@@ -41,6 +41,7 @@ public class BlogRepositoryTest {
 
         List<Blog> blogs = blogRepository.queryBlogsByTitle("%Spring%");
         Assert.assertEquals(1, blogs.size());
+        Assert.assertEquals("张三", blogs.get(0).getAuthor());
     }
 
 }

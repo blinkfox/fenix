@@ -42,7 +42,7 @@
     </properties>
 
     <dependencies>
-        <!-- 一些不需要调用方传递依赖下去的包. -->
+        <!-- 以下是一些须要调用方自己提供而不用传递依赖下去的包. -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -50,23 +50,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>5.1.9.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
-        <!--hibernate-->
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.3.10.Final</version>
             <optional>true</optional>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.hibernate</groupId>-->
-            <!--<artifactId>hibernate-entitymanager</artifactId>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -80,7 +68,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 编译运行所需的依赖包. -->
+        <!-- 以下是编译运行所需的依赖包. -->
         <dependency>
             <groupId>org.mvel</groupId>
             <artifactId>mvel2</artifactId>
