@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.entity;
+package com.blinkfox.fenix.test.entity;
 
 import java.util.Date;
 import javax.persistence.Column;

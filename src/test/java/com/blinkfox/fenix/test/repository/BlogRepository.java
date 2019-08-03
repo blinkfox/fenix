@@ -1,6 +1,6 @@
-package com.blinkfox.fenix.repository;
+package com.blinkfox.fenix.test.repository;
 
-import com.blinkfox.fenix.entity.Blog;
+import com.blinkfox.fenix.test.entity.Blog;
 
 import java.util.List;
 

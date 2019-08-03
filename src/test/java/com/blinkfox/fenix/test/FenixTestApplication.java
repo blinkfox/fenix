@@ -1,4 +1,4 @@
-package com.blinkfox.fenix;
+package com.blinkfox.fenix.test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
