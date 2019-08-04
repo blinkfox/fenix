@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * 一些通常的配置信息的单例类.
+ * 包含一些常规配置信息的配置单例类.
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -20,7 +20,7 @@ public class NormalConfig {
     private boolean debug;
 
     /**
-     * 是否打印本类库的 Banner 信息.
+     * 是否打印本 Fenix 类库的 Banner 信息.
      */
     private boolean printBanner;
 
@@ -42,10 +42,10 @@ public class NormalConfig {
     }
 
     /**
-     * 获取唯一的具有默认属性的 {@link NormalConfig} 实例.
+     * 获取具有默认属性的 {@link NormalConfig} 唯一单实例.
      *
      * <p>默认配置为: debug 模式为 false, 加载配置信息完毕后打印 Banner，打印 SQL 信息.</p>
-     * @return NormalConfig 唯一实例.
+     * @return NormalConfig 的唯一实例.
      */
     public static NormalConfig getInstance() {
         return normalConfig;

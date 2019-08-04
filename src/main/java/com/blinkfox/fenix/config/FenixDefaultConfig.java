@@ -11,25 +11,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Getter;
+
 import org.dom4j.Node;
 
 /**
  * Fenix 的默认主配置类.
  *
  * @author blinkfox on 2019-08-04.
+ * @see TagHandler
  */
 public class FenixDefaultConfig {
 
     /**
-     * 所有 fenixs XML文档的缓存 map.
-     * <p>key是资源的路径（将xml命名空间和zealotId用"@"符号分割），value是dom4j文档节点Node.</p>
+     * 所有 Fenix XML 文档的缓存 map.
+     *
+     * <p>该 Map 的 key 是资源的路径（将 XML 命名空间和 fenixId 用"."号分割），value 是 dom4j 的文档节点 Node.</p>
      */
-    private static final Map<String, Node> zealots = new ConcurrentHashMap<>();
+    @Getter
+    private static final Map<String, Node> fenixs = new ConcurrentHashMap<>();
 
-    /** 初始化默认的一些标签和tagHandlers到HashMap集合中,key是标签字符串,value是TagHandler对象. */
+    /**
+     * 初始化默认的一些标签和 TagHandler 实例到 HashMap 集合中，key 是标签字符串,value 是 TagHandler 实例.
+     */
+    @Getter
     private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>();
     
-    /* 添加默认的标签和对应的handler处理器，主要是普通条件,like,between,in等 */
+    /* 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. */
     static {
         // 等于相关标签：equal、andEqual、orEqual
 //        add(EQUAL, NormalHandler.class, EQUAL_SUFFIX);
@@ -101,83 +109,73 @@ public class FenixDefaultConfig {
     }
 
     /**
-     * 获取全局的Zealots文档缓存数据.
-     * @return 返回xml命名空间和dom4j文件的缓存map
-     */
-    public static Map<String, Node> getZealots() {
-        return zealots;
-    }
-
-    /**
-     * 获取全局的标签和对应处理器的tagHandlerMap对象.
-     * @return tagHandlerMap 标签和对应处理器的Map
-     */
-    public static Map<String, TagHandler> getTagHandlerMap() {
-        return tagHandlerMap;
-    }
-
-    /**
-     * 添加自定义标签和其对应的Handler class.
-     * @param tagName 标签名称
-     * @param handlerCls 动态处理类的反射类型
-     */
-    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls) {
-        tagHandlerMap.put(tagName, new TagHandler(handlerCls));
-    }
-
-    /**
-     * 添加自定义标签和其对应的Handler class.
-     * @param tagName 标签名称
-     * @param prefix 前缀
-     * @param handlerCls 动态处理类的反射类型
-     */
-    protected static void add(String tagName, String prefix, Class<? extends IConditHandler> handlerCls) {
-        tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls));
-    }
-
-    /**
-     * 添加自定义标签和其对应的Handler class.
-     * @param tagName 标签名称
-     * @param handlerCls 动态处理类的反射类型
-     * @param suffix 后缀
-     */
-    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls, String suffix) {
-        tagHandlerMap.put(tagName, new TagHandler(handlerCls, suffix));
-    }
-
-    /**
-     * 添加自定义标签和其对应的Handler class.
-     * @param tagName 标签名称
-     * @param prefix 前缀
-     * @param handlerCls 动态处理类的反射类型
-     * @param suffix 后缀
-     */
-    protected static void add(String tagName, String prefix,
-                              Class<? extends IConditHandler> handlerCls, String suffix) {
-        tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls, suffix));
-    }
-
-    /**
-     * 配置Zealot的普通配置信息(默认配置方法，开发者可覆盖此方法来做一些自定义配置).
-     * @param normalConfig 普通配置实例
+     * 配置 Fenix 的普通配置信息(默认配置方法，开发者可覆盖此方法来做一些自定义配置).
+     *
+     * @param normalConfig 常规配置实例
      */
     public void configNormal(NormalConfig normalConfig) {
         normalConfig.setDebug(false).setPrintBanner(true).setPrintSqlInfo(true);
     }
 
     /**
-     * 配置xml文件的标识和资源路径.
-     * @param ctx xmlContext对象
+     * 配置 XML 文件的标识和资源路径.
+     *
+     * @param ctx xmlContext 实例
      */
     public void configXml(XmlContext ctx) {
-        // 子类可覆盖此方法，来增加新的xml及命名空间的配置.
+        // 子类可重写此方法，来增加新的 XML 及命名空间的配置.
     }
 
     /**
      * 配置标签和其对应的处理类(默认了许多常用的标签，开发者可覆盖此方法来配置更多的自定义标签).
      */
     public void configTagHandler() {
-        // 子类可覆盖此方法，来增加新的标签和处理器的配置.
+        // 子类可重写此方法，来增加新的 SQL 标签和该标签对应的处理器.
+    }
+
+    /**
+     * 添加自定义标签和该 SQL 片段对应的 {@link TagHandler} 处理器实现的 class.
+     *
+     * @param tagName 标签名称
+     * @param handlerCls 标签处理器类的 Class
+     */
+    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls) {
+        tagHandlerMap.put(tagName, new TagHandler(handlerCls));
+    }
+
+    /**
+     * 添加自定义标签、SQL 片段前缀和该 SQL 片段对应的 {@link TagHandler} 处理器实现的 class.
+     *
+     * @param tagName 标签名称
+     * @param prefix SQL 片段前缀
+     * @param handlerCls 标签处理器类的 Class
+     */
+    protected static void add(String tagName, String prefix, Class<? extends IConditHandler> handlerCls) {
+        tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls));
+    }
+
+    /**
+     * 添加自定义标签、SQL 操作符和该 SQL 片段对应的 {@link TagHandler} 处理器实现的 class.
+     *
+     * @param tagName 标签名称
+     * @param handlerCls 标签处理器类的 Class
+     * @param symbol SQL 操作符
+     */
+    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls, String symbol) {
+        tagHandlerMap.put(tagName, new TagHandler(handlerCls, symbol));
+    }
+
+    /**
+     * 添加自定义标签、SQL 片段前缀、SQL 操作符和该 SQL 片段对应的 {@link TagHandler} 处理器实现的 class.
+     *
+     * @param tagName 标签名称
+     * @param prefix 前缀
+     * @param handlerCls 标签处理器类的 Class
+     * @param symbol SQL 操作符
+     */
+    protected static void add(String tagName, String prefix,
+            Class<? extends IConditHandler> handlerCls, String symbol) {
+        tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls, symbol));
     }
 
 }
