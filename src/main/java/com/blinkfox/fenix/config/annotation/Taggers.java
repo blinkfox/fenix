@@ -7,7 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Fenix XML 标签注解 Tagger 的数组，由于 Java8 以前不支持重复注解，为了更好的支持 Java6、Java7，设置此注解.
+ * Fenix XML 标签注解 {@link Tagger} 的数组.
+ *
+ * <p>Java8 及之后建议直接在类上重复使用 {@link Tagger} 注解，而不必再使用本 {@link Taggers} 注解.</p>
  *
  * @author blinkfox on 2019-08-04.
  */

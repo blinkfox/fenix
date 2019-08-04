@@ -7,9 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于配置 Fenix XML 标签和对应 Handler 的注解.
+ * 用于配置 Fenix XML 标签和对应 {@link com.blinkfox.fenix.config.entity.TagHandler} 的注解.
  *
  * @author blinkfox on 2019-08-04.
+ * @see Taggers
  */
 @Documented
 @Target(ElementType.TYPE)
@@ -24,7 +25,7 @@ public @interface Tagger {
     String value();
 
     /**
-     * 生成动态 SQL 时添加的前缀，如: ' AND ', ' OR ' 等.
+     * 生成动态 SQL 片段时可以添加的前缀，如: ' AND ', ' OR ' 等.
      *
      * @return 字符串值
      */
