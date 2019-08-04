@@ -9,7 +9,10 @@ import java.lang.annotation.Target;
 import org.springframework.data.annotation.QueryAnnotation;
 
 /**
- * 自定义的核心查询注解 '@QueryFenix'，用于解决 @Query 在复杂或动态 SQL 方面表达能力弱的问题.
+ * 自定义的核心查询注解 {@link QueryFenix}，
+ * 用于解决 {@link org.springframework.data.jpa.repository.Query} 注解在复杂或动态 SQL 方面表达能力弱的问题.
+ * '@QueryFenix' 注解可以用来关联外部的 SQL XML 文件，实现 SQL 与 Java 隔离，
+ * 并通过模板或标签语法来处理生成复杂或动态的 JPQL 或 SQL 语句.
  *
  * @author blinkfox on 2019-08-04.
  */
