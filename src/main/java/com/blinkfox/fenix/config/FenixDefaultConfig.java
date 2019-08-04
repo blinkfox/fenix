@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.dom4j.Node;
 
 /**
- * 抽象的 Fenix 主配置类.
+ * Fenix 的默认主配置类.
  *
  * @author blinkfox on 2019-08-04.
  */
-public class AbstractFenixConfig {
+public class FenixDefaultConfig {
 
     /**
      * 所有 fenixs XML文档的缓存 map.

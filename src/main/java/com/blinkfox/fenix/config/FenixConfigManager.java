@@ -8,16 +8,16 @@ import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.ConfigNotFoundException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
+import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-import com.blinkfox.fenix.loader.BannerLoader;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,205 +25,229 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 
 /**
- * Fenix 配置信息缓存管理器，用于加载 Fenix Config 配置信息到缓存中.
+ * Fenix 的配置信息管理器单例类，用于加载 Fenix 所需的各种配置信息到内存中.
  *
  * @author blinkfox on 2019-08-04.
+ * @see FenixDefaultConfig
+ * @see NormalConfig
+ * @see XmlContext
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FenixConfigManager {
+public final class FenixConfigManager {
+
+    /**
+     * Fenix 的 banner 文本.
+     */
+    private static final String BANNER_TEXT = "\n"
+            + "___________           .__        \n"
+            + "\\_   _____/___   ____ |__|__  ___\n"
+            + " |    __)/ __ \\ /    \\|  \\  \\/  /\n"
+            + " |     \\\\  ___/|   |  \\  |>    < \n"
+            + " \\___  / \\___  >___|  /__/__/\\_ \\\n"
+            + "     \\/      \\/     \\/         \\/\n";
+
+    /**
+     * fenix 的常量.
+     */
+    private static final String FENIX = "fenix";
     
     /**
-     * 初始化的单实例.
-      */
+     * 初始化的 {@link FenixConfigManager} 单实例.
+     */
     private static final FenixConfigManager confManager = new FenixConfigManager();
 
     /**
-     * Fenix 的 XML 文件所在的位置，多个用逗号隔开,可以是目录也可以是具体的 XML 文件.
+     * Fenix 的 XML 文件所在的位置，多个用逗号隔开，可以是目录也可以是具体的 XML 文件.
      */
+    @Getter
     private String xmlLocations;
 
     /**
-     * Fenix 的自定义 handler 处理器所在的位置，多个用逗号隔开,可以是目录也可以是具体的 java 或 class 文件路径.
+     * Fenix 自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
      */
+    @Getter
     private String handlerLocations;
 
     /**
-     * 获取 ZealotConfigManager的唯一实例.
-     * @return ZealotConfigManager唯一实例
+     * 获取 {@link FenixConfigManager} 的唯一实例.
+     *
+     * @return FenixConfigManager 唯一实例
      */
     public static FenixConfigManager getInstance() {
         return confManager;
     }
 
     /**
-     * 获取配置的zealot的XML文件所在的位置字符串.
-     * @return xmlLocations
-     */
-    public String getXmlLocations() {
-        return xmlLocations;
-    }
-
-    /**
-     * 获取配置的zealot的自定义handler处理器所在的位置字符串.
-     * @return handlerLocations
-     */
-    public String getHandlerLocations() {
-        return handlerLocations;
-    }
-
-    /**
-     * 初始化加载Zealot的配置信息到缓存中.
+     * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param configClass 系统中Zealot的class路径
-     * @param xmlLocations zealot的XML文件所在的位置，多个用逗号隔开
-     * @param handlerLocations zealot的自定义handler处理器所在的位置，多个用逗号隔开
+     * @param configClass 系统中 {@link FenixDefaultConfig} 的子类的 class 路径
+     * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
+     * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
+     *          处理器所在的位置，多个用逗号隔开
      */
     public void initLoad(String configClass, String xmlLocations, String handlerLocations) {
-        // 设置配置的文件路径的值，并开始加载ZealotConfig配置信息
         this.xmlLocations = xmlLocations;
         this.handlerLocations = handlerLocations;
         this.initLoad(configClass);
     }
 
     /**
-     * 初始化加载Zealot的配置信息到缓存中.
-     * @param clazz 配置类
-     * @param xmlLocations zealot的XML文件所在的位置，多个用逗号隔开
-     * @param handlerLocations zealot的自定义handler处理器所在的位置，多个用逗号隔开
+     * 初始化加载 Fenix 的配置信息到内存中.
+     *
+     * @param clazz {@link FenixDefaultConfig} 子类的配置类
+     * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
+     * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
+     *          处理器所在的位置，多个用逗号隔开
      */
-    public void initLoad(Class<? extends AbstractFenixConfig> clazz, String xmlLocations,
-            String handlerLocations) {
+    public void initLoad(Class<? extends FenixDefaultConfig> clazz, String xmlLocations, String handlerLocations) {
         this.initLoad(clazz.getName(), xmlLocations, handlerLocations);
     }
 
     /**
-     * 初始化加载Zealot的配置信息到缓存中.
+     * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param zealotConfig 配置类实例
-     * @param xmlLocations zealot的XML文件所在的位置，多个用逗号隔开
-     * @param handlerLocations zealot的自定义handler处理器所在的位置，多个用逗号隔开
+     * @param fenixConfig {@link FenixDefaultConfig} 的子类的配置类实例
+     * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
+     * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
+     *          处理器所在的位置，多个用逗号隔开
      */
-    public void initLoad(AbstractFenixConfig zealotConfig, String xmlLocations, String handlerLocations) {
+    public void initLoad(FenixDefaultConfig fenixConfig, String xmlLocations, String handlerLocations) {
         this.xmlLocations = xmlLocations;
         this.handlerLocations = handlerLocations;
-        this.initLoad(zealotConfig);
+        this.initLoad(fenixConfig);
     }
 
     /**
-     * 初始化加载Zealot的配置信息到缓存中.
-     * @param clazz 配置类
+     * 初始化加载 Fenix 的配置信息到内存中.
+     *
+     * @param clazz {@link FenixDefaultConfig} 的子类配置类
      */
-    public void initLoad(Class<? extends AbstractFenixConfig> clazz) {
+    public void initLoad(Class<? extends FenixDefaultConfig> clazz) {
         this.initLoad(clazz.getName());
     }
 
     /**
-     * 初始化加载Zealot的配置信息到缓存中.
-     * @param configClass 系统中Zealot的class路径
+     * 初始化加载 Fenix 的配置信息到内存中.
+     *
+     * @param configClass 系统中 Fenix 的 class 路径
      */
     public void initLoad(String configClass) {
-        // 加载ZealotConfig配置信息
         this.scanLocations(this.xmlLocations, this.handlerLocations);
-        this.loadZealotConfig(configClass);
+        this.loadFenixConfig(configClass);
         cachingXmlAndEval();
     }
 
     /**
-     * 初始化加载Zealot的配置信息到缓存中.
+     * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param zealotConfig 配置类实例
+     * @param fenixConfig {@link FenixDefaultConfig} 的子类配置类实例
      */
-    public void initLoad(AbstractFenixConfig zealotConfig) {
+    public void initLoad(FenixDefaultConfig fenixConfig) {
         this.scanLocations(this.xmlLocations, this.handlerLocations);
-        this.loadZealotConfig(zealotConfig);
+        this.loadFenixConfig(fenixConfig);
         this.cachingXmlAndEval();
     }
 
     /**
-     * 扫描 xml和handler所在的文件位置.
-     * @param xmlLocations zealot的XML文件所在的位置
-     * @param handlerLocations zealot的自定义handler处理器所在的位置
+     * 扫描 Fenix XML 和 {@link com.blinkfox.fenix.config.entity.TagHandler} 所在的文件位置.
+     *
+     * @param xmlLocations Fenix 的 XML 文件所在的位置
+     * @param handlerLocations Fenix 的自定义 handler 处理器所在的位置
      */
     private void scanLocations(String xmlLocations, String handlerLocations) {
-        this.xmlLocations = StringHelper.isBlank(this.xmlLocations) ? "zealot" : this.xmlLocations;
-        new XmlScanner().scan(xmlLocations);
+        this.xmlLocations = StringHelper.isBlank(this.xmlLocations) ? FENIX : this.xmlLocations;
+        new XmlScanner().scan(this.xmlLocations);
         new TaggerScanner().scan(handlerLocations);
     }
 
     /**
-     * 扫描 xml文件所在的文件位置 并识别配置加载到内存缓存中.
-     * @param xmlLocations zealot的XML文件所在的位置
-     * @return ZealotConfigManager的全局唯一实例
+     * 扫描 XML 文件所在的位置 并识别配置加载到内存中.
+     *
+     * @param xmlLocations Fenix 的 XML 文件所在的位置
+     * @return {@link FenixConfigManager} 的全局唯一实例
      */
     public FenixConfigManager initLoadXmlLocations(String xmlLocations) {
-        this.xmlLocations = StringHelper.isBlank(xmlLocations) ? "zealot" : xmlLocations;
+        this.xmlLocations = StringHelper.isBlank(xmlLocations) ? FENIX : xmlLocations;
         new XmlScanner().scan(this.xmlLocations);
         this.cachingXmlAndEval();
         return this;
     }
 
     /**
-     * 扫描 handler文件所在的文件位置 并识别配置加载到内存缓存中.
-     * @param handlerLocations zealot的自定义handler处理器所在的位置
-     * @return ZealotConfigManager的全局唯一实例
+     * 扫描 {@link com.blinkfox.fenix.config.entity.TagHandler} 文件所在的位置，并识别配置加载到内存中.
+     *
+     * @param handlerLocations Fenix 的自定义 handler 处理器所在的位置
+     * @return {@link FenixConfigManager} 的全局唯一实例
      */
     public FenixConfigManager initLoadHandlerLocations(String handlerLocations) {
         this.handlerLocations = handlerLocations;
-        new TaggerScanner().scan(handlerLocations);
+        new TaggerScanner().scan(this.handlerLocations);
         return this;
     }
 
     /**
-     * 清空zealot所有缓存的内容.
-     * 包括xml命名空间路径缓存、xml节点缓存
+     * 清空 Fenix 所有内存缓存中的内容，包括 XML 命名空间路径缓存、XML节点缓存.
      */
     public void clear() {
         XmlContext.INSTANCE.getXmlPathMap().clear();
-        AbstractFenixConfig.getZealots().clear();
+        FenixDefaultConfig.getZealots().clear();
     }
 
     /**
-     * 初始化zealotConfig的子类，并加载配置信息.
-     * @param configClass 配置类的class路径
+     * 初始化创建 {@link FenixDefaultConfig} 的子类实例，并加载配置信息.
+     *
+     * @param configClass 配置类的 class 文件全路径
      */
-    private void loadZealotConfig(String configClass) {
-        if (configClass == null) {
-            throw new ConfigNotFoundException("未获取到 FenixConfig 配置类信息");
+    private void loadFenixConfig(String configClass) {
+        if (StringHelper.isBlank(configClass)) {
+            throw new ConfigNotFoundException("未获取到 FenixConfig 的配置类信息！");
         }
 
-        log.info("Fenix 加载器开始加载，Fenix 配置类为:【" + configClass + "】.");
-        Object temp;
+        // 创建 configClass 的实例，并判断该实例是否是 FenixDefaultConfig 的子类，
+        // 如果是，则加载配置信息，否则就抛出异常.
+        log.info("【Fenix 提示】开始加载 Fenix 配置信息，配置类为:【" + configClass + "】.");
         try {
-            temp = Class.forName(configClass).newInstance();
+            Object config = Class.forName(configClass).newInstance();
+            if (config instanceof FenixDefaultConfig) {
+                this.loadFenixConfig((FenixDefaultConfig) config);
+            }
         } catch (Exception e) {
-            throw new ConfigNotFoundException("初始化 fenixConfig 实例失败，配置名称为:【" + configClass + "】.", e);
-        }
-
-        // 判断获取到的类是否是 AbstractFenixConfig 的子类，如果是，则加载 XML 和自定义标签.
-        if (temp instanceof AbstractFenixConfig) {
-            this.loadZealotConfig((AbstractFenixConfig) temp);
+            throw new ConfigNotFoundException("【Fenix 错误提示】初始化 fenixConfig 实例失败，配置名称为:【" + configClass + "】.", e);
         }
     }
 
     /**
-     * 加载初始化zealotConfig的子类信息，并执行初始化zealot配置信息到缓存中.
-     * @param zealotConfig 配置类
+     * 初始化加载 {@link FenixDefaultConfig} 的子类信息，并执行初始化 Fenix 配置信息到内存缓存中.
+     *
+     * @param fenixConfig 配置类
      */
-    private void loadZealotConfig(AbstractFenixConfig zealotConfig) {
-        zealotConfig.configNormal(NormalConfig.getInstance());
-        zealotConfig.configXml(XmlContext.INSTANCE);
-        zealotConfig.configTagHandler();
-        log.warn("Zealot的配置信息加载完成!");
+    private void loadFenixConfig(FenixDefaultConfig fenixConfig) {
+        fenixConfig.configNormal(NormalConfig.getInstance());
+        fenixConfig.configXml(XmlContext.INSTANCE);
+        fenixConfig.configTagHandler();
+        log.warn("【Fenix 提示】加载 Fenix 的配置信息完成.");
     }
 
     /**
-     * 缓存xml、打印bannner并做初次计算.
+     * 缓存 XML、打印 banner 并做初次计算.
      */
     private void cachingXmlAndEval() {
         this.cachingXmlZealots();
-        new BannerLoader().print(NormalConfig.getInstance().isPrintBanner());
+        this.printBanner(NormalConfig.getInstance().isPrintBanner());
         this.testFirstEvaluate();
+    }
+
+    /**
+     * 是否打印 Finix Banner.
+     *
+     * @param isPrint 是否打印
+     */
+    private void printBanner(boolean isPrint) {
+        if (isPrint) {
+            log.warn(BANNER_TEXT);
+        }
     }
 
     /**
@@ -232,37 +256,38 @@ public class FenixConfigManager {
     private void cachingXmlZealots() {
         Map<String, String> xmlMaps = XmlContext.INSTANCE.getXmlPathMap();
 
-        // 遍历所有的xml文档，将每个zealot节点缓存到ConcurrentHashMap内存缓存中
+        // 遍历所有的 XML 文档，将每个 fenix 节点缓存到 ConcurrentHashMap 内存缓存中.
         for (Map.Entry<String, String> entry: xmlMaps.entrySet()) {
-            String nameSpace = entry.getKey();
+            String namespace = entry.getKey();
             String filePath = entry.getValue();
 
-            // 根据文件路径获取对应的dom4j Document对象.
+            // 根据文件路径获取对应的 dom4j Document 对象.
             Document doc = XmlNodeHelper.getDocument(filePath);
             if (doc == null) {
-                throw new ConfigNotFoundException("注意：未找到配置文件中xml对应的dom4j Document文档,nameSpace为:" + nameSpace);
+                throw new ConfigNotFoundException("【Fenix 错误提示】未找到配置文件中 XML 对应的 dom4j Document 文档，"
+                        + "namespace 为:【" + namespace + "】.");
             }
 
-            // 获取该文档下所有的 fenix 元素.
-            List<Node> zealotNodes = doc.selectNodes(XpathConst.FENIX_TAG);
-            for (Node zealotNode: zealotNodes) {
-                String fenixId = XmlNodeHelper.getNodeText(zealotNode.selectSingleNode(XpathConst.ATTR_ID));
+            // 获取该文档下所有的 fenix XML 元素.
+            List<Node> fenixNodes = doc.selectNodes(XpathConst.FENIX_TAG);
+            for (Node fenixNode: fenixNodes) {
+                String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
-                    throw new NodeNotFoundException("该xml文件中有zealot节点的zealotId属性为空，请检查！文件为:" + filePath);
+                    throw new NodeNotFoundException("【Fenix 错误提示】该 XML 文件中有 fenix 节点的 id 属性为空，请检查！"
+                            + "文件为:【" + filePath + "】.");
                 }
 
-                // fenix 节点缓存到 Map 中，key 是由 nameSpace 和 fenix id 组成，用 "." 号分隔，value 是 fenixNode
-                AbstractFenixConfig.getZealots().put(StringHelper.concat(nameSpace, Const.DOT, fenixId), zealotNode);
+                // 将 fenix 节点缓存到 Map 中，key 是由 namespace 和 fenixId 组成，用 "." 号分隔，value 是 fenixNode.
+                FenixDefaultConfig.getZealots().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
             }
         }
     }
 
     /**
-     * 测试第一次 MVEL 表达式的计算,会缓存 MVEL 相关准备工作，加快后续的 MVEL 执行.
+     * 测试第一次 MVEL 表达式的计算，会缓存 MVEL 相关准备工作，从而加快后续的 MVEL 执行.
      */
     private void testFirstEvaluate() {
-        Map<String, Object> context = new HashMap<>(4);
-        context.put("foo", "hello");
+        Map<String, Object> context = ParamWrapper.newInstance("foo", "hello").toMap();
         ParseHelper.parseTemplate("@if{?foo != empty}Hello World!@end{}", context);
         ParseHelper.parseExpressWithException("foo != empty", context);
     }
