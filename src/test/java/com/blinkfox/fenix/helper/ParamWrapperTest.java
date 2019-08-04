@@ -1,6 +1,4 @@
-package com.blinkfox.fenix.test.helper;
-
-import com.blinkfox.fenix.helper.ParamWrapper;
+package com.blinkfox.fenix.helper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +42,16 @@ public class ParamWrapperTest {
                 .toMap();
         Assert.assertEquals(4, params.size());
         Assert.assertEquals(27, params.get("age"));
+    }
+
+    /**
+     * 测试构造新实例的方法.
+     */
+    @Test
+    public void newInstanceWithKeyValue() {
+        Map<String, Object> params = ParamWrapper.newInstance("age", 30).toMap();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals(30, params.get("age"));
     }
 
     /**

@@ -3,8 +3,6 @@ package com.blinkfox.fenix.jpa;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 
-import lombok.Getter;
-
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -23,7 +21,6 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
     /**
      * EntityManager 实体管理器.
      */
-    @Getter
     private final EntityManager entityManager;
 
     /**

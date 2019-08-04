@@ -1,4 +1,4 @@
-package com.blinkfox.jpa.demo.zealot.bean;
+package com.blinkfox.fenix.bean;
 
 import java.util.HashMap;
 import java.util.Map;

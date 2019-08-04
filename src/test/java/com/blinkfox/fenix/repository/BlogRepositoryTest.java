@@ -1,7 +1,7 @@
-package com.blinkfox.fenix.test.repository;
+package com.blinkfox.fenix.repository;
 
-import com.blinkfox.fenix.test.FenixTestApplication;
-import com.blinkfox.fenix.test.entity.Blog;
+import com.blinkfox.fenix.FenixTestApplication;
+import com.blinkfox.fenix.entity.Blog;
 
 import java.util.Date;
 import java.util.List;

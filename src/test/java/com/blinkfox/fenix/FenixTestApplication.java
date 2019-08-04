@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.test;
+package com.blinkfox.fenix;
 
 import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
 
