@@ -1,11 +1,10 @@
 package com.blinkfox.fenix.config.scanner;
 
-import com.blinkfox.zealot.config.entity.XmlContext;
-import com.blinkfox.zealot.consts.ZealotConst;
-import com.blinkfox.zealot.helpers.CollectionHelper;
-import com.blinkfox.zealot.helpers.StringHelper;
-import com.blinkfox.zealot.helpers.XmlNodeHelper;
-import com.blinkfox.zealot.log.Log;
+import com.blinkfox.fenix.config.entity.XmlContext;
+import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.helper.CollectionHelper;
+import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.helper.XmlNodeHelper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,31 +13,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * zealot的XML文件包的扫描类，将扫描到的所有zealot xml文件添加到XmlContext中，供后续配置使用.
+ * Fenix 的 XML 文件包的扫描类，将扫描到的所有 Fenix XML 文件添加到 XmlContext 中，供后续配置使用.
  *
- * @author blinkfox on 2018/4/24.
+ * @author blinkfox on 2019-08-04.
  */
+@Slf4j
 public final class XmlScanner implements Scanner {
 
-    private static final Log log = Log.get(XmlScanner.class);
-
-    /** 存放所有扫描位置下的XML文件资源路径Set集合. */
+    /**
+     * 存放所有扫描位置下的XML文件资源路径Set集合.
+     */
     private Set<String> xmlPaths;
 
     /**
      * 私有构造方法.
      */
-    private XmlScanner() {
-        this.xmlPaths = new HashSet<String>();
-    }
-
-    /**
-     * 获取XmlScanner最新实例的唯一方法.
-     * @return XmlScanner实例
-     */
-    public static XmlScanner newInstance() {
-        return new XmlScanner();
+    public XmlScanner() {
+        this.xmlPaths = new HashSet<>();
     }
 
     /**
@@ -54,7 +48,7 @@ public final class XmlScanner implements Scanner {
 
         // 对配置的xml路径按逗号分割的规则来解析，如果是XML文件则直接将该xml文件存放到xmlPaths的Set集合中，
         // 否则就代表是xml资源目录，并解析目录下所有的xml文件，将这些xml文件存放到xmlPaths的Set集合中，
-        String[] xmlLocationArr = xmlLocations.split(ZealotConst.COMMA);
+        String[] xmlLocationArr = xmlLocations.split(Const.COMMA);
         for (String xmlLocation: xmlLocationArr) {
             if (StringHelper.isBlank(xmlLocation)) {
                 continue;
@@ -120,10 +114,10 @@ public final class XmlScanner implements Scanner {
      */
     private List<String> getDirFilePaths(String xmlPackage, URL url) {
         try {
-            return DefaultVfs.newInstance().list(url, xmlPackage);
+            return new DefaultVfs().list(url, xmlPackage);
         } catch (Exception e) {
             // 此处忽略异常堆栈信息.
-            log.error("解析zealot xml包存在些问题,将被忽略！xml包为:" + xmlPackage + ",url:" + url);
+            log.error("解析 Fenix XML 包存在问题，将被忽略！XML包为:【" + xmlPackage + "】，url:【" + url + "】.");
             return Collections.emptyList();
         }
     }

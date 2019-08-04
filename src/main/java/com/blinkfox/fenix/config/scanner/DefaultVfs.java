@@ -1,8 +1,7 @@
 package com.blinkfox.fenix.config.scanner;
 
-import com.blinkfox.zealot.exception.ZealotException;
-import com.blinkfox.zealot.helpers.IoHelper;
-import com.blinkfox.zealot.log.Log;
+import com.blinkfox.fenix.exception.FenixException;
+import com.blinkfox.fenix.helper.IoHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,35 +21,37 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * DefaultVfs.
- * <p>注:此文件中的大部分内容是从Mybatis中参考过来的.</p>
+ * 默认的虚拟文件系统.
  *
- * @author blinkfox on 2018-04-25.
+ * <p>注:此文件中的大部分内容是从 Mybatis 中参考过来的.</p>
+ *
+ * @author blinkfox on 2019-08-04.
  */
+@Slf4j
 public class DefaultVfs {
 
-    private static final Log log = Log.get(XmlScanner.class);
-
-    /** 路径分割符. */
+    /**
+     * 路径分割符.
+     */
     private static final String PATH_SP = "/";
 
-    /** for循环最大执行时限. */
+    /**
+     * for 循环最大执行时限.
+     */
     private static final long MAX_LIMIT = 3000;
     
-    /** 文件协议标识符. */
+    /**
+     * 文件协议标识符.
+     */
     private static final String FILE_PROTOCOL = "file";
 
-    /** The magic header that indicates a JAR (ZIP) file. */
-    private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };
-
     /**
-     * 获取新实例.
-     * @return DefaultVfs实例
+     * The magic header that indicates a JAR (ZIP) file.
      */
-    public static DefaultVfs newInstance() {
-        return new DefaultVfs();
-    }
+    private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };
 
     /**
      * Recursively list the full resource path of all the resources that are children of the
@@ -235,7 +237,7 @@ public class DefaultVfs {
 
             // File name might be URL-encoded
             if (!file.exists()) {
-                file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
+                file = new File(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8.toString()));
             }
 
             if (file.exists()) {
@@ -247,7 +249,7 @@ public class DefaultVfs {
         } catch (MalformedURLException e) {
             log.warn("Invalid JAR URL: " + jarUrl);
         } catch (UnsupportedEncodingException e) {
-            throw new ZealotException("Unsupported encoding?  UTF-8?  That's unpossible.");
+            throw new FenixException("不支持的编码.");
         }
 
         return null;

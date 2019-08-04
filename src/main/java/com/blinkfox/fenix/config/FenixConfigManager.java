@@ -2,6 +2,8 @@ package com.blinkfox.fenix.config;
 
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.XmlContext;
+import com.blinkfox.fenix.config.scanner.TaggerScanner;
+import com.blinkfox.fenix.config.scanner.XmlScanner;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.ConfigNotFoundException;
@@ -15,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.dom4j.Document;
@@ -26,23 +30,23 @@ import org.dom4j.Node;
  * @author blinkfox on 2019-08-04.
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FenixConfigManager {
     
-    /** 初始化的单实例. */
+    /**
+     * 初始化的单实例.
+      */
     private static final FenixConfigManager confManager = new FenixConfigManager();
 
-    /** zealot的XML文件所在的位置，多个用逗号隔开,可以是目录也可以是具体的xml文件. */
+    /**
+     * Fenix 的 XML 文件所在的位置，多个用逗号隔开,可以是目录也可以是具体的 XML 文件.
+     */
     private String xmlLocations;
 
-    /** zealot的自定义handler处理器所在的位置，多个用逗号隔开,可以是目录也可以是具体的java或class文件路径. */
-    private String handlerLocations;
-
     /**
-     * 私有化构造方法.
+     * Fenix 的自定义 handler 处理器所在的位置，多个用逗号隔开,可以是目录也可以是具体的 java 或 class 文件路径.
      */
-    private FenixConfigManager() {
-        super();
-    }
+    private String handlerLocations;
 
     /**
      * 获取 ZealotConfigManager的唯一实例.
@@ -143,8 +147,8 @@ public class FenixConfigManager {
      */
     private void scanLocations(String xmlLocations, String handlerLocations) {
         this.xmlLocations = StringHelper.isBlank(this.xmlLocations) ? "zealot" : this.xmlLocations;
-        XmlScanner.newInstance().scan(xmlLocations);
-        TaggerScanner.newInstance().scan(handlerLocations);
+        new XmlScanner().scan(xmlLocations);
+        new TaggerScanner().scan(handlerLocations);
     }
 
     /**
@@ -154,7 +158,7 @@ public class FenixConfigManager {
      */
     public FenixConfigManager initLoadXmlLocations(String xmlLocations) {
         this.xmlLocations = StringHelper.isBlank(xmlLocations) ? "zealot" : xmlLocations;
-        XmlScanner.newInstance().scan(this.xmlLocations);
+        new XmlScanner().scan(this.xmlLocations);
         this.cachingXmlAndEval();
         return this;
     }
@@ -166,7 +170,7 @@ public class FenixConfigManager {
      */
     public FenixConfigManager initLoadHandlerLocations(String handlerLocations) {
         this.handlerLocations = handlerLocations;
-        TaggerScanner.newInstance().scan(handlerLocations);
+        new TaggerScanner().scan(handlerLocations);
         return this;
     }
 

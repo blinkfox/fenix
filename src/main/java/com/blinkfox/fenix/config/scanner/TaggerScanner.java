@@ -1,7 +1,14 @@
 package com.blinkfox.fenix.config.scanner;
 
+import com.blinkfox.fenix.config.AbstractFenixConfig;
+import com.blinkfox.fenix.config.annotation.Tagger;
+import com.blinkfox.fenix.config.annotation.Taggers;
+import com.blinkfox.fenix.config.entity.TagHandler;
+import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.core.IConditHandler;
+import com.blinkfox.fenix.helper.StringHelper;
+
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
@@ -16,38 +23,33 @@ import java.util.jar.JarFile;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Fenix Handler 上的 XML 标签注解 '@Tagger' 扫描类.
+ * Fenix Handler 上的 XML 标签注解 {@link Tagger} 扫描类.
  *
- * <p>注：将扫描的类添加到'AbstractZealotConfig.tagHandlerMap'中，供后续配置使用.</p>
+ * <p>注：将扫描的类添加到 {@link AbstractFenixConfig} 的 `tagHandlerMap` 中，供后续配置使用.</p>
  *
  * @author blinkfox on 2019-08-04.
  */
 @Slf4j
 public final class TaggerScanner implements Scanner {
 
-    /** 存放所有扫描位置下的class对象的Set集合. */
+    /**
+     * 存放所有扫描位置下的 class 对象的 Set 集合.
+     */
     private Set<Class<?>> classSet;
 
     /**
-     * 私有构造方法.
+     * 构造方法，初始化 classSet 实例.
      */
-    private TaggerScanner() {
-        this.classSet = new HashSet<Class<?>>();
+    public TaggerScanner() {
+        this.classSet = new HashSet<>();
     }
 
     /**
-     * 获取 TaggerScanner 最新实例的唯一方法.
-     * @return TaggerScanner实例
-     */
-    public static TaggerScanner newInstance() {
-        return new TaggerScanner();
-    }
-
-    /**
-     * 扫描配置的zealot handler包下所有的class.
-     * 并将含有'@Tagger'和'@Taggers'的注解的Class解析出来，存储到tagHandlerMap配置中.
+     * 扫描配置的 Fenix handler 包下所有的 class.
+     * <p>并将含有 {@link Tagger} 和 {@link Taggers} 的注解的 Class 解析出来，存储到 tagHandlerMap 配置中.
+     * </p>
      *
-     * @param handlerLocations handler所在的位置
+     * @param handlerLocations handler 所在的位置
      */
     @Override
     public void scan(String handlerLocations) {
@@ -55,20 +57,20 @@ public final class TaggerScanner implements Scanner {
             return;
         }
 
-        // 对配置的xml路径按逗号分割的规则来解析，如果是XML文件则直接将该xml文件存放到xmlPaths的Set集合中，
-        // 否则就代表是xml资源目录，并解析目录下所有的xml文件，将这些xml文件存放到xmlPaths的Set集合中，
+        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 xmlPaths 的 Set 集合中.
+        // 否则就代表是 XML 资源目录，并解析目录下所有的 XML 文件，将这些 XML 文件存放到 xmlPaths 的 Set 集合中.
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String[] locationArr = handlerLocations.split(ZealotConst.COMMA);
+        String[] locationArr = handlerLocations.split(Const.COMMA);
         for (String location: locationArr) {
             if (StringHelper.isBlank(location)) {
                 continue;
             }
 
-            // 判断文件如果是具体的Java文件和class文件，则将文件解析成Class对象.
-            // 如果都不是，则视其为包,然后解析该包及子包下面的所有class文件.
+            // 判断文件如果是具体的 Java 文件和 class 文件，则将文件解析成 Class 对象.
+            // 如果都不是，则视其为包,然后解析该包及子包下面的所有 class 文件.
             String cleanLocation = location.trim();
             if (StringHelper.isJavaFile(cleanLocation) || StringHelper.isClassFile(cleanLocation)) {
-                this.addClassByName(classLoader, cleanLocation.substring(0, cleanLocation.lastIndexOf('.')));
+                this.addClassByName(classLoader, cleanLocation.substring(0, cleanLocation.lastIndexOf(Const.DOT)));
             } else {
                 this.addClassByPackage(classLoader, cleanLocation);
             }
@@ -79,6 +81,7 @@ public final class TaggerScanner implements Scanner {
 
     /**
      * 根据classLoader和className找到对应的class对象.
+     *
      * @param classLoader ClassLoader实例
      * @param className class全路径名
      */
@@ -153,13 +156,8 @@ public final class TaggerScanner implements Scanner {
         }
 
         // 如果存在,就获取包下的所有文件,包括目录,筛选出目录和.class文件.
-        File[] dirfiles = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return (file.isDirectory()) || StringHelper.isClassFile(file.getName());
-            }
-        });
-        if (dirfiles == null) {
+        File[] dirfiles = dir.listFiles(file -> (file.isDirectory()) || StringHelper.isClassFile(file.getName()));
+        if (dirfiles == null || dirfiles.length == 0) {
             return;
         }
 
@@ -220,8 +218,8 @@ public final class TaggerScanner implements Scanner {
     }
 
     /**
-     * 将扫描到的所有class进行再解析，如果其含有{@link com.blinkfox.zealot.config.annotation.Tagger}和
-     * {@link com.blinkfox.zealot.config.annotation.Taggers}注解，则将其进行解析添加到tagHandlerMap中.
+     * 将扫描到的所有 class 进行再解析，如果其含有 {@link Tagger} 和
+     * {@link com.blinkfox.fenix.config.annotation.Taggers} 注解，则将其进行解析添加到 tagHandlerMap 中.
      */
     @SuppressWarnings("unchecked")
     private void addTagHanderInMap() {
@@ -272,7 +270,7 @@ public final class TaggerScanner implements Scanner {
      * @param cls IConditHandler实现类的class
      */
     private void addTagHandlerInMapByTagger(Class<? extends IConditHandler> cls, Tagger tagger) {
-        AbstractZealotConfig.getTagHandlerMap()
+        AbstractFenixConfig.getTagHandlerMap()
                 .put(tagger.value(), new TagHandler(tagger.prefix(), cls, tagger.symbol()));
     }
 

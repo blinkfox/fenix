@@ -51,7 +51,7 @@ public class ParseHelperTest {
      */
     @Test(expected = Exception.class)
     public void parseTemplate() {
-        Assert.assertEquals("say world", ParseHelper.parseTemplate("say @{hello}.", context));
+        Assert.assertEquals("say world.", ParseHelper.parseTemplate("say @{hello}.", context));
         Assert.assertNull(ParseHelper.parseTemplate("say @{abc}.", context));
     }
 
@@ -118,9 +118,7 @@ public class ParseHelperTest {
      */
     @Test
     public void parseSpaceStr() {
-        Boolean result = (Boolean) ParseHelper.parseExpress("", ParamWrapper.newInstance("bb", "1").toMap());
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result);
+        Assert.assertNull(ParseHelper.parseExpress("", ParamWrapper.newInstance("bb", "1").toMap()));
     }
 
 }
