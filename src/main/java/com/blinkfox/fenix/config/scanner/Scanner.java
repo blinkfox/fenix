@@ -4,6 +4,8 @@ package com.blinkfox.fenix.config.scanner;
  * Fenix 的扫描应用系统中各 XML、注解等文件的接口.
  *
  * @author blinkfox on 2019-08-04.
+ * @see TaggerScanner
+ * @see XmlScanner
  */
 public interface Scanner {
 

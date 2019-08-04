@@ -129,7 +129,7 @@ public final class XmlScanner implements Scanner {
         for (String xmlPath: xmlPaths) {
             String nameSpace = XmlNodeHelper.getZealotXmlNameSpace(xmlPath);
             if (StringHelper.isNotBlank(nameSpace)) {
-                XmlContext.INSTANCE.add(nameSpace, xmlPath);
+                XmlContext.getInstance().add(nameSpace, xmlPath);
             }
         }
     }

@@ -23,9 +23,9 @@ import java.util.jar.JarFile;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Fenix Handler 上的 XML 标签注解 {@link Tagger} 扫描类.
+ * Fenix {@link TagHandler} 实现类上标注的 XML 标签注解 {@link Tagger} 扫描类.
  *
- * <p>注：将扫描的类添加到 {@link FenixDefaultConfig} 的 `tagHandlerMap` 中，供后续配置使用.</p>
+ * <p>本类会将扫描到的类添加到 {@link FenixDefaultConfig} 的 `tagHandlerMap` 中，供后续配置使用.</p>
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -38,7 +38,7 @@ public final class TaggerScanner implements Scanner {
     private Set<Class<?>> classSet;
 
     /**
-     * 构造方法，初始化 classSet 实例.
+     * 构造方法，初始化 classSet 的 HashSet 实例.
      */
     public TaggerScanner() {
         this.classSet = new HashSet<>();
@@ -46,10 +46,9 @@ public final class TaggerScanner implements Scanner {
 
     /**
      * 扫描配置的 Fenix handler 包下所有的 class.
-     * <p>并将含有 {@link Tagger} 和 {@link Taggers} 的注解的 Class 解析出来，存储到 tagHandlerMap 配置中.
-     * </p>
+     * <p>并将含有 {@link Tagger} 和 {@link Taggers} 的注解的 Class 解析出来，存储到 tagHandlerMap 配置中.</p>
      *
-     * @param handlerLocations handler 所在的位置
+     * @param handlerLocations {@link TagHandler} 实现类所在的位置，即可以是目录也可以是文件，多个用逗号隔开
      */
     @Override
     public void scan(String handlerLocations) {
@@ -57,7 +56,7 @@ public final class TaggerScanner implements Scanner {
             return;
         }
 
-        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 xmlPaths 的 Set 集合中.
+        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 classSet 的 Set 集合中.
         // 否则就代表是 XML 资源目录，并解析目录下所有的 XML 文件，将这些 XML 文件存放到 xmlPaths 的 Set 集合中.
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String[] locationArr = handlerLocations.split(Const.COMMA);
@@ -66,13 +65,13 @@ public final class TaggerScanner implements Scanner {
                 continue;
             }
 
-            // 判断文件如果是具体的 Java 文件和 class 文件，则将文件解析成 Class 对象.
+            // 判断文件如果是具体的 Java 文件或 class 文件，如果是的话，就将文件解析成 Class 对象.
             // 如果都不是，则视其为包,然后解析该包及子包下面的所有 class 文件.
-            String cleanLocation = location.trim();
-            if (StringHelper.isJavaFile(cleanLocation) || StringHelper.isClassFile(cleanLocation)) {
-                this.addClassByName(classLoader, cleanLocation.substring(0, cleanLocation.lastIndexOf(Const.DOT)));
+            String handlerLocation = location.trim();
+            if (StringHelper.isJavaFile(handlerLocation) || StringHelper.isClassFile(handlerLocation)) {
+                this.addClassByName(classLoader, handlerLocation.substring(0, handlerLocation.lastIndexOf(Const.DOT)));
             } else {
-                this.addClassByPackage(classLoader, cleanLocation);
+                this.addClassByPackage(classLoader, handlerLocation);
             }
         }
 
@@ -80,24 +79,24 @@ public final class TaggerScanner implements Scanner {
     }
 
     /**
-     * 根据classLoader和className找到对应的class对象.
+     * 根据 classLoader 和 className 找到对应的 class 对象.
      *
-     * @param classLoader ClassLoader实例
-     * @param className class全路径名
+     * @param classLoader ClassLoader 实例
+     * @param className class 全路径名
      */
     private void addClassByName(ClassLoader classLoader, String className) {
         try {
             classSet.add(classLoader.loadClass(className));
         } catch (ClassNotFoundException expected) {
             // 由于是扫描package下的class，即时出现异常，也忽略掉.
-            log.warn("【警告】未找到class类:'" + className + "'，将忽略不解析此类.");
+            log.warn("【Fenix 警告】未找到 class 类:【" + className + "】，将忽略不解析此类.");
         }
     }
 
     /**
-     * 根据包名和Classloader实例，将该包下的所有Class存放到classSet集合中.
+     * 根据包名和 Classloader 实例，将该包下的所有 Class 存放到 classSet 集合中.
      *
-     * @param classLoader ClassLoader实例
+     * @param classLoader ClassLoader 实例
      * @param packageName 包名
      */
     private void addClassByPackage(ClassLoader classLoader, String packageName) {
