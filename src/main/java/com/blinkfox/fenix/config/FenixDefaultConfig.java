@@ -9,7 +9,6 @@ import com.blinkfox.fenix.core.IConditHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
 
@@ -29,7 +28,7 @@ public class FenixDefaultConfig {
      * <p>该 Map 的 key 是资源的路径（将 XML 命名空间和 fenixId 用"."号分割），value 是 dom4j 的文档节点 Node.</p>
      */
     @Getter
-    private static final Map<String, Node> fenixs = new ConcurrentHashMap<>();
+    private static final Map<String, Node> fenixs = new HashMap<>();
 
     /**
      * 初始化默认的一些标签和 TagHandler 实例到 HashMap 集合中，key 是标签字符串,value 是 TagHandler 实例.

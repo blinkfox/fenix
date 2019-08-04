@@ -191,8 +191,8 @@ public final class FenixConfigManager {
      * 清空 Fenix 所有内存缓存中的内容，包括 XML 命名空间路径缓存、XML节点缓存.
      */
     public void clear() {
-        XmlContext.INSTANCE.getXmlPathMap().clear();
-        FenixDefaultConfig.getZealots().clear();
+        XmlContext.getInstance().getXmlPathMap().clear();
+        FenixDefaultConfig.getFenixs().clear();
     }
 
     /**
@@ -225,7 +225,7 @@ public final class FenixConfigManager {
      */
     private void loadFenixConfig(FenixDefaultConfig fenixConfig) {
         fenixConfig.configNormal(NormalConfig.getInstance());
-        fenixConfig.configXml(XmlContext.INSTANCE);
+        fenixConfig.configXml(XmlContext.getInstance());
         fenixConfig.configTagHandler();
         log.warn("【Fenix 提示】加载 Fenix 的配置信息完成.");
     }
@@ -254,7 +254,7 @@ public final class FenixConfigManager {
      * 将每个 Fenix XML 配置文件的 key 和文档缓存到 ConcurrentHashMap 内存缓存中.
      */
     private void cachingXmlZealots() {
-        Map<String, String> xmlMaps = XmlContext.INSTANCE.getXmlPathMap();
+        Map<String, String> xmlMaps = XmlContext.getInstance().getXmlPathMap();
 
         // 遍历所有的 XML 文档，将每个 fenix 节点缓存到 ConcurrentHashMap 内存缓存中.
         for (Map.Entry<String, String> entry: xmlMaps.entrySet()) {
@@ -278,7 +278,7 @@ public final class FenixConfigManager {
                 }
 
                 // 将 fenix 节点缓存到 Map 中，key 是由 namespace 和 fenixId 组成，用 "." 号分隔，value 是 fenixNode.
-                FenixDefaultConfig.getZealots().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
+                FenixDefaultConfig.getFenixs().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
             }
         }
     }
