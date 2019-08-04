@@ -1,5 +1,7 @@
 package com.blinkfox.fenix.test;
 
+import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -16,13 +18,14 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 /**
- * 应用配置.
+ * 用于实际连接 HSQLDB 数据库的来测试 JPA 操作的应用配置.
  *
  * @author blinkfox on 2019-08-03.
+ * @see FenixJpaRepositoryFactoryBean
  */
 @Configuration
 @ComponentScan("com.blinkfox.fenix")
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
 public class FenixTestApplication {
 
     /**

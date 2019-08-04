@@ -16,7 +16,7 @@ import org.springframework.data.repository.query.QueryMethodEvaluationContextPro
  * <p>该类主要重写了 {@link #getQueryLookupStrategy} 方法，
  * 在该方法中创建了 {@link FenixQueryLookupStrategy} 的实例.</p>
  *
- * @author blinkfox on 2019-08-31.
+ * @author blinkfox on 2019-08-04.
  */
 public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
 

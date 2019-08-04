@@ -9,7 +9,7 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 /**
  * 用来构造 {@link FenixJpaRepositoryFactory} 的实例.
  *
- * @author blinkfox on 2019-08-31.
+ * @author blinkfox on 2019-08-04.
  * @see RepositoryFactorySupport
  */
 public class FenixJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
