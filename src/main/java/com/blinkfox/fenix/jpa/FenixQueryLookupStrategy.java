@@ -81,9 +81,9 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     @Override
     public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,
             NamedQueries namedQueries) {
-        QueryFenix fenix = method.getAnnotation(QueryFenix.class);
-        return fenix != null
-                ? new FenixJpaQuery(new JpaQueryMethod(method, metadata, factory, extractor), entityManager, fenix)
+        QueryFenix fenixAnno = method.getAnnotation(QueryFenix.class);
+        return fenixAnno != null
+                ? new FenixJpaQuery(new JpaQueryMethod(method, metadata, factory, extractor), entityManager, fenixAnno)
                 : this.jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
     }
 
