@@ -7,8 +7,6 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.StringHelper;
 
-import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +27,16 @@ final class ConditContext {
      * @param tag 标签名称
      */
     static void buildSqlInfo(BuildSource source, String tag) {
-        // 获取所有配置的标签和标签处理器的全局map对象，并得到对应标签的标签处理器
-        // 如果符合就执行该标签中对应handler对象的方法
-        Map<String, TagHandler> tagHandlerMap = FenixDefaultConfig.getTagHandlerMap();
-        TagHandler handler = tagHandlerMap.get(tag);
+        // 获取所有配置的标签和标签处理器的全局 map 对象，并得到对应标签的标签处理器.
+        // 如果有对应的 handler 处理器，就执行该标签中对应 handler 对象的方法.
+        TagHandler handler = FenixDefaultConfig.getTagHandlerMap().get(tag);
         if (handler == null) {
             throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到该【<{}>】标签对应的处理器.", tag));
         }
 
+        // 使用反射获取该Handler对应的实例，并执行方法.
         source.setPrefix(handler.getPrefix()).setSymbol(handler.getSymbol());
         try {
-            // 使用反射获取该Handler对应的实例，并执行方法.
             handler.getHandlerCls().newInstance().buildSqlInfo(source);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new FenixException(StringHelper

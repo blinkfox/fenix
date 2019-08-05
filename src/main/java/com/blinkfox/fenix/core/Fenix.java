@@ -80,54 +80,55 @@ public final class Fenix {
     }
 
     /**
-     * 构建新的、完整的SqlInfo对象.
+     * 构建新的、完整的 {@link SqlInfo} 对象.
      *
-     * @param nameSpace xml命名空间
-     * @param node dom4j对象节点
-     * @param paramObj 参数对象
-     * @return 返回SqlInfo对象
+     * @param namespace XML 命名空间
+     * @param node dom4j 对象节点
+     * @param paramMap Map 型参数对象
+     * @return 返回 {@link SqlInfo} 对象
      */
-    private static SqlInfo buildNewSqlInfo(String nameSpace, Node node, Map<String, Object> paramObj) {
-        return buildSqlInfo(nameSpace, new SqlInfo(), node, paramObj);
+    private static SqlInfo buildNewSqlInfo(String namespace, Node node, Map<String, Object> paramMap) {
+        return buildSqlInfo(namespace, new SqlInfo(), node, paramMap);
     }
 
     /**
-     * 构建完整的SqlInfo对象.
+     * 构建完整的 {@link SqlInfo} 对象.
+     * <p>获取所有子节点，并分别将其使用 StringBuilder 拼接起来.</p>
+     * <ul>
+     *     <li>如果子节点 node 是文本节点，则直接获取其文本.</li>
+     *     <li>如果子节点 node 是元素节点，则再判断其是什么元素，动态判断条件和参数.</li>
+     * </ul>
      *
-     * @param nameSpace xml命名空间
-     * @param sqlInfo SqlInfo对象
-     * @param node dom4j对象节点
-     * @param paramObj 参数对象
-     * @return 返回SqlInfo对象
+     * @param namespace XML 命名空间
+     * @param sqlInfo {@link SqlInfo} 对象
+     * @param node dom4j 对象节点
+     * @param paramMap 参数对象
+     * @return 返回 {@link SqlInfo} 对象
      */
-    public static SqlInfo buildSqlInfo(String nameSpace, SqlInfo sqlInfo, Node node, Map<String, Object> paramObj) {
-        // 获取所有子节点，并分别将其使用StringBuilder拼接起来
+    private static SqlInfo buildSqlInfo(String namespace, SqlInfo sqlInfo, Node node, Map<String, Object> paramMap) {
         List<Node> nodes = node.selectNodes(XpathConst.ATTR_CHILD);
         for (Node n: nodes) {
-            // 如果子节点node 是文本节点，则直接获取其文本.
-            if (Const.NODETYPE_TEXT.equals(n.getNodeTypeName())) {
+            String nodeTypeName = n.getNodeTypeName();
+            if (Const.NODETYPE_TEXT.equals(nodeTypeName)) {
                 sqlInfo.getJoin().append(n.getText());
-            } else if (Const.NODETYPE_ELEMENT.equals(n.getNodeTypeName())) {
-                // 如果子节点node 是元素节点，则再判断其是什么元素，动态判断条件和参数
-                ConditContext.buildSqlInfo(new BuildSource(nameSpace, sqlInfo, n, paramObj), n.getName());
+            } else if (Const.NODETYPE_ELEMENT.equals(nodeTypeName)) {
+                ConditContext.buildSqlInfo(new BuildSource(namespace, sqlInfo, n, paramMap), n.getName());
             }
         }
 
-        return buildFinalSql(sqlInfo, paramObj);
+        return buildFinalSql(sqlInfo, paramMap);
     }
 
     /**
-     * 根据标签拼接的SQL信息来生成最终的SQL.
+     * 根据标签拼接的 SQL 信息来生成最终的 SQL.
+     * <p>得到生成的 SQL，如果有 MVEL 的模板表达式，则执行计算出该表达式来生成最终的 SQL.</p>
      *
-     * @param sqlInfo sql及参数信息
-     * @param paramObj 参数对象信息
-     * @return 返回SqlInfo对象
+     * @param sqlInfo {@link SqlInfo} 信息
+     * @param paramMap 参数对象信息
+     * @return 返回 {@link SqlInfo} 对象
      */
-    private static SqlInfo buildFinalSql(SqlInfo sqlInfo, Map<String, Object> paramObj) {
-        // 得到生成的SQL，如果有MVEL的模板表达式，则执行计算出该表达式来生成最终的SQL
-        String sql = sqlInfo.getJoin().toString();
-        sql = ParseHelper.parseTemplate(sql, paramObj);
-        sqlInfo.setSql(StringHelper.replaceBlank(sql));
+    private static SqlInfo buildFinalSql(SqlInfo sqlInfo, Map<String, Object> paramMap) {
+        sqlInfo.setSql(StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), paramMap)));
         return sqlInfo;
     }
 
