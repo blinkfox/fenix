@@ -49,7 +49,7 @@ public final class XmlNodeHelper {
      * @return dom4j的Node节点
      */
     public static Node getNodeBySpaceAndId(String namespace, String zealotId) {
-        Document doc = XmlNodeHelper.getDocument(XmlContext.INSTANCE.getXmlPathMap().get(namespace));
+        Document doc = XmlNodeHelper.getDocument(XmlContext.getInstance().getXmlPathMap().get(namespace));
         return doc == null ? null : XmlNodeHelper.getZealotNodeById(doc, zealotId);
     }
 
