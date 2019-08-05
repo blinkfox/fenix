@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.exception;
 
 /**
- * Fenix 配置未找到的异常.
+ * Fenix 配置未找到时抛出的异常.
  *
  * @author blinkfox on 2019-08-04.
  */

@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.exception;
 
 /**
- * Fenix xml 文件配置异常.
+ * Fenix XML 标签节点未找到时抛出的异常.
  *
  * @author blinkfox on 2019-08-04.
  */

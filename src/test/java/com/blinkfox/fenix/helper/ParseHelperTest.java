@@ -40,11 +40,19 @@ public class ParseHelperTest {
     }
 
     /**
+     * 测试解析表达式的方法.
+     */
+    @Test
+    public void parseExpressWithNull() {
+        Assert.assertNull(ParseHelper.parseExpress("abc", context));
+    }
+
+    /**
      * 测试解析表达式会抛异常的方法.
      */
     @Test(expected = Exception.class)
     public void parseExpressWithException() {
-        Assert.assertNull(ParseHelper.parseExpressWithException("abc", context));
+        ParseHelper.parseExpressWithException("def", context);
     }
 
     /**
@@ -78,6 +86,8 @@ public class ParseHelperTest {
         Assert.assertTrue(ParseHelper.isMatch("", context));
         Assert.assertTrue(ParseHelper.isMatch("hello != null", context));
         Assert.assertFalse(ParseHelper.isMatch("?hello != 'world'", context));
+
+        Assert.assertFalse(ParseHelper.isNotMatch("", context));
     }
 
     /**

@@ -14,7 +14,7 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 /**
- * XML 和 XML 节点相关操作的工具类.
+ * XML 文件和 XML 标签节点相关操作的工具类.
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -37,25 +37,25 @@ public final class XmlNodeHelper {
         try {
             return new SAXReader().read(Thread.currentThread().getContextClassLoader().getResourceAsStream(xmlPath));
         } catch (Exception e) {
-            throw new XmlParseException("读取或解析 XML 文件失败，读取到的 XML 路径是:【" + xmlPath + "】.", e);
+            throw new XmlParseException("【Fenix 异常提示】读取或解析 XML 文件失败，读取到的 XML 路径是:【" + xmlPath + "】.", e);
         }
     }
 
     /**
-     * 根据xml文件的nameSpace及zealot节点id值获取对应的第一个dom4j节点.
+     * 根据 XML 文件的 namespace 及 Fenix 节点 id 值获取对应的第一个 dom4j 节点.
      *
      * @param namespace XML 文件对应命名空间
-     * @param zealotId ZealotId
+     * @param fenixId fenixId
      * @return dom4j的Node节点
      */
-    public static Node getNodeBySpaceAndId(String namespace, String zealotId) {
+    public static Node getNodeBySpaceAndId(String namespace, String fenixId) {
         Document doc = XmlNodeHelper.getDocument(XmlContext.getInstance().getXmlPathMap().get(namespace));
-        return doc == null ? null : XmlNodeHelper.getZealotNodeById(doc, zealotId);
+        return doc == null ? null : XmlNodeHelper.getZealotNodeById(doc, fenixId);
     }
 
     /**
-     * 根据 XML 文件的路径判断该 XML 文件是否是 Fenix XML 文件，如果是则返回nameSpace.
-     * <p>注：这里简单判断是否有 'fenixs' 根节点即可.</p>
+     * 根据 XML 文件的路径判断该 XML 文件是否是 Fenix XML 文件，如果是则返回 namespace.
+     * <p>注：这里简单判断是否有 '<fenixs></fenixs>' 根节点即可.</p>
      *
      * @param xmlPath XML 路径
      * @return 该 XML 文件的 Fenix 命名空间 namespace
@@ -66,26 +66,26 @@ public final class XmlNodeHelper {
             doc = new SAXReader().read(Thread.currentThread().getContextClassLoader().getResourceAsStream(xmlPath));
         } catch (Exception expected) {
             // 由于只是判断该文件是否能被正确解析，并不进行正式的解析，所有这里就不抛出和记录异常了.
-            log.warn("解析路径为:【" + xmlPath + "】的 XML 文件出错，请检查其正确性!");
+            log.warn("【Fenix 警示】解析路径为:【" + xmlPath + "】的 XML 文件出错，请检查其正确性!");
             return null;
         }
 
         // 获取 XML 文件的根节点，判断其根节点是否为 '<fenixs></fenixs>'，如果是则获取其属性 namespace 的值.
         Node root = doc.getRootElement();
         if (root != null && ROOT_NAME.equals(root.getName())) {
-            String nameSpace = getNodeText(root.selectSingleNode(XpathConst.ATTR_NAMESPACE));
-            if (StringHelper.isBlank(nameSpace)) {
-                log.warn("Fenix XML 文件:【" + xmlPath + "】的根节点 namespace 命名空间属性未配置，请配置，否则将被忽略!");
+            String namespace = getNodeText(root.selectSingleNode(XpathConst.ATTR_NAMESPACE));
+            if (StringHelper.isBlank(namespace)) {
+                log.warn("【Fenix 警示】Fenix XML 文件:【" + xmlPath + "】的根节点 namespace 命名空间属性未配置，请配置，否则将被忽略!");
                 return null;
             }
-            return nameSpace;
+            return namespace;
         }
 
         return null;
     }
 
     /**
-     * 根据 XML 文件 Docment 中的 fenix 节点 id 值获取对应的第一个节点.
+     * 根据 XML 文件 Docment 中的 Fenix 节点 id 值获取对应的第一个节点.
      *
      * <p>使用 xPath 语法获取第一个符合条件的节点.</p>
      * @param doc docment文档
@@ -128,22 +128,22 @@ public final class XmlNodeHelper {
         // 判断必填的参数是否为空.
         String fieldText = XmlNodeHelper.getNodeText(node.selectSingleNode(nodeName));
         if (StringHelper.isBlank(fieldText)) {
-            throw new FieldEmptyException("填写的字段值是空的");
+            throw new FieldEmptyException("【Fenix 异常】填写的字段值是空的");
         }
         return fieldText;
     }
 
     /**
-     * 检查和获取开始和结束文本的内容，返回一个数组，会检查两个节点是否为空，如果都为空，则抛出异常.
+     * 检查和获取开始和结束文本的内容，返回一个数组，会检查两个节点是否为空，如果都为空，则抛出 {@link FieldEmptyException} 异常.
      *
      * @param node dom4j 节点
      * @return 返回开始和结束文本的二元数组
      */
-    public static String[] getBothCheckNodeText(Node node) {
+    public static String[] getRangeCheckNodeText(Node node) {
         String startText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_START));
         String endText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_ENT));
         if (StringHelper.isBlank(startText) && StringHelper.isBlank(endText)) {
-            throw new FieldEmptyException("填写的开始和结束字段值是空的！");
+            throw new FieldEmptyException("【Fenix 异常】填写的开始和结束字段值是空的！");
         }
         return new String[] {startText, endText};
     }

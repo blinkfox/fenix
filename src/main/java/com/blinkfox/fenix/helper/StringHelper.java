@@ -102,7 +102,7 @@ public final class StringHelper {
     }
 
     /**
-     * 根据给定的文件路径判断文件是否是XML文件.
+     * 根据给定的文件路径判断文件是否是 XML 文件.
      *
      * @param filePath 文件路径
      * @return 布尔值
@@ -112,7 +112,7 @@ public final class StringHelper {
     }
 
     /**
-     * 根据给定的文件路径判断文件是否是.java文件.
+     * 根据给定的文件路径判断文件是否是 .java 文件.
      *
      * @param filePath 文件路径
      * @return 布尔值
@@ -122,7 +122,7 @@ public final class StringHelper {
     }
 
     /**
-     * 根据给定的文件路径判断文件是否是.class文件.
+     * 根据给定的文件路径判断文件是否是 .class 文件.
      *
      * @param filePath 文件路径
      * @return 布尔值

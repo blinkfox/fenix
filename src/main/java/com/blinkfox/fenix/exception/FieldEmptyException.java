@@ -1,8 +1,9 @@
 package com.blinkfox.fenix.exception;
 
 /**
- * 字段为空的异常.
- * @author blinkfox on 2016/11/7.
+ * Fenix XML 标签中当字段为空时抛出的异常.
+ *
+ * @author blinkfox on 2019-08-05.
  */
 public class FieldEmptyException extends RuntimeException {
 

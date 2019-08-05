@@ -17,6 +17,7 @@ public final class CollectionHelper {
 
     /**
      * 判断数组是否不为空.
+     *
      * @param array 数组
      * @return 布尔值
      */
@@ -26,6 +27,7 @@ public final class CollectionHelper {
 
     /**
      * 判断集合是否为空.
+     *
      * @param collections 集合
      * @return 布尔值
      */
@@ -34,7 +36,8 @@ public final class CollectionHelper {
     }
 
     /**
-     * 将对象转成数组，如果对象类型是数组或集合，则直接转换，否则构造成数组.
+     * 将对象转成数组，如果对象类型是数组或集合，则直接转换，否则将对象用数组来包装.
+     *
      * @param obj 对象
      * @param objType 对象类型
      * @return 数组

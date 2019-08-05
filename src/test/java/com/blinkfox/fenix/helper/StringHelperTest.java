@@ -18,7 +18,7 @@ public class StringHelperTest {
      * 判断字符串是否为空的单元测试类.
      */
     @Test
-    public void testIsBlank() {
+    public void isBlank() {
         assertTrue(StringHelper.isBlank(null));
         assertTrue(StringHelper.isBlank(""));
         assertTrue(StringHelper.isBlank(" "));
@@ -30,38 +30,38 @@ public class StringHelperTest {
      * 判断字符串是否不为空的单元测试类.
      */
     @Test
-    public void testIsNotBlank() {
-        assertEquals(false, StringHelper.isNotBlank(null));
-        assertEquals(false, StringHelper.isNotBlank(""));
-        assertEquals(false, StringHelper.isNotBlank(" "));
-        assertEquals(true, StringHelper.isNotBlank(" a "));
+    public void isNotBlank() {
+        assertFalse(StringHelper.isNotBlank(null));
+        assertFalse(StringHelper.isNotBlank(""));
+        assertFalse(StringHelper.isNotBlank(" "));
+        assertTrue(StringHelper.isNotBlank(" a "));
     }
 
     /**
-     * 测试是否是XML文件.
+     * 测试是否是 XML 文件.
      */
     @Test
-    public void testIsXmlFile() {
+    public void isXmlFile() {
         Assert.assertFalse(StringHelper.isXmlFile(null));
         Assert.assertFalse(StringHelper.isXmlFile("ab/.xmls"));
         Assert.assertTrue(StringHelper.isXmlFile("zealot/ab.xml"));
     }
 
     /**
-     * 测试是否是XML文件.
+     * 测试是否是 Java 文件.
      */
     @Test
-    public void testIsJavaFile() {
+    public void isJavaFile() {
         Assert.assertFalse(StringHelper.isJavaFile(null));
         Assert.assertFalse(StringHelper.isJavaFile("ab/.jav"));
         Assert.assertTrue(StringHelper.isJavaFile("com.blinkfox.zealot.Hello.java"));
     }
 
     /**
-     * 测试是否是XML文件.
+     * 测试是否是 clsss 文件.
      */
     @Test
-    public void testIsClassFile() {
+    public void isClassFile() {
         Assert.assertFalse(StringHelper.isClassFile(null));
         Assert.assertFalse(StringHelper.isClassFile("com.blinkfox.Test.classes"));
         Assert.assertTrue(StringHelper.isClassFile("com.blinkfox.zealot.Hello.class"));

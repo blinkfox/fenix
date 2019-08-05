@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.exception;
 
 /**
- * 不是集合或者数组的自定义异常.
+ * 当判断的值不是集合或者数组时需要抛出的异常.
  *
  * @author blinkfox on 2019-08-04.
  */
