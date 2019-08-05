@@ -43,7 +43,7 @@ public class FenixVfs extends AbstractVfs {
     /**
      * 文件协议标识符.
      */
-    private static final String FILE_PROTOCOL = "file";
+    static final String FILE_PROTOCOL = "file";
 
     /**
      * JAR (ZIP) 文件头标识的字节数组常量.

@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class XmlScanner implements Scanner {
 
     /**
-     * 存放所有扫描位置下的XML文件资源路径Set集合.
+     * 存放所有扫描位置下的 XML 文件资源路径的 Set 集合.
      */
     private Set<String> xmlPaths;
 
@@ -36,9 +36,9 @@ public final class XmlScanner implements Scanner {
     }
 
     /**
-     * 扫描配置的zealot xml包下所有的xml文件，并将这些xml文件的zealot节点读取存储到内存中.
+     * 扫描配置的 Fenix XML 包下所有的 XML 文件，并将这些 XML 文件的 fenix 节点读取存储到内存中.
      *
-     * @param xmlLocations xml所在的位置
+     * @param xmlLocations XML 文件所在的位置
      */
     @Override
     public void scan(String xmlLocations) {
@@ -46,7 +46,7 @@ public final class XmlScanner implements Scanner {
             return;
         }
 
-        // 对配置的xml路径按逗号分割的规则来解析，如果是XML文件则直接将该xml文件存放到xmlPaths的Set集合中，
+        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 xmlPaths 的 Set 集合中，
         // 否则就代表是xml资源目录，并解析目录下所有的xml文件，将这些xml文件存放到xmlPaths的Set集合中，
         String[] xmlLocationArr = xmlLocations.split(Const.COMMA);
         for (String xmlLocation: xmlLocationArr) {
@@ -54,21 +54,22 @@ public final class XmlScanner implements Scanner {
                 continue;
             }
 
-            String cleanXmlLocation = xmlLocation.trim();
-            if (StringHelper.isXmlFile(cleanXmlLocation)) {
-                xmlPaths.add(cleanXmlLocation);
+            String location = xmlLocation.trim();
+            if (StringHelper.isXmlFile(location)) {
+                xmlPaths.add(location);
             } else {
-                this.scanXmlsByPackage(cleanXmlLocation.replace('.', '/'));
+                this.scanXmlsByPackage(location.replace('.', '/'));
             }
         }
 
-        // 从xmlPath的Set集合中获取的如果是zealot的xml文件的话，则将其添加到XmlContext上下文中.
+        // 从 xmlPaths 的 Set 集合中获取的如果是 Fenix 的 XML 文件的话，则将其添加到 XmlContext 上下文中.
         this.addZealotXmlInContext();
     }
 
     /**
-     * 根据指定的一个包扫描其下所有的xml文件.
-     * @param xmlPackage xml包
+     * 根据指定的一个包扫描其下所有的 XML 文件.
+     *
+     * @param xmlPackage XML 包
      */
     private void scanXmlsByPackage(String xmlPackage) {
         List<URL> urls = this.getDirUrls(xmlPackage);
@@ -93,22 +94,24 @@ public final class XmlScanner implements Scanner {
     }
 
     /**
-     * 根据xml所在的包名，扫描得到其下所有的URL.
-     * @param xmlPackage xml包
+     * 根据 XML 所在的包名，扫描得到其下所有的 URL.
+     *
+     * @param xmlPackage XML 包
      * @return url集合
      */
     private List<URL> getDirUrls(String xmlPackage) {
         try {
             return Collections.list(Thread.currentThread().getContextClassLoader().getResources(xmlPackage));
         } catch (IOException e) {
-            log.error("无法解析配置的zealot xml路径下文件的URL，将被忽略.该路径为:" + xmlPackage + "，请检查!", e);
+            log.error("【Fenix 错误警示】无法解析配置的 Fenix XML 路径下文件的 URL，将被忽略.该路径为:【" + xmlPackage + "】，请检查!", e);
             return Collections.emptyList();
         }
     }
 
     /**
-     * 根据xml所在的包名，扫描得到其下所有的文件路径名的集合.
-     * @param xmlPackage xml包
+     * 根据 XML 所在的包名，扫描得到其下所有的文件路径名的集合.
+     *
+     * @param xmlPackage XML 包
      * @param url url
      * @return 包中所有文件的集合
      */
@@ -117,19 +120,19 @@ public final class XmlScanner implements Scanner {
             return new FenixVfs().list(url, xmlPackage);
         } catch (Exception e) {
             // 此处忽略异常堆栈信息.
-            log.error("解析 Fenix XML 包存在问题，将被忽略！XML包为:【" + xmlPackage + "】，url:【" + url + "】.");
+            log.error("【Fenix 错误警示】解析 Fenix XML 包存在问题，将被忽略！XML包为:【" + xmlPackage + "】，url:【" + url + "】.");
             return Collections.emptyList();
         }
     }
 
     /**
-     * 从xmlPath的Set集合中解析判断是否是zealot的xml文件，如果是的话则将其添加到XmlContext上下文中，供后面解析.
+     * 从 xmlPaths 的 Set 集合中解析判断是否是 Fenix 的 XML 文件，如果是的话则将其添加到 XmlContext 上下文中，供后面解析.
      */
     private void addZealotXmlInContext() {
         for (String xmlPath: xmlPaths) {
-            String nameSpace = XmlNodeHelper.getZealotXmlNameSpace(xmlPath);
-            if (StringHelper.isNotBlank(nameSpace)) {
-                XmlContext.getInstance().add(nameSpace, xmlPath);
+            String namespace = XmlNodeHelper.getZealotXmlNameSpace(xmlPath);
+            if (StringHelper.isNotBlank(namespace)) {
+                XmlContext.getInstance().add(namespace, xmlPath);
             }
         }
     }
