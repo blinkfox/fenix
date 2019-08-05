@@ -114,7 +114,7 @@ public final class XmlScanner implements Scanner {
      */
     private List<String> getDirFilePaths(String xmlPackage, URL url) {
         try {
-            return new DefaultVfs().list(url, xmlPackage);
+            return new FenixVfs().list(url, xmlPackage);
         } catch (Exception e) {
             // 此处忽略异常堆栈信息.
             log.error("解析 Fenix XML 包存在问题，将被忽略！XML包为:【" + xmlPackage + "】，url:【" + url + "】.");
