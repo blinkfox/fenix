@@ -21,15 +21,35 @@ public final class Const {
      */
     public static final String COMMA = ",";
 
-    /* 节点类型 */
-    public static final String NODETYPE_TEXT = "Text"; // 文本节点
-    public static final String NODETYPE_ELEMENT = "Element"; // 元素节点
+    /**
+     * 普通数组.
+     */
+    public static final int OBJTYPE_ARRAY = 1;
 
-    /* 自定义的zealot的元素节点类型. */
-    // 等于
+    /**
+     * Java集合.
+     */
+    public static final int OBJTYPE_COLLECTION = 2;
+
+    /**
+     * 节点类型 - 文本节点.
+     */
+    public static final String NODETYPE_TEXT = "Text";
+
+    /**
+     * 节点类型 - 元素节点.
+     */
+    public static final String NODETYPE_ELEMENT = "Element";
+
+    /* ------------------- 自定义的 Fenix 的元素节点类型.------------------- */
+
+    /** 等于. */
     public static final String EQUAL = "equal";
+    /** and 等于. */
     public static final String AND_EQUAL = "andEqual";
+    /** or 等于. */
     public static final String OR_EQUAL = "orEqual";
+
     // 不等于
     public static final String NOT_EQUAL = "notEqual";
     public static final String AND_NOT_EQUAL = "andNotEqual";
@@ -85,29 +105,44 @@ public final class Const {
     // "choose"多条件选择
     public static final String CHOOSE = "choose";
 
-    /* sql中前缀常量 */
+    /* ------------------- SQL 中的前缀常量. ------------------- */
+
+    /** 空字符串. */
     public static final String EMPTY = "";
+    /** 含空格的字符串. */
     public static final String ONE_SPACE = " ";
+    /** 含 AND 的字符串. */
     public static final String AND_PREFIX = " AND ";
+    /** 含 OR 的字符串. */
     public static final String OR_PREFIX = " OR ";
 
-    /* sql中的后缀常量 */
-    public static final String EQUAL_SUFFIX = " = ? ";
-    public static final String GT_SUFFIX = " > ? ";
-    public static final String LT_SUFFIX = " < ? ";
-    public static final String GTE_SUFFIX = " >= ? ";
-    public static final String LTE_SUFFIX = " <= ? ";
-    public static final String NOT_EQUAL_SUFFIX = " <> ? ";
-    public static final String LIKE_KEY = " LIKE ";
-    public static final String NOT_LIKE_KEY = " NOT LIKE ";
-    public static final String BT_AND_SUFFIX = " BETWEEN ? AND ? ";
-    public static final String IN_SUFFIX = " IN ";
-    public static final String NOT_IN_SUFFIX = " NOT IN ";
-    public static final String IS_NULL_SUFFIX = " IS NULL ";
-    public static final String IS_NOT_NULL_SUFFIX = " IS NOT NULL ";
+    /* ------------------- SQL 中的操作符常量. ------------------- */
 
-    /* 集合类型的常量,0表示单个对象，1表示普通数组，2表示Java集合 */
-    public static final int OBJTYPE_ARRAY = 1;
-    public static final int OBJTYPE_COLLECTION = 2;
+    /** 等于. */
+    public static final String EQUAL_SUFFIX = " = ? ";
+    /** 大于. */
+    public static final String GT_SUFFIX = " > ? ";
+    /** 小于. */
+    public static final String LT_SUFFIX = " < ? ";
+    /** 大于等于. */
+    public static final String GTE_SUFFIX = " >= ? ";
+    /** 小于等于. */
+    public static final String LTE_SUFFIX = " <= ? ";
+    /** 不等于. */
+    public static final String NOT_EQUAL_SUFFIX = " <> ? ";
+    /** LIKE 匹配. */
+    public static final String LIKE_KEY = " LIKE ";
+    /** NOT LIKE 匹配. */
+    public static final String NOT_LIKE_KEY = " NOT LIKE ";
+    /** 区间匹配. */
+    public static final String BT_AND_SUFFIX = " BETWEEN ? AND ? ";
+    /** 范围匹配. */
+    public static final String IN_SUFFIX = " IN ";
+    /** NOT 范围匹配. */
+    public static final String NOT_IN_SUFFIX = " NOT IN ";
+    /** NULL. */
+    public static final String IS_NULL_SUFFIX = " IS NULL ";
+    /** NOT NULL. */
+    public static final String IS_NOT_NULL_SUFFIX = " IS NOT NULL ";
 
 }
