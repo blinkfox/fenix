@@ -38,6 +38,17 @@ public class StringHelperTest {
     }
 
     /**
+     * 测试字符串格式化方法.
+     */
+    @Test
+    public void format() {
+        Assert.assertEquals("", StringHelper.format(null));
+        Assert.assertEquals("aaa", StringHelper.format("aaa"));
+        Assert.assertEquals("", StringHelper.format(null, ""));
+        Assert.assertEquals("Hello 张三, I'm 李四.", StringHelper.format("Hello {}, I'm {}.", "张三", "李四"));
+    }
+
+    /**
      * 测试是否是 XML 文件.
      */
     @Test

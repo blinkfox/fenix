@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * 字符串操作的工具类.
@@ -74,6 +75,17 @@ public final class StringHelper {
      */
     public static boolean isNotBlank(String str) {
         return !isBlank(str);
+    }
+
+    /**
+     * 使用 Slf4j 中的字符串格式化方式来格式化字符串.
+     *
+     * @param pattern 待格式化的字符串
+     * @param args 参数
+     * @return 格式化后的字符串
+     */
+    public static String format(String pattern, Object... args) {
+        return pattern == null ? "" : MessageFormatter.arrayFormat(pattern, args).getMessage();
     }
 
     /**

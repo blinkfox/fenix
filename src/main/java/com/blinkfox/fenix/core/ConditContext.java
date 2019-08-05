@@ -1,10 +1,11 @@
 package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
-import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.config.FenixDefaultConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
+import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
+import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.Map;
 
@@ -19,44 +20,31 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConditContext {
+final class ConditContext {
 
     /**
-     * 根据标签名称和对应的构建参数构造出对应标签的sql和参数.
+     * 根据标签名称和对应的构建参数构造出对应标签的 JPQL (或者 SQL)与参数.
+     *
      * @param source 构建所需的资源对象
      * @param tag 标签名称
-     * @return 返回SqlInfo对象
      */
-    public static SqlInfo buildSqlInfo(BuildSource source, String tag) {
+    static void buildSqlInfo(BuildSource source, String tag) {
         // 获取所有配置的标签和标签处理器的全局map对象，并得到对应标签的标签处理器
         // 如果符合就执行该标签中对应handler对象的方法
         Map<String, TagHandler> tagHandlerMap = FenixDefaultConfig.getTagHandlerMap();
-        if (!tagHandlerMap.containsKey(tag)) {
-            throw new NodeNotFoundException("【Fenix 异常】未找到该【<" + tag + ">】标签对应的处理器.");
+        TagHandler handler = tagHandlerMap.get(tag);
+        if (handler == null) {
+            throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到该【<{}>】标签对应的处理器.", tag));
         }
 
-        TagHandler handler = tagHandlerMap.get(tag);
         source.setPrefix(handler.getPrefix()).setSymbol(handler.getSymbol());
-        return doBuildSqlInfo(source, handler);
-    }
-
-    /**
-     * 执行构建SQL片段和参数的方法.
-     *
-     * @param source 构建所需的资源对象
-     * @param handler 标签处理器实体
-     * @return 返回SqlInfo对象
-     */
-    private static SqlInfo doBuildSqlInfo(BuildSource source, TagHandler handler) {
         try {
             // 使用反射获取该Handler对应的实例，并执行方法.
-            return handler.getHandlerCls().newInstance().buildSqlInfo(source);
-        } catch (InstantiationException e) {
-            log.error("【Fenix 异常】实例化【" + handler.getHandlerCls().getName() + "】类出错!", e);
-        } catch (IllegalAccessException e) {
-            log.error("【Fenix 异常】访问 【" + handler.getHandlerCls().getName() + "】类出错!", e);
+            handler.getHandlerCls().newInstance().buildSqlInfo(source);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new FenixException(StringHelper
+                    .format("【Fenix 异常】访问或实例化【{}】class 出错!", handler.getHandlerCls().getName()), e);
         }
-        return source.getSqlInfo();
     }
 
 }
