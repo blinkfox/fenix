@@ -11,26 +11,23 @@ import lombok.Setter;
  *
  * @author blinkfox on 2019-08-04.
  */
+@Getter
+@Setter
 public class SqlInfo {
 
     /**
      * 拼接 JPQL 语句的 StringBuilder 对象.
      */
-    @Getter
-    @Setter
     private StringBuilder join;
 
     /**
      * JPQL 语句对应的 Map 参数.
      */
-    @Getter
-    @Setter
     private Map<String, Object> params;
 
     /**
      * 最终生成的 JPQL 或 SQL 语句.
      */
-    @Getter
     private String sql;
 
     /**

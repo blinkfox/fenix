@@ -4,6 +4,10 @@ import com.blinkfox.fenix.consts.Const;
 
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.dom4j.Node;
 
 /**
@@ -14,6 +18,9 @@ import org.dom4j.Node;
  * @author blinkfox on 2019-08-04.
  * @see SqlInfo
  */
+@Getter
+@Setter
+@Accessors(chain = true)
 public final class BuildSource {
 
     /**
