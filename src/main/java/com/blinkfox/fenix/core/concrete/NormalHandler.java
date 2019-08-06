@@ -23,19 +23,20 @@ import org.dom4j.Node;
  * <p>注：获取到 match 字段的值，如果没有或者为 true，就通过 field, value 来生成此 SQL 片段.</p>
  *
  * @author blinkfox on 2019-08-06.
+ * @see LikeHandler
  */
 public class NormalHandler implements FenixHandler {
 
     /**
-     * 根据构建参数构建常规的 JPQL 或者 SQL 语句片段的信息.
+     * 根据 {@link BuildSource} 构建参数构建常规的 JPQL 或者 SQL 语句片段的信息.
      *
-     * @param source 构建所需的资源对象
+     * <p>如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.</p>
+     *
+     * @param source {@link BuildSource} 构建资源参数
      */
     @Override
     public void buildSqlInfo(BuildSource source) {
         Node node = source.getNode();
-
-        // 如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.
         String matchText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_MATCH));
         if (StringHelper.isBlank(matchText) || ParseHelper.isTrue(matchText, source.getContext())) {
             new XmlSqlInfoBuilder(source).buildNormalSql(

@@ -13,6 +13,7 @@ import com.blinkfox.fenix.core.concrete.NormalHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.blinkfox.fenix.core.concrete.BetweenHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import lombok.Getter;
 
@@ -103,11 +104,11 @@ public class FenixDefaultConfig {
         add("andNotEndsWith", AND, EndsWithHandler.class, NOT_LIKE);
         add("orNotEndsWith", OR, EndsWithHandler.class, NOT_LIKE);
 
-//        // between相关标签：between、andBetween、orBetween
-//        add(BETWEEN, BetweenHandler.class);
-//        add(AND_BETWEEN, AND_PREFIX, BetweenHandler.class);
-//        add(OR_BETWEEN, OR_PREFIX, BetweenHandler.class);
-//
+        // between相关标签：between、andBetween、orBetween
+        add("between", BetweenHandler.class);
+        add("andBetween", AND, BetweenHandler.class);
+        add("orBetween", OR, BetweenHandler.class);
+
 //        // "IN"相关标签：in、andIn、orIn
 //        add(IN, InHandler.class, IN_SUFFIX);
 //        add(AND_IN, AND_PREFIX, InHandler.class, IN_SUFFIX);

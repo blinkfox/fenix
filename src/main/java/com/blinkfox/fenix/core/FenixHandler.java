@@ -10,7 +10,7 @@ import com.blinkfox.fenix.bean.BuildSource;
 public interface FenixHandler {
 
     /**
-     * 根据构建资源的相关参数来追加构建出对应标签的 JPQL 及参数信息.
+     * 根据 {@link BuildSource} 参数的相关参数来追加构建出对应 XML 标签的 JPQL 及参数信息.
      *
      * @param source 构建所需的 {@link BuildSource} 资源对象
      */

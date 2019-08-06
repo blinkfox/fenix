@@ -41,9 +41,9 @@ public class EndsWithHandler extends LikeHandler {
 
     /**
      * 重写了 {@link LikeHandler#buildSqlInfo(BuildSource)} 中的方法，
-     * 在 source 变量中设置一个 map 参数，用来标记是后缀匹配的情况，便于后续的获取、判断和处理.
+     * 在 {@link BuildSource} 变量中设置一个 map 参数，用来标记是后缀匹配的情况，便于后续的获取、判断和处理.
      *
-     * @param source 构建所需的资源对象
+     * @param source {@link BuildSource} 构建资源参数
      */
     @Override
     public void buildSqlInfo(BuildSource source) {

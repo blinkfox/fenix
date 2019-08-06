@@ -34,15 +34,15 @@ import org.dom4j.Node;
 public class LikeHandler implements FenixHandler {
 
     /**
-     * 根据构建参数构建常规的 JPQL 或者 SQL 语句片段的信息.
+     * 根据 {@link BuildSource} 参数构建"模糊查询"的 JPQL 或者 SQL 语句片段的信息.
      *
-     * @param source 构建所需的资源对象
+     * <p>如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.</p>
+     *
+     * @param source {@link BuildSource} 构建资源参数
      */
     @Override
     public void buildSqlInfo(BuildSource source) {
         Node node = source.getNode();
-
-        // 如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.
         String matchText = XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH);
         if (StringHelper.isBlank(matchText) || ParseHelper.isTrue(matchText, source.getContext())) {
             new XmlSqlInfoBuilder(source).buildLikeSql(

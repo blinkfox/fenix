@@ -135,7 +135,9 @@ public final class XmlNodeHelper {
     }
 
     /**
-     * 检查和获取开始和结束文本的内容，返回一个数组，会检查两个节点是否为空，如果都为空，则抛出 {@link FieldEmptyException} 异常.
+     * 检查和获取开始和结束文本的内容，返回一个数组.
+     *
+     * <p>会检查这两个节点是否为空，如果都为空，则抛出 {@link FieldEmptyException} 异常.</p>
      *
      * @param node dom4j 节点
      * @return 返回开始和结束文本的二元数组
@@ -144,7 +146,7 @@ public final class XmlNodeHelper {
         String startText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_START));
         String endText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_ENT));
         if (StringHelper.isBlank(startText) && StringHelper.isBlank(endText)) {
-            throw new FieldEmptyException("【Fenix 异常】填写的开始和结束字段值是空的！");
+            throw new FieldEmptyException("【Fenix 异常】【" + node.getName() + "】标签中填写的【start】和【end】字段值都是空的！");
         }
         return new String[] {startText, endText};
     }
