@@ -1,9 +1,13 @@
 package com.blinkfox.fenix.config;
 
+import static com.blinkfox.fenix.consts.SymbolConst.*;
+
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
+import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.core.concrete.NormalHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +38,13 @@ public class FenixDefaultConfig {
     @Getter
     private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>();
     
-    /* 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. */
+    /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
+
     static {
         // 等于相关标签：equal、andEqual、orEqual
-//        add(EQUAL, NormalHandler.class, EQUAL_SUFFIX);
-//        add(AND_EQUAL, AND_PREFIX, NormalHandler.class, EQUAL_SUFFIX);
-//        add(OR_EQUAL, OR_PREFIX, NormalHandler.class, EQUAL_SUFFIX);
+        add("equal", NormalHandler.class, EQUAL);
+        add("andEqual", AND, NormalHandler.class, EQUAL);
+        add("orEqual", OR, NormalHandler.class, EQUAL);
 //
 //        // 不等于相关标签：notEqual、andNotEqual、orNotEqual
 //        add(NOT_EQUAL, NormalHandler.class, NOT_EQUAL_SUFFIX);

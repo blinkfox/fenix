@@ -36,7 +36,7 @@ public final class Fenix {
      * @param context 上下文参数（一般是 Bean 或者 map）
      * @return 返回 {@link SqlInfo} 对象
      */
-    public static SqlInfo getSqlInfoSimply(String fullFenixId, Object context) {
+    public static SqlInfo getSqlInfo(String fullFenixId, Object context) {
         if (!fullFenixId.contains(Const.DOT)) {
             throw new FenixException("【Fenix 异常】fullFenixId 参数的值必须是 XML 文件中的 namespace + '.' + fenixId 节点的值，"
                     + "如:【student.queryStudentById】。其中 student 为 namespace, queryStudentById 为 XML 文件中 fenixId。");

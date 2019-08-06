@@ -16,22 +16,23 @@ import java.util.Collection;
 public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
 
     /**
-     * 私有构造方法.
+     * 构造方法.
+     *
+     * @param source 构建资源
      */
     public XmlSqlInfoBuilder(BuildSource source) {
         super(source);
     }
 
     /**
-     * 构建普通类型查询的sqlInfo信息.
+     * 通过计算 XML 中 value 属性的值来追加构建常规 SQL 片段需要的 {@link SqlInfo} 信息.
+     *
      * @param fieldText 字段文本值
      * @param valueText 参数值
      * @param suffix 后缀，如：大于、等于、小于等
-     * @return 返回SqlInfo信息
      */
     public void buildNormalSql(String fieldText, String valueText, String suffix) {
-//        Object value = ParseHelper.parseExpressWithException(valueText, context);
-//        return super.buildNormalSql(fieldText, value, suffix);
+        super.buildNormalSql(fieldText, ParseHelper.parseExpressWithException(valueText, context), suffix);
     }
 
     /**

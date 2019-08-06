@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="fenix">
+
+    <!-- 用于单元测试 equal 标签生成的 JPQL 语句和参数. -->
+    <fenix id="equal">
+        SELECT u FROM @{entityName}
+        WHERE
+        <equal field="u.id" value="user.id"/>
+        <andEqual match="user.name != empty" field="u.name" value="user.name"/>
+        <orEqual match="" field="u.email" value="user.email"/>
+        <!-- 使用 '?' 号，即使不存在这个属性，解析时也不会报错. -->
+        <orEqual match="?abc != empty" field="u.abc" value="user.def"/>
+    </fenix>
+
+</fenixs>

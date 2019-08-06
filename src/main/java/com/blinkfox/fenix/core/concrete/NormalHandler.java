@@ -26,6 +26,7 @@ public class NormalHandler implements FenixHandler {
 
     /**
      * 根据构建参数构建常规的 JPQL 或者 SQL 语句片段的信息.
+     * <p>获取到 match 字段的值，如果没有或者为 true，就通过 field, value 来生成此 SQL 片段.</p>
      *
      * @param source 构建所需的资源对象
      */
@@ -33,21 +34,14 @@ public class NormalHandler implements FenixHandler {
     public void buildSqlInfo(BuildSource source) {
         // 获取需要拼接的 XML 节点，判断必填的参数是否为空.
         Node node = source.getNode();
-        String fieldText = XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD);
-        String valueText = XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_VALUE);
 
-        // 如果没有 match 字段，则认为是必然生成项.
-        Node matchNode = node.selectSingleNode(XpathConst.ATTR_MATCH);
-        String matchText = XmlNodeHelper.getNodeText(matchNode);
-        if (StringHelper.isBlank(matchText)) {
-            new XmlSqlInfoBuilder(source).buildNormalSql(fieldText, valueText, source.getSymbol());
-        } else {
-            // 如果 match 表达式的值为 true，则生成该 JPQL 或者 SQL 片段.
-            if (ParseHelper.isTrue(matchText, source.getContext())) {
-                new XmlSqlInfoBuilder(source).buildNormalSql(fieldText, valueText, source.getSymbol());
-            }
+        // 如果没有 match 属性或者 match 属性中的表达式的值是 true，则认为是必然生成此 JPQL 或者 SQL 语句和参数.
+        String matchText = XmlNodeHelper.getNodeText(node.selectSingleNode(XpathConst.ATTR_MATCH));
+        if (StringHelper.isBlank(matchText) || ParseHelper.isTrue(matchText, source.getContext())) {
+            new XmlSqlInfoBuilder(source).buildNormalSql(
+                    XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+                            XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_VALUE), source.getSymbol());
         }
-
         source.resetPrefix();
     }
 

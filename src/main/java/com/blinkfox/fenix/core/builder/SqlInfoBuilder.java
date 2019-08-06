@@ -5,8 +5,6 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.helper.StringHelper;
 
-import java.util.Map;
-
 /**
  * 构建拼接 JPQL 或者 SQL 语句片段和参数的构建器类.
  *
@@ -18,17 +16,7 @@ public class SqlInfoBuilder {
     /**
      * {@link SqlInfo} 对象.
      */
-    SqlInfo sqlInfo;
-
-    /**
-     * SQL 拼接器，这是 {@link SqlInfo#getJoin()} 的 StringBuilder 对象.
-     */
-    private StringBuilder join;
-
-    /**
-     * JPQL 或者 SQL 语句对应的 Map 参数，这是 {@link SqlInfo#getParams()} 的对象.
-     */
-    private Map<String, Object> params;
+    private SqlInfo sqlInfo;
 
     /**
      * 上下文参数（一般是 Bean 或者 map）.
@@ -50,10 +38,8 @@ public class SqlInfoBuilder {
      *
      * @param source 构建资源参数
      */
-    public SqlInfoBuilder(BuildSource source) {
+    SqlInfoBuilder(BuildSource source) {
         this.sqlInfo = source.getSqlInfo();
-        this.join = sqlInfo.getJoin();
-        this.params = sqlInfo.getParams();
         this.context = source.getContext();
         this.prefix = source.getPrefix();
         this.symbol = source.getSymbol();
@@ -61,16 +47,16 @@ public class SqlInfoBuilder {
 
     /**
      * 构建常规 SQL 片段需要的 {@link SqlInfo} 信息.
+     * <p>如：'u.id = :u_id'.</p>
      *
      * @param fieldText JPQL 或者 SQL 语句的字段的文本
-     * @param value 参数值
-     * @param suffix 后缀，如：大于、等于、小于等
-     * @return sqlInfo
+     * @param value 解析后的表达式的值
+     * @param symbol SQL 标记或者操作符，如：大于、等于、小于等
      */
-    public void buildNormalSql(String fieldText, Object value, String suffix) {
-        join.append(prefix).append(fieldText).append(suffix);
-        // params.add(value);
-        params.put(fieldText, value);
+    void buildNormalSql(String fieldText, Object value, String symbol) {
+        String namedField = fieldText.replace(Const.DOT, Const.UNDERLINE);
+        sqlInfo.getJoin().append(prefix).append(fieldText).append(symbol).append(Const.COLON).append(namedField);
+        sqlInfo.getParams().put(namedField, value);
     }
 
     /**

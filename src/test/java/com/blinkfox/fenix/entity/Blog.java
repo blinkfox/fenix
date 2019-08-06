@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 /**
  * 博客实体表.
  *
- * @author blinkfox on 2019/7/30.
+ * @author blinkfox on 2019-08-03.
  */
 @Getter
 @Setter
