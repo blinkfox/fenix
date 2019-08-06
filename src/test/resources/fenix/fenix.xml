@@ -22,4 +22,40 @@
         <orNotEqual match="" field="u.email" value="user.email"/>
     </fenix>
 
+    <!-- 用于单元测试 greaterThan 标签生成的 JPQL 语句和参数. -->
+    <fenix id="greaterThan">
+        SELECT u FROM @{entityName}
+        WHERE
+        <greaterThan field="u.id" value="user.id"/>
+        <andGreaterThan match="user.name != empty" field="u.name" value="user.name"/>
+        <orGreaterThan match="" field="u.email" value="user.email"/>
+    </fenix>
+
+    <!-- 用于单元测试 lessThan 标签生成的 JPQL 语句和参数. -->
+    <fenix id="lessThan">
+        SELECT u FROM @{entityName}
+        WHERE
+        <lessThan field="u.id" value="user.id"/>
+        <andLessThan match="user.name != empty" field="u.name" value="user.name"/>
+        <orLessThan match="" field="u.email" value="user.email"/>
+    </fenix>
+
+    <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
+    <fenix id="greaterThanEqual">
+        SELECT u FROM @{entityName}
+        WHERE
+        <greaterThanEqual field="u.id" value="user.id"/>
+        <andGreaterThanEqual match="user.name != empty" field="u.name" value="user.name"/>
+        <orGreaterThanEqual match="" field="u.email" value="user.email"/>
+    </fenix>
+
+    <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
+    <fenix id="lessThanEqual">
+        SELECT u FROM @{entityName}
+        WHERE
+        <lessThanEqual field="u.id" value="user.id"/>
+        <andLessThanEqual match="user.name != empty" field="u.name" value="user.name"/>
+        <orLessThanEqual match="" field="u.email" value="user.email"/>
+    </fenix>
+
 </fenixs>

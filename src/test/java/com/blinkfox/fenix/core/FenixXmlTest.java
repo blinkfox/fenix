@@ -60,4 +60,48 @@ public class FenixXmlTest {
         Assert.assertEquals(3, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 greaterThan 标签的情况.
+     */
+    @Test
+    public void greaterThan() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.greaterThan", context);
+        Assert.assertEquals("SELECT u FROM User WHERE u.id > :u_id AND u.name > :u_name OR u.email > :u_email",
+                sqlInfo.getSql());
+        Assert.assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 lessThan 标签的情况.
+     */
+    @Test
+    public void lessThan() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.lessThan", context);
+        Assert.assertEquals("SELECT u FROM User WHERE u.id < :u_id AND u.name < :u_name OR u.email < :u_email",
+                sqlInfo.getSql());
+        Assert.assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 greaterThanEqual 标签的情况.
+     */
+    @Test
+    public void greaterThanEqual() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.greaterThanEqual", context);
+        Assert.assertEquals("SELECT u FROM User WHERE u.id >= :u_id AND u.name >= :u_name OR u.email >= :u_email",
+                sqlInfo.getSql());
+        Assert.assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 greaterThanEqual 标签的情况.
+     */
+    @Test
+    public void lessThanEqual() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.lessThanEqual", context);
+        Assert.assertEquals("SELECT u FROM User WHERE u.id <= :u_id AND u.name <= :u_name OR u.email <= :u_email",
+                sqlInfo.getSql());
+        Assert.assertEquals(3, sqlInfo.getParams().size());
+    }
+
 }

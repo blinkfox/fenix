@@ -5,7 +5,6 @@ import static com.blinkfox.fenix.consts.SymbolConst.*;
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
-import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
 
@@ -50,27 +49,27 @@ public class FenixDefaultConfig {
         add("notEqual", NormalHandler.class, NOT_EQUAL);
         add("andNotEqual", AND, NormalHandler.class, NOT_EQUAL);
         add("orNotEqual", OR, NormalHandler.class, NOT_EQUAL);
-//
-//        // 大于相关标签：greaterThan、andGreaterThan、orGreaterThan
-//        add(MORE, NormalHandler.class, GT_SUFFIX);
-//        add(AND_MORE, AND_PREFIX, NormalHandler.class, GT_SUFFIX);
-//        add(OR_MORE, OR_PREFIX, NormalHandler.class, GT_SUFFIX);
-//
-//        // 小于相关标签：lessThan、andGreater、orGreater
-//        add(LESS, NormalHandler.class, LT_SUFFIX);
-//        add(AND_LESS, AND_PREFIX, NormalHandler.class, LT_SUFFIX);
-//        add(OR_LESS, OR_PREFIX, NormalHandler.class, LT_SUFFIX);
-//
-//        // 大于等于相关标签：greaterEqual、andGreaterEqual、orGreaterEqual
-//        add(MORE_EQUAL, NormalHandler.class, GTE_SUFFIX);
-//        add(AND_MORE_EQUAL, AND_PREFIX, NormalHandler.class, GTE_SUFFIX);
-//        add(OR_MORE_EQUAL, OR_PREFIX, NormalHandler.class, GTE_SUFFIX);
-//
-//        // 小于等于相关标签：lessEqual、andLessEqual、orLessEqual
-//        add(LESS_EQUAL, NormalHandler.class, LTE_SUFFIX);
-//        add(AND_LESS_EQUAL, AND_PREFIX, NormalHandler.class, LTE_SUFFIX);
-//        add(OR_LESS_EQUAL, OR_PREFIX, NormalHandler.class, LTE_SUFFIX);
-//
+
+        // “大于”的相关标签：greaterThan、andGreaterThan、orGreaterThan
+        add("greaterThan", NormalHandler.class, GT);
+        add("andGreaterThan", AND, NormalHandler.class, GT);
+        add("orGreaterThan", OR, NormalHandler.class, GT);
+
+        // “小于”的相关标签：lessThan、andLessThan、orLessThan
+        add("lessThan", NormalHandler.class, LT);
+        add("andLessThan", AND, NormalHandler.class, LT);
+        add("orLessThan", OR, NormalHandler.class, LT);
+
+        // “大于等于”的相关标签：greaterThanEqual、andGreaterThanEqual、orGreaterThanEqual
+        add("greaterThanEqual", NormalHandler.class, GTE);
+        add("andGreaterThanEqual", AND, NormalHandler.class, GTE);
+        add("orGreaterThanEqual", OR, NormalHandler.class, GTE);
+
+        // “小于等于”的相关标签：lessThanEqual、andLessThanEqual、orLessThanEqual
+        add("lessThanEqual", NormalHandler.class, LTE);
+        add("andLessThanEqual", AND, NormalHandler.class, LTE);
+        add("orLessThanEqual", OR, NormalHandler.class, LTE);
+
 //        // like相关标签：like、andLike、orLike
 //        add(LIKE, LikeHandler.class, LIKE_KEY);
 //        add(AND_LIKE, AND_PREFIX, LikeHandler.class, LIKE_KEY);
