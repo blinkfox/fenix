@@ -12,6 +12,7 @@ import com.blinkfox.fenix.core.concrete.NormalHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import lombok.Getter;
 
 import org.dom4j.Node;
@@ -80,7 +81,17 @@ public class FenixDefaultConfig {
         add("notLike", LikeHandler.class, NOT_LIKE);
         add("andNotLike", AND, LikeHandler.class, NOT_LIKE);
         add("orNotLike", OR, LikeHandler.class, NOT_LIKE);
-//
+
+        // "LIKE 前缀匹配" 的相关标签：startsWith、andStartsWith、orStartsWith
+        add("startsWith", StartsWithHandler.class, LIKE);
+        add("andStartsWith", AND, StartsWithHandler.class, LIKE);
+        add("orStartsWith", OR, StartsWithHandler.class, LIKE);
+
+        // "NOT LIKE 前缀匹配" 的相关标签：notStartsWith、andNotStartsWith、orNotStartsWith
+        add("notStartsWith", StartsWithHandler.class, NOT_LIKE);
+        add("andNotStartsWith", AND, StartsWithHandler.class, NOT_LIKE);
+        add("orNotStartsWith", OR, StartsWithHandler.class, NOT_LIKE);
+
 //        // between相关标签：between、andBetween、orBetween
 //        add(BETWEEN, BetweenHandler.class);
 //        add(AND_BETWEEN, AND_PREFIX, BetweenHandler.class);

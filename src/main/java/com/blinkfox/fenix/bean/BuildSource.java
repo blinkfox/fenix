@@ -2,6 +2,8 @@ package com.blinkfox.fenix.bean;
 
 import com.blinkfox.fenix.consts.Const;
 
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -50,6 +52,13 @@ public final class BuildSource {
      * 拼接 JPQL 或者 SQL 片段的关键标记符号，如：'>'、'='、'LIKE' 等.
      */
     private String symbol;
+
+    /**
+     * 其它资源条件，这是一个不定值.
+     * <p>注：通常情况下这个值是 NULL，如果某些情况下，你需要传递额外的参数值，可以通过这个属性来传递，
+     *      是为了方便传递或处理数据而设计的.</p>
+     */
+    private Map<String, Object> others;
 
     /**
      * 含 XML 命名空间、SqlInfo、Node 节点、上下文参数的构造方法.

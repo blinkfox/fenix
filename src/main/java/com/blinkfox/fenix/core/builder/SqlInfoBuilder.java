@@ -3,8 +3,11 @@ package com.blinkfox.fenix.core.builder;
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
+
+import java.util.Map;
 
 /**
  * 构建拼接 JPQL 或者 SQL 语句片段和参数的构建器类.
@@ -35,6 +38,14 @@ public class SqlInfoBuilder {
     private String symbol;
 
     /**
+     * 其它数据.
+     *
+     * <p>注：通常情况下这个值是 NULL，如果某些情况下，你需要传递额外的参数值，可以通过这个属性来传递，
+     *      是为了方便传递或处理数据而设计的.</p>
+     */
+    private Map<String, Object> others;
+
+    /**
      * 私有构造方法.
      *
      * @param source 构建资源参数
@@ -44,6 +55,7 @@ public class SqlInfoBuilder {
         this.context = source.getContext();
         this.prefix = source.getPrefix();
         this.symbol = source.getSymbol();
+        this.others = source.getOthers();
     }
 
     /**
@@ -75,7 +87,7 @@ public class SqlInfoBuilder {
 
     /**
      * 构建 LIKE 模糊查询 SQL 片段的 {@link SqlInfo} 信息.
-     * <p>如：'u.id LIKE %:id%'.</p>
+     * <p>如：'u.id LIKE :id'.</p>
      *
      * @param fieldText 数据库字段的文本
      * @param valueText 待解析 value 的文本值
@@ -86,7 +98,20 @@ public class SqlInfoBuilder {
         String namedText = this.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(this.symbol).append(Const.COLON).append(namedText);
-        sqlInfo.getParams().put(namedText, "%" + value + "%");
+
+        // 如果 others 参数为空，说明是前后模糊的情况.
+        if (this.others == null || this.others.size() == 0) {
+            sqlInfo.getParams().put(namedText, "%" + value + "%");
+            return;
+        }
+
+        // 如果 others 参数不为空，获取对应的类型设置参数.
+        LikeTypeEnum likeTypeEnum = (LikeTypeEnum) this.others.get(Const.TYPE);
+        if (likeTypeEnum == LikeTypeEnum.STARTS_WITH) {
+            sqlInfo.getParams().put(namedText, value + "%");
+        } else if (likeTypeEnum == LikeTypeEnum.ENDS_WITH) {
+            sqlInfo.getParams().put(namedText, "%" + value);
+        }
     }
 
     /**

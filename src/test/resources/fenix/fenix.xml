@@ -76,4 +76,22 @@
         <orNotLike match="" field="u.email" pattern="%@163.com"/>
     </fenix>
 
+    <!-- 用于单元测试 startsWith 标签生成的 JPQL 语句和参数. -->
+    <fenix id="startsWith">
+        SELECT u FROM @{entityName}
+        WHERE
+        <startsWith field="u.id" value="user.id"/>
+        <andStartsWith match="user.name != empty" field="u.name" value="user.name"/>
+        <orStartsWith match="" field="u.email" value="email"/>
+    </fenix>
+
+    <!-- 用于单元测试 notStartsWith 标签生成的 JPQL 语句和参数. -->
+    <fenix id="notStartsWith">
+        SELECT u FROM @{entityName}
+        WHERE
+        <notStartsWith field="u.id" value="user.id"/>
+        <andNotStartsWith match="user.name != empty" field="u.name" value="user.name"/>
+        <orNotStartsWith match="" field="u.email" value="email"/>
+    </fenix>
+
 </fenixs>

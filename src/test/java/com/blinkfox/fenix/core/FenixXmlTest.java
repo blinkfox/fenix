@@ -22,6 +22,8 @@ public class FenixXmlTest {
 
     private static final String NAME = "ZhangSan";
 
+    private static final String EMAIL_KEY = "email";
+
     /**
      * 基础查询的 SQL 语句.
      */
@@ -41,7 +43,7 @@ public class FenixXmlTest {
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
         context.put("user", new User().setId("123").setName(NAME));
-        context.put("email", "zhangsan@163.com");
+        context.put(EMAIL_KEY, "zhangsan@163.com");
     }
 
     /**
@@ -56,7 +58,7 @@ public class FenixXmlTest {
         Map<String, Object> params = sqlInfo.getParams();
         assertEquals(3, params.size());
         assertEquals(NAME, params.get("user_name"));
-        assertEquals("zhangsan@163.com", params.get("email"));
+        assertEquals("zhangsan@163.com", params.get(EMAIL_KEY));
     }
 
     /**
@@ -135,6 +137,31 @@ public class FenixXmlTest {
                         + "OR u.email NOT LIKE '%@163.com'",
                 sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 startsWith 标签的情况.
+     */
+    @Test
+    public void startsWith() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.startsWith", context);
+        assertEquals(BASE_QUERY + " u.id LIKE :user_id AND u.name LIKE :user_name OR u.email LIKE :email",
+                sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(3, params.size());
+        assertEquals("zhangsan@163.com%", params.get(EMAIL_KEY));
+    }
+
+    /**
+     * 测试 notStartsWith 标签的情况.
+     */
+    @Test
+    public void notStartsWith() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notStartsWith", context);
+        assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name OR u.email NOT LIKE :email",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
     }
 
 }

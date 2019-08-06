@@ -63,6 +63,9 @@ public final class Const {
     /** 含空格的字符串. */
     public static final String ONE_SPACE = " ";
 
-    /* ------------------- SQL 中的操作符常量. ------------------- */
+    /**
+     * 类型的字符串常量.
+     */
+    public static final String TYPE = "type";
 
 }
