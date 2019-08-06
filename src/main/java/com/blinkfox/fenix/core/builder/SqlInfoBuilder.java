@@ -49,9 +49,9 @@ public class SqlInfoBuilder {
      * 构建常规 SQL 片段需要的 {@link SqlInfo} 信息.
      * <p>如：'u.id = :u_id'.</p>
      *
-     * @param fieldText JPQL 或者 SQL 语句的字段的文本
+     * @param fieldText JPQL 或者 SQL 语句的字段的文本.
      * @param value 解析后的表达式的值
-     * @param symbol SQL 标记或者操作符，如：大于、等于、小于等
+     * @param symbol SQL 标记或者操作符，如：" = "、" > "、" <= "等.
      */
     void buildNormalSql(String fieldText, Object value, String symbol) {
         String namedField = fieldText.replace(Const.DOT, Const.UNDERLINE);
@@ -63,7 +63,6 @@ public class SqlInfoBuilder {
      * 构建like模糊查询需要的SqlInfo信息.
      * @param fieldText 数据库字段的文本
      * @param value 参数值
-     * @return sqlInfo
      */
     public void buildLikeSql(String fieldText, Object value) {
         // 由于默认配置的suffix的值只是" LIKE "和" NOT LIKE "两个关键字，生成的LIKE SQL片段需要加上" ? "占位符.

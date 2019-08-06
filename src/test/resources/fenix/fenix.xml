@@ -13,4 +13,13 @@
         <orEqual match="?abc != empty" field="u.abc" value="user.def"/>
     </fenix>
 
+    <!-- 用于单元测试 notEqual 标签生成的 JPQL 语句和参数. -->
+    <fenix id="notEqual">
+        SELECT u FROM @{entityName}
+        WHERE
+        <notEqual field="u.id" value="user.id"/>
+        <andNotEqual match="user.name != empty" field="u.name" value="user.name"/>
+        <orNotEqual match="" field="u.email" value="user.email"/>
+    </fenix>
+
 </fenixs>

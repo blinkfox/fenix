@@ -41,15 +41,15 @@ public class FenixDefaultConfig {
     /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
 
     static {
-        // 等于相关标签：equal、andEqual、orEqual
+        // “等于”的相关标签：equal、andEqual、orEqual
         add("equal", NormalHandler.class, EQUAL);
         add("andEqual", AND, NormalHandler.class, EQUAL);
         add("orEqual", OR, NormalHandler.class, EQUAL);
-//
-//        // 不等于相关标签：notEqual、andNotEqual、orNotEqual
-//        add(NOT_EQUAL, NormalHandler.class, NOT_EQUAL_SUFFIX);
-//        add(AND_NOT_EQUAL, AND_PREFIX, NormalHandler.class, NOT_EQUAL_SUFFIX);
-//        add(OR_NOT_EQUAL, OR_PREFIX, NormalHandler.class, NOT_EQUAL_SUFFIX);
+
+        // “不等于”的相关标签：notEqual、andNotEqual、orNotEqual
+        add("notEqual", NormalHandler.class, NOT_EQUAL);
+        add("andNotEqual", AND, NormalHandler.class, NOT_EQUAL);
+        add("orNotEqual", OR, NormalHandler.class, NOT_EQUAL);
 //
 //        // 大于相关标签：greaterThan、andGreaterThan、orGreaterThan
 //        add(MORE, NormalHandler.class, GT_SUFFIX);

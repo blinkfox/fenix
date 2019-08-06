@@ -49,4 +49,15 @@ public class FenixXmlTest {
         Assert.assertEquals("ZhangSan", params.get("u_name"));
     }
 
+    /**
+     * 测试 notEqual 标签的情况.
+     */
+    @Test
+    public void notEqual() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notEqual", context);
+        Assert.assertEquals("SELECT u FROM User WHERE u.id <> :u_id AND u.name <> :u_name OR u.email <> :u_email",
+                sqlInfo.getSql());
+        Assert.assertEquals(3, sqlInfo.getParams().size());
+    }
+
 }
