@@ -127,25 +127,39 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建区间查询的SqlInfo信息.
-     * @param fieldText 数据库字段文本
-     * @param startValue 参数开始值
-     * @param endValue 参数结束值
-     * @return 返回SqlInfo信息
+     * 构建区间查询 SQL 片段的 {@link SqlInfo} 信息.
+     *
+     * <p>根据开始文本和结束文本是否为空来判断执行是大于、小于还是区间的查询 JPQL 和参数的生成.</p>
+     *
+     * @param fieldText 字段文本
+     * @param startValue 开始值
+     * @param endValue 结束值
      */
-    public void buildBetweenSql(String fieldText, Object startValue, Object endValue) {
-        /* 根据开始文本和结束文本判断执行是大于、小于还是区间的查询sql和参数的生成 */
-//        if (startValue != null && endValue == null) {
-//            join.append(prefix).append(fieldText).append(Const.GTE_SUFFIX);
-//            params.add(startValue);
-//        } else if (startValue == null && endValue != null) {
-//            join.append(prefix).append(fieldText).append(Const.LTE_SUFFIX);
-//            params.add(endValue);
-//        } else {
-//            join.append(prefix).append(fieldText).append(Const.BT_AND_SUFFIX);
-//            params.add(startValue);
-//            params.add(endValue);
-//        }
+    protected void buildBetweenSql(String fieldText, String startText, Object startValue,
+            String endText, Object endValue) {
+        // 开始值不为空，结束值为空时，转为"大于"的情况.
+        if (startValue != null && endValue == null) {
+            String startNamed = this.fixDot(startText);
+            sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.GTE)
+                    .append(Const.COLON).append(startNamed);
+            sqlInfo.getParams().put(startNamed, startValue);
+        } else if (startValue == null && endValue != null) {
+            // 开始值为空，结束值不为空时，转为"小于"的情况.
+            String endNamed = this.fixDot(endText);
+            sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.LTE)
+                    .append(Const.COLON).append(endNamed);
+            sqlInfo.getParams().put(endNamed, endValue);
+        } else {
+            // 开始值不为空，结束值也不为空时，转为"BETWEEN ? AND ?"的情况.
+            String startNamed = this.fixDot(startText);
+            String endNamed = this.fixDot(endText);
+            sqlInfo.getJoin().append(prefix).append(fieldText)
+                    .append(SymbolConst.BETWEEN).append(Const.COLON).append(startNamed)
+                    .append(SymbolConst.AND).append(Const.COLON).append(endNamed);
+            Map<String, Object> params = sqlInfo.getParams();
+            params.put(startNamed, startValue);
+            params.put(endNamed, endValue);
+        }
     }
 
     /**

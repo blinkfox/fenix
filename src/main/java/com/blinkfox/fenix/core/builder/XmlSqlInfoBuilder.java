@@ -52,17 +52,15 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 构建between区间查询的sqlInfo信息.
+     * 构建追加 'BETWEEN ? AND ?'、'>='、'<=' 的区间范围查询的 {@link SqlInfo} 信息.
+     *
      * @param fieldText 字段文本值
-     * @param startText 参数开始值
-     * @param endText 参数结束值
-     * @return 返回SqlInfo信息
+     * @param startText 开始文本
+     * @param endText 结束文本
      */
     public void buildBetweenSql(String fieldText, String startText, String endText) {
-        // 获取开始属性值和结束属性值,作区间查询
-//        Object startValue = ParseHelper.parseExpress(startText, context);
-//        Object endValue = ParseHelper.parseExpress(endText, context);
-//        return super.buildBetweenSql(fieldText, startValue, endValue);
+        super.buildBetweenSql(fieldText, startText, ParseHelper.parseExpress(startText, context),
+                endText, ParseHelper.parseExpress(endText, context));
     }
 
     /**
