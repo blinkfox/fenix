@@ -94,10 +94,10 @@ public class SqlInfoBuilder {
      * @param value 参数值
      */
     protected void buildLikeSql(String fieldText, String valueText, Object value) {
-        this.symbol = StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol;
         String namedText = this.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
-                .append(this.symbol).append(Const.COLON).append(namedText);
+                .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
+                .append(Const.COLON).append(namedText);
 
         // 如果 others 参数为空，说明是前后模糊的情况.
         if (this.others == null || this.others.size() == 0) {

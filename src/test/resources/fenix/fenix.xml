@@ -94,4 +94,22 @@
         <orNotStartsWith match="" field="u.email" value="email"/>
     </fenix>
 
+    <!-- 用于单元测试 endsWith 标签生成的 JPQL 语句和参数. -->
+    <fenix id="endsWith">
+        SELECT u FROM @{entityName}
+        WHERE
+        <endsWith field="u.id" value="user.id"/>
+        <andEndsWith match="user.name != empty" field="u.name" value="user.name"/>
+        <orEndsWith match="" field="u.email" value="email"/>
+    </fenix>
+
+    <!-- 用于单元测试 notEndsWith 标签生成的 JPQL 语句和参数. -->
+    <fenix id="notEndsWith">
+        SELECT u FROM @{entityName}
+        WHERE
+        <notEndsWith field="u.id" value="user.id"/>
+        <andNotEndsWith match="user.name != empty" field="u.name" value="user.name"/>
+        <orNotEndsWith match="" field="u.email" value="email"/>
+    </fenix>
+
 </fenixs>

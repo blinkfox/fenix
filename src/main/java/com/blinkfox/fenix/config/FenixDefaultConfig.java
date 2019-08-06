@@ -6,6 +6,7 @@ import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.core.concrete.EndsWithHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
 
@@ -91,6 +92,16 @@ public class FenixDefaultConfig {
         add("notStartsWith", StartsWithHandler.class, NOT_LIKE);
         add("andNotStartsWith", AND, StartsWithHandler.class, NOT_LIKE);
         add("orNotStartsWith", OR, StartsWithHandler.class, NOT_LIKE);
+
+        // "LIKE 后缀匹配" 的相关标签：endsWith、andEndsWith、orEndsWith
+        add("endsWith", EndsWithHandler.class, LIKE);
+        add("andEndsWith", AND, EndsWithHandler.class, LIKE);
+        add("orEndsWith", OR, EndsWithHandler.class, LIKE);
+
+        // "NOT LIKE 后缀匹配" 的相关标签：notEndsWith、andNotEndsWith、orNotEndsWith
+        add("notEndsWith", EndsWithHandler.class, NOT_LIKE);
+        add("andNotEndsWith", AND, EndsWithHandler.class, NOT_LIKE);
+        add("orNotEndsWith", OR, EndsWithHandler.class, NOT_LIKE);
 
 //        // between相关标签：between、andBetween、orBetween
 //        add(BETWEEN, BetweenHandler.class);

@@ -106,7 +106,7 @@ public class FenixXmlTest {
     }
 
     /**
-     * 测试 greaterThanEqual 标签的情况.
+     * 测试 lessThanEqual 标签的情况.
      */
     @Test
     public void lessThanEqual() {
@@ -159,6 +159,28 @@ public class FenixXmlTest {
     @Test
     public void notStartsWith() {
         SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notStartsWith", context);
+        assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name OR u.email NOT LIKE :email",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 endsWith 标签的情况.
+     */
+    @Test
+    public void endsWith() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.endsWith", context);
+        assertEquals(BASE_QUERY + " u.id LIKE :user_id AND u.name LIKE :user_name OR u.email LIKE :email",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 notEndsWith 标签的情况.
+     */
+    @Test
+    public void notEndsWith() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notEndsWith", context);
         assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name OR u.email NOT LIKE :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
