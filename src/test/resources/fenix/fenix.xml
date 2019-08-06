@@ -8,7 +8,7 @@
         WHERE
         <equal field="u.id" value="user.id"/>
         <andEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orEqual match="" field="u.email" value="user.email"/>
+        <orEqual match="" field="u.email" value="email"/>
         <!-- 使用 '?' 号，即使不存在这个属性，解析时也不会报错. -->
         <orEqual match="?abc != empty" field="u.abc" value="user.def"/>
     </fenix>
@@ -19,7 +19,7 @@
         WHERE
         <notEqual field="u.id" value="user.id"/>
         <andNotEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orNotEqual match="" field="u.email" value="user.email"/>
+        <orNotEqual match="" field="u.email" value="email"/>
     </fenix>
 
     <!-- 用于单元测试 greaterThan 标签生成的 JPQL 语句和参数. -->
@@ -28,7 +28,7 @@
         WHERE
         <greaterThan field="u.id" value="user.id"/>
         <andGreaterThan match="user.name != empty" field="u.name" value="user.name"/>
-        <orGreaterThan match="" field="u.email" value="user.email"/>
+        <orGreaterThan match="" field="u.email" value="email"/>
     </fenix>
 
     <!-- 用于单元测试 lessThan 标签生成的 JPQL 语句和参数. -->
@@ -37,7 +37,7 @@
         WHERE
         <lessThan field="u.id" value="user.id"/>
         <andLessThan match="user.name != empty" field="u.name" value="user.name"/>
-        <orLessThan match="" field="u.email" value="user.email"/>
+        <orLessThan match="" field="u.email" value="email"/>
     </fenix>
 
     <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
@@ -46,7 +46,7 @@
         WHERE
         <greaterThanEqual field="u.id" value="user.id"/>
         <andGreaterThanEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orGreaterThanEqual match="" field="u.email" value="user.email"/>
+        <orGreaterThanEqual match="" field="u.email" value="email"/>
     </fenix>
 
     <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
@@ -55,7 +55,25 @@
         WHERE
         <lessThanEqual field="u.id" value="user.id"/>
         <andLessThanEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orLessThanEqual match="" field="u.email" value="user.email"/>
+        <orLessThanEqual match="" field="u.email" value="email"/>
+    </fenix>
+
+    <!-- 用于单元测试 like 标签生成的 JPQL 语句和参数. -->
+    <fenix id="like">
+        SELECT u FROM @{entityName}
+        WHERE
+        <like field="u.id" value="user.id"/>
+        <andLike match="user.name != empty" field="u.name" value="user.name"/>
+        <orLike match="" field="u.email" pattern="%@163.com"/>
+    </fenix>
+
+    <!-- 用于单元测试 notLike 标签生成的 JPQL 语句和参数. -->
+    <fenix id="notLike">
+        SELECT u FROM @{entityName}
+        WHERE
+        <notLike field="u.id" value="user.id"/>
+        <andNotLike match="user.name != empty" field="u.name" value="user.name"/>
+        <orNotLike match="" field="u.email" pattern="%@163.com"/>
     </fenix>
 
 </fenixs>

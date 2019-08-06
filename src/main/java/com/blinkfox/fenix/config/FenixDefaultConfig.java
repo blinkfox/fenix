@@ -6,6 +6,7 @@ import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
 
 import java.util.HashMap;
@@ -70,15 +71,15 @@ public class FenixDefaultConfig {
         add("andLessThanEqual", AND, NormalHandler.class, LTE);
         add("orLessThanEqual", OR, NormalHandler.class, LTE);
 
-//        // like相关标签：like、andLike、orLike
-//        add(LIKE, LikeHandler.class, LIKE_KEY);
-//        add(AND_LIKE, AND_PREFIX, LikeHandler.class, LIKE_KEY);
-//        add(OR_LIKE, OR_PREFIX, LikeHandler.class, LIKE_KEY);
-//
-//        // not like相关标签：notLike、andNotLike、orNotLike
-//        add(NOT_LIKE, LikeHandler.class, NOT_LIKE_KEY);
-//        add(AND_NOT_LIKE, AND_PREFIX, LikeHandler.class, NOT_LIKE_KEY);
-//        add(OR_NOT_LIKE, OR_PREFIX, LikeHandler.class, NOT_LIKE_KEY);
+        // "LIKE" 的相关标签：like、andLike、orLike
+        add("like", LikeHandler.class, LIKE);
+        add("andLike", AND, LikeHandler.class, LIKE);
+        add("orLike", OR, LikeHandler.class, LIKE);
+
+        // "NOT LIKE" 的相关标签：notLike、andNotLike、orNotLike
+        add("notLike", LikeHandler.class, NOT_LIKE);
+        add("andNotLike", AND, LikeHandler.class, NOT_LIKE);
+        add("orNotLike", OR, LikeHandler.class, NOT_LIKE);
 //
 //        // between相关标签：between、andBetween、orBetween
 //        add(BETWEEN, BetweenHandler.class);

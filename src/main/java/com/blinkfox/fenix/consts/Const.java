@@ -32,6 +32,11 @@ public final class Const {
     public static final String UNDERLINE = "_";
 
     /**
+     * 单引号.
+     */
+    public static final String QUOTE = "'";
+
+    /**
      * 普通数组.
      */
     public static final int OBJTYPE_ARRAY = 1;

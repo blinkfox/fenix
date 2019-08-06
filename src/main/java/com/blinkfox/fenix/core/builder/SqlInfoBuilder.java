@@ -3,6 +3,7 @@ package com.blinkfox.fenix.core.builder;
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
 
 /**
@@ -46,41 +47,58 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建常规 SQL 片段需要的 {@link SqlInfo} 信息.
-     * <p>如：'u.id = :u_id'.</p>
+     * 为了生成 JPQL 语法中 " :text " 这种冒号式的命名参数，需要将 "." 点号替换为 "_"，Spring DATA JPA 才支持.
+     *
+     * <p>如：JPQL 语句片段 " b.title = :blog.title "，会将 "blog.title" 替换为 "blog_title".</p>
+     *
+     * @param text 待替换的文本
+     * @return 替换后的文本
+     */
+    private String fixDot(String text) {
+        return text.contains(Const.DOT) ? text.replace(Const.DOT, Const.UNDERLINE) : text;
+    }
+
+    /**
+     * 构建常规 SQL 片段的 {@link SqlInfo} 信息.
+     * <p>如：'u.id = :id'.</p>
      *
      * @param fieldText JPQL 或者 SQL 语句的字段的文本.
+     * @param valueText 待解析 value 的文本值
      * @param value 解析后的表达式的值
-     * @param symbol SQL 标记或者操作符，如：" = "、" > "、" <= "等.
      */
-    void buildNormalSql(String fieldText, Object value, String symbol) {
-        String namedField = fieldText.replace(Const.DOT, Const.UNDERLINE);
-        sqlInfo.getJoin().append(prefix).append(fieldText).append(symbol).append(Const.COLON).append(namedField);
-        sqlInfo.getParams().put(namedField, value);
+    protected void buildNormalSql(String fieldText, String valueText, Object value) {
+        String namedText = this.fixDot(valueText);
+        sqlInfo.getJoin().append(this.prefix).append(fieldText)
+                .append(this.symbol).append(Const.COLON).append(namedText);
+        sqlInfo.getParams().put(namedText, value);
     }
 
     /**
-     * 构建like模糊查询需要的SqlInfo信息.
+     * 构建 LIKE 模糊查询 SQL 片段的 {@link SqlInfo} 信息.
+     * <p>如：'u.id LIKE %:id%'.</p>
+     *
      * @param fieldText 数据库字段的文本
+     * @param valueText 待解析 value 的文本值
      * @param value 参数值
      */
-    public void buildLikeSql(String fieldText, Object value) {
-        // 由于默认配置的suffix的值只是" LIKE "和" NOT LIKE "两个关键字，生成的LIKE SQL片段需要加上" ? "占位符.
-//        this.suffix = StringHelper.isBlank(this.suffix) ? Const.LIKE_KEY : this.suffix;
-//        join.append(prefix).append(fieldText).append(suffix).append("? ");
-//        params.add("%" + value + "%");
+    protected void buildLikeSql(String fieldText, String valueText, Object value) {
+        this.symbol = StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol;
+        String namedText = this.fixDot(valueText);
+        sqlInfo.getJoin().append(this.prefix).append(fieldText)
+                .append(this.symbol).append(Const.COLON).append(namedText);
+        sqlInfo.getParams().put(namedText, "%" + value + "%");
     }
 
     /**
-     * 根据指定的模式`pattern`来构建like模糊查询需要的SqlInfo信息.
+     * 根据指定的模式 `pattern` 来追加构建 LIKE 模糊查询 SQL 片段的 {@link SqlInfo} 信息.
+     *
      * @param fieldText 数据库字段的文本
-     * @param pattern like匹配的模式
-     * @return sqlInfo
+     * @param pattern LIKE 匹配的模式
      */
-    public void buildLikePatternSql(String fieldText, String pattern) {
-//        this.suffix = StringHelper.isBlank(this.suffix) ? Const.LIKE_KEY : this.suffix;
-//        join.append(prefix).append(fieldText).append(this.suffix).append("'").append(pattern).append("' ");
-//        return sqlInfo.setJoin(join);
+    protected void buildLikePatternSql(String fieldText, String pattern) {
+        sqlInfo.getJoin().append(prefix).append(fieldText)
+                .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
+                .append(Const.QUOTE).append(pattern).append(Const.QUOTE);
     }
 
     /**

@@ -29,27 +29,26 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      *
      * @param fieldText 字段文本值
      * @param valueText 参数值
-     * @param suffix 后缀，如：大于、等于、小于等
      */
-    public void buildNormalSql(String fieldText, String valueText, String suffix) {
-        super.buildNormalSql(fieldText, ParseHelper.parseExpressWithException(valueText, context), suffix);
+    public void buildNormalSql(String fieldText, String valueText) {
+        super.buildNormalSql(fieldText, valueText, ParseHelper.parseExpressWithException(valueText, context));
     }
 
     /**
-     * 构建Like模糊查询的sqlInfo信息.
+     * 追加构建 LIKE 模糊查询的 {@link SqlInfo} 信息.
+     *
      * @param fieldText 字段文本值
      * @param valueText 参数值
      * @param patternText 模式字符串文本
-     * @return 返回SqlInfo信息
      */
     public void buildLikeSql(String fieldText, String valueText, String patternText) {
-//        if (StringHelper.isNotBlank(valueText) && StringHelper.isBlank(patternText)) {
-//            return super.buildLikeSql(fieldText, ParseHelper.parseExpressWithException(valueText, context));
-//        } else if (StringHelper.isBlank(valueText) && StringHelper.isNotBlank(patternText)) {
-//            return super.buildLikePatternSql(fieldText, patternText);
-//        } else {
-//            throw new FenixException("<like /> 标签中的'value'属性和'pattern'属性不能同时为空或者同时不为空！");
-//        }
+        if (StringHelper.isNotBlank(valueText) && StringHelper.isBlank(patternText)) {
+            super.buildLikeSql(fieldText, valueText, ParseHelper.parseExpressWithException(valueText, context));
+        } else if (StringHelper.isBlank(valueText) && StringHelper.isNotBlank(patternText)) {
+            super.buildLikePatternSql(fieldText, patternText);
+        } else {
+            throw new FenixException("【Fenix 异常】<like /> 相关的标签中，【value】属性和【pattern】属性不能同时为空或者同时不为空！");
+        }
     }
 
     /**

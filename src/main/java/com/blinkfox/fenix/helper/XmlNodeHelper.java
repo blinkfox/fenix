@@ -107,7 +107,7 @@ public final class XmlNodeHelper {
     }
 
     /**
-     * 获取节点文本.
+     * 获取节点文本的字符串值.
      *
      * @param node dom4j 节点
      * @param attrName 节点属性
@@ -118,17 +118,18 @@ public final class XmlNodeHelper {
     }
 
     /**
-     * 检查和获取节点文本，会检查节点是否为空，如果节点为空，则抛出异常.
+     * 获取和检查节点文本，会检查节点是否为空，如果节点为空，则抛出异常.
+     *
+     * <p>注：该方法需要判断必填的参数是否为空，为空的话，需要抛出 {@link FieldEmptyException} 异常.</p>
      *
      * @param node dom4j 节点
      * @param nodeName 节点名称
      * @return 返回节点文本值
      */
     public static String getAndCheckNodeText(Node node, String nodeName) {
-        // 判断必填的参数是否为空.
         String fieldText = XmlNodeHelper.getNodeText(node.selectSingleNode(nodeName));
         if (StringHelper.isBlank(fieldText)) {
-            throw new FieldEmptyException("【Fenix 异常】填写的字段值是空的");
+            throw new FieldEmptyException("【Fenix 异常】填写的字段不存在或者值是空的！");
         }
         return fieldText;
     }
