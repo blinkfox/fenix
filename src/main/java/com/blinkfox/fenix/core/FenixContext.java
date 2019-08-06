@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 构建动态 JPQL 或者 SQL 片段的上下文协调类.
+ * 追加构建动态 JPQL 或者 SQL 语句及参数的上下文协调类.
  *
  * @author blinkfox on 2019-08-05.
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class ConditContext {
+final class FenixContext {
 
     /**
      * 根据标签名称和对应的构建参数构造出对应标签的 JPQL (或者 SQL)与参数.

@@ -14,7 +14,6 @@ import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,14 +29,14 @@ import org.dom4j.Node;
 public final class Fenix {
 
     /**
-     * 通过传入 fullFenixId（命名空间和 Fenix 节点的 ID）以及 Map 参数对象，
+     * 通过传入 fullFenixId（命名空间和 Fenix 节点的 ID）和上下文参数，
      * 来简单快速的生成和获取 {@link SqlInfo} 信息(有参的SQL).
      *
      * @param fullFenixId XML 命名空间 'namespace' + '.' + 'fenixId' 的值，如: "student.queryStudentById".
-     * @param paramMap Map 型参数
+     * @param context 上下文参数（一般是 Bean 或者 map）
      * @return 返回 {@link SqlInfo} 对象
      */
-    public static SqlInfo getSqlInfoSimply(String fullFenixId, Map<String, Object> paramMap) {
+    public static SqlInfo getSqlInfoSimply(String fullFenixId, Object context) {
         if (!fullFenixId.contains(Const.DOT)) {
             throw new FenixException("【Fenix 异常】fullFenixId 参数的值必须是 XML 文件中的 namespace + '.' + fenixId 节点的值，"
                     + "如:【student.queryStudentById】。其中 student 为 namespace, queryStudentById 为 XML 文件中 fenixId。");
@@ -45,7 +44,7 @@ public final class Fenix {
 
         // 从 fullFenixId 中解析出 namespace 和 fenixId 的值，便于后续处理.
         int dotIndex = fullFenixId.lastIndexOf(Const.DOT);
-        return getSqlInfo(fullFenixId.substring(0, dotIndex), fullFenixId.substring(dotIndex + 1), paramMap);
+        return getSqlInfo(fullFenixId.substring(0, dotIndex), fullFenixId.substring(dotIndex + 1), context);
     }
 
     /**
@@ -54,10 +53,10 @@ public final class Fenix {
      *
      * @param namespace XML 命名空间
      * @param fenixId XML 中的 fenixId
-     * @param paramMap Map 型参数
+     * @param context 上下文参数（一般是 Bean 或者 map）
      * @return 返回 {@link SqlInfo} 对象
      */
-    public static SqlInfo getSqlInfo(String namespace, String fenixId, Map<String, Object> paramMap) {
+    public static SqlInfo getSqlInfo(String namespace, String fenixId, Object context) {
         if (StringHelper.isBlank(namespace) || StringHelper.isBlank(fenixId)) {
             throw new FenixException("【Fenix 异常】请输入有效的 namespace 或者 fenixId 的值!");
         }
@@ -72,7 +71,7 @@ public final class Fenix {
         }
 
         // 生成新的 SqlInfo 信息并打印出来.
-        SqlInfo sqlInfo = buildNewSqlInfo(namespace, fenixNode, paramMap);
+        SqlInfo sqlInfo = buildSqlInfo(namespace, fenixNode, context);
         if (NormalConfig.getInstance().isPrintSqlInfo()) {
             new SqlInfoPrinter().print(sqlInfo, true, namespace, fenixId);
         }
@@ -81,18 +80,6 @@ public final class Fenix {
 
     /**
      * 构建新的、完整的 {@link SqlInfo} 对象.
-     *
-     * @param namespace XML 命名空间
-     * @param node dom4j 对象节点
-     * @param paramMap Map 型参数对象
-     * @return 返回 {@link SqlInfo} 对象
-     */
-    private static SqlInfo buildNewSqlInfo(String namespace, Node node, Map<String, Object> paramMap) {
-        return buildSqlInfo(namespace, new SqlInfo(), node, paramMap);
-    }
-
-    /**
-     * 构建完整的 {@link SqlInfo} 对象.
      * <p>获取所有子节点，并分别将其使用 StringBuilder 拼接起来.</p>
      * <ul>
      *     <li>如果子节点 node 是文本节点，则直接获取其文本.</li>
@@ -100,35 +87,25 @@ public final class Fenix {
      * </ul>
      *
      * @param namespace XML 命名空间
-     * @param sqlInfo {@link SqlInfo} 对象
      * @param node dom4j 对象节点
-     * @param paramMap 参数对象
+     * @param context 上下文参数（一般是 Bean 或者 map）
      * @return 返回 {@link SqlInfo} 对象
      */
-    private static SqlInfo buildSqlInfo(String namespace, SqlInfo sqlInfo, Node node, Map<String, Object> paramMap) {
+    private static SqlInfo buildSqlInfo(String namespace, Node node, Object context) {
+        SqlInfo sqlInfo = new SqlInfo();
         List<Node> nodes = node.selectNodes(XpathConst.ATTR_CHILD);
         for (Node n: nodes) {
             String nodeTypeName = n.getNodeTypeName();
             if (Const.NODETYPE_TEXT.equals(nodeTypeName)) {
                 sqlInfo.getJoin().append(n.getText());
             } else if (Const.NODETYPE_ELEMENT.equals(nodeTypeName)) {
-                ConditContext.buildSqlInfo(new BuildSource(namespace, sqlInfo, n, paramMap), n.getName());
+                FenixContext.buildSqlInfo(new BuildSource(namespace, sqlInfo, n, context), n.getName());
             }
         }
 
-        return buildFinalSql(sqlInfo, paramMap);
-    }
-
-    /**
-     * 根据标签拼接的 SQL 信息来生成最终的 SQL.
-     * <p>得到生成的 SQL，如果有 MVEL 的模板表达式，则执行计算出该表达式来生成最终的 SQL.</p>
-     *
-     * @param sqlInfo {@link SqlInfo} 信息
-     * @param paramMap 参数对象信息
-     * @return 返回 {@link SqlInfo} 对象
-     */
-    private static SqlInfo buildFinalSql(SqlInfo sqlInfo, Map<String, Object> paramMap) {
-        sqlInfo.setSql(StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), paramMap)));
+        // 根据标签拼接的 SQL 信息来生成最终的 SQL.
+        // 得到生成的 SQL，如果有 MVEL 的模板表达式，则执行计算出该表达式来生成最终的 SQL.
+        sqlInfo.setSql(StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), context)));
         return sqlInfo;
     }
 

@@ -2,8 +2,6 @@ package com.blinkfox.fenix.bean;
 
 import com.blinkfox.fenix.consts.Const;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -39,9 +37,9 @@ public final class BuildSource {
     private Node node;
 
     /**
-     * 基于 JPQL 接口方法封装的参数对象Map.
+     * 解析表达式或者渲染模版时需要的上下文参数（一般是 Bean 或者 map）.
      */
-    private Map<String, Object> paramMap;
+    private Object context;
 
     /**
      * 拼接 JPQL 或者 SQL 片段时的前缀，如: 'and'、'or' 等.
@@ -54,29 +52,18 @@ public final class BuildSource {
     private String symbol;
 
     /**
-     * 仅仅有 SqlInfo 的构造方法.
-     *
-     * @param sqlInfo SQL 拼接信息
-     */
-    public BuildSource(SqlInfo sqlInfo) {
-        this.sqlInfo = sqlInfo;
-        resetPrefix();
-        resetSymbol();
-    }
-
-    /**
-     * 含 XML 命名空间、SqlInfo、Node 节点、Map 参数上下文的构造方法.
+     * 含 XML 命名空间、SqlInfo、Node 节点、上下文参数的构造方法.
      *
      * @param namespace XML 命名空间
      * @param sqlInfo SQL 拼接和参数对象
      * @param node 某查询 Fenix 的 dom4j 节点
-     * @param paramMap Map 参数对象
+     * @param context （一般是 Bean 或者 map）
      */
-    public BuildSource(String namespace, SqlInfo sqlInfo, Node node, Map<String, Object> paramMap) {
+    public BuildSource(String namespace, SqlInfo sqlInfo, Node node, Object context) {
         this.namespace = namespace;
         this.sqlInfo = sqlInfo;
         this.node = node;
-        this.paramMap = paramMap;
+        this.context = context;
         resetPrefix();
         resetSymbol();
     }

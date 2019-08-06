@@ -5,7 +5,7 @@ import com.blinkfox.fenix.config.annotation.Tagger;
 import com.blinkfox.fenix.config.annotation.Taggers;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.consts.Const;
-import com.blinkfox.fenix.core.IConditHandler;
+import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.helper.StringHelper;
 
 import java.io.File;
@@ -223,14 +223,14 @@ public final class TaggerScanner implements Scanner {
     /**
      * 将扫描到的所有 class 进行再解析.如果其含有 {@link Tagger} 和 {@link Taggers} 注解，则将其进行解析添加到 tagHandlerMap 中.
      *
-     * <p>循环遍历所有 class，如果其不是 {@link IConditHandler} 的实现类，则表明其是正确的 class，继续下次循环.</p>
+     * <p>循环遍历所有 class，如果其不是 {@link FenixHandler} 的实现类，则表明其是正确的 class，继续下次循环.</p>
      */
     @SuppressWarnings("unchecked")
     private void addTagHanderInMap() {
         for (Class<?> cls: classSet) {
             // 如果是 Tagger 注解，则将其 Tagger 信息存放到 Map 中.
             if (cls.isAnnotationPresent(Tagger.class) && isImplConditHandlerClass(cls)) {
-                Class<? extends IConditHandler> conditCls = (Class<? extends IConditHandler>) cls;
+                Class<? extends FenixHandler> conditCls = (Class<? extends FenixHandler>) cls;
                 this.addTagHandlerInMapByTagger(conditCls, conditCls.getAnnotation(Tagger.class));
             }
 
@@ -238,14 +238,14 @@ public final class TaggerScanner implements Scanner {
             if (cls.isAnnotationPresent(Taggers.class) && isImplConditHandlerClass(cls)) {
                 Tagger[] taggerArr = cls.getAnnotation(Taggers.class).value();
                 for (Tagger tagger: taggerArr) {
-                    this.addTagHandlerInMapByTagger((Class<? extends IConditHandler>) cls, tagger);
+                    this.addTagHandlerInMapByTagger((Class<? extends FenixHandler>) cls, tagger);
                 }
             }
         }
     }
 
     /**
-     * 判断给定的 class 所对应的类是否是 {@link IConditHandler} 类的实现类.
+     * 判断给定的 class 所对应的类是否是 {@link FenixHandler} 类的实现类.
      *
      * <p>由于通过 'isAssignableFrom()' 判断'实现'关系时是 false，所以这里采用获取 'getInterfaces()' 方法来判断.</p>
      *
@@ -258,9 +258,9 @@ public final class TaggerScanner implements Scanner {
             return false;
         }
 
-        // 循环判断其接口是否含有 'IConditHandler' 接口.
+        // 循环判断其接口是否含有 'FenixHandler' 接口.
         for (Class<?> cls: classes) {
-            if (IConditHandler.class.isAssignableFrom(cls)) {
+            if (FenixHandler.class.isAssignableFrom(cls)) {
                 return true;
             }
         }
@@ -270,9 +270,9 @@ public final class TaggerScanner implements Scanner {
     /**
      * 添加单个的 {@link Tagger} 注解相关信息到 tagHandlerMap 中.
      *
-     * @param cls IConditHandler 实现类的 class
+     * @param cls FenixHandler 实现类的 class
      */
-    private void addTagHandlerInMapByTagger(Class<? extends IConditHandler> cls, Tagger tagger) {
+    private void addTagHandlerInMapByTagger(Class<? extends FenixHandler> cls, Tagger tagger) {
         FenixDefaultConfig.getTagHandlerMap()
                 .put(tagger.value(), new TagHandler(tagger.prefix(), cls, tagger.symbol()));
     }

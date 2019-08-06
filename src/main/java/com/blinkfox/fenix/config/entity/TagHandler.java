@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.config.entity;
 
 import com.blinkfox.fenix.consts.Const;
-import com.blinkfox.fenix.core.IConditHandler;
+import com.blinkfox.fenix.core.FenixHandler;
 
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
  * XML 标签对应的动态 SQL 片段生成的处理类.
  *
  * @author blinkfox on 2019-08-04.
- * @see IConditHandler
+ * @see FenixHandler
  */
 public class TagHandler {
 
@@ -23,7 +23,7 @@ public class TagHandler {
      * 生成动态 SQL 片段的处理实现反射类型，如: 'EqualHandler'.
      */
     @Getter
-    private Class<? extends IConditHandler> handlerCls;
+    private Class<? extends FenixHandler> handlerCls;
 
     /**
      * 生成动态 SQL 片段的 SQL 操作符，如: '>', '=', 'LIKE' 等.
@@ -36,7 +36,7 @@ public class TagHandler {
      *
      * @param handlerCls 标签处理器的 class
      */
-    public TagHandler(Class<? extends IConditHandler> handlerCls) {
+    public TagHandler(Class<? extends FenixHandler> handlerCls) {
         this.prefix = Const.ONE_SPACE;
         this.handlerCls = handlerCls;
     }
@@ -47,7 +47,7 @@ public class TagHandler {
      * @param prefix SQL 前缀
      * @param handlerCls 标签处理器的 class
      */
-    public TagHandler(String prefix, Class<? extends IConditHandler> handlerCls) {
+    public TagHandler(String prefix, Class<? extends FenixHandler> handlerCls) {
         this.prefix = prefix;
         this.handlerCls = handlerCls;
     }
@@ -58,7 +58,7 @@ public class TagHandler {
      * @param handlerCls 标签处理器的 class
      * @param symbol SQL 操作符
      */
-    public TagHandler(Class<? extends IConditHandler> handlerCls, String symbol) {
+    public TagHandler(Class<? extends FenixHandler> handlerCls, String symbol) {
         this.prefix = Const.ONE_SPACE;
         this.handlerCls = handlerCls;
         this.symbol = symbol;
@@ -71,7 +71,7 @@ public class TagHandler {
      * @param symbol SQL 操作符
      * @param handlerCls 标签处理器的 class
      */
-    public TagHandler(String prefix, Class<? extends IConditHandler> handlerCls, String symbol) {
+    public TagHandler(String prefix, Class<? extends FenixHandler> handlerCls, String symbol) {
         this.prefix = prefix;
         this.handlerCls = handlerCls;
         this.symbol = symbol;

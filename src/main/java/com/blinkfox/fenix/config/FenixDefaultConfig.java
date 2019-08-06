@@ -1,11 +1,9 @@
 package com.blinkfox.fenix.config;
 
-import static com.blinkfox.fenix.consts.Const.*;
-
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
-import com.blinkfox.fenix.core.IConditHandler;
+import com.blinkfox.fenix.core.FenixHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,7 +136,7 @@ public class FenixDefaultConfig {
      * @param tagName 标签名称
      * @param handlerCls 标签处理器类的 Class
      */
-    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls) {
+    protected static void add(String tagName, Class<? extends FenixHandler> handlerCls) {
         tagHandlerMap.put(tagName, new TagHandler(handlerCls));
     }
 
@@ -149,7 +147,7 @@ public class FenixDefaultConfig {
      * @param prefix SQL 片段前缀
      * @param handlerCls 标签处理器类的 Class
      */
-    protected static void add(String tagName, String prefix, Class<? extends IConditHandler> handlerCls) {
+    protected static void add(String tagName, String prefix, Class<? extends FenixHandler> handlerCls) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls));
     }
 
@@ -160,7 +158,7 @@ public class FenixDefaultConfig {
      * @param handlerCls 标签处理器类的 Class
      * @param symbol SQL 操作符
      */
-    protected static void add(String tagName, Class<? extends IConditHandler> handlerCls, String symbol) {
+    protected static void add(String tagName, Class<? extends FenixHandler> handlerCls, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(handlerCls, symbol));
     }
 
@@ -173,7 +171,7 @@ public class FenixDefaultConfig {
      * @param symbol SQL 操作符
      */
     protected static void add(String tagName, String prefix,
-            Class<? extends IConditHandler> handlerCls, String symbol) {
+                              Class<? extends FenixHandler> handlerCls, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls, symbol));
     }
 
