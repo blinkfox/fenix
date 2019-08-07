@@ -232,4 +232,16 @@ public class FenixXmlTest {
         assertEquals(3, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 notIn 标签的情况.
+     */
+    @Test
+    public void notIn() {
+        this.buildInParams();
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notIn", context);
+        assertEquals(BASE_QUERY + " u.id NOT IN :user_id AND u.name NOT IN :names OR u.email NOT IN :emails",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
 }

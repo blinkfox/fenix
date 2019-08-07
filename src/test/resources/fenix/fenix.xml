@@ -130,4 +130,13 @@
         <orIn match="" field="u.email" value="emails"/>
     </fenix>
 
+    <!-- 用于单元测试 notIn 标签生成的 JPQL 语句和参数. -->
+    <fenix id="notIn">
+        SELECT u FROM @{entityName}
+        WHERE
+        <notIn field="u.id" value="user.id"/>
+        <andNotIn match="names != empty" field="u.name" value="names"/>
+        <orNotIn match="" field="u.email" value="emails"/>
+    </fenix>
+
 </fenixs>
