@@ -276,4 +276,17 @@ public class FenixXmlTest {
         assertEquals(3, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 import 标签的情况.
+     */
+    @Test
+    public void testImport() {
+        context.put("names", new String[] {NAME, "Maliu"});
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.import", context);
+        assertEquals("SELECT u.id, u.name, u.email FROM User WHERE u.id IS NOT NULL "
+                        + "AND u.name IN :names OR u.email LIKE :email",
+                sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+    }
+
 }

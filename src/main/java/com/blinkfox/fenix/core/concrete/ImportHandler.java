@@ -54,6 +54,10 @@ public class ImportHandler implements FenixHandler {
 
         // 获取 fenixId 及该 fenixId 所对应的 XML 节点.
         String fenixId = XmlNodeHelper.getNodeAttrText(source.getNode(), XpathConst.ATTR_FENIX_ID);
+        if (StringHelper.isBlank(fenixId)) {
+            throw new NodeNotFoundException("【Fenix 异常提示】<import /> 标签中存在 fenixId 为空的情况，请检查！");
+        }
+
         Node node = XmlNodeHelper.getNodeBySpaceAndId(nameSpace, fenixId);
         if (node == null) {
             throw new NodeNotFoundException("【Fenix 异常提示】从 <import /> 标签中，未找到 namespace 为【" + nameSpace

@@ -170,4 +170,25 @@
         </text>
     </fenix>
 
+    <!-- 用于测试 import 标签导入而设计的 XML 节点. -->
+    <fenix id="commonFields">
+        u.id, u.name, u.email
+    </fenix>
+
+    <!-- 用于测试 import 标签导入而设计的 XML 节点. -->
+    <fenix id="commonConditions">
+        <isNotNull field="u.id" value="user.id"/>
+        <andIn match="names != empty" field="u.name" value="names"/>
+        <orEndsWith match="" field="u.email" value="email"/>
+    </fenix>
+
+    <!-- 用于单元测试 import 标签生成的 JPQL 语句和参数. -->
+    <fenix id="import">
+        SELECT
+        <import fenixId="commonFields"/>
+        FROM @{entityName}
+        WHERE
+        <import match="user.name != empty &amp;&amp; email != empty" fenixId="commonConditions"/>
+    </fenix>
+
 </fenixs>
