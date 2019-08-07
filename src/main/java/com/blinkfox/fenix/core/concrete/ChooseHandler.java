@@ -24,7 +24,7 @@ import org.dom4j.Node;
  *     <li>when 表示匹配条件，结果为 true 时，执行对应的 then 块；</li>
  *     <li>then 表示需要执行的逻辑，和 when 一一对应，内容是字符串或字符串模版；</li>
  *     <li>else 表示所有 when 条件都不满足时才执行的逻辑，内容是字符串或者字符串模版；</li>
- *     <li>when then 必须一一对应，没写一对计数器累加，可以写 {@link Integer#MAX_VALUE} 个；</li>
+ *     <li>when-then 必须一一对应，每写一对计数器就会向后累加，可以写 {@link Integer#MAX_VALUE} 个；</li>
  * </ul>
  *
  * @author blinkfox on 2019-08-07.
@@ -50,7 +50,7 @@ public class ChooseHandler implements FenixHandler {
         // 在循环过程中，如果判断到第 x 个 when 解析后的值为 true 时，则解析拼接这第 x 个 then 的值到 Sql 中，并直接返回.
         int i = 0;
         while (true) {
-            // 每次循环加1，如果是第一个，则，when-then 等添加的后缀为空字符串.
+            // 每次循环加1，如果是第一个，则，when-then 添加的后缀为空字符串.
             i++;
             String x = i == 1 ? "" : Integer.toString(i);
 

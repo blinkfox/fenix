@@ -208,4 +208,13 @@
         WHERE u.c_id = '@{user.id}'
     </fenix>
 
+    <!-- 用于单元测试 set 标签生成的 JPQL 语句和参数. -->
+    <fenix id="set">
+        UPDATE t_user
+        <set match1="" field="" value=""
+             match2="" field2="" value2=""
+             match3="" field3="" value3=""/>
+        WHERE u.c_id = '@{user.id}'
+    </fenix>
+
 </fenixs>
