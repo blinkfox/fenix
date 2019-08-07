@@ -51,7 +51,7 @@ public class SqlInfoBuilder {
      *
      * @param source 构建资源参数
      */
-    protected SqlInfoBuilder(BuildSource source) {
+    public SqlInfoBuilder(BuildSource source) {
         this.sqlInfo = source.getSqlInfo();
         this.context = source.getContext();
         this.prefix = source.getPrefix();
@@ -79,7 +79,7 @@ public class SqlInfoBuilder {
      * @param valueText 待解析 value 的文本值
      * @param value 解析后的表达式的值
      */
-    protected void buildNormalSql(String fieldText, String valueText, Object value) {
+    public void buildNormalSql(String fieldText, String valueText, Object value) {
         String namedText = this.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(this.symbol).append(Const.COLON).append(namedText);
@@ -94,7 +94,7 @@ public class SqlInfoBuilder {
      * @param valueText 待解析 value 的文本值
      * @param value 参数值
      */
-    protected void buildLikeSql(String fieldText, String valueText, Object value) {
+    public void buildLikeSql(String fieldText, String valueText, Object value) {
         String namedText = this.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
@@ -121,7 +121,7 @@ public class SqlInfoBuilder {
      * @param fieldText 数据库字段的文本
      * @param pattern LIKE 匹配的模式
      */
-    protected void buildLikePatternSql(String fieldText, String pattern) {
+    public void buildLikePatternSql(String fieldText, String pattern) {
         sqlInfo.getJoin().append(prefix).append(fieldText)
                 .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
                 .append(Const.QUOTE).append(pattern).append(Const.QUOTE);
@@ -133,10 +133,12 @@ public class SqlInfoBuilder {
      * <p>根据开始文本和结束文本是否为空来判断执行是大于、小于还是区间的查询 JPQL 和参数的生成.</p>
      *
      * @param fieldText 字段文本
-     * @param startValue 开始值
-     * @param endValue 结束值
+     * @param startText 开始文本
+     * @param startValue 解析的开始值
+     * @param endText 结束文本
+     * @param endValue 解析的结束值
      */
-    protected void buildBetweenSql(String fieldText, String startText, Object startValue,
+    public void buildBetweenSql(String fieldText, String startText, Object startValue,
             String endText, Object endValue) {
         // 开始值不为空，结束值为空时，转为"大于"的情况.
         if (startValue != null && endValue == null) {
@@ -166,12 +168,11 @@ public class SqlInfoBuilder {
     /**
      * 追加构建 'IN' 范围查询 SQL 片段的 {@link SqlInfo} 信息.
      *
-     * <p>根据开始文本和结束文本是否为空来判断执行是大于、小于还是区间的查询 JPQL 和参数的生成.</p>
-     *
      * @param fieldText 字段文本
+     * @param valueText IN 属性的值文本
      * @param obj IN 查询范围的值，如果不是集合或数组，就将单个的值包装数组
      */
-    protected void buildInSql(String fieldText, String valueText, Object obj) {
+    public void buildInSql(String fieldText, String valueText, Object obj) {
         String endNamed = this.fixDot(valueText);
         sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol)
                 .append(Const.COLON).append(endNamed);
@@ -182,13 +183,12 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建" IS NULL "和" IS NOT NULL "需要的SqlInfo信息.
-     * @param fieldText 数据库字段的文本
-     * @return SqlInfo信息
+     * 追加构建 ' IS NULL ' 和 ' IS NOT NULL ' SQL 片段的 {@link SqlInfo} 信息.
+     *
+     * @param fieldText 字段文本
      */
     public void buildIsNullSql(String fieldText) {
-//        this.suffix = StringHelper.isBlank(this.suffix) ? Const.IS_NULL_SUFFIX : this.suffix;
-//        join.append(prefix).append(fieldText).append(this.suffix);
+        sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol);
     }
 
 }

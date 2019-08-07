@@ -9,6 +9,7 @@ import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.concrete.BetweenHandler;
 import com.blinkfox.fenix.core.concrete.EndsWithHandler;
 import com.blinkfox.fenix.core.concrete.InHandler;
+import com.blinkfox.fenix.core.concrete.IsNullHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
@@ -120,15 +121,16 @@ public class FenixDefaultConfig {
         add("andNotIn", AND, InHandler.class, NOT_IN);
         add("orNotIn", OR, InHandler.class, NOT_IN);
 
-//        // "IS NULL"相关标签：isNull、andIsNull、orIsNull
-//        add(IS_NULL, IsNullHandler.class, IS_NULL_SUFFIX);
-//        add(AND_IS_NULL, AND_PREFIX, IsNullHandler.class, IS_NULL_SUFFIX);
-//        add(OR_IS_NULL, OR_PREFIX, IsNullHandler.class, IS_NULL_SUFFIX);
-//        // "IS NOT NULL"相关标签：isNotNull、andIsNotNull、orIsNotNull
-//        add(IS_NOT_NULL, IsNullHandler.class, IS_NOT_NULL_SUFFIX);
-//        add(AND_IS_NOT_NULL, AND_PREFIX, IsNullHandler.class, IS_NOT_NULL_SUFFIX);
-//        add(OR_IS_NOT_NULL, OR_PREFIX, IsNullHandler.class, IS_NOT_NULL_SUFFIX);
-//
+        // "IS NULL" 的相关标签：isNull、andIsNull、orIsNull
+        add("isNull", IsNullHandler.class, IS_NULL);
+        add("andIsNull", AND, IsNullHandler.class, IS_NULL);
+        add("orIsNull", OR, IsNullHandler.class, IS_NULL);
+
+        // "IS NOT NULL" 的相关标签：isNotNull、andIsNotNull、orIsNotNull
+        add("isNotNull", IsNullHandler.class, IS_NOT_NULL);
+        add("andIsNotNull", AND, IsNullHandler.class, IS_NOT_NULL);
+        add("orIsNotNull", OR, IsNullHandler.class, IS_NOT_NULL);
+
 //        // 其他标签：text、include、case
 //        add(TEXT, TextHandler.class);
 //        add(IMPORT, ImportHandler.class);

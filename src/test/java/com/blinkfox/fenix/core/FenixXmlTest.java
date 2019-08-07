@@ -244,4 +244,25 @@ public class FenixXmlTest {
         assertEquals(3, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 isNull 标签的情况.
+     */
+    @Test
+    public void isNull() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.isNull", context);
+        assertEquals(BASE_QUERY + " u.id IS NULL AND u.name IS NULL OR u.email IS NULL", sqlInfo.getSql());
+        assertEquals(0, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 isNotNull 标签的情况.
+     */
+    @Test
+    public void isNotNull() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.isNotNull", context);
+        assertEquals(BASE_QUERY + " u.id IS NOT NULL AND u.name IS NOT NULL OR u.email IS NOT NULL",
+                sqlInfo.getSql());
+        assertEquals(0, sqlInfo.getParams().size());
+    }
+
 }
