@@ -7,6 +7,7 @@ import com.blinkfox.fenix.config.scanner.XmlScanner;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.ConfigNotFoundException;
+import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
@@ -264,7 +265,7 @@ public final class FenixConfigManager {
             // 根据文件路径获取对应的 dom4j Document 对象.
             Document doc = XmlNodeHelper.getDocument(filePath);
             if (doc == null) {
-                throw new ConfigNotFoundException("【Fenix 错误提示】未找到配置文件中 XML 对应的 dom4j Document 文档，"
+                throw new ConfigNotFoundException("【Fenix 异常提示】未找到配置文件中 XML 对应的 dom4j Document 文档，"
                         + "namespace 为:【" + namespace + "】.");
             }
 
@@ -273,8 +274,14 @@ public final class FenixConfigManager {
             for (Node fenixNode: fenixNodes) {
                 String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
-                    throw new NodeNotFoundException("【Fenix 错误提示】该 XML 文件中有 fenix 节点的 id 属性为空，请检查！"
-                            + "文件为:【" + filePath + "】.");
+                    throw new NodeNotFoundException("【Fenix 异常提示】该【" + filePath + "】的 XML 文件中有"
+                            + " fenix 节点的 id 属性为空，请检查！");
+                }
+
+                // 判断 fenixId 是否有 '.' 号，如果有的话，就抛出异常提示.
+                if (fenixId.contains(Const.DOT)) {
+                    throw new FenixException("【Fenix 异常提示】该【" + filePath + "】的 XML 文件中"
+                            + " fenix 节点 id【" + fenixId + "】不能包含 '.' 号，请修正！");
                 }
 
                 // 将 fenix 节点缓存到 Map 中，key 是由 namespace 和 fenixId 组成，用 "." 号分隔，value 是 fenixNode.
