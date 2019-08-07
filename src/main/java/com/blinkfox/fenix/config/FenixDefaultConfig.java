@@ -14,6 +14,7 @@ import com.blinkfox.fenix.core.concrete.InHandler;
 import com.blinkfox.fenix.core.concrete.IsNullHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
+import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 
@@ -138,6 +139,7 @@ public class FenixDefaultConfig {
         add("text", TextHandler.class);
         add("import", ImportHandler.class);
         add("choose", ChooseHandler.class);
+        add("set", SetHandler.class);
     }
 
     /**

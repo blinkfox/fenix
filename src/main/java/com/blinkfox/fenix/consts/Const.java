@@ -37,6 +37,11 @@ public final class Const {
     public static final String QUOTE = "'";
 
     /**
+     * 含一个空格的字符串.
+     */
+    public static final String SPACE = " ";
+
+    /**
      * 普通数组.
      */
     public static final int OBJTYPE_ARRAY = 1;
@@ -55,13 +60,6 @@ public final class Const {
      * 节点类型 - 元素节点.
      */
     public static final String NODETYPE_ELEMENT = "Element";
-
-    /* ------------------- SQL 中的前缀常量. ------------------- */
-
-    /** 空字符串. */
-    public static final String EMPTY = "";
-    /** 含空格的字符串. */
-    public static final String ONE_SPACE = " ";
 
     /**
      * 类型的字符串常量.

@@ -77,13 +77,18 @@ public final class SymbolConst {
     public static final String NOT_IN = " NOT IN ";
 
     /**
-     * NULL.
+     * IS NULL.
      */
     public static final String IS_NULL = " IS NULL ";
 
     /**
-     * NOT NULL.
+     * IS NOT NULL.
      */
     public static final String IS_NOT_NULL = " IS NOT NULL ";
+
+    /**
+     * SET.
+     */
+    public static final String SET = " SET ";
 
 }

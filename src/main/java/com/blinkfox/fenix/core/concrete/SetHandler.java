@@ -1,6 +1,8 @@
 package com.blinkfox.fenix.core.concrete;
 
 import com.blinkfox.fenix.bean.BuildSource;
+import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.exception.FenixException;
@@ -43,12 +45,14 @@ public class SetHandler implements FenixHandler {
     @Override
     public void buildSqlInfo(BuildSource source) {
         Object context = source.getContext();
+        String namespace = source.getNamespace();
         StringBuilder join = source.getSqlInfo().getJoin();
         Map<String, Object> params = source.getSqlInfo().getParams();
         Node node = source.getNode();
 
         // 每次循环加 1，如果是第一个，则，match-field-value 添加的后缀为空字符串.
         int i = 0;
+        boolean isSet = false;
         while (true) {
             i++;
             String x = i == 1 ? "" : Integer.toString(i);
@@ -61,19 +65,37 @@ public class SetHandler implements FenixHandler {
 
             // 如果 match 匹配，就拼接 field-value 的 set 语句.
             if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH + x), context)) {
-                String fieldText = fieldNode.getText();
-                if (StringHelper.isBlank(fieldText)) {
-                    throw new FenixException("【Fenix 异常提示】namespace 为【" + source.getNamespace() + "】的 XML 中，"
-                            + "<set /> 标签中第【" + i + "】个 field 属性内容是空的，请检查！");
+                String fieldText = getAndCheckFieldText(fieldNode, namespace, i);
+
+                if (!isSet) {
+                    join.append(SymbolConst.SET);
+                    isSet = true;
+                } else {
+                    join.append(Const.COMMA).append(Const.SPACE);
                 }
 
-                // 拼接 field-value 的 SQL 和命名参数.
+                // 然后拼接 'field = :value' 的 SQL 和命名参数.
                 Node valueNode = node.selectSingleNode(XpathConst.ATTR_VALUE + x);
+                join.append(fieldText).append(SymbolConst.EQUAL).append(Const.COLON).append(fieldText);
                 params.put(fieldText, valueNode == null ? null :
                         ParseHelper.parseExpressWithException(valueNode.getText(), context));
-                join.append("a");
             }
         }
+    }
+
+    /**
+     * 根据 field 的 Node 节点获取其文本值.
+     *
+     * @param fieldNode 字段节点
+     * @return 字段文本值
+     */
+    private String getAndCheckFieldText(Node fieldNode, String namespace, int i) {
+        String fieldText = fieldNode.getText();
+        if (StringHelper.isBlank(fieldText)) {
+            throw new FenixException("【Fenix 异常提示】namespace 为【" + namespace + "】的 XML 中，"
+                    + "<set /> 标签中第【" + i + "】个 field 属性内容是空的，请检查！");
+        }
+        return fieldText;
     }
 
 }

@@ -308,9 +308,9 @@ public class FenixXmlTest {
     public void set() {
         context.put("age", 25);
         SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.set", context);
-        assertEquals("UPDATE t_user SET u.c_sex = 'female' , u.c_status = 'no' , u.c_age = '青年' WHERE u.c_id = '123'",
+        assertEquals("UPDATE User SET name = :name, email = :email, sex = :sex WHERE u.c_id = '123'",
                 sqlInfo.getSql());
-        assertEquals(0, sqlInfo.getParams().size());
+        assertEquals(3, sqlInfo.getParams().size());
     }
 
 }

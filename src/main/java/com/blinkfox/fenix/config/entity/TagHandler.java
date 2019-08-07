@@ -37,7 +37,7 @@ public class TagHandler {
      * @param handlerCls 标签处理器的 class
      */
     public TagHandler(Class<? extends FenixHandler> handlerCls) {
-        this.prefix = Const.ONE_SPACE;
+        this.prefix = Const.SPACE;
         this.handlerCls = handlerCls;
     }
 
@@ -59,7 +59,7 @@ public class TagHandler {
      * @param symbol SQL 操作符
      */
     public TagHandler(Class<? extends FenixHandler> handlerCls, String symbol) {
-        this.prefix = Const.ONE_SPACE;
+        this.prefix = Const.SPACE;
         this.handlerCls = handlerCls;
         this.symbol = symbol;
     }

@@ -83,7 +83,7 @@ public final class BuildSource {
      * <p>注：为了防止 SQL 拼接时连在一起，默认前缀为一个空格的字符串.</p>
      */
     public void resetPrefix() {
-        this.prefix = Const.ONE_SPACE;
+        this.prefix = Const.SPACE;
     }
 
     /**
@@ -92,7 +92,7 @@ public final class BuildSource {
      * <p>为了防止 SQL 拼接时连在一起，默认 SQL 操作符为一个空格的字符串.</p>
      */
     public void resetSymbol() {
-        this.symbol = Const.ONE_SPACE;
+        this.symbol = Const.SPACE;
     }
 
 }

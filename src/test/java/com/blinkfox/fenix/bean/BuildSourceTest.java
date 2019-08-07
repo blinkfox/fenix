@@ -34,7 +34,7 @@ public class BuildSourceTest {
     @Test
     public void resetPrefix() {
         source.setPrefix(null).resetPrefix();
-        assertEquals(Const.ONE_SPACE, source.getPrefix());
+        assertEquals(Const.SPACE, source.getPrefix());
     }
 
     /**
@@ -43,7 +43,7 @@ public class BuildSourceTest {
     @Test
     public void resetSymbol() {
         source.setSymbol(null).resetSymbol();
-        assertEquals(Const.ONE_SPACE, source.getSymbol());
+        assertEquals(Const.SPACE, source.getSymbol());
     }
 
     /**
