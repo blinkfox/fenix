@@ -1,7 +1,12 @@
 package com.blinkfox.fenix.jpa;
 
-import java.util.LinkedHashMap;
+import com.blinkfox.fenix.bean.SqlInfo;
+import com.blinkfox.fenix.core.Fenix;
+import com.blinkfox.fenix.helper.QueryHelper;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -14,7 +19,6 @@ import org.springframework.data.jpa.repository.query.JpaParameters;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.repository.query.Parameter;
-import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.RepositoryQuery;
 
@@ -29,9 +33,19 @@ import org.springframework.data.repository.query.RepositoryQuery;
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
+     * JPA 参数对象.
+     */
+    private JpaParameters jpaParams;
+
+    /**
      * 标注了 {@link QueryFenix} 注解的注解实例.
      */
     private QueryFenix queryFenix;
+
+    /**
+     * JPQL 或者 SQL 语句.
+     */
+    private String sql;
 
     /**
      * Creates a new {@link AbstractJpaQuery} from the given {@link JpaQueryMethod}.
@@ -52,63 +66,76 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     @Override
     protected Query doCreateQuery(Object[] values) {
-        // 分析出 SQL 查询的参数
-        Map<String, Object> paramMap = new LinkedHashMap<>();
-        JpaParameters parameters = getQueryMethod().getParameters();
-        for (int i = 0; i < parameters.getNumberOfParameters(); i++) {
-            Parameter parameter = parameters.getParameter(i);
+        this.jpaParams = getQueryMethod().getParameters();
+        // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
+        SqlInfo sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.buildContextParams(values));
+        this.sql = sqlInfo.getSql();
+
+        // 判断是否有分页参数.如果有的话，就设置分页参数.
+        Pageable pageable = this.buildPagableAndSortSql(values);
+
+        // 构建出 SQL 查询和相关的参数.
+        EntityManager em = super.getEntityManager();
+        Query query = em.createQuery(this.sql);
+        for (Map.Entry<String, Object> entry : sqlInfo.getParams().entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        // 如果分页对象不为空，就设置分页参数.
+        if (pageable != null) {
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+        }
+        return query;
+    }
+
+    /**
+     * 根据 JPA 参数和值的数组来分析构建出 JPQL 语句和参数的 Map 型上下文参数.
+     *
+     * @param values JPA 参数值
+     * @return Map
+     */
+    private Map<String, Object> buildContextParams(Object[] values) {
+        int len = jpaParams.getNumberOfParameters();
+        Map<String, Object> context = new HashMap<>(len);
+        for (int i = 0; i < len; i++) {
+            Parameter parameter = jpaParams.getParameter(i);
             if (parameter.isSpecialParameter()) {
                 continue;
             }
 
-            log.info("isExplicitlyNamed: 【{}】", parameter.isExplicitlyNamed());
-            paramMap.put(parameter.getName().get(), values[i]);
-            log.info("param name:【{}】, type:【{}】，index:【{}】，placeholder:【{}】", parameter.getName(),
-                    parameter.getType(), parameter.getIndex(), parameter.getPlaceholder());
+            // 获取参数
+            Optional<String> nameOptional =  parameter.getName();
+            if (nameOptional.isPresent()) {
+                context.put(nameOptional.get(), values[i]);
+            }
         }
+        return context;
+    }
 
-//        String namespace = myQuery.namespace();
-//        String zealotId = myQuery.zealotId();
-//        log.info("namespace:【{}】, zealotId:【{}】", namespace, zealotId);
-//
-//        SqlInfo sqlInfo = Zealot.getSqlInfo(namespace, zealotId, paramMap);
-//        String sql = sqlInfo.getSql();
-//        Map<String, Object> sqlParamMap = sqlInfo.getParamMap();
-//        log.info("zealot 解析后的新 sql 字符串: 【{}】, 参数：【{}】", sql, sqlParamMap);
-        Map<String, Object> sqlParamMap = null;
-        String sql = "";
-
-        // 判断是否有分页参数.如果有的话，就设置分页参数.
+    /**
+     * 继续构建 Spring Data JPA 分页和排序参数的SQL.
+     *
+     * @param values 参数数组
+     */
+    private Pageable buildPagableAndSortSql(Object[] values) {
         Pageable pageable = null;
-        if (parameters.hasPageableParameter()) {
-            pageable = (Pageable) (values[parameters.getPageableIndex()]);
+        if (jpaParams.hasPageableParameter()) {
+            pageable = (Pageable) (values[jpaParams.getPageableIndex()]);
             if (pageable != null) {
                 Sort sort = pageable.getSort();
                 if (sort != null) {
-                    sql = QueryUtils.applySorting(sql, sort, QueryUtils.detectAlias(sql));
+                    this.sql = QueryUtils.applySorting(this.sql, sort, QueryHelper.detectAlias(this.sql));
                 }
             }
         }
 
         // 判断是否有排序参数，如果有，就追加排序相关的参数.
-        if (parameters.hasSortParameter()) {
-            ParameterAccessor accessor = new ParametersParameterAccessor(parameters, values);
-            sql = QueryUtils.applySorting(sql, accessor.getSort(), QueryUtils.detectAlias(sql));
+        if (jpaParams.hasSortParameter()) {
+            this.sql = QueryUtils.applySorting(this.sql, new ParametersParameterAccessor(jpaParams, values).getSort(),
+                    QueryHelper.detectAlias(this.sql));
         }
-
-        EntityManager em = super.getEntityManager();
-        Query query = em.createQuery(sql);
-        for (Map.Entry<String, Object> entry : sqlParamMap.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
-
-        // 设置分页参数.
-        if (pageable != null) {
-            query.setFirstResult((int) pageable.getOffset());
-            query.setMaxResults(pageable.getPageSize());
-        }
-
-        return query;
+        return pageable;
     }
 
     /**

@@ -11,10 +11,12 @@ import org.springframework.data.annotation.QueryAnnotation;
 /**
  * 自定义的核心查询注解 {@link QueryFenix}，
  * 用于解决 {@link org.springframework.data.jpa.repository.Query} 注解在复杂或动态 SQL 方面表达能力弱的问题.
- * '@QueryFenix' 注解可以用来关联外部的 SQL XML 文件，实现 SQL 与 Java 隔离，
- * 并通过模板或标签语法来处理生成复杂或动态的 JPQL 或 SQL 语句.
+ *
+ * <p>{@link QueryFenix} 注解可以用来关联外部的 SQL XML 文件，实现 SQL 与 Java 隔离，
+ *      并通过模板或标签语法来处理生成复杂或动态的 JPQL 或 SQL 语句.</p>
  *
  * @author blinkfox on 2019-08-04.
+ * @see FenixQueryLookupStrategy
  */
 @Documented
 @QueryAnnotation
@@ -23,24 +25,26 @@ import org.springframework.data.annotation.QueryAnnotation;
 public @interface QueryFenix {
 
     /**
-     * SQL 模板的字符串值.
+     * 全 FenixId 标记，该值由 XML 文件的命名空间、'.'号和 Fenix XML 标签中的 id 组成.
+     *
+     * <p>即：'{namespace}' + '.' + '{fenixId}'，如：'blogRepostiry.getMyBlogs'</p>
      *
      * @return value
      */
     String value() default "";
 
     /**
-     * SQL 所在的 XML 文件的命名空间，如果不设置此值，将默认使用 SQL 的 XML 文件名作为命名空间.
+     * 查询记录数 SQL 的全 FenixId 标记，该值由 XML 文件的命名空间、'.'号和 Fenix XML 标签中的 id 组成.
      *
-     * @return namespace SQL 所在的 XML 文件的命名空间
+     * <p>即：'{namespace}' + '.' + '{fenixId}'，如：'blogRepostiry.getMyBlogs'</p>
+     *
+     * @return countQuery
      */
-    String namespace() default "";
+    String countQuery() default "";
 
     /**
-     * 每个 SQL 所在的 Fenix XML 文件的 id 值.
-     *
-     * @return zealotId
+     * 是否原生 SQL 查询，默认为 false.
      */
-    String fenixId() default "";
+    boolean nativeQuery() default false;
 
 }

@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.entity.Blog;
+import com.blinkfox.fenix.jpa.QueryFenix;
 
 import java.util.List;
 
@@ -25,5 +26,14 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      */
     @Query("select b from Blog as b where b.title like :title")
     List<Blog> queryBlogsByTitle(@Param("title") String title);
+
+    /**
+     * 根据博客的部分信息查询对应的博客信息集合.
+     *
+     * @param blog 博客实体信息
+     * @return 博客信息集合
+     */
+    @QueryFenix("BlogRepository.queryMyBlogs")
+    List<Blog> queryMyBlogs(@Param("blog") Blog blog);
 
 }

@@ -45,7 +45,7 @@ public class FenixDefaultConfig {
      * 初始化默认的一些标签和 TagHandler 实例到 HashMap 集合中，key 是标签字符串,value 是 TagHandler 实例.
      */
     @Getter
-    private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>();
+    private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>(128);
     
     /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
 
