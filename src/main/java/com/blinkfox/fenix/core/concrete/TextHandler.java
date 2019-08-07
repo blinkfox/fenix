@@ -39,7 +39,7 @@ public class TextHandler implements FenixHandler {
      *
      * <p>如果有非文本节点则抛出 {@link FenixException} 异常.</p>
      *
-     * @param source  {@link BuildSource} 构建资源参数
+     * @param source {@link BuildSource} 构建资源参数
      */
     @Override
     public void buildSqlInfo(BuildSource source) {

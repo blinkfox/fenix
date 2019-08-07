@@ -7,6 +7,7 @@ import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.concrete.BetweenHandler;
+import com.blinkfox.fenix.core.concrete.ChooseHandler;
 import com.blinkfox.fenix.core.concrete.EndsWithHandler;
 import com.blinkfox.fenix.core.concrete.ImportHandler;
 import com.blinkfox.fenix.core.concrete.InHandler;
@@ -14,11 +15,11 @@ import com.blinkfox.fenix.core.concrete.IsNullHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
+import com.blinkfox.fenix.core.concrete.TextHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.blinkfox.fenix.core.concrete.TextHandler;
 import lombok.Getter;
 
 import org.dom4j.Node;
@@ -136,7 +137,7 @@ public class FenixDefaultConfig {
         // 其他标签：text、import、choose.
         add("text", TextHandler.class);
         add("import", ImportHandler.class);
-//        add(CHOOSE, ChooseHandler.class);
+        add("choose", ChooseHandler.class);
     }
 
     /**

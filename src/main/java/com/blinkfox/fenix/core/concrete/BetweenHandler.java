@@ -41,7 +41,7 @@ public class BetweenHandler implements FenixHandler {
      *
      * <p>如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.</p>
      *
-     * @param source  {@link BuildSource} 构建资源参数
+     * @param source {@link BuildSource} 构建资源参数
      */
     @Override
     public void buildSqlInfo(BuildSource source) {
