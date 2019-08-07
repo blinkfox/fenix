@@ -191,4 +191,21 @@
         <import match="user.name != empty &amp;&amp; email != empty" fenixId="commonConditions"/>
     </fenix>
 
+    <!-- 用于单元测试 choose 标签生成的 JPQL 语句和参数. -->
+    <fenix id="choose">
+        UPDATE t_user SET u.c_sex =
+        <choose when="user.sex == '0'" then="'female'"
+                when2="user.sex == '1'" then2="'male'"
+                else="unknown" />
+        , u.c_status =
+        <choose when="?state != empty" then="'yes'" else="'no'" />
+        , u.c_age =
+        <choose when="age > 60" then="'老年'"
+                when2="age > 35" then2="'中年'"
+                when3="age > 20" then3="'青年'"
+                when4="age > 10" then4="'少年'"
+                else="'幼年'" />
+        WHERE u.c_id = '@{user.id}'
+    </fenix>
+
 </fenixs>

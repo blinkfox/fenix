@@ -44,7 +44,7 @@ public class FenixXmlTest {
         FenixConfigManager.getInstance().initLoad(new FenixConfig());
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
-        context.put("user", new User().setId("123").setName(NAME));
+        context.put("user", new User().setId("123").setName(NAME).setSex("0"));
         context.put(EMAIL_KEY, "zhangsan@163.com");
     }
 
@@ -215,8 +215,8 @@ public class FenixXmlTest {
         context.put("endBirthday", "2019-08-07");
 
         SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.between", context);
-        assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge OR u.birthday <= :endBirthday",
-                sqlInfo.getSql());
+        assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge "
+                        + "OR u.birthday <= :endBirthday", sqlInfo.getSql());
         assertEquals(4, sqlInfo.getParams().size());
     }
 
@@ -287,6 +287,18 @@ public class FenixXmlTest {
                         + "AND u.name IN :names OR u.email LIKE :email",
                 sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 choose 标签的情况.
+     */
+    @Test
+    public void choose() {
+        context.put("age", 25);
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.choose", context);
+        assertEquals("UPDATE t_user SET u.c_sex = 'female' , u.c_status = 'no' , u.c_age = '青年' WHERE u.c_id = '123'",
+                sqlInfo.getSql());
+        assertEquals(0, sqlInfo.getParams().size());
     }
 
 }

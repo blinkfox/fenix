@@ -206,7 +206,7 @@ public class FenixDefaultConfig {
      * @param symbol SQL 操作符
      */
     protected static void add(String tagName, String prefix,
-                              Class<? extends FenixHandler> handlerCls, String symbol) {
+            Class<? extends FenixHandler> handlerCls, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls, symbol));
     }
 

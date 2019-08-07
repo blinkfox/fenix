@@ -42,6 +42,12 @@ public class User {
     private int age;
 
     /**
+     * 性别.
+     */
+    @Column(name = "c_sex")
+    private String sex;
+
+    /**
      * 邮箱.
      */
     @Column(name = "c_email")
@@ -70,5 +76,11 @@ public class User {
      */
     @Column(name = "dt_update_time")
     private Date updateTime;
+
+    /**
+     * 状态.
+     */
+    @Column(name = "c_status")
+    private String status;
 
 }
