@@ -35,7 +35,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 追加构建 LIKE 模糊查询的 {@link SqlInfo} 信息.
+     * 追加构建 'LIKE' 模糊查询的 {@link SqlInfo} 信息.
      *
      * @param fieldText 字段文本值
      * @param valueText 参数值
@@ -52,7 +52,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 构建追加 'BETWEEN ? AND ?'、'>='、'<=' 的区间范围查询的 {@link SqlInfo} 信息.
+     * 追加构建 'BETWEEN ? AND ?'、'>='、'<=' 的区间查询的 {@link SqlInfo} 信息.
      *
      * @param fieldText 字段文本值
      * @param startText 开始文本
@@ -64,20 +64,18 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 构建in范围查询的sqlInfo信息.
+     * 追加构建 'IN' 的范围查询的 {@link SqlInfo} 信息.
+     *
+     * <p>获取 value 的值，判断是否为空，若为空，则不做处理.</p>
+     *
      * @param fieldText 字段文本值
-     * @param valueText 参数值
-     * @return 返回SqlInfo信息
+     * @param valueText IN 所要查找的范围文本值
      */
     public void buildInSql(String fieldText, String valueText) {
-        // 获取value值，判断是否为空，若为空，则直接退出本方法
-//        Object obj = ParseHelper.parseExpressWithException(valueText, context);
-//        if (obj == null) {
-//            return sqlInfo;
-//        }
-//
-//        Object[] values = this.convertToArray(obj);
-//        return super.buildInSql(fieldText, values);
+        Object obj = ParseHelper.parseExpressWithException(valueText, context);
+        if (obj != null) {
+            super.buildInSql(fieldText, valueText, obj);
+        }
     }
 
     /**
@@ -104,7 +102,6 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      */
     @SuppressWarnings("rawtypes")
     private Object[] convertToArray(Object obj) {
-        // 获取参数的集合信息，并转换成数组.
         if (obj instanceof Collection) {
             return ((Collection) obj).toArray();
         } else if (obj.getClass().isArray()) {

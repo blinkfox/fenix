@@ -6,15 +6,16 @@ import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.core.concrete.BetweenHandler;
 import com.blinkfox.fenix.core.concrete.EndsWithHandler;
+import com.blinkfox.fenix.core.concrete.InHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
 import com.blinkfox.fenix.core.concrete.NormalHandler;
+import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.blinkfox.fenix.core.concrete.BetweenHandler;
-import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import lombok.Getter;
 
 import org.dom4j.Node;
@@ -104,20 +105,21 @@ public class FenixDefaultConfig {
         add("andNotEndsWith", AND, EndsWithHandler.class, NOT_LIKE);
         add("orNotEndsWith", OR, EndsWithHandler.class, NOT_LIKE);
 
-        // between相关标签：between、andBetween、orBetween
+        // "BETWEEN" 的相关标签：between、andBetween、orBetween
         add("between", BetweenHandler.class);
         add("andBetween", AND, BetweenHandler.class);
         add("orBetween", OR, BetweenHandler.class);
 
-//        // "IN"相关标签：in、andIn、orIn
-//        add(IN, InHandler.class, IN_SUFFIX);
-//        add(AND_IN, AND_PREFIX, InHandler.class, IN_SUFFIX);
-//        add(OR_IN, OR_PREFIX, InHandler.class, IN_SUFFIX);
-//        // "NOT IN"相关标签：notIn、andNotIn、orNotIn
-//        add(NOT_IN, InHandler.class, NOT_IN_SUFFIX);
-//        add(AND_NOT_IN, AND_PREFIX, InHandler.class, NOT_IN_SUFFIX);
-//        add(OR_NOT_IN, OR_PREFIX, InHandler.class, NOT_IN_SUFFIX);
-//
+        // "IN" 的相关标签：in、andIn、orIn
+        add("in", InHandler.class, IN);
+        add("andIn", AND, InHandler.class, IN);
+        add("orIn", OR, InHandler.class, IN);
+
+        // "NOT IN" 的相关标签：notIn、andNotIn、orNotIn
+        add("notIn", InHandler.class, NOT_IN);
+        add("andNotIn", AND, InHandler.class, NOT_IN);
+        add("orNotIn", OR, InHandler.class, NOT_IN);
+
 //        // "IS NULL"相关标签：isNull、andIsNull、orIsNull
 //        add(IS_NULL, IsNullHandler.class, IS_NULL_SUFFIX);
 //        add(AND_IS_NULL, AND_PREFIX, IsNullHandler.class, IS_NULL_SUFFIX);

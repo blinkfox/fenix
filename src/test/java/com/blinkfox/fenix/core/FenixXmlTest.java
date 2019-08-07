@@ -7,7 +7,9 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.BeforeClass;
@@ -187,15 +189,16 @@ public class FenixXmlTest {
     }
 
     /**
-     * 构建 between 区间查询的相关参数.
+     * 构建 IN 区间查询的相关参数.
      */
-    private void buildBetweenParams() {
-        context.put("startId", "100");
-        context.put("endId", null);
-        context.put("startAge", 18);
-        context.put("endAge", 30);
-        context.put("startBirthday", null);
-        context.put("endBirthday", "2019-08-07");
+    private void buildInParams() {
+        context.put("names", new String[] {NAME, "Lisi", "WangWu"});
+
+        List<String> emails = new ArrayList<>(3);
+        emails.add("zs@163.com");
+        emails.add("lisi@gmail.com");
+        emails.add("wangwu@qq.com");
+        context.put("emails", emails);
     }
 
     /**
@@ -203,11 +206,30 @@ public class FenixXmlTest {
      */
     @Test
     public void between() {
-        this.buildBetweenParams();
+        // 构建 between 区间查询的相关参数.
+        context.put("startId", "100");
+        context.put("endId", null);
+        context.put("startAge", 18);
+        context.put("endAge", 30);
+        context.put("startBirthday", null);
+        context.put("endBirthday", "2019-08-07");
+
         SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.between", context);
         assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge OR u.birthday <= :endBirthday",
                 sqlInfo.getSql());
         assertEquals(4, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 in 标签的情况.
+     */
+    @Test
+    public void in() {
+        this.buildInParams();
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.in", context);
+        assertEquals(BASE_QUERY + " u.id IN :user_id AND u.name IN :names OR u.email IN :emails",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
     }
 
 }

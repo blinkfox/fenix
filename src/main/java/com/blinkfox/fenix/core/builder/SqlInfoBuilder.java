@@ -7,6 +7,7 @@ import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -50,7 +51,7 @@ public class SqlInfoBuilder {
      *
      * @param source 构建资源参数
      */
-    SqlInfoBuilder(BuildSource source) {
+    protected SqlInfoBuilder(BuildSource source) {
         this.sqlInfo = source.getSqlInfo();
         this.context = source.getContext();
         this.prefix = source.getPrefix();
@@ -71,7 +72,7 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建常规 SQL 片段的 {@link SqlInfo} 信息.
+     * 追加构建常规 SQL 片段的 {@link SqlInfo} 信息.
      * <p>如：'u.id = :id'.</p>
      *
      * @param fieldText JPQL 或者 SQL 语句的字段的文本.
@@ -86,7 +87,7 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建 LIKE 模糊查询 SQL 片段的 {@link SqlInfo} 信息.
+     * 追加构建 LIKE 模糊查询 SQL 片段的 {@link SqlInfo} 信息.
      * <p>如：'u.id LIKE :id'.</p>
      *
      * @param fieldText 数据库字段的文本
@@ -127,7 +128,7 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建区间查询 SQL 片段的 {@link SqlInfo} 信息.
+     * 追加构建区间查询 SQL 片段的 {@link SqlInfo} 信息.
      *
      * <p>根据开始文本和结束文本是否为空来判断执行是大于、小于还是区间的查询 JPQL 和参数的生成.</p>
      *
@@ -163,28 +164,21 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 构建" IN "范围查询的SqlInfo信息.
-     * @param fieldText 数据库字段文本
-     * @param values 对象数组的值
-     * @return 返回SqlInfo信息
+     * 追加构建 'IN' 范围查询 SQL 片段的 {@link SqlInfo} 信息.
+     *
+     * <p>根据开始文本和结束文本是否为空来判断执行是大于、小于还是区间的查询 JPQL 和参数的生成.</p>
+     *
+     * @param fieldText 字段文本
+     * @param obj IN 查询范围的值，如果不是集合或数组，就将单个的值包装数组
      */
-    public void buildInSql(String fieldText, Object[] values) {
-//        if (values == null || values.length == 0) {
-//            return sqlInfo;
-//        }
-//
-//        // 遍历数组，并遍历添加in查询的替换符和参数
-//        this.symbol = StringHelper.isBlank(this.symbol) ? Const.IN_SUFFIX : this.symbol;
-//        join.append(prefix).append(fieldText).append(this.symbol).append("(");
-//        int len = values.length;
-//        for (int i = 0; i < len; i++) {
-//            if (i == len - 1) {
-//                join.append("?) ");
-//            } else {
-//                join.append("?, ");
-//            }
-//            params.add(values[i]);
-//        }
+    protected void buildInSql(String fieldText, String valueText, Object obj) {
+        String endNamed = this.fixDot(valueText);
+        sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol)
+                .append(Const.COLON).append(endNamed);
+
+        // 封装 IN 查询的参数，如果解析的值是一个数组或集合，就直接使用此值作为参数，否则包装成数组来使用.
+        sqlInfo.getParams().put(endNamed,
+                obj instanceof Collection || obj.getClass().isArray() ? obj : new Object[] {obj});
     }
 
     /**

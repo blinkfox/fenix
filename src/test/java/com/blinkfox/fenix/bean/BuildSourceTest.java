@@ -32,7 +32,7 @@ public class BuildSourceTest {
      * 重置前缀的方法.
      */
     @Test
-    public void testResetPrefix() {
+    public void resetPrefix() {
         source.setPrefix(null).resetPrefix();
         assertEquals(Const.ONE_SPACE, source.getPrefix());
     }
@@ -41,7 +41,7 @@ public class BuildSourceTest {
      * 重置后缀的方法.
      */
     @Test
-    public void testResetSuffix() {
+    public void resetSymbol() {
         source.setSymbol(null).resetSymbol();
         assertEquals(Const.ONE_SPACE, source.getSymbol());
     }
@@ -50,7 +50,7 @@ public class BuildSourceTest {
      * 测试设置SqlInfo对象的方法.
      */
     @Test
-    public void testSetSqlInfo() {
+    public void setSqlInfo() {
         SqlInfo sqlInfo = new SqlInfo();
         sqlInfo.setJoin(new StringBuilder("SELECT id, name").append(" FROM user"));
         source.setSqlInfo(sqlInfo);
@@ -61,7 +61,7 @@ public class BuildSourceTest {
      * 测试设置Node节点的方法.
      */
     @Test
-    public void testSetNode() {
+    public void setNode() {
         source.setNode(null);
         assertNull(source.getNode());
     }

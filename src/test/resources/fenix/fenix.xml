@@ -121,4 +121,13 @@
         <orBetween match="(?startBirthday != null) || (endBirthday != null)" field="u.birthday" start="startBirthday" end="endBirthday"/>
     </fenix>
 
+    <!-- 用于单元测试 in 标签生成的 JPQL 语句和参数. -->
+    <fenix id="in">
+        SELECT u FROM @{entityName}
+        WHERE
+        <in field="u.id" value="user.id"/>
+        <andIn match="names != empty" field="u.name" value="names"/>
+        <orIn match="" field="u.email" value="emails"/>
+    </fenix>
+
 </fenixs>
