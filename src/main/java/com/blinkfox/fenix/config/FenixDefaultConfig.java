@@ -17,6 +17,7 @@ import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.blinkfox.fenix.core.concrete.TextHandler;
 import lombok.Getter;
 
 import org.dom4j.Node;
@@ -46,93 +47,93 @@ public class FenixDefaultConfig {
     /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
 
     static {
-        // “等于”的相关标签：equal、andEqual、orEqual
+        // “等于”的相关标签：equal、andEqual、orEqual.
         add("equal", NormalHandler.class, EQUAL);
         add("andEqual", AND, NormalHandler.class, EQUAL);
         add("orEqual", OR, NormalHandler.class, EQUAL);
 
-        // “不等于”的相关标签：notEqual、andNotEqual、orNotEqual
+        // “不等于”的相关标签：notEqual、andNotEqual、orNotEqual.
         add("notEqual", NormalHandler.class, NOT_EQUAL);
         add("andNotEqual", AND, NormalHandler.class, NOT_EQUAL);
         add("orNotEqual", OR, NormalHandler.class, NOT_EQUAL);
 
-        // “大于”的相关标签：greaterThan、andGreaterThan、orGreaterThan
+        // “大于”的相关标签：greaterThan、andGreaterThan、orGreaterThan.
         add("greaterThan", NormalHandler.class, GT);
         add("andGreaterThan", AND, NormalHandler.class, GT);
         add("orGreaterThan", OR, NormalHandler.class, GT);
 
-        // “小于”的相关标签：lessThan、andLessThan、orLessThan
+        // “小于”的相关标签：lessThan、andLessThan、orLessThan.
         add("lessThan", NormalHandler.class, LT);
         add("andLessThan", AND, NormalHandler.class, LT);
         add("orLessThan", OR, NormalHandler.class, LT);
 
-        // “大于等于”的相关标签：greaterThanEqual、andGreaterThanEqual、orGreaterThanEqual
+        // “大于等于”的相关标签：greaterThanEqual、andGreaterThanEqual、orGreaterThanEqual.
         add("greaterThanEqual", NormalHandler.class, GTE);
         add("andGreaterThanEqual", AND, NormalHandler.class, GTE);
         add("orGreaterThanEqual", OR, NormalHandler.class, GTE);
 
-        // “小于等于”的相关标签：lessThanEqual、andLessThanEqual、orLessThanEqual
+        // “小于等于”的相关标签：lessThanEqual、andLessThanEqual、orLessThanEqual.
         add("lessThanEqual", NormalHandler.class, LTE);
         add("andLessThanEqual", AND, NormalHandler.class, LTE);
         add("orLessThanEqual", OR, NormalHandler.class, LTE);
 
-        // "LIKE" 的相关标签：like、andLike、orLike
+        // "LIKE" 的相关标签：like、andLike、orLike.
         add("like", LikeHandler.class, LIKE);
         add("andLike", AND, LikeHandler.class, LIKE);
         add("orLike", OR, LikeHandler.class, LIKE);
 
-        // "NOT LIKE" 的相关标签：notLike、andNotLike、orNotLike
+        // "NOT LIKE" 的相关标签：notLike、andNotLike、orNotLike.
         add("notLike", LikeHandler.class, NOT_LIKE);
         add("andNotLike", AND, LikeHandler.class, NOT_LIKE);
         add("orNotLike", OR, LikeHandler.class, NOT_LIKE);
 
-        // "LIKE 前缀匹配" 的相关标签：startsWith、andStartsWith、orStartsWith
+        // "LIKE 前缀匹配" 的相关标签：startsWith、andStartsWith、orStartsWith.
         add("startsWith", StartsWithHandler.class, LIKE);
         add("andStartsWith", AND, StartsWithHandler.class, LIKE);
         add("orStartsWith", OR, StartsWithHandler.class, LIKE);
 
-        // "NOT LIKE 前缀匹配" 的相关标签：notStartsWith、andNotStartsWith、orNotStartsWith
+        // "NOT LIKE 前缀匹配" 的相关标签：notStartsWith、andNotStartsWith、orNotStartsWith.
         add("notStartsWith", StartsWithHandler.class, NOT_LIKE);
         add("andNotStartsWith", AND, StartsWithHandler.class, NOT_LIKE);
         add("orNotStartsWith", OR, StartsWithHandler.class, NOT_LIKE);
 
-        // "LIKE 后缀匹配" 的相关标签：endsWith、andEndsWith、orEndsWith
+        // "LIKE 后缀匹配" 的相关标签：endsWith、andEndsWith、orEndsWith.
         add("endsWith", EndsWithHandler.class, LIKE);
         add("andEndsWith", AND, EndsWithHandler.class, LIKE);
         add("orEndsWith", OR, EndsWithHandler.class, LIKE);
 
-        // "NOT LIKE 后缀匹配" 的相关标签：notEndsWith、andNotEndsWith、orNotEndsWith
+        // "NOT LIKE 后缀匹配" 的相关标签：notEndsWith、andNotEndsWith、orNotEndsWith.
         add("notEndsWith", EndsWithHandler.class, NOT_LIKE);
         add("andNotEndsWith", AND, EndsWithHandler.class, NOT_LIKE);
         add("orNotEndsWith", OR, EndsWithHandler.class, NOT_LIKE);
 
-        // "BETWEEN" 的相关标签：between、andBetween、orBetween
+        // "BETWEEN" 的相关标签：between、andBetween、orBetween.
         add("between", BetweenHandler.class);
         add("andBetween", AND, BetweenHandler.class);
         add("orBetween", OR, BetweenHandler.class);
 
-        // "IN" 的相关标签：in、andIn、orIn
+        // "IN" 的相关标签：in、andIn、orIn.
         add("in", InHandler.class, IN);
         add("andIn", AND, InHandler.class, IN);
         add("orIn", OR, InHandler.class, IN);
 
-        // "NOT IN" 的相关标签：notIn、andNotIn、orNotIn
+        // "NOT IN" 的相关标签：notIn、andNotIn、orNotIn.
         add("notIn", InHandler.class, NOT_IN);
         add("andNotIn", AND, InHandler.class, NOT_IN);
         add("orNotIn", OR, InHandler.class, NOT_IN);
 
-        // "IS NULL" 的相关标签：isNull、andIsNull、orIsNull
+        // "IS NULL" 的相关标签：isNull、andIsNull、orIsNull.
         add("isNull", IsNullHandler.class, IS_NULL);
         add("andIsNull", AND, IsNullHandler.class, IS_NULL);
         add("orIsNull", OR, IsNullHandler.class, IS_NULL);
 
-        // "IS NOT NULL" 的相关标签：isNotNull、andIsNotNull、orIsNotNull
+        // "IS NOT NULL" 的相关标签：isNotNull、andIsNotNull、orIsNotNull.
         add("isNotNull", IsNullHandler.class, IS_NOT_NULL);
         add("andIsNotNull", AND, IsNullHandler.class, IS_NOT_NULL);
         add("orIsNotNull", OR, IsNullHandler.class, IS_NOT_NULL);
 
-//        // 其他标签：text、include、case
-//        add(TEXT, TextHandler.class);
+        // 其他标签：text、import、choose.
+        add("text", TextHandler.class);
 //        add(IMPORT, ImportHandler.class);
 //        add(CHOOSE, ChooseHandler.class);
     }

@@ -157,4 +157,17 @@
         <orIsNotNull match="" field="u.email" value="email"/>
     </fenix>
 
+    <!-- 用于单元测试 text 标签生成的 JPQL 语句和参数. -->
+    <fenix id="text">
+        SELECT u FROM @{entityName}
+        WHERE
+        <text value="['userId': user.id]">
+            u.id = :userId
+        </text>
+        <!-- 含义是：当用户名和邮箱都不为空（对 '&&' 符号做了转义）时，才生成下面的 JPQL 语句，value 中是 Map 型参数. -->
+        <text match="user.name != empty &amp;&amp; email != empty" value="['userName': user.name, 'email': '%163.com']">
+            AND u.name = :userName AND u.email LIKE :email
+        </text>
+    </fenix>
+
 </fenixs>

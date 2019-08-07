@@ -21,22 +21,22 @@ public class SqlInfoBuilder {
     /**
      * {@link SqlInfo} 对象.
      */
-    private SqlInfo sqlInfo;
+    protected SqlInfo sqlInfo;
 
     /**
      * 上下文参数（一般是 Bean 或者 map）.
      */
-    Object context;
+    protected Object context;
 
     /**
      * 生成的 SQL 片段的前缀.
      */
-    private String prefix;
+    protected String prefix;
 
     /**
      * SQL 标记操作符.
      */
-    private String symbol;
+    protected String symbol;
 
     /**
      * 其它数据.
@@ -44,7 +44,7 @@ public class SqlInfoBuilder {
      * <p>注：通常情况下这个值是 NULL，如果某些情况下，你需要传递额外的参数值，可以通过这个属性来传递，
      *      是为了方便传递或处理数据而设计的.</p>
      */
-    private Map<String, Object> others;
+    protected Map<String, Object> others;
 
     /**
      * 私有构造方法.

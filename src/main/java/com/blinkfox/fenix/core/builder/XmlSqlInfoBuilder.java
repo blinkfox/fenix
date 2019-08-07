@@ -7,6 +7,7 @@ import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * 构建使用 XML 拼接 JPQL 或者 SQL 片段的构建器.
@@ -79,35 +80,30 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 构建任意文本和自定义有序参数集合来构建的sqlInfo信息.
-     * @param valueText value参数值
-     * @return 返回SqlInfo信息
+     * 追加构建 'TEXT' 的文本标签中参数的 {@link SqlInfo} 信息.
+     *
+     * <p>注：value 的类型必须是 Map 类型的，否则将抛出 {@link FenixException} 异常；
+     *      且 Map 中的 key 必须是“死”字符串，value 的值才可以被动态解析.</p>
+     *
+     * @param valueText value 文本值
      */
     public void buildTextSqlParams(String valueText) {
-        // 获取value值，判断是否为空，若为空，则直接退出本方法
-//        Object obj = ParseHelper.parseExpressWithException(valueText, context);
-//        obj = obj == null ? new Object(){} : obj;
-//
-//        Object[] values = this.convertToArray(obj);
-//        for (Object objVal: values) {
-//            this.sqlInfo.getParams().add(objVal);
-//        }
-    }
+        // 获取 value 值为空，则直接退出本方法.
+        Object obj;
+        if (StringHelper.isBlank(valueText)
+                || (obj = ParseHelper.parseExpressWithException(valueText, context)) == null) {
+            return;
+        }
 
-    /**
-     * 将对象转成数组.
-     *
-     * @param obj 对象
-     * @return 数组
-     */
-    @SuppressWarnings("rawtypes")
-    private Object[] convertToArray(Object obj) {
-        if (obj instanceof Collection) {
-            return ((Collection) obj).toArray();
-        } else if (obj.getClass().isArray()) {
-            return (Object[]) obj;
-        } else {
-            return new Object[]{obj};
+        // 如果这个对象实例是 Map 类型的，才能进行后续设置参数的操作，否则抛出异常！
+        if (!(obj instanceof Map)) {
+            throw new FenixException("【Fenix 异常提示】<text /> 标签中 value 值的类型不是 Map 类型，请检查！");
+        }
+
+        // Map 的 key 是 JPQL 的命名参数，是死字符串，value 是 JPQL 中对应的参数值，会被动态解析.
+        Map<String, Object> params = super.sqlInfo.getParams();
+        for (Map.Entry<String, Object> entry : ((Map<String, Object>) obj).entrySet()) {
+            params.put(entry.getKey(), entry.getValue());
         }
     }
 

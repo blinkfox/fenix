@@ -265,4 +265,15 @@ public class FenixXmlTest {
         assertEquals(0, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 text 标签的情况.
+     */
+    @Test
+    public void text() {
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.text", context);
+        assertEquals(BASE_QUERY + " u.id = :userId AND u.name = :userName AND u.email LIKE :email",
+                sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
 }
