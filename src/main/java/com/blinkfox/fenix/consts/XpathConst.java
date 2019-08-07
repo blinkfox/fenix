@@ -69,7 +69,7 @@ public final class XpathConst {
     /**
      * 用于表示 “fenixId” 的属性 XPATH 常量.
      */
-    public static final String ATTR_ZEALOT_ID = "attribute::fenixId";
+    public static final String ATTR_FENIX_ID = "attribute::fenixId";
 
     /**
      * 用于表示 “when” 的属性 XPATH 常量.

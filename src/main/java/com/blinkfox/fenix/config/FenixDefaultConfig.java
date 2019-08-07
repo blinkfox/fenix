@@ -8,6 +8,7 @@ import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.concrete.BetweenHandler;
 import com.blinkfox.fenix.core.concrete.EndsWithHandler;
+import com.blinkfox.fenix.core.concrete.ImportHandler;
 import com.blinkfox.fenix.core.concrete.InHandler;
 import com.blinkfox.fenix.core.concrete.IsNullHandler;
 import com.blinkfox.fenix.core.concrete.LikeHandler;
@@ -134,7 +135,7 @@ public class FenixDefaultConfig {
 
         // 其他标签：text、import、choose.
         add("text", TextHandler.class);
-//        add(IMPORT, ImportHandler.class);
+        add("import", ImportHandler.class);
 //        add(CHOOSE, ChooseHandler.class);
     }
 

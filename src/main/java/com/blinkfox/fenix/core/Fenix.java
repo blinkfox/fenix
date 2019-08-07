@@ -71,7 +71,7 @@ public final class Fenix {
         }
 
         // 生成新的 SqlInfo 信息并打印出来.
-        SqlInfo sqlInfo = buildSqlInfo(namespace, fenixNode, context);
+        SqlInfo sqlInfo = buildNewSqlInfo(namespace, fenixNode, context);
         if (NormalConfig.getInstance().isPrintSqlInfo()) {
             new SqlInfoPrinter().print(sqlInfo, true, namespace, fenixId);
         }
@@ -91,8 +91,24 @@ public final class Fenix {
      * @param context 上下文参数（一般是 Bean 或者 map）
      * @return 返回 {@link SqlInfo} 对象
      */
-    private static SqlInfo buildSqlInfo(String namespace, Node node, Object context) {
-        SqlInfo sqlInfo = new SqlInfo();
+    private static SqlInfo buildNewSqlInfo(String namespace, Node node, Object context) {
+        return buildSqlInfo(namespace, new SqlInfo(), node, context);
+    }
+
+    /**
+     * 根据已有的 {@link SqlInfo} 信息来追加构建 {@link SqlInfo} 对象.
+     * <ul>
+     *     <li>如果子节点 node 是文本节点，则直接获取其文本.</li>
+     *     <li>如果子节点 node 是元素节点，则再判断其是什么元素，动态判断条件和参数.</li>
+     * </ul>
+     *
+     * @param namespace XML 命名空间
+     * @param sqlInfo {@link SqlInfo} 信息
+     * @param node dom4j 对象节点
+     * @param context 上下文参数（一般是 Bean 或者 map）
+     * @return 返回 {@link SqlInfo} 对象
+     */
+    public static SqlInfo buildSqlInfo(String namespace, SqlInfo sqlInfo, Node node, Object context) {
         List<Node> nodes = node.selectNodes(XpathConst.ATTR_CHILD);
         for (Node n: nodes) {
             String nodeTypeName = n.getNodeTypeName();
