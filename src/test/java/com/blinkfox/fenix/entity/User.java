@@ -54,6 +54,12 @@ public class User {
     private String password;
 
     /**
+     * 出生日期.
+     */
+    @Column(name = "d_birthday")
+    private Date birthday;
+
+    /**
      * 创建时间.
      */
     @Column(name = "dt_create_time")

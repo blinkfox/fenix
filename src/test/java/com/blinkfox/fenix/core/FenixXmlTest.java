@@ -186,4 +186,28 @@ public class FenixXmlTest {
         assertEquals(3, sqlInfo.getParams().size());
     }
 
+    /**
+     * 构建 between 区间查询的相关参数.
+     */
+    private void buildBetweenParams() {
+        context.put("startId", "100");
+        context.put("endId", null);
+        context.put("startAge", 18);
+        context.put("endAge", 30);
+        context.put("startBirthday", null);
+        context.put("endBirthday", "2019-08-07");
+    }
+
+    /**
+     * 测试 between 标签的情况.
+     */
+    @Test
+    public void between() {
+        this.buildBetweenParams();
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.between", context);
+        assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge OR u.birthday <= :endBirthday",
+                sqlInfo.getSql());
+        assertEquals(4, sqlInfo.getParams().size());
+    }
+
 }

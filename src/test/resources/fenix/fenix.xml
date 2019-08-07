@@ -112,4 +112,13 @@
         <orNotEndsWith match="" field="u.email" value="email"/>
     </fenix>
 
+    <!-- 用于单元测试 between 标签生成的 JPQL 语句和参数，并一起测试 between 退化成大于等于或者小于等于的情况. -->
+    <fenix id="between">
+        SELECT u FROM @{entityName}
+        WHERE
+        <between match="(?startId != empty) || (?endId != empty)" field="u.id" start="startId" end="endId"/>
+        <andBetween match="(?startAge != empty) || (?endAge != empty)" field="u.age" start="startAge" end="endAge"/>
+        <orBetween match="(?startBirthday != null) || (endBirthday != null)" field="u.birthday" start="startBirthday" end="endBirthday"/>
+    </fenix>
+
 </fenixs>
