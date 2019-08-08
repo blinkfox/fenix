@@ -14,6 +14,14 @@
         <orEqual field="u.id" value="userId" match="userId != empty"/>
     </fenix>
 
+    <!-- 测试 equal 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeEqual">
+        SELECT * FROM t_user AS u
+        WHERE
+<!--        <equal field="u.c_id" value="user.id"/>-->
+        <equal field="u.c_id" value="userId" match="userId != empty"/>
+    </fenix>
+
     <!-- 测试 notEqual 相关标签的查询. -->
     <fenix id="testNotEqual">
         SELECT u FROM User AS u

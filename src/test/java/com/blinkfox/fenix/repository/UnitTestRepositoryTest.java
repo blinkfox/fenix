@@ -81,6 +81,24 @@ public class UnitTestRepositoryTest {
     }
 
     /**
+     * 测试 UnitTestRepository.testNativeEqual 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeEqual() {
+        List<User> users1 = unitTestRepository.testNativeEqual("2");
+        Assert.assertEquals(1, users1.size());
+    }
+
+    /**
+     * 测试使用原生 {@link org.springframework.data.jpa.repository.Query} 注解来查询原生 SQL 的情况.
+     */
+    @Test
+    public void testOriginNativeEqual() {
+        List<User> users = unitTestRepository.testOriginNativeEqual("2");
+        Assert.assertEquals(1, users.size());
+    }
+
+    /**
      * 测试 UnitTestRepository.testNotEqual 中 XML SQL 的执行情况.
      */
     @Test

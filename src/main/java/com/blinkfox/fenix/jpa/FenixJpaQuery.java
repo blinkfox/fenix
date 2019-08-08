@@ -76,10 +76,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
 
         // 构建出 SQL 查询和相关的参数.
         EntityManager em = super.getEntityManager();
-        Query query = em.createQuery(this.sql);
-        for (Map.Entry<String, Object> entry : sqlInfo.getParams().entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
+        Query query = queryFenix.nativeQuery()
+                ? em.createNativeQuery(this.sql, getQueryMethod().getReturnedObjectType())
+                : em.createQuery(this.sql);
+        sqlInfo.getParams().forEach(query::setParameter);
 
         // 如果分页对象不为空，就设置分页参数.
         if (pageable != null) {

@@ -33,6 +33,24 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     /**
      * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
      *
+     * @param userId 用户ID
+     * @return 用户信息集合
+     */
+    @QueryFenix(value = "UnitTestRepository.testNativeEqual", nativeQuery = true)
+    List<User> testNativeEqual(@Param("userId") String userId);
+
+    /**
+     * 使用原生 {@link Query} 注解来查询用户信息.
+     *
+     * @param userId 用户ID
+     * @return 用户信息集合
+     */
+    @Query(value = "SELECT * FROM t_user AS u WHERE u.c_id = :userId", nativeQuery = true)
+    List<User> testOriginNativeEqual(@Param("userId") String userId);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
      * @param user 用户实体信息
      * @return 用户信息集合
      */
