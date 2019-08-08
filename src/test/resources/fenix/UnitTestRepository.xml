@@ -2,21 +2,66 @@
 <!-- 这是用来单元测试 XML 模版或标签生成的 SQL 的数据库操作运行时的 Fenix XML 仓库. -->
 <fenixs namespace="UnitTestRepository">
 
-    <!-- 测试 equal 相关标签的查询. -->
-    <fenix id="testEqual">
+    <fenix id="sqlHeader">
         SELECT u FROM User AS u
         WHERE
+    </fenix>
+
+    <!-- 测试 equal 相关标签的查询. -->
+    <fenix id="testEqual">
+        <import fenixId="sqlHeader"/>
         <equal field="u.id" value="user.id"/>
         <orEqual field="u.id" value="userId" match="userId != empty"/>
     </fenix>
 
-    <!-- 测试 equal 相关标签的查询. -->
-    <fenix id="testEqual2">
+    <!-- 测试 notEqual 相关标签的查询. -->
+    <fenix id="testNotEqual">
         SELECT u FROM User AS u
         WHERE
         <greaterThan field="u.age" value="user.age"/>
         <andEqual field="u.status" value="user.status" match="user.status != empty"/>
         <andNotEqual field="u.name" value="user.name"/>
+    </fenix>
+
+    <!-- 测试 lessThan 相关标签的查询. -->
+    <fenix id="testLessThanEqual">
+        SELECT u FROM User AS u
+        WHERE
+        <notEqual field="u.id" value="user.id"/>
+        <andLessThanEqual field="u.age" value="user.age" match="user.age != empty"/>
+    </fenix>
+
+    <!-- 测试 like 相关标签的查询. -->
+    <fenix id="testLike">
+        SELECT u FROM User AS u
+        WHERE
+        <greaterThanEqual field="u.age" value="user.age"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        <andNotLike field="u.sex" value="user.sex" match="user.sex != empty"/>
+    </fenix>
+
+    <!-- 测试 startsWith 相关标签的查询. -->
+    <fenix id="testStartsWith">
+        SELECT u FROM User AS u
+        WHERE
+        <startsWith field="u.name" value="user.name" match="user.name != empty"/>
+        <andNotStartsWith field="u.sex" value="user.sex" match="user.sex != empty"/>
+    </fenix>
+
+    <!-- 测试 endsWith 相关标签的查询. -->
+    <fenix id="testEndsWith">
+        <import fenixId="sqlHeader"/>
+        <endsWith field="u.email" value="user.email" match="user.email != empty"/>
+        <andNotEndsWith field="u.name" value="user.name" match="user.name != empty"/>
+    </fenix>
+
+    <!-- 测试 between 相关标签的查询. -->
+    <fenix id="testBetween">
+        SELECT u FROM User AS u
+        WHERE
+        <between field="u.age" start="user.startAge" end="user.endAge" match="(?user.startAge != empty) || (?user.endAge != empty)"/>
+        <andBetween field="u.birthday" start="user.startBirthday" end="user.?endBirthday"
+                 match="(?user.startBirthday != empty) || (?user.endBirthday != empty)"/>
     </fenix>
 
 </fenixs>

@@ -4,8 +4,8 @@ import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -33,7 +33,52 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      * @param user 用户实体信息
      * @return 用户信息集合
      */
-    @QueryFenix("UnitTestRepository.testEqual2")
-    List<User> testEqual2(@Param("user") User user);
+    @QueryFenix("UnitTestRepository.testNotEqual")
+    List<User> testNotEqual(@Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param user 用户实体信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testLessThanEqual")
+    List<User> testLessThanEqual(@Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param user 用户实体信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testLike")
+    List<User> testLike(@Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param user 用户实体信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testStartsWith")
+    List<User> testStartsWith(@Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param user 用户实体信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testEndsWith")
+    List<User> testEndsWith(@Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param userMap 用 Map 存放的用户信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testBetween")
+    List<User> testBetween(@Param("user") Map<String, Object> userMap);
 
 }

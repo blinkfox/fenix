@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
@@ -37,6 +38,12 @@ import org.springframework.util.FileCopyUtils;
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class BlogRepositoryTest {
 
+    /**
+     * 是否加载过的标识.
+     */
+    @Setter
+    private static Boolean isLoad = false;
+
     @Autowired
     private BlogRepository blogRepository;
 
@@ -48,9 +55,12 @@ public class BlogRepositoryTest {
      */
     @PostConstruct
     public void init() throws IOException {
-        FenixConfigManager.getInstance().initLoad(new FenixConfig());
-        blogRepository.saveAll(
-                JSON.parseArray(new String(FileCopyUtils.copyToByteArray(blogResource.getFile())), Blog.class));
+        if (!isLoad) {
+            FenixConfigManager.getInstance().initLoad(new FenixConfig());
+            blogRepository.saveAll(
+                    JSON.parseArray(new String(FileCopyUtils.copyToByteArray(blogResource.getFile())), Blog.class));
+            setIsLoad(true);
+        }
     }
 
     /**
