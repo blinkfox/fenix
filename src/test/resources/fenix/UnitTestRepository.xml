@@ -106,4 +106,14 @@
         <import fenixId="commonLike"/>
     </fenix>
 
+    <!-- 测试 set 相关标签的查询. -->
+    <fenix id="testSet">
+        UPDATE User
+        <set field="name" value="user.name" match1="user.name != empty"
+             field2="email" value2="user.email"
+             field3="age" value3="user.age" match3="user.?age != empty"
+             field4="sex" value4="user.sex" match4="" />
+        WHERE id = '@{user.id}'
+    </fenix>
+
 </fenixs>

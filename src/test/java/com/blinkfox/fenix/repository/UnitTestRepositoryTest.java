@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 
@@ -195,6 +196,32 @@ public class UnitTestRepositoryTest {
         names.add("name-姓名-7");
         context.put("names", names);
         Assert.assertEquals(1, unitTestRepository.testImport(context, new User().setEmail("@qq.com")).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testSet 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testSet() {
+        String id = "10";
+        String sex = "sex-性-11";
+        Assert.assertEquals(1, unitTestRepository.testSet(new User().setId(id)
+                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
+        Optional<User> userOptional = unitTestRepository.findById(id);
+        Assert.assertTrue(userOptional.isPresent());
+        Assert.assertEquals(sex, userOptional.get().getSex());
+    }
+
+    /**
+     * 测试 原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行情况.
+     */
+    @Test
+    public void testUpdate() {
+        String id = "10";
+        Assert.assertEquals(1, unitTestRepository.testUpdate("name-姓-11", "email-11@163.com", 31, "sex-性-11"));
+        Optional<User> userOptional = unitTestRepository.findById(id);
+        Assert.assertTrue(userOptional.isPresent());
+        Assert.assertEquals(31, userOptional.get().getAge());
     }
 
 }

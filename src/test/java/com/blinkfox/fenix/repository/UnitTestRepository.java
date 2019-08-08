@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 博客数据的库持久化类.
@@ -116,5 +119,28 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      */
     @QueryFenix("UnitTestRepository.testImport")
     List<User> testImport(@Param("userMap") Map<String, Object> userMap, @Param("user") User user);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param user 用户实体信息
+     * @return 用户信息集合
+     */
+    @Transactional
+    @Modifying
+    @QueryFenix("UnitTestRepository.testSet")
+    int testSet(@Param("user") User user);
+
+    /**
+     * 使用原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行更新.
+     *
+     * @param name 名称
+     * @return 用户信息集合
+     */
+    @Transactional
+    @Modifying
+    @Query("UPDATE User SET name = :name, email = :email, age = :age, sex = :sex WHERE id = '10'")
+    int testUpdate(@Param("name") String name, @Param("email") String email,
+                   @Param("age") int age, @Param("sex") String sex);
 
 }
