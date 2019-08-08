@@ -7,7 +7,10 @@ import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -177,9 +180,17 @@ public class SqlInfoBuilder {
         sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol)
                 .append(Const.COLON).append(endNamed);
 
-        // 封装 IN 查询的参数，如果解析的值是一个数组或集合，就直接使用此值作为参数，否则包装成数组来使用.
-        sqlInfo.getParams().put(endNamed,
-                obj instanceof Collection || obj.getClass().isArray() ? obj : new Object[] {obj});
+        // 封装 IN 查询的参数，如果解析到的值是一个数组，需要转换成 List 集合，不然 JPA 执行会报错，如果只有单个元素就包装成 List 集合.
+        if (obj instanceof Collection) {
+            sqlInfo.getParams().put(endNamed, obj);
+        } else if (obj.getClass().isArray()) {
+            sqlInfo.getParams().put(endNamed, Arrays.asList((Object[]) obj));
+        } else {
+            // 如果只有一个元素就创建一个 List 集合.
+            List<Object> lists = new ArrayList<>(2);
+            lists.add(obj);
+            sqlInfo.getParams().put(endNamed, lists);
+        }
     }
 
     /**

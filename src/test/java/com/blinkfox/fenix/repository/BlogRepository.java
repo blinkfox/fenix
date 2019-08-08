@@ -24,8 +24,8 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @param title 标题
      * @return 博客信息集合
      */
-    @Query("select b from Blog as b where b.title like :title")
-    List<Blog> queryBlogsByTitle(@Param("title") String title);
+    @Query("select b from Blog as b where b.id IN :ids and b.title like :title")
+    List<Blog> queryBlogsByTitle(@Param("ids") String[] idList, @Param("title") String title);
 
     /**
      * 使用 {@link QueryFenix} 注解根据博客的实体 VO 类来查询博客信息.
@@ -43,6 +43,6 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 博客信息集合
      */
     @QueryFenix("BlogRepository.queryBlogs2")
-    List<Blog> queryBlogs2(@Param("ids") List<String> idList, @Param("blog") Blog blog);
+    List<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog);
 
 }

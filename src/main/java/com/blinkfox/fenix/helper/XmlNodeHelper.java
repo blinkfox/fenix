@@ -127,11 +127,11 @@ public final class XmlNodeHelper {
      * @return 返回节点文本值
      */
     public static String getAndCheckNodeText(Node node, String nodeName) {
-        String fieldText = XmlNodeHelper.getNodeText(node.selectSingleNode(nodeName));
-        if (StringHelper.isBlank(fieldText)) {
-            throw new FieldEmptyException("【Fenix 异常】填写的字段不存在或者值是空的！");
+        String text = XmlNodeHelper.getNodeText(node.selectSingleNode(nodeName));
+        if (StringHelper.isBlank(text)) {
+            throw new FieldEmptyException("【Fenix 异常】【" + node.getName() + "】节点中填写的属性不存在或者属性内容是空的！");
         }
-        return fieldText;
+        return text;
     }
 
     /**

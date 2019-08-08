@@ -58,7 +58,7 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogsByTitle() {
-        List<Blog> blogs = blogRepository.queryBlogsByTitle("%Spring%");
+        List<Blog> blogs = blogRepository.queryBlogsByTitle(new String[] {"1", "2", "3", "9", "10"}, "%Spring%");
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -76,8 +76,7 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogs2() {
-        List<String> ids = Arrays.asList("1", "2", "3", "9", "10");
-        List<Blog> blogs = blogRepository.queryBlogs2(ids, new Blog().setAuthor("张三"));
+        List<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"}, new Blog().setAuthor("张三"));
         Assert.assertFalse(blogs.isEmpty());
     }
 
