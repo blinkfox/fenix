@@ -7,6 +7,7 @@ import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,6 +178,23 @@ public class UnitTestRepositoryTest {
         Map<String, Object> context = new HashMap<>(8);
         context.put("ids", new String[] {"1", "3", "5", "7", "9"});
         Assert.assertEquals(4, unitTestRepository.testText(context, new User().setName("姓名").setEmail("1")).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testImport 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testImport() {
+        // 设置开始和结束的年龄.
+        Map<String, Object> context = new HashMap<>(8);
+        context.put("ids", new String[] {"1", "3", "5", "7", "9"});
+
+        List<String> names = new ArrayList<>(4);
+        names.add("name-姓名-3");
+        names.add("name-姓名-5");
+        names.add("name-姓名-7");
+        context.put("names", names);
+        Assert.assertEquals(1, unitTestRepository.testImport(context, new User().setEmail("@qq.com")).size());
     }
 
 }

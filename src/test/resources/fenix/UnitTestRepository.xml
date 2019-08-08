@@ -94,4 +94,16 @@
         </text>
     </fenix>
 
+    <!-- 用于测试 import 标签导入而设计的 XML 节点. -->
+    <fenix id="commonLike">
+        <andIn match="userMap.names != empty" field="u.name" value="userMap.names"/>
+        <andEndsWith match="user.email != empty" field="u.email" value="user.email"/>
+    </fenix>
+
+    <!-- 测试 import 相关标签的查询. -->
+    <fenix id="testImport">
+        <import namespace="UserRepository" fenixId="queryUserByIds"/>
+        <import fenixId="commonLike"/>
+    </fenix>
+
 </fenixs>

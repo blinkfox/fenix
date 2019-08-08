@@ -108,4 +108,13 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     @QueryFenix("UnitTestRepository.testText")
     List<User> testText(@Param("userMap") Map<String, Object> userMap, @Param("user") User user);
 
+    /**
+     * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
+     *
+     * @param userMap 用 Map 存放的用户信息
+     * @return 用户信息集合
+     */
+    @QueryFenix("UnitTestRepository.testImport")
+    List<User> testImport(@Param("userMap") Map<String, Object> userMap, @Param("user") User user);
+
 }

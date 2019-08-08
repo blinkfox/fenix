@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="UserRepository">
+
+    <fenix id="UserHeader">
+        SELECT u FROM User AS u
+        WHERE
+    </fenix>
+
+    <!-- 根据多个 ID 来查询用户信息. -->
+    <fenix id="queryUserByIds">
+        <import fenixId="UserHeader"/>
+        <in field="u.id" value="userMap.ids"/>
+    </fenix>
+
+</fenixs>
