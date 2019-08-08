@@ -81,4 +81,13 @@
         <andIsNotNull field="u.updateTime" match="user.id != empty"/>
     </fenix>
 
+    <!-- 测试 text 相关标签的查询. -->
+    <fenix id="testText">
+        SELECT u FROM User AS u
+        WHERE
+        <text value="['userId': userMap.ids]">
+            u.id IN :userId
+        </text>
+    </fenix>
+
 </fenixs>

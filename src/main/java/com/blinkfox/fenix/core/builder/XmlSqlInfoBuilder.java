@@ -6,7 +6,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -103,7 +103,13 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
         // Map 的 key 是 JPQL 的命名参数，是死字符串，value 是 JPQL 中对应的参数值，会被动态解析.
         Map<String, Object> params = super.sqlInfo.getParams();
         for (Map.Entry<String, Object> entry : ((Map<String, Object>) obj).entrySet()) {
-            params.put(entry.getKey(), entry.getValue());
+            // 如果 value 是数组，就需要转换成集合，否则 JPA 的执行会报错.
+            Object value = entry.getValue();
+            if (value != null && value.getClass().isArray()) {
+                params.put(entry.getKey(), Arrays.asList((Object[]) value));
+            } else {
+                params.put(entry.getKey(), value);
+            }
         }
     }
 
