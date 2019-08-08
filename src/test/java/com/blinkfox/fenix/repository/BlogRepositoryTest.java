@@ -76,7 +76,8 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogs2() {
-        List<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"}, new Blog().setAuthor("张三"));
+        List<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
+                new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()));
         Assert.assertFalse(blogs.isEmpty());
     }
 
