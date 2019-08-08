@@ -143,18 +143,18 @@
     <fenix id="isNull">
         SELECT u FROM @{entityName}
         WHERE
-        <isNull field="u.id" value="user.id"/>
-        <andIsNull match="user.name != empty" field="u.name" value="user.name"/>
-        <orIsNull match="" field="u.email" value="email"/>
+        <isNull field="u.id"/>
+        <andIsNull match="user.name != empty" field="u.name"/>
+        <orIsNull match="" field="u.email"/>
     </fenix>
 
     <!-- 用于单元测试 isNotNull 标签生成的 JPQL 语句和参数. -->
     <fenix id="isNotNull">
         SELECT u FROM @{entityName}
         WHERE
-        <isNotNull field="u.id" value="user.id"/>
-        <andIsNotNull match="user.name != empty" field="u.name" value="user.name"/>
-        <orIsNotNull match="" field="u.email" value="email"/>
+        <isNotNull field="u.id"/>
+        <andIsNotNull match="user.name != empty" field="u.name"/>
+        <orIsNotNull match="" field="u.email"/>
     </fenix>
 
     <!-- 用于单元测试 text 标签生成的 JPQL 语句和参数. -->

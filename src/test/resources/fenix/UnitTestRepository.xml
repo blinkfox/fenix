@@ -64,4 +64,21 @@
                  match="(?user.startBirthday != empty) || (?user.endBirthday != empty)"/>
     </fenix>
 
+    <!-- 测试 in 相关标签的查询. -->
+    <fenix id="testIn">
+        SELECT u FROM User AS u
+        WHERE
+        <in field="u.id" value="userMap.ids"/>
+        <andIn field="u.name" value="userMap.names" match="userMap.?names != empty"/>
+        <andNotIn field="u.sex" value="userMap.sexs" match="userMap.?sexs != empty"/>
+    </fenix>
+
+    <!-- 测试 isNull 相关标签的查询. -->
+    <fenix id="testIsNull">
+        SELECT u FROM User AS u
+        WHERE
+        <isNull field="u.createTime"/>
+        <andIsNotNull field="u.updateTime" match="user.id != empty"/>
+    </fenix>
+
 </fenixs>

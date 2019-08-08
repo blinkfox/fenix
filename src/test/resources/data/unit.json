@@ -8,7 +8,7 @@
         "email": "email-1@163.com",
         "password": "654321",
         "status": "1",
-        "createTime": 1565244607035,
+        "createTime": null,
         "updateTime": 1565244607035
     },
     {
@@ -116,7 +116,7 @@
         "email": "email-10@163.com",
         "password": "6543210",
         "status": "0",
-        "createTime": 1565245313010,
-        "updateTime": 1565245313010
+        "createTime": null,
+        "updateTime": null
     }
 ]

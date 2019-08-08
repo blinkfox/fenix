@@ -9,8 +9,10 @@ import com.blinkfox.fenix.entity.User;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import lombok.Setter;
@@ -137,6 +139,33 @@ public class UnitTestRepositoryTest {
         context.put("startBirthday", c.getTime());
 
         Assert.assertEquals(4, unitTestRepository.testBetween(context).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testIn 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testIn() {
+        // 设置开始和结束的年龄.
+        Map<String, Object> context = new HashMap<>(8);
+        context.put("ids", new String[] {"1", "3", "5", "7", "9"});
+
+        Set<String> names = new HashSet<>(4);
+        names.add("name-姓名-1");
+        names.add("name-姓名-3");
+        names.add("name-姓名-5");
+        context.put("names", names);
+
+        context.put("sexs", "sex-性别-1");
+        Assert.assertEquals(2, unitTestRepository.testIn(context).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testIsNull 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testIsNull() {
+        Assert.assertEquals(1, unitTestRepository.testIsNull(new User().setId("4")).size());
     }
 
 }
