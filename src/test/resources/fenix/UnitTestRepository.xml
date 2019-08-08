@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来单元测试 XML 模版或标签生成的 SQL 的数据库操作运行时的 Fenix XML 仓库. -->
+<fenixs namespace="UnitTestRepository">
+
+    <!-- 测试 equal 相关标签的查询. -->
+    <fenix id="testEqual">
+        SELECT u FROM User AS u
+        WHERE
+        <equal field="u.id" value="user.id"/>
+        <orEqual field="u.id" value="userId" match="userId != empty"/>
+    </fenix>
+
+    <!-- 测试 equal 相关标签的查询. -->
+    <fenix id="testEqual2">
+        SELECT u FROM User AS u
+        WHERE
+        <greaterThan field="u.age" value="user.age"/>
+        <andEqual field="u.status" value="user.status" match="user.status != empty"/>
+        <andNotEqual field="u.name" value="user.name"/>
+    </fenix>
+
+</fenixs>
