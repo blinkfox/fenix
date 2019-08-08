@@ -5,6 +5,7 @@ import com.blinkfox.fenix.jpa.QueryFenix;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -43,6 +44,6 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 博客信息集合
      */
     @QueryFenix("BlogRepository.queryBlogs2")
-    List<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog);
+    List<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog, Pageable pageable);
 
 }

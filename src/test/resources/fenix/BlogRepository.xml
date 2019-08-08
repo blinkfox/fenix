@@ -13,7 +13,7 @@
     <fenix id="queryBlogs2">
         SELECT b FROM Blog AS b
         WHERE
-        <in match="ids != empty" field="b.id" value="ids"/>
+        <in field="b.id" value="ids"/>
         <andEqual match="blog.author != empty" field="b.author" value="blog.author"/>
         <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
         <andBetween match="(?blog.createTime != empty) || (?blog.updateTime != empty)" field="b.createTime" start="blog.createTime" end="blog.updateTime"/>

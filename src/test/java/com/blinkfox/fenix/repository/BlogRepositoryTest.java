@@ -5,15 +5,13 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.Blog;
+import com.blinkfox.fenix.jpa.QueryFenix;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
-import com.blinkfox.fenix.jpa.QueryFenix;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
@@ -22,6 +20,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -77,7 +77,8 @@ public class BlogRepositoryTest {
     @Test
     public void queryBlogs2() {
         List<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
-                new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()));
+                new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()),
+                PageRequest.of(0, 5, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
         Assert.assertFalse(blogs.isEmpty());
     }
 
