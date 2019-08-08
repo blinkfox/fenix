@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +86,17 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeEqual() {
-        List<User> users1 = unitTestRepository.testNativeEqual("2");
-        Assert.assertEquals(1, users1.size());
+        List<User> users = unitTestRepository.testNativeEqual(new User().setId("1"), "2");
+        Assert.assertEquals(2, users.size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeEqualPartFields 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeEqualPartFields() {
+        List<Map<String, Object>> users = unitTestRepository.testNativeEqualPartFields("2");
+        Assert.assertEquals(1, users.size());
     }
 
     /**
@@ -108,11 +118,30 @@ public class UnitTestRepositoryTest {
     }
 
     /**
+     * 测试 UnitTestRepository.testNativeNotEqual 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeNotEqual() {
+        List<User> users = unitTestRepository
+                .testNativeNotEqual(new User().setAge(23).setStatus("0").setName("name-姓名-5"));
+        Assert.assertEquals(3, users.size());
+    }
+
+    /**
      * 测试 UnitTestRepository.testLessThanEqual 中 XML SQL 的执行情况.
      */
     @Test
     public void testLessThanEqual() {
         List<User> users = unitTestRepository.testLessThanEqual(new User().setId("1").setAge(28));
+        Assert.assertEquals(7, users.size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeLessThanEqual 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeLessThanEqual() {
+        List<User> users = unitTestRepository.testNativeLessThanEqual(new User().setId("1").setAge(28));
         Assert.assertEquals(7, users.size());
     }
 
@@ -126,11 +155,29 @@ public class UnitTestRepositoryTest {
     }
 
     /**
+     * 测试 UnitTestRepository.testNativeLike 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeLike() {
+        List<User> users = unitTestRepository.testNativeLike(new User().setAge(25).setName("姓名").setSex("sex-性别-9"));
+        Assert.assertEquals(4, users.size());
+    }
+
+    /**
      * 测试 UnitTestRepository.testStartsWith 中 XML SQL 的执行情况.
      */
     @Test
     public void testStartsWith() {
         List<User> users = unitTestRepository.testStartsWith(new User().setName("name-姓").setSex("sex-性别"));
+        Assert.assertEquals(1, users.size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeStartsWith 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeStartsWith() {
+        List<User> users = unitTestRepository.testNativeStartsWith(new User().setName("name-姓").setSex("sex-性别"));
         Assert.assertEquals(1, users.size());
     }
 
@@ -144,10 +191,20 @@ public class UnitTestRepositoryTest {
     }
 
     /**
-     * 测试 UnitTestRepository.testBetween 中 XML SQL 的执行情况.
+     * 测试 UnitTestRepository.testNativeEndsWith 中 XML SQL 的执行情况.
      */
     @Test
-    public void testBetween() {
+    public void testNativeEndsWith() {
+        List<User> users = unitTestRepository.testNativeEndsWith(new User().setName("名-8").setEmail("@qq.com"));
+        Assert.assertEquals(2, users.size());
+    }
+
+    /**
+     * 构建 between 查询的上下文参数.
+     *
+     * @return map
+     */
+    private Map<String, Object> buildBetweenContext() {
         // 设置开始和结束的年龄.
         Map<String, Object> context = new HashMap<>(8);
         context.put("startAge", 22);
@@ -157,18 +214,34 @@ public class UnitTestRepositoryTest {
         Calendar c = Calendar.getInstance();
         c.set(1991, Calendar.FEBRUARY, 1);
         context.put("startBirthday", c.getTime());
-
-        Assert.assertEquals(4, unitTestRepository.testBetween(context).size());
+        return context;
     }
 
     /**
-     * 测试 UnitTestRepository.testIn 中 XML SQL 的执行情况.
+     * 测试 UnitTestRepository.testBetween 中 XML SQL 的执行情况.
      */
     @Test
-    public void testIn() {
+    public void testBetween() {
+        Assert.assertEquals(4, unitTestRepository.testBetween(this.buildBetweenContext()).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeBetween 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeBetween() {
+        Assert.assertEquals(4, unitTestRepository.testNativeBetween(this.buildBetweenContext()).size());
+    }
+
+    /**
+     * 构建 in 查询的上下文参数.
+     *
+     * @return map
+     */
+    private Map<String, Object> buildInContext() {
         // 设置开始和结束的年龄.
         Map<String, Object> context = new HashMap<>(8);
-        context.put("ids", new String[] {"1", "3", "5", "7", "9"});
+        context.put("ids", new String[]{"1", "3", "5", "7", "9"});
 
         Set<String> names = new HashSet<>(4);
         names.add("name-姓名-1");
@@ -177,7 +250,23 @@ public class UnitTestRepositoryTest {
         context.put("names", names);
 
         context.put("sexs", "sex-性别-1");
-        Assert.assertEquals(2, unitTestRepository.testIn(context).size());
+        return context;
+    }
+
+    /**
+     * 测试 UnitTestRepository.testIn 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testIn() {
+        Assert.assertEquals(2, unitTestRepository.testIn(this.buildInContext()).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeIn 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeIn() {
+        Assert.assertEquals(2, unitTestRepository.testNativeIn(this.buildInContext()).size());
     }
 
     /**
@@ -186,6 +275,14 @@ public class UnitTestRepositoryTest {
     @Test
     public void testIsNull() {
         Assert.assertEquals(1, unitTestRepository.testIsNull(new User().setId("4")).size());
+    }
+
+    /**
+     * 测试 UnitTestRepository.testNativeIsNull 中 XML SQL 的执行情况.
+     */
+    @Test
+    public void testNativeIsNull() {
+        Assert.assertEquals(1, unitTestRepository.testNativeIsNull(new User().setId("4")).size());
     }
 
     /**
@@ -231,6 +328,22 @@ public class UnitTestRepositoryTest {
     }
 
     /**
+     * 测试 UnitTestRepository.testNativeSet 中 XML SQL 的执行情况.
+     */
+    @Test
+    @Ignore
+    public void testNativeSet() {
+        // TODO 此处原生语法 set 还有问题.
+        String id = "10";
+        String sex = "sex-性-11";
+        Assert.assertEquals(1, unitTestRepository.testNativeSet(new User().setId(id)
+                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
+        Optional<User> userOptional = unitTestRepository.findById(id);
+        Assert.assertTrue(userOptional.isPresent());
+        Assert.assertEquals(sex, userOptional.get().getSex());
+    }
+
+    /**
      * 测试 原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行情况.
      */
     @Test
@@ -239,7 +352,17 @@ public class UnitTestRepositoryTest {
         Assert.assertEquals(1, unitTestRepository.testUpdate("name-姓-11", "email-11@163.com", 31, "sex-性-11"));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
-        Assert.assertEquals(31, userOptional.get().getAge());
+    }
+
+    /**
+     * 测试 原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行情况.
+     */
+    @Test
+    public void testNativeUpdate() {
+        String id = "10";
+        Assert.assertEquals(1, unitTestRepository.testNativeUpdate("name-姓-11", "email-11@163.com", "sex-性-11"));
+        Optional<User> userOptional = unitTestRepository.findById(id);
+        Assert.assertTrue(userOptional.isPresent());
     }
 
 }

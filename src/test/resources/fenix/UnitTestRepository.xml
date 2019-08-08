@@ -18,7 +18,20 @@
     <fenix id="testNativeEqual">
         SELECT * FROM t_user AS u
         WHERE
-<!--        <equal field="u.c_id" value="user.id"/>-->
+        <equal field="u.c_id" value="user.id" match="user.id != empty"/>
+        <orEqual field="u.c_id" value="userId" match="userId != empty"/>
+    </fenix>
+
+    <!-- 测试 equal 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeEqualPartFields">
+        SELECT
+            u.c_id AS id,
+            u.c_name AS name,
+            u.n_age AS age,
+            u.c_email AS email
+        FROM t_user AS u
+        WHERE
+        <!--        <equal field="u.c_id" value="user.id"/>-->
         <equal field="u.c_id" value="userId" match="userId != empty"/>
     </fenix>
 
@@ -31,12 +44,29 @@
         <andNotEqual field="u.name" value="user.name"/>
     </fenix>
 
+    <!-- 测试 notEqual 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeNotEqual">
+        SELECT * FROM t_user AS u
+        WHERE
+        <greaterThan field="u.n_age" value="user.age"/>
+        <andEqual field="u.c_status" value="user.status" match="user.status != empty"/>
+        <andNotEqual field="u.c_name" value="user.name"/>
+    </fenix>
+
     <!-- 测试 lessThan 相关标签的查询. -->
     <fenix id="testLessThanEqual">
         SELECT u FROM User AS u
         WHERE
         <notEqual field="u.id" value="user.id"/>
         <andLessThanEqual field="u.age" value="user.age" match="user.age != empty"/>
+    </fenix>
+
+    <!-- 测试 lessThan 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeLessThanEqual">
+        SELECT * FROM t_user AS u
+        WHERE
+        <notEqual field="u.c_id" value="user.id"/>
+        <andLessThanEqual field="u.n_age" value="user.age" match="user.age != empty"/>
     </fenix>
 
     <!-- 测试 like 相关标签的查询. -->
@@ -48,6 +78,15 @@
         <andNotLike field="u.sex" value="user.sex" match="user.sex != empty"/>
     </fenix>
 
+    <!-- 测试 like 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeLike">
+        SELECT * FROM t_user AS u
+        WHERE
+        <greaterThanEqual field="u.n_age" value="user.age"/>
+        <andLike field="u.c_name" value="user.name" match="user.name != empty"/>
+        <andNotLike field="u.c_sex" value="user.sex" match="user.sex != empty"/>
+    </fenix>
+
     <!-- 测试 startsWith 相关标签的查询. -->
     <fenix id="testStartsWith">
         SELECT u FROM User AS u
@@ -56,11 +95,27 @@
         <andNotStartsWith field="u.sex" value="user.sex" match="user.sex != empty"/>
     </fenix>
 
+    <!-- 测试 startsWith 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeStartsWith">
+        SELECT * FROM t_user AS u
+        WHERE
+        <startsWith field="u.c_name" value="user.name" match="user.name != empty"/>
+        <andNotStartsWith field="u.c_sex" value="user.sex" match="user.sex != empty"/>
+    </fenix>
+
     <!-- 测试 endsWith 相关标签的查询. -->
     <fenix id="testEndsWith">
         <import fenixId="sqlHeader"/>
         <endsWith field="u.email" value="user.email" match="user.email != empty"/>
         <andNotEndsWith field="u.name" value="user.name" match="user.name != empty"/>
+    </fenix>
+
+    <!-- 测试 endsWith 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeEndsWith">
+        SELECT * FROM t_user AS u
+        WHERE
+        <endsWith field="u.c_email" value="user.email" match="user.email != empty"/>
+        <andNotEndsWith field="u.c_name" value="user.name" match="user.name != empty"/>
     </fenix>
 
     <!-- 测试 between 相关标签的查询. -->
@@ -72,6 +127,15 @@
                  match="(?user.startBirthday != empty) || (?user.endBirthday != empty)"/>
     </fenix>
 
+    <!-- 测试 between 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeBetween">
+        SELECT * FROM t_user AS u
+        WHERE
+        <between field="u.n_age" start="user.startAge" end="user.endAge" match="(?user.startAge != empty) || (?user.endAge != empty)"/>
+        <andBetween field="u.d_birthday" start="user.startBirthday" end="user.?endBirthday"
+                    match="(?user.startBirthday != empty) || (?user.endBirthday != empty)"/>
+    </fenix>
+
     <!-- 测试 in 相关标签的查询. -->
     <fenix id="testIn">
         SELECT u FROM User AS u
@@ -81,12 +145,29 @@
         <andNotIn field="u.sex" value="userMap.sexs" match="userMap.?sexs != empty"/>
     </fenix>
 
+    <!-- 测试 in 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeIn">
+        SELECT * FROM t_user AS u
+        WHERE
+        <in field="u.c_id" value="userMap.ids"/>
+        <andIn field="u.c_name" value="userMap.names" match="userMap.?names != empty"/>
+        <andNotIn field="u.c_sex" value="userMap.sexs" match="userMap.?sexs != empty"/>
+    </fenix>
+
     <!-- 测试 isNull 相关标签的查询. -->
     <fenix id="testIsNull">
         SELECT u FROM User AS u
         WHERE
         <isNull field="u.createTime"/>
         <andIsNotNull field="u.updateTime" match="user.id != empty"/>
+    </fenix>
+
+    <!-- 测试 isNull 相关标签的原生 SQL 查询. -->
+    <fenix id="testNativeIsNull">
+        SELECT * FROM t_user AS u
+        WHERE
+        <isNull field="u.dt_create_time"/>
+        <andIsNotNull field="u.dt_update_time" match="user.id != empty"/>
     </fenix>
 
     <!-- 测试 text 相关标签的查询. -->
@@ -114,7 +195,7 @@
         <import fenixId="commonLike"/>
     </fenix>
 
-    <!-- 测试 set 相关标签的查询. -->
+    <!-- 测试 set 相关标签的更新. -->
     <fenix id="testSet">
         UPDATE User
         <set field="name" value="user.name" match1="user.name != empty"
@@ -122,6 +203,16 @@
              field3="age" value3="user.age" match3="user.?age != empty"
              field4="sex" value4="user.sex" match4="" />
         WHERE id = '@{user.id}'
+    </fenix>
+
+    <!-- 测试 set 相关标签的原生 SQL 更新. -->
+    <fenix id="testNativeSet">
+        UPDATE t_user
+        <set field="c_name" value="user.name" match1="user.name != empty"
+             field2="c_email" value2="user.email"
+             field3="n_age" value3="user.age" match3="user.?age != empty"
+             field4="c_sex" value4="user.sex" match4="" />
+        WHERE c_id = '@{user.id}'
     </fenix>
 
 </fenixs>
