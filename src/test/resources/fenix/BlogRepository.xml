@@ -2,11 +2,19 @@
 <!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
 <fenixs namespace="BlogRepository">
 
-    <!-- 查询我的博客信息. -->
-    <fenix id="queryMyBlogs">
+    <!-- 一个最简单的示例来查询我的博客信息. -->
+    <fenix id="querySimplyDemo">
         SELECT b FROM Blog AS b
         WHERE
         <equal field="b.id" value="blog.id"/>
+    </fenix>
+
+    <!-- 查询我的博客信息2. -->
+    <fenix id="queryBlogs2">
+        SELECT b FROM Blog AS b
+        WHERE
+        <in match="ids != empty" field="b.id" value="ids"/>
+        <andEqual match="blog.author != empty" field="b.author" value="blog.author"/>
     </fenix>
 
 </fenixs>

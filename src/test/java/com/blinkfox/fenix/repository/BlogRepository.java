@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
-     * 根据博客标题模糊查询博客信息.
+     * 使用原生的 {@link Query} 注解来模糊查询博客信息.
      *
      * @param title 标题
      * @return 博客信息集合
@@ -28,12 +28,21 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     List<Blog> queryBlogsByTitle(@Param("title") String title);
 
     /**
-     * 根据博客的部分信息查询对应的博客信息集合.
+     * 使用 {@link QueryFenix} 注解根据博客的实体 VO 类来查询博客信息.
      *
      * @param blog 博客实体信息
      * @return 博客信息集合
      */
-    @QueryFenix("BlogRepository.queryMyBlogs")
-    List<Blog> queryMyBlogs(@Param("blog") Blog blog);
+    @QueryFenix("BlogRepository.querySimplyDemo")
+    List<Blog> querySimplyDemo(@Param("blog") Blog blog);
+
+    /**
+     * 使用 {@link QueryFenix} 注解根据博客的实体 VO 类和其他参数来查询博客信息.
+     *
+     * @param blog 博客实体信息
+     * @return 博客信息集合
+     */
+    @QueryFenix("BlogRepository.queryBlogs2")
+    List<Blog> queryBlogs2(@Param("ids") List<String> idList, @Param("blog") Blog blog);
 
 }
