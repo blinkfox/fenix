@@ -88,6 +88,10 @@
         <text value="['userId': userMap.ids]">
             u.id IN :userId
         </text>
+        <!-- 含义是：当用户名和邮箱都不为空（对 '&&' 符号做了转义）时，才生成下面的 JPQL 语句，value 中是 Map 型参数. -->
+        <text value="['userName': '%' + user.name + '%', 'email': '%@163.com']" match="user.name != empty &amp;&amp; user.email != empty">
+            AND u.name LIKE :userName AND u.email LIKE :email
+        </text>
     </fenix>
 
 </fenixs>

@@ -176,7 +176,7 @@ public class UnitTestRepositoryTest {
         // 设置开始和结束的年龄.
         Map<String, Object> context = new HashMap<>(8);
         context.put("ids", new String[] {"1", "3", "5", "7", "9"});
-        Assert.assertEquals(5, unitTestRepository.testText(context).size());
+        Assert.assertEquals(4, unitTestRepository.testText(context, new User().setName("姓名").setEmail("1")).size());
     }
 
 }
