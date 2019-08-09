@@ -112,7 +112,7 @@ public class BlogRepositoryTest {
     public void queryBlogs2() {
         Page<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
                 new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()),
-                PageRequest.of(0, 1, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
+                PageRequest.of(1, 1, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
         Assert.assertFalse(blogs.isEmpty());
     }
 

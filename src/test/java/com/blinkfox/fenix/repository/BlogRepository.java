@@ -57,7 +57,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @param blog 博客实体信息
      * @return 博客信息集合
      */
-    @QueryFenix(value = "BlogRepository.queryBlogs2")
+    @QueryFenix(value = "BlogRepository.queryBlogs2", countQuery = "BlogRepository.queryBlogs2Count")
     Page<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog, Pageable pageable);
 
     /**
