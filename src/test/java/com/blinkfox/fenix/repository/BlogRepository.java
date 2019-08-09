@@ -7,6 +7,7 @@ import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,6 +31,16 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      */
     @Query("select b from Blog as b where b.id IN :ids and b.title like :title")
     List<Blog> queryBlogsByTitle(@Param("ids") String[] idList, @Param("title") String title);
+
+    /**
+     * 使用原生的 {@link Query} 注解来查询指定 ID 的博客信息.
+     *
+     * @param idList ID 集合
+     * @return 博客信息集合
+     */
+    @Query(value = "select b from Blog as b where b.id IN :ids",
+            countQuery = "select count(*) from Blog as b")
+    Page<Blog> queryBlogsByIds(@Param("ids") String[] idList, Pageable pageable);
 
     /**
      * 使用 {@link QueryFenix} 注解根据博客的实体 VO 类来查询博客信息.
@@ -103,6 +114,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 用户博客信息投影的集合
      */
     @QueryFenix(value = "BlogRepository.queryFenixNativeByProjection", nativeQuery = true)
-    List<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId, @Param("blog") Blog blog);
+    List<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId,
+            @Param("blog") Blog blog, Pageable pageable);
 
 }
