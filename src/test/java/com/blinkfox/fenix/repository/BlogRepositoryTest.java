@@ -42,6 +42,8 @@ import org.springframework.util.FileCopyUtils;
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class BlogRepositoryTest {
 
+    private static final String SPRING = "%Spring%";
+
     /**
      * 是否加载过的标识.
      */
@@ -80,7 +82,7 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogsByTitle() {
-        List<Blog> blogs = blogRepository.queryBlogsByTitle(new String[] {"1", "2", "3", "9", "10"}, "%Spring%");
+        List<Blog> blogs = blogRepository.queryBlogsByTitle(new String[] {"1", "2", "3", "9", "10"}, SPRING);
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -119,7 +121,7 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryUserBlogsByTitle() {
-        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", "%Spring%");
+        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", SPRING);
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -129,7 +131,7 @@ public class BlogRepositoryTest {
     @Test
     public void queryUserBlogsByTitleWithFenix() {
         List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
-                new Blog().setTitle("%Spring%").setContent("一"));
+                new Blog().setTitle(SPRING).setContent("一"));
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -139,7 +141,7 @@ public class BlogRepositoryTest {
     @Test
     public void queryUserBlogsByProjection() {
         List<UserBlogProjection> blogs = blogRepository.queryUserBlogsByProjection("1",
-                new Blog().setTitle("%Spring%").setContent("一"));
+                new Blog().setTitle(SPRING).setContent("一"));
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.get(0).getDescription());
     }
@@ -149,7 +151,7 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryNativeByProjection() {
-        List<UserBlogProjection> blogs = blogRepository.queryNativeByProjection("1", "%Spring%");
+        List<UserBlogProjection> blogs = blogRepository.queryNativeByProjection("1", SPRING);
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.get(0).getDescription());
     }
@@ -159,11 +161,11 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryFenixNativeByProjection() {
-        List<UserBlogProjection> blogs = blogRepository.queryFenixNativeByProjection("1",
-                new Blog().setTitle("%Spring%").setContent("一"),
+        Page<UserBlogProjection> blogs = blogRepository.queryFenixNativeByProjection("1",
+                new Blog().setTitle(SPRING).setContent("一"),
                 PageRequest.of(0, 3, Sort.by(Sort.Order.asc("dt_create_time"), Sort.Order.desc("c_id"))));
         Assert.assertFalse(blogs.isEmpty());
-        //Assert.assertNotNull(blogs.getContent().get(0).getDescription());
+        Assert.assertNotNull(blogs.getContent().get(0).getDescription());
     }
 
 }

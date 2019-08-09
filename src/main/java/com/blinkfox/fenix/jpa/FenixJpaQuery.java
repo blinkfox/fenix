@@ -3,6 +3,7 @@ package com.blinkfox.fenix.jpa;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.QueryHelper;
+import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 
-import com.blinkfox.fenix.helper.StringHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.query.JpaParameters;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.repository.query.Parameter;
-import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.ReturnedType;
@@ -37,6 +36,16 @@ import org.springframework.data.repository.query.ReturnedType;
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
+     * 用来替换 'select ... from' 为 'select count(*) from ' 的正则表达式.
+     */
+    private static final String REGX_SELECT_FROM = "((?i)select)([\\s\\S]*?)((?i)from)";
+
+    /**
+     * 用来替换 'select ... from' 为 'select count(*) from ' 的求 count(*) 的常量.
+     */
+    private static final String SELECT_COUNT = "select count(*) from ";
+
+    /**
      * JPA 参数对象.
      */
     private JpaParameters jpaParams;
@@ -45,6 +54,11 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * 标注了 {@link QueryFenix} 注解的注解实例.
      */
     private QueryFenix queryFenix;
+
+    /**
+     * 用作 {@link Fenix} 构建 SQL 信息的上下文参数.
+     */
+    private Map<String, Object> contextParams;
 
     /**
      * Fenix 构建出来的 SQL 信息.
@@ -77,19 +91,19 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     protected Query doCreateQuery(Object[] values) {
         this.jpaParams = getQueryMethod().getParameters();
         // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
-        this.sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.buildContextParams(values));
+        this.contextParams = this.buildContextParams(values);
+        this.sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.contextParams);
         this.querySql = sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
         Pageable pageable = this.buildPagableAndSortSql(values);
 
-        // 构建出 SQL 查询和相关的参数.
+        // 构建出 SQL 查询和相关的参数，区分是否是原生 SQL 的查询.
         Query query;
         EntityManager em = super.getEntityManager();
         if (queryFenix.nativeQuery()) {
-            ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), values);
-            Class<?> type = getTypeToQueryFor(getQueryMethod().getResultProcessor()
-                    .withDynamicProjection(accessor).getReturnedType());
+            Class<?> type = this.getTypeToQueryFor(getQueryMethod().getResultProcessor().withDynamicProjection(
+                    new ParametersParameterAccessor(getQueryMethod().getParameters(), values)).getReturnedType());
             if (type == null) {
                 query = em.createNativeQuery(this.querySql);
             } else {
@@ -172,8 +186,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
 
         // 判断是否有排序参数，如果有，就追加排序相关的参数.
         if (jpaParams.hasSortParameter()) {
-            this.querySql = QueryUtils.applySorting(this.querySql,
-                    new ParametersParameterAccessor(jpaParams, values).getSort(), QueryHelper.detectAlias(this.querySql));
+            this.querySql = QueryUtils.applySorting(this.querySql, new ParametersParameterAccessor(jpaParams, values)
+                    .getSort(), QueryHelper.detectAlias(this.querySql));
         }
         return pageable;
     }
@@ -181,24 +195,33 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     /**
      * 根据给定的数组参数创建一个 {@link Query}，用于查询分页时的记录数.
      *
-     * @param values must not be {@literal null}.
+     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 的值。</p>
+     * <ul>
+     *     <li>如果没有设置这个值，就默认使用先前的 SQL 来处理为查询条数的SQL；</li>
+     *     <li>如果设置了这个值，就构建设置的 SQL 作为查询条数的SQL；</li>
+     * </ul>
+     *
+     * @param values 参数数组
      * @return Query
      */
     @Override
     protected Query doCreateCountQuery(Object[] values) {
-        // 如果 计数查询的 SQL 不为空，就重新构建 SqlInfo 信息.
+        // 如果计数查询的 SQL 不为空，就重新构建 SqlInfo 信息，否则就替换查询字符串中的字段值为 'count(*)'.
+        String countSql;
         if (StringHelper.isNotBlank(queryFenix.countQuery())) {
-            this.sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.buildContextParams(values));
+            this.sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.contextParams);
+            countSql = this.sqlInfo.getSql();
+        } else {
+            countSql = this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
         }
+        log.info("【Fenix 提示】分页查询时的总记录数 SQL:\n{}", countSql);
 
         // 创建 Query，并循环设置命名绑定参数.
-        //String countSql = "select count(*) from (" + this.sqlInfo.getSql() + ") as tmp";
-        String countSql = this.sqlInfo.getSql();
         EntityManager em = getEntityManager();
         Query query = this.queryFenix.nativeQuery()
                 ? em.createNativeQuery(countSql)
                 : em.createQuery(countSql, Long.class);
-        sqlInfo.getParams().forEach(query::setParameter);
+        this.sqlInfo.getParams().forEach(query::setParameter);
 
         return query;
     }

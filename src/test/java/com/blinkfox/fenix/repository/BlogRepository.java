@@ -113,7 +113,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 用户博客信息投影的集合
      */
     @QueryFenix(value = "BlogRepository.queryFenixNativeByProjection", nativeQuery = true)
-    List<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId,
+    Page<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId,
             @Param("blog") Blog blog, Pageable pageable);
 
 }
