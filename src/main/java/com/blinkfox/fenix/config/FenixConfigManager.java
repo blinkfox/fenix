@@ -29,7 +29,7 @@ import org.dom4j.Node;
  * Fenix 的配置信息管理器单例类，用于加载 Fenix 所需的各种配置信息到内存中.
  *
  * @author blinkfox on 2019-08-04.
- * @see FenixDefaultConfig
+ * @see FenixConfig
  * @see NormalConfig
  * @see XmlContext
  */
@@ -83,7 +83,7 @@ public final class FenixConfigManager {
     /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param configClass 系统中 {@link FenixDefaultConfig} 的子类的 class 路径
+     * @param configClass 系统中 {@link FenixConfig} 的子类的 class 路径
      * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
      * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
      *          处理器所在的位置，多个用逗号隔开
@@ -97,24 +97,24 @@ public final class FenixConfigManager {
     /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param clazz {@link FenixDefaultConfig} 子类的配置类
+     * @param clazz {@link FenixConfig} 子类的配置类
      * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
      * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
      *          处理器所在的位置，多个用逗号隔开
      */
-    public void initLoad(Class<? extends FenixDefaultConfig> clazz, String xmlLocations, String handlerLocations) {
+    public void initLoad(Class<? extends FenixConfig> clazz, String xmlLocations, String handlerLocations) {
         this.initLoad(clazz.getName(), xmlLocations, handlerLocations);
     }
 
     /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param fenixConfig {@link FenixDefaultConfig} 的子类的配置类实例
+     * @param fenixConfig {@link FenixConfig} 的子类的配置类实例
      * @param xmlLocations Fenix 的 XML 文件所在的位置，多个用逗号隔开
      * @param handlerLocations Fenix 的自定义 {@link com.blinkfox.fenix.config.entity.TagHandler}
      *          处理器所在的位置，多个用逗号隔开
      */
-    public void initLoad(FenixDefaultConfig fenixConfig, String xmlLocations, String handlerLocations) {
+    public void initLoad(FenixConfig fenixConfig, String xmlLocations, String handlerLocations) {
         this.xmlLocations = xmlLocations;
         this.handlerLocations = handlerLocations;
         this.initLoad(fenixConfig);
@@ -123,9 +123,9 @@ public final class FenixConfigManager {
     /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param clazz {@link FenixDefaultConfig} 的子类配置类
+     * @param clazz {@link FenixConfig} 的子类配置类
      */
-    public void initLoad(Class<? extends FenixDefaultConfig> clazz) {
+    public void initLoad(Class<? extends FenixConfig> clazz) {
         this.initLoad(clazz.getName());
     }
 
@@ -143,9 +143,9 @@ public final class FenixConfigManager {
     /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
-     * @param fenixConfig {@link FenixDefaultConfig} 的子类配置类实例
+     * @param fenixConfig {@link FenixConfig} 的子类配置类实例
      */
-    public void initLoad(FenixDefaultConfig fenixConfig) {
+    public void initLoad(FenixConfig fenixConfig) {
         this.scanLocations(this.xmlLocations, this.handlerLocations);
         this.loadFenixConfig(fenixConfig);
         this.cachingXmlAndEval();
@@ -193,11 +193,11 @@ public final class FenixConfigManager {
      */
     public void clear() {
         XmlContext.getInstance().getXmlPathMap().clear();
-        FenixDefaultConfig.getFenixs().clear();
+        FenixConfig.getFenixs().clear();
     }
 
     /**
-     * 初始化创建 {@link FenixDefaultConfig} 的子类实例，并加载配置信息.
+     * 初始化创建 {@link FenixConfig} 的子类实例，并加载配置信息.
      *
      * @param configClass 配置类的 class 文件全路径
      */
@@ -211,8 +211,8 @@ public final class FenixConfigManager {
         log.info("【Fenix 提示】开始加载 Fenix 配置信息，配置类为:【" + configClass + "】.");
         try {
             Object config = Class.forName(configClass).newInstance();
-            if (config instanceof FenixDefaultConfig) {
-                this.loadFenixConfig((FenixDefaultConfig) config);
+            if (config instanceof FenixConfig) {
+                this.loadFenixConfig((FenixConfig) config);
             }
         } catch (Exception e) {
             throw new ConfigNotFoundException("【Fenix 错误提示】初始化 fenixConfig 实例失败，配置名称为:【" + configClass + "】.", e);
@@ -220,11 +220,11 @@ public final class FenixConfigManager {
     }
 
     /**
-     * 初始化加载 {@link FenixDefaultConfig} 的子类信息，并执行初始化 Fenix 配置信息到内存缓存中.
+     * 初始化加载 {@link FenixConfig} 的子类信息，并执行初始化 Fenix 配置信息到内存缓存中.
      *
      * @param fenixConfig 配置类
      */
-    private void loadFenixConfig(FenixDefaultConfig fenixConfig) {
+    private void loadFenixConfig(FenixConfig fenixConfig) {
         fenixConfig.configNormal(NormalConfig.getInstance());
         fenixConfig.configXml(XmlContext.getInstance());
         fenixConfig.configTagHandler();
@@ -285,7 +285,7 @@ public final class FenixConfigManager {
                 }
 
                 // 将 fenix 节点缓存到 Map 中，key 是由 namespace 和 fenixId 组成，用 "." 号分隔，value 是 fenixNode.
-                FenixDefaultConfig.getFenixs().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
+                FenixConfig.getFenixs().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
             }
         }
     }

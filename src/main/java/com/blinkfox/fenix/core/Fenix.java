@@ -2,7 +2,7 @@ package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.config.FenixDefaultConfig;
+import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
@@ -64,7 +64,7 @@ public final class Fenix {
         // 获取 namespace 文档中的指定的 fenixId 的节点对应的 Node 节点，如果是 debug 模式，则实时获取；否则从缓存中获取.
         Node fenixNode = NormalConfig.getInstance().isDebug()
                 ? XmlNodeHelper.getNodeBySpaceAndId(namespace, fenixId)
-                : FenixDefaultConfig.getFenixs().get(StringHelper.concat(namespace, Const.DOT, fenixId));
+                : FenixConfig.getFenixs().get(StringHelper.concat(namespace, Const.DOT, fenixId));
         if (fenixNode == null) {
             throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到 namespace 为:【{}】,"
                     + " fenixId 为:【{}】的 XML 节点!", namespace, fenixId));

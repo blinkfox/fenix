@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.config.scanner;
 
-import com.blinkfox.fenix.config.FenixDefaultConfig;
+import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.annotation.Tagger;
 import com.blinkfox.fenix.config.annotation.Taggers;
 import com.blinkfox.fenix.config.entity.TagHandler;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Fenix {@link TagHandler} 实现类上标注的 XML 标签注解 {@link Tagger} 扫描类.
  *
- * <p>本类会将扫描到的类添加到 {@link FenixDefaultConfig} 的 `tagHandlerMap` 中，供后续配置使用.</p>
+ * <p>本类会将扫描到的类添加到 {@link FenixConfig} 的 `tagHandlerMap` 中，供后续配置使用.</p>
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -273,7 +273,7 @@ public final class TaggerScanner implements Scanner {
      * @param cls FenixHandler 实现类的 class
      */
     private void addTagHandlerInMapByTagger(Class<? extends FenixHandler> cls, Tagger tagger) {
-        FenixDefaultConfig.getTagHandlerMap()
+        FenixConfig.getTagHandlerMap()
                 .put(tagger.value(), new TagHandler(tagger.prefix(), cls, tagger.symbol()));
     }
 

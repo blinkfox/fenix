@@ -7,7 +7,7 @@ import com.blinkfox.fenix.config.entity.NormalConfig;
  *
  * @author blinkfox on 2019-08-06.
  */
-public class FenixConfig extends FenixDefaultConfig {
+public class MyFenixConfig extends FenixConfig {
 
     /**
      * 设置相关参数.

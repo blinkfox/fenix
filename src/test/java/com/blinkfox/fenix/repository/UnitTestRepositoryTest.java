@@ -40,6 +40,16 @@ import org.springframework.util.FileCopyUtils;
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class UnitTestRepositoryTest {
 
+    private static final String NAME = "name-姓名-5";
+
+    private static final String QQ_SUFFIX = "@qq.com";
+
+    private static final String NAME_11 = "name-姓-11";
+
+    private static final String SEX_11 = "sex-性-11";
+
+    private static final String EMAIL_11 = "email-11@163.com";
+
     /**
      * 是否加载过的标识.
      */
@@ -112,7 +122,7 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNotEqual() {
-        List<User> users = unitTestRepository.testNotEqual(new User().setAge(23).setStatus("0").setName("name-姓名-5"));
+        List<User> users = unitTestRepository.testNotEqual(new User().setAge(23).setStatus("0").setName(NAME));
         Assert.assertEquals(3, users.size());
     }
 
@@ -122,7 +132,7 @@ public class UnitTestRepositoryTest {
     @Test
     public void testNativeNotEqual() {
         List<User> users = unitTestRepository
-                .testNativeNotEqual(new User().setAge(23).setStatus("0").setName("name-姓名-5"));
+                .testNativeNotEqual(new User().setAge(23).setStatus("0").setName(NAME));
         Assert.assertEquals(3, users.size());
     }
 
@@ -185,7 +195,7 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testEndsWith() {
-        List<User> users = unitTestRepository.testEndsWith(new User().setName("名-8").setEmail("@qq.com"));
+        List<User> users = unitTestRepository.testEndsWith(new User().setName("名-8").setEmail(QQ_SUFFIX));
         Assert.assertEquals(2, users.size());
     }
 
@@ -194,7 +204,7 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeEndsWith() {
-        List<User> users = unitTestRepository.testNativeEndsWith(new User().setName("名-8").setEmail("@qq.com"));
+        List<User> users = unitTestRepository.testNativeEndsWith(new User().setName("名-8").setEmail(QQ_SUFFIX));
         Assert.assertEquals(2, users.size());
     }
 
@@ -245,7 +255,7 @@ public class UnitTestRepositoryTest {
         Set<String> names = new HashSet<>(4);
         names.add("name-姓名-1");
         names.add("name-姓名-3");
-        names.add("name-姓名-5");
+        names.add(NAME);
         context.put("names", names);
 
         context.put("sexs", "sex-性别-1");
@@ -306,10 +316,10 @@ public class UnitTestRepositoryTest {
 
         List<String> names = new ArrayList<>(4);
         names.add("name-姓名-3");
-        names.add("name-姓名-5");
+        names.add(NAME);
         names.add("name-姓名-7");
         context.put("names", names);
-        Assert.assertEquals(1, unitTestRepository.testImport(context, new User().setEmail("@qq.com")).size());
+        Assert.assertEquals(1, unitTestRepository.testImport(context, new User().setEmail(QQ_SUFFIX)).size());
     }
 
     /**
@@ -318,12 +328,10 @@ public class UnitTestRepositoryTest {
     @Test
     public void testSet() {
         String id = "10";
-        String sex = "sex-性-11";
         Assert.assertEquals(1, unitTestRepository.testSet(new User().setId(id)
-                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
+                .setName(NAME_11).setEmail(EMAIL_11).setSex(SEX_11)));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
-        Assert.assertEquals(sex, userOptional.get().getSex());
     }
 
     /**
@@ -332,12 +340,10 @@ public class UnitTestRepositoryTest {
     @Test
     public void testNativeSet() {
         String id = "10";
-        String sex = "sex-性-11";
         Assert.assertEquals(1, unitTestRepository.testNativeSet(new User().setId(id)
-                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
+                .setName(NAME_11).setEmail(EMAIL_11).setSex(SEX_11)));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
-        Assert.assertEquals(sex, userOptional.get().getSex());
     }
 
     /**
@@ -346,7 +352,8 @@ public class UnitTestRepositoryTest {
     @Test
     public void testUpdate() {
         String id = "10";
-        Assert.assertEquals(1, unitTestRepository.testUpdate("name-姓-11", "email-11@163.com", 31, "sex-性-11"));
+        Assert.assertEquals(1,
+                unitTestRepository.testUpdate(NAME_11, EMAIL_11, 31, SEX_11));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
     }
@@ -357,7 +364,8 @@ public class UnitTestRepositoryTest {
     @Test
     public void testNativeUpdate() {
         String id = "10";
-        Assert.assertEquals(1, unitTestRepository.testNativeUpdate("name-姓-11", "email-11@163.com", "sex-性-11"));
+        Assert.assertEquals(1,
+                unitTestRepository.testNativeUpdate(NAME_11, EMAIL_11, SEX_11));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
     }

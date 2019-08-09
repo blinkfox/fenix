@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
-import com.blinkfox.fenix.config.FenixDefaultConfig;
+import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
@@ -29,7 +29,7 @@ final class FenixContext {
      * @param tag 标签名称
      */
     static void buildSqlInfo(BuildSource source, String tag) {
-        TagHandler handler = FenixDefaultConfig.getTagHandlerMap().get(tag);
+        TagHandler handler = FenixConfig.getTagHandlerMap().get(tag);
         if (handler == null) {
             throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到该【<{}>】标签对应的处理器.", tag));
         }

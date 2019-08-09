@@ -3,7 +3,7 @@ package com.blinkfox.fenix.core;
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
 
@@ -41,7 +41,7 @@ public class FenixXmlTest {
      */
     @BeforeClass
     public static void init() {
-        FenixConfigManager.getInstance().initLoad(new FenixConfig());
+        FenixConfigManager.getInstance().initLoad(new MyFenixConfig());
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
         context.put("user", new User().setId("123").setName(NAME).setSex("0"));

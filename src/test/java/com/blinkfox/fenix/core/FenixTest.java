@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.core;
 
-import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.stalker.Stalker;
@@ -27,7 +27,7 @@ public class FenixTest {
      */
     @BeforeClass
     public static void init() {
-        FenixConfigManager.getInstance().initLoad(new FenixConfig());
+        FenixConfigManager.getInstance().initLoad(new MyFenixConfig());
     }
 
     /**

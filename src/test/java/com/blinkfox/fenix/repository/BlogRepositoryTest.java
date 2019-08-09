@@ -2,7 +2,7 @@ package com.blinkfox.fenix.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
-import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
@@ -68,7 +68,7 @@ public class BlogRepositoryTest {
     @PostConstruct
     public void init() throws IOException {
         if (!isLoad) {
-            FenixConfigManager.getInstance().initLoad(new FenixConfig());
+            FenixConfigManager.getInstance().initLoad(new MyFenixConfig());
             blogRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(blogResource.getFile())), Blog.class));
             userRepository.saveAll(

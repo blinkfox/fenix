@@ -29,9 +29,10 @@ import org.dom4j.Node;
  * Fenix 的默认主配置类.
  *
  * @author blinkfox on 2019-08-04.
+ * @see FenixConfigManager
  * @see TagHandler
  */
-public class FenixDefaultConfig {
+public class FenixConfig {
 
     /**
      * 所有 Fenix XML 文档的缓存 map.
