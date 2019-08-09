@@ -63,18 +63,6 @@ public class SqlInfoBuilder {
     }
 
     /**
-     * 为了生成 JPQL 语法中 " :text " 这种冒号式的命名参数，需要将 "." 点号替换为 "_"，Spring DATA JPA 才支持.
-     *
-     * <p>如：JPQL 语句片段 " b.title = :blog.title "，会将 "blog.title" 替换为 "blog_title".</p>
-     *
-     * @param text 待替换的文本
-     * @return 替换后的文本
-     */
-    private String fixDot(String text) {
-        return text.contains(Const.DOT) ? text.replace(Const.DOT, Const.UNDERLINE) : text;
-    }
-
-    /**
      * 追加构建常规 SQL 片段的 {@link SqlInfo} 信息.
      * <p>如：'u.id = :id'.</p>
      *
@@ -83,7 +71,7 @@ public class SqlInfoBuilder {
      * @param value 解析后的表达式的值
      */
     public void buildNormalSql(String fieldText, String valueText, Object value) {
-        String namedText = this.fixDot(valueText);
+        String namedText = StringHelper.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(this.symbol).append(Const.COLON).append(namedText);
         sqlInfo.getParams().put(namedText, value);
@@ -98,7 +86,7 @@ public class SqlInfoBuilder {
      * @param value 参数值
      */
     public void buildLikeSql(String fieldText, String valueText, Object value) {
-        String namedText = this.fixDot(valueText);
+        String namedText = StringHelper.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
                 .append(Const.COLON).append(namedText);
@@ -145,20 +133,20 @@ public class SqlInfoBuilder {
             String endText, Object endValue) {
         // 开始值不为空，结束值为空时，转为"大于"的情况.
         if (startValue != null && endValue == null) {
-            String startNamed = this.fixDot(startText);
+            String startNamed = StringHelper.fixDot(startText);
             sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.GTE)
                     .append(Const.COLON).append(startNamed);
             sqlInfo.getParams().put(startNamed, startValue);
         } else if (startValue == null && endValue != null) {
             // 开始值为空，结束值不为空时，转为"小于"的情况.
-            String endNamed = this.fixDot(endText);
+            String endNamed = StringHelper.fixDot(endText);
             sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.LTE)
                     .append(Const.COLON).append(endNamed);
             sqlInfo.getParams().put(endNamed, endValue);
         } else {
             // 开始值不为空，结束值也不为空时，转为"BETWEEN ? AND ?"的情况.
-            String startNamed = this.fixDot(startText);
-            String endNamed = this.fixDot(endText);
+            String startNamed = StringHelper.fixDot(startText);
+            String endNamed = StringHelper.fixDot(endText);
             sqlInfo.getJoin().append(prefix).append(fieldText)
                     .append(SymbolConst.BETWEEN).append(Const.COLON).append(startNamed)
                     .append(SymbolConst.AND).append(Const.COLON).append(endNamed);
@@ -176,7 +164,7 @@ public class SqlInfoBuilder {
      * @param obj IN 查询范围的值，如果不是集合或数组，就将单个的值包装数组
      */
     public void buildInSql(String fieldText, String valueText, Object obj) {
-        String endNamed = this.fixDot(valueText);
+        String endNamed = StringHelper.fixDot(valueText);
         sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol)
                 .append(Const.COLON).append(endNamed);
 

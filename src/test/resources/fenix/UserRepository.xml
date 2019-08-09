@@ -13,4 +13,14 @@
         <in field="u.id" value="userMap.ids"/>
     </fenix>
 
+    <fenix id="queryUserWithIdEmail">
+        SELECT
+            u
+        FROM
+            User AS u
+        WHERE
+        <userIdEmail idField="id" emailField="email"
+                     idValue="userId" emailValue="userEmail" match="?userId != empty || ?userEmail != empty"/>
+    </fenix>
+
 </fenixs>

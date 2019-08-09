@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.core;
 
-import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
+import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.stalker.Stalker;
 import com.blinkfox.stalker.config.Options;

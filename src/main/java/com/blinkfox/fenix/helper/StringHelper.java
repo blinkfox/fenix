@@ -1,10 +1,13 @@
 package com.blinkfox.fenix.helper;
 
+import com.blinkfox.fenix.consts.Const;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
 import org.slf4j.helpers.MessageFormatter;
 
 /**
@@ -100,6 +103,19 @@ public final class StringHelper {
             sb.append(o == null ? "" : o.toString());
         }
         return sb.toString();
+    }
+
+    /**
+     * 为了生成 JPQL 语法中 " :text " 这种冒号式的命名参数，
+     * 如果有点号(".")，就需要将点号(".")替换为下划线("_")，Spring DATA JPA 才支持.
+     *
+     * <p>如：JPQL 语句片段 " b.title = :blog.title "，会将 "blog.title" 替换为 "blog_title".</p>
+     *
+     * @param text 待替换的文本
+     * @return 替换后的文本
+     */
+    public static String fixDot(String text) {
+        return text.contains(Const.DOT) ? text.replace(Const.DOT, Const.UNDERLINE) : text;
     }
 
     /**
