@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * UserBlogInfo.
+ * 用户博客信息的自定义业务实体类，用于测试 JPA 返回自定义实体的使用.
  *
  * @author blinkfox on 2019/8/9.
  */

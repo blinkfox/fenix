@@ -19,4 +19,32 @@
         <andBetween match="(?blog.createTime != empty) || (?blog.updateTime != empty)" field="b.createTime" start="blog.createTime" end="blog.updateTime"/>
     </fenix>
 
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
+    <fenix id="queryUserBlogsByTitleWithFenix">
+        SELECT
+            new com.blinkfox.fenix.vo.UserBlogInfo(u.id, u.name, b.id, b.title, b.author, b.content)
+        FROM
+            Blog as b,
+            com.blinkfox.fenix.entity.User as u
+        WHERE
+            u.id = b.userId
+        <andEqual field="b.userId" value="userId"/>
+        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
+        <andLike match="blog.content != empty" field="b.content" value="blog.content"/>
+    </fenix>
+
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
+    <fenix id="queryUserBlogsByProjection">
+        SELECT
+            u.id AS userId, u.name, b.id AS blogId, b.title, b.author, b.content
+        FROM
+            Blog as b,
+            com.blinkfox.fenix.entity.User as u
+        WHERE
+            u.id = b.userId
+        <andEqual field="b.userId" value="userId"/>
+        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
+        <andLike match="blog.content != empty" field="b.content" value="blog.content"/>
+    </fenix>
+
 </fenixs>

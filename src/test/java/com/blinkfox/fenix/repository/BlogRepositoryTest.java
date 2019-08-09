@@ -8,6 +8,7 @@ import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogInfo;
+import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.io.IOException;
 import java.util.Date;
@@ -83,15 +84,6 @@ public class BlogRepositoryTest {
     }
 
     /**
-     * 测试使用原生的 {@link Query} 注解来模糊查询博客信息.
-     */
-    @Test
-    public void queryUserBlogsByTitle() {
-        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", "%Spring%");
-        Assert.assertFalse(blogs.isEmpty());
-    }
-
-    /**
      * 测试使用 {@link QueryFenix} 注解根据博客的实体 VO 类来查询博客信息.
      */
     @Test
@@ -109,6 +101,46 @@ public class BlogRepositoryTest {
                 new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()),
                 PageRequest.of(0, 5, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
         Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用原生的 {@link Query} 注解来模糊查询用户博客信息.
+     */
+    @Test
+    public void queryUserBlogsByTitle() {
+        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", "%Spring%");
+        Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
+     */
+    @Test
+    public void queryUserBlogsByTitleWithFenix() {
+        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
+                new Blog().setTitle("%Spring%").setContent("一"));
+        Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息到自定义的投影接口 {@link com.blinkfox.fenix.vo.UserBlogProjection} 中.
+     */
+    @Test
+    public void queryUserBlogsByProjection() {
+        List<UserBlogProjection> blogs = blogRepository.queryUserBlogsByProjection("1",
+                new Blog().setTitle("%Spring%").setContent("一"));
+        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertNotNull(blogs.get(0).getDescription());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息到自定义的投影接口 {@link com.blinkfox.fenix.vo.UserBlogProjection} 中.
+     */
+    @Test
+    public void queryNativeByProjection() {
+        List<UserBlogProjection> blogs = blogRepository.queryNativeByProjection("1", "%Spring%");
+        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertNotNull(blogs.get(0).getDescription());
     }
 
 }
