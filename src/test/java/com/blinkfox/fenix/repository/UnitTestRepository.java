@@ -45,9 +45,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      * @param userId 用户ID
      * @return 用户信息集合
      */
-    @Query(value = "SELECT u.c_id, u.c_name, u.n_age, u.c_email, u.dt_create_time FROM t_user AS u WHERE u.c_id = :userId", nativeQuery = true)
-    // TODO 使用 QueryFenix 注解还有问题，目前只能使用原生的语法才行.
-    // @QueryFenix(value = "UnitTestRepository.testNativeEqualPartFields", nativeQuery = true)
+    @QueryFenix(value = "UnitTestRepository.testNativeEqualPartFields", nativeQuery = true)
     List<Map<String, Object>> testNativeEqualPartFields(@Param("userId") String userId);
 
     /**
@@ -241,7 +239,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     @Transactional
     @Modifying
     @QueryFenix(value = "UnitTestRepository.testNativeSet", nativeQuery = true)
-    void testNativeSet(@Param("user") User user);
+    int testNativeSet(@Param("user") User user);
 
     /**
      * 使用原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行更新.

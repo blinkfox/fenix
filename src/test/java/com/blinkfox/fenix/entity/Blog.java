@@ -32,6 +32,12 @@ public class Blog {
     private String id;
 
     /**
+     * 发表博客的用户 ID.
+     */
+    @Column(name = "c_user_id")
+    private String userId;
+
+    /**
      * 博客标题.
      */
     @Column(name = "c_title")

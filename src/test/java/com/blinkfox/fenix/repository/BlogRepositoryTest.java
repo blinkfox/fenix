@@ -5,7 +5,9 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.Blog;
+import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
+import com.blinkfox.fenix.vo.UserBlogInfo;
 
 import java.io.IOException;
 import java.util.Date;
@@ -47,8 +49,14 @@ public class BlogRepositoryTest {
     @Autowired
     private BlogRepository blogRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Value("/data/blog.json")
     private Resource blogResource;
+
+    @Value("/data/user.json")
+    private Resource userResource;
 
     /**
      * 初始化 Fenix 配置信息，并从资源文件的中读取数据，初始化保存起来，便于后续读取或操作.
@@ -59,6 +67,8 @@ public class BlogRepositoryTest {
             FenixConfigManager.getInstance().initLoad(new FenixConfig());
             blogRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(blogResource.getFile())), Blog.class));
+            userRepository.saveAll(
+                    JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
             setIsLoad(true);
         }
     }
@@ -69,6 +79,15 @@ public class BlogRepositoryTest {
     @Test
     public void queryBlogsByTitle() {
         List<Blog> blogs = blogRepository.queryBlogsByTitle(new String[] {"1", "2", "3", "9", "10"}, "%Spring%");
+        Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用原生的 {@link Query} 注解来模糊查询博客信息.
+     */
+    @Test
+    public void queryUserBlogsByTitle() {
+        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", "%Spring%");
         Assert.assertFalse(blogs.isEmpty());
     }
 

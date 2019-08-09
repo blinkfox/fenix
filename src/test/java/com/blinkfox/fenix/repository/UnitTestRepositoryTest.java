@@ -49,8 +49,8 @@ public class UnitTestRepositoryTest {
     @Autowired
     private UnitTestRepository unitTestRepository;
 
-    @Value("/data/unit.json")
-    private Resource unitResource;
+    @Value("/data/user.json")
+    private Resource userResource;
 
     /**
      * 初始化 Fenix 配置信息，并从资源文件的中读取数据，初始化保存起来，便于后续读取或操作.
@@ -60,7 +60,7 @@ public class UnitTestRepositoryTest {
         if (!isLoad) {
             FenixConfigManager.getInstance().initLoad(new FenixConfig());
             unitTestRepository.saveAll(
-                    JSON.parseArray(new String(FileCopyUtils.copyToByteArray(unitResource.getFile())), User.class));
+                    JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
 
             // 验证读取的数据条数是否正确.
             Assert.assertEquals(10, unitTestRepository.findAll().size());
@@ -331,11 +331,10 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeSet() {
-        // TODO 此处原生语法 set 还有问题.
         String id = "10";
         String sex = "sex-性-11";
-        unitTestRepository.testNativeSet(new User().setId(id)
-                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex));
+        Assert.assertEquals(1, unitTestRepository.testNativeSet(new User().setId(id)
+                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
         Assert.assertEquals(sex, userOptional.get().getSex());
