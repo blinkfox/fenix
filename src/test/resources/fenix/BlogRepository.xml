@@ -47,4 +47,22 @@
         <andLike match="blog.content != empty" field="b.content" value="blog.content"/>
     </fenix>
 
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义投影信息）. -->
+    <fenix id="queryFenixNativeByProjection">
+        SELECT
+            u.c_id as userId,
+            u.c_name as name,
+            b.c_id as blogId,
+            b.c_title as title,
+            b.c_author as author,
+            b.c_content as content
+        FROM
+            t_blog as b, t_user as u
+        WHERE
+            u.c_id = b.c_user_id
+        <andEqual field="b.c_user_id" value="userId"/>
+        <andLike match="blog.title != empty" field="b.c_title" value="blog.title"/>
+        <andLike match="blog.content != empty" field="b.c_content" value="blog.content"/>
+    </fenix>
+
 </fenixs>

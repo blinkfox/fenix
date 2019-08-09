@@ -24,6 +24,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     /**
      * 使用原生的 {@link Query} 注解来模糊查询博客信息.
      *
+     * @param idList ID 集合
      * @param title 标题
      * @return 博客信息集合
      */
@@ -42,6 +43,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     /**
      * 使用 {@link QueryFenix} 注解根据博客的实体 VO 类和其他参数来查询博客信息.
      *
+     * @param idList ID 集合
      * @param blog 博客实体信息
      * @return 博客信息集合
      */
@@ -51,6 +53,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     /**
      * 使用原生的 {@link Query} 注解来连表模糊查询用户博客信息.
      *
+     * @param userId 用户 ID
      * @param title 标题
      * @return 用户博客信息集合
      */
@@ -74,7 +77,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      *
      * @param userId 用户ID
      * @param blog 博客实体信息
-     * @return 用户博客信息集合
+     * @return 用户博客信息投影的集合
      */
     @QueryFenix("BlogRepository.queryUserBlogsByProjection")
     List<UserBlogProjection> queryUserBlogsByProjection(@Param("userId") String userId, @Param("blog") Blog blog);
@@ -82,13 +85,24 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     /**
      * 使用原生的 {@link Query} 注解来连表模糊查询用户博客信息到自定义的 {@link com.blinkfox.fenix.vo.UserBlogProjection} 投影接口中.
      *
+     * @param userId 用户 ID
      * @param title 标题
-     * @return 用户博客信息集合
+     * @return 用户博客信息投影的集合
      */
     @Query(value = "select u.c_id as userId, u.c_name as name, b.c_id as blogId, b.c_title as title, "
             + "b.c_author as author, b.c_content as content "
             + "from t_blog as b, t_user as u "
             + "where u.c_id = b.c_user_id and b.c_user_id = :userId and b.c_title like :title", nativeQuery = true)
     List<UserBlogProjection> queryNativeByProjection(@Param("userId") String userId, @Param("title") String title);
+
+    /**
+     * 使用 {@link QueryFenix} 注解的原生 SQL 来连表模糊查询用户博客信息到自定义的 {@link com.blinkfox.fenix.vo.UserBlogProjection} 投影接口中.
+     *
+     * @param userId 用户 ID
+     * @param blog 博客信息
+     * @return 用户博客信息投影的集合
+     */
+    @QueryFenix(value = "BlogRepository.queryFenixNativeByProjection", nativeQuery = true)
+    List<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId, @Param("blog") Blog blog);
 
 }

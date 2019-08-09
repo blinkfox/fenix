@@ -143,4 +143,15 @@ public class BlogRepositoryTest {
         Assert.assertNotNull(blogs.get(0).getDescription());
     }
 
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息到自定义的投影接口 {@link com.blinkfox.fenix.vo.UserBlogProjection} 中.
+     */
+    @Test
+    public void queryFenixNativeByProjection() {
+        List<UserBlogProjection> blogs = blogRepository.queryFenixNativeByProjection("1",
+                new Blog().setTitle("%Spring%").setContent("一"));
+        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertNotNull(blogs.get(0).getDescription());
+    }
+
 }
