@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,8 +20,10 @@ import org.springframework.data.jpa.repository.query.JpaParameters;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.repository.query.Parameter;
+import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ReturnedType;
 
 /**
  * 继承了 {@link AbstractJpaQuery} 抽象类，
@@ -75,18 +78,48 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         Pageable pageable = this.buildPagableAndSortSql(values);
 
         // 构建出 SQL 查询和相关的参数.
+        Query query;
         EntityManager em = super.getEntityManager();
-        Query query = queryFenix.nativeQuery()
-                ? em.createNativeQuery(this.sql, getQueryMethod().getReturnedObjectType())
-                : em.createQuery(this.sql);
-        sqlInfo.getParams().forEach(query::setParameter);
+        if (queryFenix.nativeQuery()) {
+            ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), values);
+            Class<?> type = getTypeToQueryFor(getQueryMethod().getResultProcessor()
+                    .withDynamicProjection(accessor).getReturnedType());
+            if (type == null) {
+                query = em.createNativeQuery(this.sql);
+            } else {
+                query = em.createNativeQuery(this.sql, type);
+            }
+        } else {
+            query = em.createQuery(this.sql);
+        }
 
-        // 如果分页对象不为空，就设置分页参数.
+        // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
+        sqlInfo.getParams().forEach(query::setParameter);
         if (pageable != null) {
             query.setFirstResult((int) pageable.getOffset());
             query.setMaxResults(pageable.getPageSize());
         }
         return query;
+    }
+
+    /**
+     * 根据返回类型获取对应的 class.
+     *
+     * @param returnedType ReturnedType 实例
+     * @return class
+     */
+    private Class<?> getTypeToQueryFor(ReturnedType returnedType) {
+        Class<?> result = getQueryMethod().isQueryForEntity() ? returnedType.getDomainType() : null;
+
+        // 如果 sql 中有构造器表达式或者投影，就直接返回该结果.
+        if (QueryUtils.hasConstructorExpression(this.sql)
+                || QueryUtils.getProjection(this.sql).equalsIgnoreCase(QueryHelper.detectAlias(this.sql))) {
+            return result;
+        }
+
+        return returnedType.isProjecting() && !getMetamodel().isJpaManaged(returnedType.getReturnedType())
+                ? Tuple.class
+                : result;
     }
 
     /**

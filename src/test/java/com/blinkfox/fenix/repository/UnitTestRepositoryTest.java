@@ -21,7 +21,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -331,13 +330,12 @@ public class UnitTestRepositoryTest {
      * 测试 UnitTestRepository.testNativeSet 中 XML SQL 的执行情况.
      */
     @Test
-    @Ignore
     public void testNativeSet() {
         // TODO 此处原生语法 set 还有问题.
         String id = "10";
         String sex = "sex-性-11";
-        Assert.assertEquals(1, unitTestRepository.testNativeSet(new User().setId(id)
-                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex)));
+        unitTestRepository.testNativeSet(new User().setId(id)
+                .setName("name-姓-11").setEmail("email-11@163.com").setSex(sex));
         Optional<User> userOptional = unitTestRepository.findById(id);
         Assert.assertTrue(userOptional.isPresent());
         Assert.assertEquals(sex, userOptional.get().getSex());

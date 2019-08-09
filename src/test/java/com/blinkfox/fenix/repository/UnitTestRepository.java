@@ -241,7 +241,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     @Transactional
     @Modifying
     @QueryFenix(value = "UnitTestRepository.testNativeSet", nativeQuery = true)
-    int testNativeSet(@Param("user") User user);
+    void testNativeSet(@Param("user") User user);
 
     /**
      * 使用原生的 JPA {@link org.springframework.data.jpa.repository.Query} 的注解的执行更新.
