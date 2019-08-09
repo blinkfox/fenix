@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 
+import com.blinkfox.fenix.helper.StringHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
@@ -46,9 +47,14 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private QueryFenix queryFenix;
 
     /**
-     * JPQL 或者 SQL 语句.
+     * Fenix 构建出来的 SQL 信息.
      */
-    private String sql;
+    private SqlInfo sqlInfo;
+
+    /**
+     * 用于拼接排序、分页等参数时的最终用于查询数据时的 JPQL 或者 SQL 语句.
+     */
+    private String querySql;
 
     /**
      * Creates a new {@link AbstractJpaQuery} from the given {@link JpaQueryMethod}.
@@ -71,8 +77,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     protected Query doCreateQuery(Object[] values) {
         this.jpaParams = getQueryMethod().getParameters();
         // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
-        SqlInfo sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.buildContextParams(values));
-        this.sql = sqlInfo.getSql();
+        this.sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.buildContextParams(values));
+        this.querySql = sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
         Pageable pageable = this.buildPagableAndSortSql(values);
@@ -85,16 +91,16 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             Class<?> type = getTypeToQueryFor(getQueryMethod().getResultProcessor()
                     .withDynamicProjection(accessor).getReturnedType());
             if (type == null) {
-                query = em.createNativeQuery(this.sql);
+                query = em.createNativeQuery(this.querySql);
             } else {
-                query = em.createNativeQuery(this.sql, type);
+                query = em.createNativeQuery(this.querySql, type);
             }
         } else {
-            query = em.createQuery(this.sql);
+            query = em.createQuery(this.querySql);
         }
 
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
-        sqlInfo.getParams().forEach(query::setParameter);
+        this.sqlInfo.getParams().forEach(query::setParameter);
         if (pageable != null) {
             query.setFirstResult((int) pageable.getOffset());
             query.setMaxResults(pageable.getPageSize());
@@ -112,8 +118,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         Class<?> result = getQueryMethod().isQueryForEntity() ? returnedType.getDomainType() : null;
 
         // 如果 sql 中有构造器表达式或者投影，就直接返回该结果.
-        if (QueryUtils.hasConstructorExpression(this.sql)
-                || QueryUtils.getProjection(this.sql).equalsIgnoreCase(QueryHelper.detectAlias(this.sql))) {
+        if (QueryUtils.hasConstructorExpression(this.querySql)
+                || QueryUtils.getProjection(this.querySql).equalsIgnoreCase(QueryHelper.detectAlias(this.querySql))) {
             return result;
         }
 
@@ -158,15 +164,16 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             if (pageable != null) {
                 Sort sort = pageable.getSort();
                 if (sort != null) {
-                    this.sql = QueryUtils.applySorting(this.sql, sort, QueryHelper.detectAlias(this.sql));
+                    this.querySql = QueryUtils.applySorting(this.querySql, sort,
+                            QueryHelper.detectAlias(this.querySql));
                 }
             }
         }
 
         // 判断是否有排序参数，如果有，就追加排序相关的参数.
         if (jpaParams.hasSortParameter()) {
-            this.sql = QueryUtils.applySorting(this.sql, new ParametersParameterAccessor(jpaParams, values).getSort(),
-                    QueryHelper.detectAlias(this.sql));
+            this.querySql = QueryUtils.applySorting(this.querySql,
+                    new ParametersParameterAccessor(jpaParams, values).getSort(), QueryHelper.detectAlias(this.querySql));
         }
         return pageable;
     }
@@ -179,14 +186,18 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     @Override
     protected Query doCreateCountQuery(Object[] values) {
-        SqlInfo sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.buildContextParams(values));
-        String countSql = sqlInfo.getSql();
+        // 如果 计数查询的 SQL 不为空，就重新构建 SqlInfo 信息.
+        if (StringHelper.isNotBlank(queryFenix.countQuery())) {
+            this.sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.buildContextParams(values));
+        }
 
+        // 创建 Query，并循环设置命名绑定参数.
+        //String countSql = "select count(*) from (" + this.sqlInfo.getSql() + ") as tmp";
+        String countSql = this.sqlInfo.getSql();
         EntityManager em = getEntityManager();
         Query query = this.queryFenix.nativeQuery()
                 ? em.createNativeQuery(countSql)
                 : em.createQuery(countSql, Long.class);
-        // 循环设置命名绑定参数.
         sqlInfo.getParams().forEach(query::setParameter);
 
         return query;
