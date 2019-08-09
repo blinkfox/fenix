@@ -38,8 +38,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @param idList ID 集合
      * @return 博客信息集合
      */
-    @Query(value = "select b from Blog as b where b.id IN :ids",
-            countQuery = "select count(*) from Blog as b")
+    @Query(value = "select b from Blog as b where b.id IN :ids")
     Page<Blog> queryBlogsByIds(@Param("ids") String[] idList, Pageable pageable);
 
     /**
@@ -58,8 +57,8 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @param blog 博客实体信息
      * @return 博客信息集合
      */
-    @QueryFenix("BlogRepository.queryBlogs2")
-    List<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog, Pageable pageable);
+    @QueryFenix(value = "BlogRepository.queryBlogs2", countQuery = "BlogRepository.queryBlogs2Count")
+    Page<Blog> queryBlogs2(@Param("ids") String[] idList, @Param("blog") Blog blog, Pageable pageable);
 
     /**
      * 使用原生的 {@link Query} 注解来连表模糊查询用户博客信息.

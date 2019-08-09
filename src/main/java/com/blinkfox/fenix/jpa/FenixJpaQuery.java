@@ -172,14 +172,24 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     }
 
     /**
-     * Creates a TypedQuery for counting using the given values.
+     * 根据给定的数组参数创建一个 {@link Query}，用于查询分页时的记录数.
      *
      * @param values must not be {@literal null}.
      * @return Query
      */
     @Override
     protected Query doCreateCountQuery(Object[] values) {
-        return null;
+        SqlInfo sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.buildContextParams(values));
+        String countSql = sqlInfo.getSql();
+
+        EntityManager em = getEntityManager();
+        Query query = this.queryFenix.nativeQuery()
+                ? em.createNativeQuery(countSql)
+                : em.createQuery(countSql, Long.class);
+        // 循环设置命名绑定参数.
+        sqlInfo.getParams().forEach(query::setParameter);
+
+        return query;
     }
 
 }
