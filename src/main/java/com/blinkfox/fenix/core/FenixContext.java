@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
  * 追加构建动态 JPQL 或者 SQL 语句及参数的上下文协调类.
  *
  * @author blinkfox on 2019-08-05.
+ * @see FenixHandlerFactory
+ * @see FenixHandler
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -34,9 +36,16 @@ final class FenixContext {
             throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到该【<{}>】标签对应的处理器.", tag));
         }
 
-        // 使用反射获取该Handler对应的实例，并执行方法.
+        // 首先获取 FenixHandlerFactory 对象，并判断其是否为空，如果不为空就直接调用 newInstance 来创建 FenixHandler 实例.
         source.setPrefix(handler.getPrefix()).setSymbol(handler.getSymbol());
+        FenixHandlerFactory handlerFactory = handler.getHandlerFactory();
+        if (handlerFactory != null) {
+            handlerFactory.newInstance().buildSqlInfo(source);
+            return;
+        }
+
         try {
+            // 否则就调用 getHandlerCls() 方法来使用反射获取该 Handler 对应的实例，并执行方法.
             handler.getHandlerCls().newInstance().buildSqlInfo(source);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new FenixException(StringHelper

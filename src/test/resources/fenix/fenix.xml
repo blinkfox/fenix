@@ -225,4 +225,10 @@
         <orHello value="Fenix"/>
     </fenix>
 
+    <!-- 用于单元测试自定义的 hi 标签生成的 SQL 片段和参数. -->
+    <fenix id="hiTagger">
+        <hi value="LiLei"/>
+        <andHi value="HanMeiMei"/>
+    </fenix>
+
 </fenixs>

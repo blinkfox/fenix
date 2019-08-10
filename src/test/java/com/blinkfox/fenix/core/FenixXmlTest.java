@@ -331,4 +331,19 @@ public class FenixXmlTest {
         assertEquals(world, sqlInfo.getParams().get("World"));
     }
 
+    /**
+     * 测试 hi 的自定义标签的情况.
+     */
+    @Test
+    public void hiTagger() {
+        String name = "LiLei";
+        Map<String, Object> contextParams = new HashMap<>(4);
+        contextParams.put(name, name);
+        contextParams.put("HanMeiMei", name);
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.hiTagger", contextParams);
+        assertEquals("Hello :LiLei AND Hello LIKE :HanMeiMei", sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+        assertEquals(name, sqlInfo.getParams().get(name));
+    }
+
 }

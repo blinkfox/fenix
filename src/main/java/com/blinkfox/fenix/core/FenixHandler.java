@@ -7,6 +7,7 @@ import com.blinkfox.fenix.bean.BuildSource;
  *
  * @author blinkfox on 2019-08-04.
  */
+@FunctionalInterface
 public interface FenixHandler {
 
     /**

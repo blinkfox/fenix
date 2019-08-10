@@ -42,7 +42,7 @@ public class HelloTagHandler implements FenixHandler {
         sqlInfo.getJoin()
                 .append(source.getPrefix())
                 .append("Hello")
-                .append(source.getSymbol())
+                .append(source.getSymbol() == null ? " " : source.getSymbol())
                 .append(":")
                 .append(valueText);
         sqlInfo.getParams().put(valueText, value);
