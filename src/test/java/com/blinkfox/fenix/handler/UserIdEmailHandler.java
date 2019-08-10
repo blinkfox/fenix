@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.handler;
 
 import com.blinkfox.fenix.bean.BuildSource;
-import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.config.annotation.Tagger;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SymbolConst;
@@ -35,9 +34,8 @@ public class UserIdEmailHandler implements FenixHandler {
 
         /* 获取 match 属性值,如果匹配中 字符值没有，则认为是必然生成项. */
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
-            SqlInfo sqlInfo = source.getSqlInfo();
-            StringBuilder join = sqlInfo.getJoin();
-            Map<String, Object> params = sqlInfo.getParams();
+            StringBuilder join = source.getSqlInfo().getJoin();
+            Map<String, Object> params = source.getSqlInfo().getParams();
 
             // 获取配置的属性值,getAndCheckNodeText()方法会检测属性值是否为空，如果为空，会抛出运行时异常
             String idFieldText = XmlNodeHelper.getAndCheckNodeText(node, "attribute::idField");
@@ -47,7 +45,7 @@ public class UserIdEmailHandler implements FenixHandler {
             String emailValueText = XmlNodeHelper.getNodeAttrText(node, "attribute::emailValue");
 
             // 如果 userId 不为空，则根据 id 来做等值查询.
-            Integer id = (Integer) ParseHelper.parseExpressWithException(idValueText, source.getContext());
+            String id = (String) ParseHelper.parseExpressWithException(idValueText, source.getContext());
             if (id != null) {
                 // prefix 是前缀，如 " and ", " or " 之类，没有则默认为空字符串""
                 String idNamed = StringHelper.fixDot(idValueText);
@@ -63,7 +61,7 @@ public class UserIdEmailHandler implements FenixHandler {
                 String emailNamed = StringHelper.fixDot(emailValueText);
                 join.append(source.getPrefix()).append(emailFieldText).append(SymbolConst.LIKE)
                         .append(Const.COLON).append(emailNamed);
-                params.put(emailNamed, email);
+                params.put(emailNamed, "%" + email + "%");
             }
         }
     }

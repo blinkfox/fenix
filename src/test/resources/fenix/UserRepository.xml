@@ -13,14 +13,15 @@
         <in field="u.id" value="userMap.ids"/>
     </fenix>
 
+    <!-- 根据自定义的 userIdEmail 标签来查询用户信息. -->
     <fenix id="queryUserWithIdEmail">
         SELECT
             u
         FROM
             User AS u
         WHERE
-        <userIdEmail idField="id" emailField="email"
-                     idValue="userId" emailValue="userEmail" match="?userId != empty || ?userEmail != empty"/>
+        <userIdEmail idField="u.id" emailField="u.email"
+                     idValue="userId" emailValue="userEmail" match="(?userId != empty) || (?userEmail != empty)"/>
     </fenix>
 
 </fenixs>
