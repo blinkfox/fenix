@@ -41,7 +41,9 @@ public class FenixXmlTest {
      */
     @BeforeClass
     public static void init() {
-        FenixConfigManager.getInstance().initLoad(new MyFenixConfig());
+        FenixConfigManager.getInstance()
+                .initLoadHandlerLocations("com.blinkfox.fenix.handler")
+                .initLoad(new MyFenixConfig());
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
         context.put("user", new User().setId("123").setName(NAME).setSex("0"));
@@ -311,6 +313,22 @@ public class FenixXmlTest {
         assertEquals("UPDATE User SET name = :name, email = :email, sex = :sex WHERE u.c_id = '123'",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 hello 的自定义标签的情况.
+     */
+    @Test
+    public void helloTagger() {
+        String world = "World";
+        Map<String, Object> contextParams = new HashMap<>(4);
+        contextParams.put(world, world);
+        contextParams.put("Blinkfox", "Blinkfox");
+        contextParams.put("Fenix", "Fenix");
+        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.helloTagger", contextParams);
+        assertEquals("Hello = :World AND Hello = :Blinkfox OR Hello = :Fenix", sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+        assertEquals(world, sqlInfo.getParams().get("World"));
     }
 
 }

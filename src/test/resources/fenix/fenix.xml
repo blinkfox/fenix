@@ -218,4 +218,11 @@
         WHERE u.c_id = '@{user.id}'
     </fenix>
 
+    <!-- 用于单元测试自定义的 hello 标签生成的 SQL 片段和参数. -->
+    <fenix id="helloTagger">
+        <hello value="World"/>
+        <andHello value="Blinkfox"/>
+        <orHello value="Fenix"/>
+    </fenix>
+
 </fenixs>
