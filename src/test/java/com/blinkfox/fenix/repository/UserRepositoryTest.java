@@ -5,6 +5,7 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
+import com.blinkfox.fenix.jpa.QueryFenix;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,12 +15,12 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
@@ -63,7 +64,7 @@ public class UserRepositoryTest {
     }
 
     /**
-     * 测试使用原生的 {@link Query} 注解来模糊查询博客信息.
+     * 测试使用 {@link com.blinkfox.fenix.jpa.QueryFenix} 注解来模糊查询博客信息.
      */
     @Test
     public void queryBlogsByTitle() {
@@ -72,6 +73,16 @@ public class UserRepositoryTest {
 
         List<User> users2 = userRepository.queryUserWithIdEmail(null, "@qq.com");
         Assert.assertFalse(users2.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来根据用户 ID 和 Email 来查询用户信息.
+     */
+    @Test
+    @Ignore
+    public void queryWithJava() {
+        List<User> users = userRepository.queryWithJava("1", new User().setId("2").setAge(32), 5, "email");
+        Assert.assertFalse(users.isEmpty());
     }
 
 }

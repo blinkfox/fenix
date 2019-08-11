@@ -92,7 +92,14 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.jpaParams = getQueryMethod().getParameters();
         // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
         this.contextParams = this.buildContextParams(values);
-        this.sqlInfo = Fenix.getSqlInfo(queryFenix.value(), this.contextParams);
+        String fenixId = queryFenix.value();
+        if (StringHelper.isNotBlank(fenixId)) {
+            this.sqlInfo = Fenix.getSqlInfo(fenixId, this.contextParams);
+        } else if (queryFenix.providerCls() != Void.class && StringHelper.isNotBlank(queryFenix.method())) {
+            this.sqlInfo = FenixProviderInvoker.invoke(queryFenix.providerCls(),
+                    queryFenix.method(), this.contextParams);
+        }
+
         this.querySql = sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.

@@ -47,4 +47,18 @@ public @interface QueryFenix {
      */
     boolean nativeQuery() default false;
 
+    /**
+     * 使用 Java 来做 SQL 拼接的提供类的 class.
+     *
+     * @return Class
+     */
+    Class<?> providerCls() default Void.class;
+
+    /**
+     * 使用 Java 来做 SQL 拼接的提供类的方法名.
+     *
+     * @return 方法名
+     */
+    String method() default "";
+
 }
