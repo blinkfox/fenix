@@ -73,7 +73,7 @@ public final class Fenix {
         // 生成新的 SqlInfo 信息并打印出来.
         SqlInfo sqlInfo = buildNewSqlInfo(namespace, fenixNode, context);
         if (NormalConfig.getInstance().isPrintSqlInfo()) {
-            new SqlInfoPrinter().print(sqlInfo, true, namespace, fenixId);
+            new SqlInfoPrinter().print(sqlInfo, namespace, fenixId);
         }
         return sqlInfo;
     }

@@ -61,6 +61,17 @@ public final class BuildSource {
     private Map<String, Object> others;
 
     /**
+     * 仅含 {@link SqlInfo} 实例的构造方法.
+     *
+     * @param sqlInfo SQL 拼接和参数对象
+     */
+    public BuildSource(SqlInfo sqlInfo) {
+        this.sqlInfo = sqlInfo;
+        resetPrefix();
+        resetSymbol();
+    }
+
+    /**
      * 含 XML 命名空间、SqlInfo、Node 节点、上下文参数的构造方法.
      *
      * @param namespace XML 命名空间
