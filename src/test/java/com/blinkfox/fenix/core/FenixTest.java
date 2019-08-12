@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.core;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
@@ -159,11 +160,10 @@ public class FenixTest {
     }
 
     /**
-     * equal相关方法测试.
+     * equal 相关方法的测试.
      */
     @Test
     public void testEqual() {
-        long start = System.currentTimeMillis();
         SqlInfo sqlInfo = Fenix.start()
                 .equal("u.id", context.get("id"), "4".equals(context.get("id")))
                 .equal("u.nickName", context.get("name"))
@@ -179,11 +179,37 @@ public class FenixTest {
                 .orEqual("u.nickName", context.get("myBirthday"), context.get("name") == null)
                 .equal("u.id", context.get("id"))
                 .end();
-        log.info("testEqual() 方法执行耗时: {} ms.", System.currentTimeMillis() - start);
 
         assertEquals("u.nickName = :u_nickName u.email = :u_email AND u.age = :u_age AND u.trueAge = "
                 + ":u_trueAge AND u.trueAge = :u_trueAge u.nickName = :u_nickName OR u.email = :u_email "
                 + "OR u.birthday = :u_birthday OR u.birthday = :u_birthday u.id = :u_id", sqlInfo.getSql());
+        assertEquals(6, sqlInfo.getParams().size());
+    }
+
+    /**
+     * notEqual 相关方法的测试.
+     */
+    @Test
+    public void testNotEqual() {
+        SqlInfo sqlInfo = Fenix.start()
+                .notEqual("u.id", context.get("id"), "4".equals(context.get("id")))
+                .notEqual("u.nickName", context.get("name"))
+                .notEqual("u.email", context.get("myEmail"), context.get("myEmail") != null)
+                .andNotEqual("u.age", context.get("myAge"))
+                .andNotEqual("u.trueAge", context.get("myAge"))
+                .andNotEqual("u.trueAge", context.get("myAge"), context.get("myAge") != null)
+                .andNotEqual("u.email", context.get("myAge"), context.get("myEmail") == null)
+                .notEqual("u.nickName", context.get("name"))
+                .orNotEqual("u.email", context.get("myEmail"))
+                .orNotEqual("u.birthday", context.get("myBirthday"))
+                .orNotEqual("u.birthday", context.get("myBirthday"), context.get("myBirthday") != null)
+                .orNotEqual("u.nickName", context.get("myBirthday"), context.get("name") == null)
+                .notEqual("u.id", context.get("id"))
+                .end();
+
+        assertEquals("u.nickName <> :u_nickName u.email <> :u_email AND u.age <> :u_age AND u.trueAge <> "
+                + ":u_trueAge AND u.trueAge <> :u_trueAge u.nickName <> :u_nickName OR u.email <> :u_email "
+                + "OR u.birthday <> :u_birthday OR u.birthday <> :u_birthday u.id <> :u_id", sqlInfo.getSql());
         assertEquals(6, sqlInfo.getParams().size());
     }
 
