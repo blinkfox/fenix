@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.core;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
@@ -256,7 +257,7 @@ public class FenixTest {
     }
 
     /**
-     * Like 片段相关方法的测试.
+     * LIKE 片段相关方法的测试.
      */
     @Test
     public void testLike() {
@@ -280,6 +281,29 @@ public class FenixTest {
                 + "LIKE :u_trueAge AND u.trueAge LIKE :u_trueAge u.nickName LIKE :u_nickName OR u.email LIKE :u_email "
                 + "OR u.birthday LIKE :u_birthday OR u.birthday LIKE :u_birthday u.id LIKE :u_id", sqlInfo.getSql());
         assertEquals(6, sqlInfo.getParams().size());
+    }
+
+    /**
+     * NOT LIKE 片段相关方法的测试.
+     */
+    @Test
+    public void testNotLike() {
+        SqlInfo sqlInfo = Fenix.start()
+                .notLike("u.id", context.get("id"), "4".equals(context.get("id")))
+                .notLike("u.nickName", context.get("name"))
+                .notLike("u.email", context.get("myEmail"), context.get("myEmail") != null)
+                .andNotLike("u.age", context.get("myAge"))
+                .andNotLike("u.trueAge", context.get("myAge"), context.get("myAge") != null)
+                .andNotLike("u.email", context.get("myAge"), context.get("myEmail") == null)
+                .orNotLike("u.email", context.get("myEmail"))
+                .orNotLike("u.birthday", context.get("myBirthday"), context.get("myBirthday") != null)
+                .orNotLike("u.nickName", context.get("myBirthday"), context.get("name") == null)
+                .end();
+
+        assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
+                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                sqlInfo.getSql());
+        assertEquals(5, sqlInfo.getParams().size());
     }
 
 }
