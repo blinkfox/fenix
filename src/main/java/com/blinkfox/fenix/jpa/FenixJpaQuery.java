@@ -92,14 +92,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.jpaParams = getQueryMethod().getParameters();
         // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
         this.contextParams = this.buildContextParams(values);
-        String fenixId = queryFenix.value();
-        if (StringHelper.isNotBlank(fenixId)) {
-            this.sqlInfo = Fenix.getXmlSqlInfo(fenixId, this.contextParams);
-        } else if (queryFenix.providerCls() != Void.class && StringHelper.isNotBlank(queryFenix.method())) {
-            this.sqlInfo = FenixProviderInvoker.invoke(queryFenix.providerCls(),
-                    queryFenix.method(), this.contextParams);
-        }
-
+        this.getSqlInfoByFenix();
         this.querySql = sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
@@ -171,6 +164,28 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             }
         }
         return context;
+    }
+
+    /**
+     * 根据 {@link QueryFenix} 注解来获取 {@link SqlInfo} 信息，
+     * 并区分判断 Java 或者 XML 两种方式来构建 {@link SqlInfo} 信息.
+     */
+    private void getSqlInfoByFenix() {
+        // 如果 QueryFenix 注解中 providerCls 和 method 两个都不为空，说明是用 Java 代码的方式来拼接 SQL 的.
+        Class<?> providerCls = queryFenix.providerCls();
+        String method = queryFenix.method();
+        if (providerCls != Void.class && StringHelper.isNotBlank(method)) {
+            this.sqlInfo = FenixProviderInvoker.invoke(providerCls, method, this.contextParams);
+            return;
+        }
+
+        // 如果 QueryFenix 注解中 value 不为空，即表明 fullFenixId 不为空，则说明是使用 XML 的方式来拼接 SQL 的.
+        String fullFenixId = queryFenix.value();
+        if (StringHelper.isNotBlank(fullFenixId)) {
+            this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
+        } else {
+
+        }
     }
 
     /**
