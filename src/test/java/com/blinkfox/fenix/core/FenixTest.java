@@ -1,13 +1,14 @@
 package com.blinkfox.fenix.core;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.helper.ParamWrapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
@@ -304,6 +305,233 @@ public class FenixTest {
                 + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 根据指定模式生成 LIKE 片段相关方法的测试.
+     */
+    @Test
+    public void testLikePattern() {
+        SqlInfo sqlInfo = Fenix.start()
+                .likePattern("u.id", "4%", "4".equals(context.get("id")))
+                .likePattern("u.nickName", context.get("name") + "%")
+                .likePattern("u.email", "%" + context.get("myEmail"), context.get("myEmail") != null)
+                .andLikePattern("u.age", context.get("myAge") + "%")
+                .andLikePattern("u.trueAge", context.get("myAge") + "%", context.get("myAge") != null)
+                .andLikePattern("u.email", context.get("myAge") + "%", context.get("myEmail") == null)
+                .orLikePattern("u.email", context.get("myEmail") + "%")
+                .orLikePattern("u.birthday", "%" + context.get("myBirthday") + "%", context.get("myBirthday") != null)
+                .end();
+
+        assertEquals("u.nickName LIKE 'zhagnsan%' u.email LIKE '%zhagnsan@163.com' AND u.age LIKE '25%' AND "
+                + "u.trueAge LIKE '25%' OR u.email LIKE 'zhagnsan@163.com%' OR u.birthday LIKE '%1990-03-31%'",
+                sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * 根据指定模式生成 NOT LIKE 片段相关方法的测试.
+     */
+    @Test
+    public void testNotLikePattern() {
+        SqlInfo sqlInfo = Fenix.start()
+                .notLikePattern("u.id", "4%", "4".equals(context.get("id")))
+                .notLikePattern("u.nickName", context.get("name") + "%")
+                .notLikePattern("u.email", "%" + context.get("myEmail"), context.get("myEmail") != null)
+                .andNotLikePattern("u.age", context.get("myAge") + "%")
+                .andNotLikePattern("u.trueAge", context.get("myAge") + "%", context.get("myAge") != null)
+                .andNotLikePattern("u.email", context.get("myAge") + "%", context.get("myEmail") == null)
+                .orNotLikePattern("u.email", context.get("myEmail") + "%")
+                .orNotLikePattern("u.birthday", context.get("myBirthday") + "%", context.get("myBirthday") != null)
+                .end();
+
+        assertEquals("u.nickName NOT LIKE 'zhagnsan%' u.email NOT LIKE '%zhagnsan@163.com' AND u.age NOT LIKE '25%'"
+                + " AND u.trueAge NOT LIKE '25%' OR u.email NOT LIKE 'zhagnsan@163.com%' OR u.birthday "
+                + "NOT LIKE '1990-03-31%'", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * BETWEEN 相关方法的测试.
+     */
+    @Test
+    public void testBetween() {
+        Integer startAge = (Integer) context.get("startAge");
+        Integer endAge = (Integer) context.get("endAge");
+        String startBirthday = (String) context.get("startBirthday");
+        String endBirthday = (String) context.get("endBirthday");
+
+        SqlInfo sqlInfo = Fenix.start()
+                .between("u.age", startAge, endAge)
+                .between("u.age", startAge, endAge, startAge == null && endAge == null)
+                .between("u.birthday", startBirthday, endBirthday)
+                .between("u.birthday", startBirthday, endBirthday, startBirthday != null)
+                .andBetween("u.age", startAge, endAge)
+                .andBetween("u.age", startAge, endAge, startAge != null && endAge != null)
+                .andBetween("u.birthday", startBirthday, endBirthday)
+                .andBetween("u.birthday", startBirthday, endBirthday, startBirthday != null)
+                .orBetween("u.age", startAge, endAge)
+                .orBetween("u.age", startAge, endAge, startAge != null && endAge != null)
+                .orBetween("u.birthday", startBirthday, endBirthday)
+                .orBetween("u.birthday", startBirthday, endBirthday, startBirthday != null)
+                .end();
+
+        assertEquals("u.age BETWEEN :u_age_start AND :u_age_end u.birthday <= :u_birthday_end AND u.age "
+                + "BETWEEN :u_age_start AND :u_age_end AND u.age BETWEEN :u_age_start AND :u_age_end AND "
+                + "u.birthday <= :u_birthday_end OR u.age BETWEEN :u_age_start AND :u_age_end OR u.age "
+                + "BETWEEN :u_age_start AND :u_age_end OR u.birthday <= :u_birthday_end", sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * IN 相关方法的测试.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testIn() {
+        Integer[] sexs = (Integer[]) context.get("sexs");
+        List<String> citys = (List<String>) context.get("citys");
+
+        SqlInfo sqlInfo = Fenix.start()
+                .in("u.sex", sexs)
+                .in("u.city", citys)
+                .in("u.sex", sexs, sexs != null)
+                .in("u.city", citys, citys == null)
+                .andIn("u.sex", sexs)
+                .andIn("u.city", citys)
+                .andIn("u.sex", sexs, sexs != null)
+                .andIn("u.city", citys, citys == null)
+                .orIn("u.sex", sexs)
+                .orIn("u.city", citys)
+                .orIn("u.sex", sexs, sexs != null)
+                .orIn("u.city", citys, citys == null)
+                .end();
+
+        assertEquals("u.sex IN :u_sex u.city IN :u_city u.sex IN :u_sex AND u.sex IN :u_sex "
+                + "AND u.city IN :u_city AND u.sex IN :u_sex OR u.sex IN :u_sex OR u.city IN :u_city "
+                + "OR u.sex IN :u_sex", sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+    }
+
+    /**
+     * NOT IN 相关方法的测试.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testNotIn() {
+        Integer[] sexs = (Integer[]) context.get("sexs");
+        List<String> citys = (List<String>) context.get("citys");
+
+        SqlInfo sqlInfo = Fenix.start()
+                .notIn("u.sex", sexs)
+                .notIn("u.city", citys)
+                .notIn("u.sex", sexs, sexs != null)
+                .notIn("u.city", citys, citys == null)
+                .andNotIn("u.sex", sexs)
+                .andNotIn("u.city", citys)
+                .andNotIn("u.sex", sexs, sexs != null)
+                .andNotIn("u.city", citys, citys == null)
+                .orNotIn("u.sex", sexs)
+                .orNotIn("u.city", citys)
+                .orNotIn("u.sex", sexs, sexs != null)
+                .orNotIn("u.city", citys, citys == null)
+                .end();
+
+        assertEquals("u.sex NOT IN :u_sex u.city NOT IN :u_city u.sex NOT IN :u_sex AND u.sex NOT IN :u_sex "
+                + "AND u.city NOT IN :u_city AND u.sex NOT IN :u_sex OR u.sex NOT IN :u_sex OR u.city NOT "
+                + "IN :u_city OR u.sex NOT IN :u_sex", sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+    }
+
+    /**
+     * IS NULL 相关方法的测试.
+     */
+    @Test
+    public void testIsNull() {
+        SqlInfo sqlInfo = Fenix.start()
+                .isNull("a.name")
+                .isNull("b.email")
+                .isNull("a.name", true)
+                .isNull("b.email", false)
+                .andIsNull("a.name")
+                .andIsNull("b.email")
+                .andIsNull("a.name", false)
+                .andIsNull("b.email", true)
+                .orIsNull("a.name")
+                .orIsNull("b.email")
+                .orIsNull("a.name", false)
+                .orIsNull("b.email", true)
+                .end();
+
+        assertEquals("a.name IS NULL b.email IS NULL a.name IS NULL AND a.name IS NULL AND b.email IS NULL "
+                + "AND b.email IS NULL OR a.name IS NULL OR b.email IS NULL OR b.email IS NULL", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * IS NOT NULL 相关方法的测试.
+     */
+    @Test
+    public void testIsNotNull() {
+        SqlInfo sqlInfo = Fenix.start()
+                .isNotNull("a.name")
+                .isNotNull("b.email")
+                .isNotNull("a.name", true)
+                .isNotNull("b.email", false)
+                .andIsNotNull("a.name")
+                .andIsNotNull("b.email")
+                .andIsNotNull("a.name", false)
+                .andIsNotNull("b.email", true)
+                .orIsNotNull("a.name")
+                .orIsNotNull("b.email")
+                .orIsNotNull("a.name", false)
+                .orIsNotNull("b.email", true)
+                .end();
+
+        assertEquals("a.name IS NOT NULL b.email IS NOT NULL a.name IS NOT NULL AND a.name IS NOT NULL "
+                + "AND b.email IS NOT NULL AND b.email IS NOT NULL OR a.name IS NOT NULL OR b.email IS NOT NULL "
+                + "OR b.email IS NOT NULL", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * 综合测试使用 Fenix 书写的 SQL.
+     */
+    @Test
+    public void testSql() {
+        String userName = "zhang";
+        String startBirthday = "1990-03-25";
+        String endBirthday = "2010-08-28";
+        Integer[] sexs = new Integer[]{0, 1};
+
+        SqlInfo sqlInfo = Fenix.start()
+                .select("u.id, u.name, u.email, d.birthday, d.address")
+                .from("User AS u")
+                .leftJoin("UserDetail AS d").on("u.id = d.userId")
+                .where("u.id != ''")
+                .andLike("u.name", userName)
+                .doAny(true, (join, params) -> {
+                    join.append(" AND 1 = 1");
+                    params.put("abc", 5);
+                    log.info("执行了自定义操作，你可以任意拼接 SQL 字符串和命名参数.");
+                })
+                .doAny(false, (join, params) -> log.info("match 为 false，将不会执行该自定义操作."))
+                .andGreaterThan("u.age", 21)
+                .andLessThan("u.age", 13)
+                .andGreaterThanEqual("d.birthday", startBirthday)
+                .andLessThanEqual("d.birthday", endBirthday)
+                .andBetween("d.birthday", startBirthday, endBirthday)
+                .andIn("u.sex", sexs)
+                .andIsNotNull("u.state")
+                .orderBy("d.birthday").desc()
+                .end();
+
+        assertEquals("SELECT u.id, u.name, u.email, d.birthday, d.address FROM User AS u "
+                + "LEFT JOIN UserDetail AS d ON u.id = d.userId WHERE u.id != '' AND u.name LIKE :u_name "
+                + "AND 1 = 1 AND u.age > :u_age AND u.age < :u_age AND d.birthday >= :d_birthday "
+                + "AND d.birthday <= :d_birthday AND d.birthday BETWEEN :d_birthday_start AND :d_birthday_end "
+                + "AND u.sex IN :u_sex AND u.state IS NOT NULL ORDER BY d.birthday DESC", sqlInfo.getSql());
+        assertEquals(7, sqlInfo.getParams().size());
     }
 
 }

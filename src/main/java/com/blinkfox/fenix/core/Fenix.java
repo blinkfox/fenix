@@ -3,7 +3,6 @@ package com.blinkfox.fenix.core;
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.config.entity.NormalConfig;
-import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SqlKeyConst;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.builder.JavaSqlInfoBuilder;
@@ -21,6 +20,10 @@ import java.util.Map;
  * @see FenixXmlBuilder
  */
 public final class Fenix {
+
+    private static final String START = "_start";
+
+    private static final String END = "_end";
 
     /**
      * 封装了 {@link SqlInfo}、应用中提供的上下文参数、前缀等信息.
@@ -586,7 +589,8 @@ public final class Fenix {
     private Fenix doBetween(String prefix, String field, Object startValue, Object endValue, boolean match) {
         if (match) {
             this.source.setPrefix(prefix);
-            // new JavaSqlInfoBuilder(this.source).buildBetweenSql(field, startValue, endValue);
+            new JavaSqlInfoBuilder(this.source)
+                    .buildBetweenSql(field, field + START, startValue, field + END, endValue);
             this.source.resetPrefix();
         }
         return this;
@@ -599,30 +603,13 @@ public final class Fenix {
      * @param field 数据库字段
      * @param value 数组的值
      * @param match 是否匹配
-     * @param objType 对象类型，取自ZealotConst.java中以OBJTYPE开头的类型
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    @SuppressWarnings("unchecked")
-    private Fenix doInByType(String prefix, String field, Object value,
-                             boolean match, int objType, boolean positive) {
+    private Fenix doInByType(String prefix, String field, Object value, boolean match, boolean positive) {
         if (match) {
-            // 赋予 source 对象 IN 或者 NOT IN 的 SQL 片段的前缀和操作符.
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.IN : SymbolConst.NOT_IN);
-            switch (objType) {
-                // 如果类型是数组.
-                case Const.OBJTYPE_ARRAY:
-                    // TODO 待修改
-                    // new JavaSqlInfoBuilder(this.source).buildInSql(field, (Object[]) value);
-                    break;
-                // 如果类型是Java集合.
-                case Const.OBJTYPE_COLLECTION:
-                    new JavaSqlInfoBuilder(this.source).buildInSqlByCollection(field, (Collection<Object>) value);
-                    break;
-                default:
-                    // 这里要包装成集合.
-                    // throw new NotCollectionOrArrayException("in查询的值不是有效的集合或数组!");
-            }
+            new JavaSqlInfoBuilder(this.source).buildInSql(field, field, value);
             this.source.resetPrefix();
         }
         return this;
@@ -639,7 +626,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例的当前实例
      */
     private Fenix doIn(String prefix, String field, Object[] values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, Const.OBJTYPE_ARRAY, positive);
+        return this.doInByType(prefix, field, values, match, positive);
     }
 
     /**
@@ -653,7 +640,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例的当前实例
      */
     private Fenix doIn(String prefix, String field, Collection<?> values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, Const.OBJTYPE_COLLECTION, positive);
+        return this.doInByType(prefix, field, values, match, positive);
     }
 
     /**

@@ -144,7 +144,7 @@ public class SqlInfoBuilder {
                     .append(Const.COLON).append(endNamed);
             sqlInfo.getParams().put(endNamed, endValue);
         } else {
-            // 开始值不为空，结束值也不为空时，转为"BETWEEN ? AND ?"的情况.
+            // 开始值不为空，结束值也不为空时，转为 "BETWEEN :xxx AND :yyy" 的情况.
             String startNamed = StringHelper.fixDot(startText);
             String endNamed = StringHelper.fixDot(endText);
             sqlInfo.getJoin().append(prefix).append(fieldText)
