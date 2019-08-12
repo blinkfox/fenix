@@ -2,8 +2,8 @@ package com.blinkfox.fenix.core.concrete;
 
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.consts.XpathConst;
-import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.core.FenixXmlBuilder;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
@@ -67,7 +67,7 @@ public class ImportHandler implements FenixHandler {
         // 获取 valueText 值，如果 valueText 不为空，则视为将此 valueText 的解析值再次传入到引入的模板中作为新的上下文参数.
         // 否则使用默认上下文参数对象传入到待解析的引入模板中.
         String valueText = XmlNodeHelper.getNodeAttrText(source.getNode(), XpathConst.ATTR_VALUE);
-        Fenix.buildSqlInfo(nameSpace, source.getSqlInfo(), node, StringHelper.isNotBlank(valueText)
+        FenixXmlBuilder.buildSqlInfo(nameSpace, source.getSqlInfo(), node, StringHelper.isNotBlank(valueText)
                         ? ParseHelper.parseExpressWithException(valueText, source.getContext()) : source.getContext());
     }
 
