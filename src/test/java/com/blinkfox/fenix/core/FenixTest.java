@@ -1,6 +1,5 @@
 package com.blinkfox.fenix.core;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
@@ -249,12 +248,38 @@ public class FenixTest {
                 .orLessThanEqual("u.age", 85, false)
                 .end();
 
-        // 断言并输出sql信息
         assertEquals("SELECT u FROM User WHERE u.age > :u_age AND OR u.age > :u_age OR u.salary > :u_salary "
                 + "OR OR u.age < :u_age AND u.age < :u_age OR u.age < :u_age OR u.salary < :u_salary UNION SELECT u "
                 + "FROM userBak WHERE 1 = 1 u.age >= :u_age AND OR u.age >= :u_age OR u.salary >= :u_salary AND "
                 + "u.age <= :u_age AND u.age <= :u_age OR u.salary <= :u_salary", sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
+    }
+
+    /**
+     * Like 片段相关方法的测试.
+     */
+    @Test
+    public void testLike() {
+        SqlInfo sqlInfo = Fenix.start()
+                .like("u.id", context.get("id"), "4".equals(context.get("id")))
+                .like("u.nickName", context.get("name"))
+                .like("u.email", context.get("myEmail"), context.get("myEmail") != null)
+                .andLike("u.age", context.get("myAge"))
+                .andLike("u.trueAge", context.get("myAge"))
+                .andLike("u.trueAge", context.get("myAge"), context.get("myAge") != null)
+                .andLike("u.email", context.get("myAge"), context.get("myEmail") == null)
+                .like("u.nickName", context.get("name"))
+                .orLike("u.email", context.get("myEmail"))
+                .orLike("u.birthday", context.get("myBirthday"))
+                .orLike("u.birthday", context.get("myBirthday"), context.get("myBirthday") != null)
+                .orLike("u.nickName", context.get("myBirthday"), context.get("name") == null)
+                .like("u.id", context.get("id"))
+                .end();
+
+        assertEquals("u.nickName LIKE :u_nickName u.email LIKE :u_email AND u.age LIKE :u_age AND u.trueAge "
+                + "LIKE :u_trueAge AND u.trueAge LIKE :u_trueAge u.nickName LIKE :u_nickName OR u.email LIKE :u_email "
+                + "OR u.birthday LIKE :u_birthday OR u.birthday LIKE :u_birthday u.id LIKE :u_id", sqlInfo.getSql());
+        assertEquals(6, sqlInfo.getParams().size());
     }
 
 }

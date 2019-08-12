@@ -547,9 +547,8 @@ public final class Fenix {
      */
     private Fenix doLike(String prefix, String field, Object value, boolean match, boolean positive) {
         if (match) {
-            // TODO 这里还有问题.
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE);
-            //new JavaSqlInfoBuilder(this.source).buildLikeSql(field, value);
+            new JavaSqlInfoBuilder(this.source).buildLikeSql(field, field, value);
             this.source.resetPrefix();
         }
         return this;
