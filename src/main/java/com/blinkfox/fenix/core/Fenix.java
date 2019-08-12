@@ -2,6 +2,7 @@ package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
+import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SqlKeyConst;
 import com.blinkfox.fenix.consts.SymbolConst;
@@ -45,14 +46,16 @@ public final class Fenix {
     }
 
     /**
-     * 结束JPQL 或者 SQL 的拼接流程，并生成最终的 {@link SqlInfo} 信息.
+     * 结束 JPQL 或者 SQL 的拼接流程，并生成最终的 {@link SqlInfo} 信息.
      *
      * @return sqlInfo
      */
     public SqlInfo end() {
         SqlInfo sqlInfo = this.source.getSqlInfo();
         sqlInfo.setSql(StringHelper.replaceBlank(sqlInfo.getJoin().toString()));
-        new SqlInfoPrinter().print(sqlInfo);
+        if (NormalConfig.getInstance().isPrintSqlInfo()) {
+            new SqlInfoPrinter().print(sqlInfo);
+        }
         return sqlInfo;
     }
 
@@ -155,6 +158,17 @@ public final class Fenix {
      */
     public Fenix from(String text) {
         return this.concat(SqlKeyConst.FROM, text);
+    }
+
+    /**
+     * 拼接并带上 'WHERE' 关键字及之后的字符串.
+     *
+     * @param text 文本
+     * @return {@link Fenix} 实例
+     */
+    public Fenix where(String text) {
+        this.concat(SqlKeyConst.WHERE, text);
+        return this;
     }
 
     /**

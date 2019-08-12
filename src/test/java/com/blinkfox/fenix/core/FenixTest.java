@@ -1,9 +1,8 @@
-package com.blinkfox.fenix;
+package com.blinkfox.fenix.core;
 
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ParamWrapper;
 
 import java.util.Arrays;
