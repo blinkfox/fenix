@@ -20,7 +20,7 @@ import org.junit.Test;
  *
  * @author blinkfox on 2019-08-06.
  */
-public class FenixXmlTest {
+public class FenixXmlBuilderTest {
 
     private static final String NAME = "ZhangSan";
 

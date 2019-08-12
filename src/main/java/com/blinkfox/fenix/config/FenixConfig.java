@@ -31,6 +31,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-04.
  * @see FenixConfigManager
+ * @see NormalConfig
  * @see FenixHandlerFactory
  * @see TagHandler
  */
@@ -151,7 +152,7 @@ public class FenixConfig {
      * @param normalConfig 常规配置实例
      */
     public void configNormal(NormalConfig normalConfig) {
-        normalConfig.setDebug(false).setPrintBanner(true).setPrintSqlInfo(true);
+        // 子类可重写此方法，来增加常规配置信息.
     }
 
     /**
@@ -168,6 +169,36 @@ public class FenixConfig {
      */
     public void configTagHandler() {
         // 子类可重写此方法，来增加新的 SQL 标签和该标签对应的处理器.
+    }
+
+    /**
+     * 设置是否开启调试模式，开启了调试模式之后，每次就会动态获取 XML 文件中的 SQL.
+     *
+     * @param enabled 是否开启 debug 模式的标识
+     */
+    public FenixConfig setDebug(boolean enabled) {
+        NormalConfig.getInstance().setDebug(enabled);
+        return this;
+    }
+
+    /**
+     * 设置是否打印 Fenix 的 Banner 信息.
+     *
+     * @param enabled 是否开启打印 banner 的标识
+     */
+    public FenixConfig setPrintBanner(boolean enabled) {
+        NormalConfig.getInstance().setPrintBanner(enabled);
+        return this;
+    }
+
+    /**
+     * 设置是否打印 {@link com.blinkfox.fenix.bean.SqlInfo} 中的 SQL 语句和参数信息.
+     *
+     * @param enabled 是否开启 SQL 和参数打印的标识
+     */
+    public FenixConfig setPrintSqlInfo(boolean enabled) {
+        NormalConfig.getInstance().setPrintSqlInfo(enabled);
+        return this;
     }
 
     /**

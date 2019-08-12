@@ -6,11 +6,12 @@ import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SqlKeyConst;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.builder.JavaSqlInfoBuilder;
-import com.blinkfox.fenix.helper.CollectionHelper;
+import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.SqlInfoPrinter;
 import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * 使用 XML 或者 Java 链式写法来拼接 JPQL 或者 SQL 语句和对应命名参数的 {@link com.blinkfox.fenix.bean.SqlInfo} 信息的核心 API 类.
@@ -28,16 +29,10 @@ public final class Fenix {
     private BuildSource source;
 
     /**
-     * 用于构建 {@link SqlInfo} 对象中的 JPQL 片段和参数的构建器.
-     */
-    private JavaSqlInfoBuilder sqlInfoBuilder;
-
-    /**
      * 私有构造方法，构造时就初始化 {@link BuildSource} 相应的参数信息.
      */
     private Fenix() {
         this.source = new BuildSource(new SqlInfo());
-        this.sqlInfoBuilder = new JavaSqlInfoBuilder(source);
     }
 
     /**
@@ -166,12 +161,25 @@ public final class Fenix {
      * 拼接并带上 'WHERE' 关键字的字符串和动态参数.
      *
      * @param text 文本
-     * @param value 不定个数的参数值
+     * @param paramMap Map 型参数
      * @return {@link Fenix} 实例
      */
-    public Fenix where(String text, Object... value) {
+    public Fenix where(String text, Map<String, Object> paramMap) {
         this.concat(SqlKeyConst.WHERE, text);
-        return this.param(value);
+        return this.params(paramMap);
+    }
+
+    /**
+     * 拼接并带上 'WHERE' 关键字的字符串和动态参数.
+     *
+     * @param text 文本
+     * @param key 命名参数的 key
+     * @param value 命名参数的 value
+     * @return {@link Fenix} 实例
+     */
+    public Fenix where(String text, String key, Object value) {
+        this.concat(SqlKeyConst.WHERE, text);
+        return this.param(key, value);
     }
 
     /**
@@ -351,15 +359,40 @@ public final class Fenix {
     }
 
     /**
-     * 在 SQL 后追加任何文本字符串，后可追加自定义可变参数.
+     * 在 SQL 后追加任何文本字符串.
      *
      * @param text 文本
-     * @param values 可变参数数组
      * @return {@link Fenix} 实例
      */
-    public Fenix text(String text, Object... values) {
+    public Fenix text(String text) {
         this.source.getSqlInfo().getJoin().append(text);
-        this.appendParams(values, Const.OBJTYPE_ARRAY);
+        return this;
+    }
+
+    /**
+     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数.
+     *
+     * @param text 文本
+     * @param paramMap Map 型参数
+     * @return {@link Fenix} 实例
+     */
+    public Fenix text(String text, Map<String, Object> paramMap) {
+        this.source.getSqlInfo().getJoin().append(text);
+        this.params(paramMap);
+        return this;
+    }
+
+    /**
+     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数.
+     *
+     * @param text 文本
+     * @param key 命名参数 key
+     * @param value 命名参数 value
+     * @return {@link Fenix} 实例
+     */
+    public Fenix text(String text, String key, Object value) {
+        this.source.getSqlInfo().getJoin().append(text);
+        this.param(key, value);
         return this;
     }
 
@@ -368,47 +401,54 @@ public final class Fenix {
      *
      * @param match 匹配条件
      * @param text 文本
-     * @param values 可变参数数组
+     * @param paramMap Map 型参数
      * @return {@link Fenix} 实例
      */
-    public Fenix text(boolean match, String text, Object... values) {
-        return match ? text(text, values) : this;
+    public Fenix text(boolean match, String text, Map<String, Object> paramMap) {
+        return match ? this.text(text, paramMap) : this;
     }
 
     /**
-     * 在 SQL 的参数集合后追加任何的数组.
+     * 在 SQL 后追加任何文本字符串，后可追加自定义可变参数，如果 match 为 true 时，才生成此 SQL 文本和参数.
      *
-     * @param value 值
-     * @param objType 对象类型那
+     * @param match 匹配条件
+     * @param text 文本
+     * @param key 命名参数的 key
+     * @param value 命名参数的 value
      * @return {@link Fenix} 实例
      */
-    private Fenix appendParams(Object value, int objType) {
-        Object[] values = CollectionHelper.toArray(value, objType);
-        if (CollectionHelper.isNotEmpty(values)) {
-            // TODO 之类待修改和完善.
-            //Collections.addAll(this.source.getXmlSqlInfo().getParams(), values);
+    public Fenix text(boolean match, String text, String key, Object value) {
+        return match ? this.text(text, key, value) : this;
+    }
+
+    /**
+     * 在 SQL 的参数集合后key, value 参数对象，其中 key 是 JPQL 中命名参数名称，value 是该参数对应的值.
+     *
+     * @param key 命名参数名称
+     * @param value 命名参数的值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix param(String key, Object value) {
+        if (StringHelper.isBlank(key)) {
+            throw new FenixException("【Fenix 异常提示】添加的命名参数名称为空！");
         }
+        this.source.getSqlInfo().getParams().put(key, value);
         return this;
     }
 
     /**
-     * 在 SQL 的参数集合后追加不定对象个数的数组.
+     * 在 SQL 的参数集合后追加任何的一个 Map 集合，其中 Map 中的 key 是 JPQL 中命名参数名称，value 是该参数对应的值.
      *
-     * @param values 不定个数的值，也是数组
+     * @param paramMap 存放在 Map 中的参数键值对
      * @return {@link Fenix} 实例
      */
-    public Fenix param(Object... values) {
-        return this.appendParams(values, Const.OBJTYPE_ARRAY);
-    }
+    public Fenix params(Map<String, Object> paramMap) {
+        if (paramMap == null) {
+            throw new FenixException("【Fenix 异常提示】添加的命名参数 Map 为null");
+        }
 
-    /**
-     * 在 SQL 的参数集合后追加任何的一个集合.
-     *
-     * @param values 不定个数的值
-     * @return {@link Fenix} 实例
-     */
-    public Fenix param(Collection<?> values) {
-        return this.appendParams(values, Const.OBJTYPE_COLLECTION);
+        paramMap.forEach(this::param);
+        return this;
     }
 
     /**
@@ -446,10 +486,8 @@ public final class Fenix {
      */
     private Fenix doNormal(String prefix, String field, Object value, String symbol, boolean match) {
         if (match) {
-            //this.source.setPrefix(prefix);
-            //this.sqlInfoBuilder.buildNormalSql(field, value, symbol);
-            // TODO 有待修改和完善.
-            //.buildNormalSql(field, value, symbol);
+            this.source.setPrefix(prefix).setSymbol(symbol);
+            new JavaSqlInfoBuilder(this.source).buildNormalSql(field, field, value);
             this.source.resetPrefix();
         }
         return this;
@@ -469,7 +507,7 @@ public final class Fenix {
         if (match) {
             // TODO 这里还有问题.
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE);
-            //this.sqlInfoBuilder.buildLikeSql(field, value);
+            //new JavaSqlInfoBuilder(this.source).buildLikeSql(field, value);
             this.source.resetPrefix();
         }
         return this;
@@ -488,7 +526,7 @@ public final class Fenix {
     private Fenix doLikePattern(String prefix, String field, String pattern, boolean match, boolean positive) {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE);
-            this.sqlInfoBuilder.buildLikePatternSql(field, pattern);
+            new JavaSqlInfoBuilder(this.source).buildLikePatternSql(field, pattern);
             this.source.resetPrefix();
         }
         return this;
@@ -507,7 +545,7 @@ public final class Fenix {
     private Fenix doBetween(String prefix, String field, Object startValue, Object endValue, boolean match) {
         if (match) {
             this.source.setPrefix(prefix);
-            // this.sqlInfoBuilder.buildBetweenSql(field, startValue, endValue);
+            // new JavaSqlInfoBuilder(this.source).buildBetweenSql(field, startValue, endValue);
             this.source.resetPrefix();
         }
         return this;
@@ -534,11 +572,11 @@ public final class Fenix {
                 // 如果类型是数组.
                 case Const.OBJTYPE_ARRAY:
                     // TODO 待修改
-                    // this.sqlInfoBuilder.buildInSql(field, (Object[]) value);
+                    // new JavaSqlInfoBuilder(this.source).buildInSql(field, (Object[]) value);
                     break;
                 // 如果类型是Java集合.
                 case Const.OBJTYPE_COLLECTION:
-                    this.sqlInfoBuilder.buildInSqlByCollection(field, (Collection<Object>) value);
+                    new JavaSqlInfoBuilder(this.source).buildInSqlByCollection(field, (Collection<Object>) value);
                     break;
                 default:
                     // 这里要包装成集合.
@@ -591,7 +629,7 @@ public final class Fenix {
             // 判断是"IS NULL"还是"IS NOT NULL"来设置source实例.
             this.source = this.source.setPrefix(prefix)
                     .setSymbol(positive ? SymbolConst.IS_NULL : SymbolConst.IS_NOT_NULL);
-            this.sqlInfoBuilder.buildIsNullSql(field);
+            new JavaSqlInfoBuilder(this.source).buildIsNullSql(field);
             this.source.resetPrefix();
         }
         return this;
