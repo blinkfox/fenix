@@ -161,6 +161,16 @@ public final class Fenix {
     }
 
     /**
+     * 拼接并带上 'WHERE' 关键字的 SQL 字符串.
+     *
+     * @return {@link Fenix} 实例
+     */
+    public Fenix where() {
+        this.concat(SqlKeyConst.WHERE);
+        return this;
+    }
+
+    /**
      * 拼接并带上 'WHERE' 关键字及之后的字符串.
      *
      * @param text 文本
@@ -199,6 +209,15 @@ public final class Fenix {
     /**
      * 拼接并带上 'AND' 关键字的字符串.
      *
+     * @return {@link Fenix} 实例
+     */
+    public Fenix and() {
+        return this.concat(SqlKeyConst.AND);
+    }
+
+    /**
+     * 拼接并带上 'AND' 关键字和其他文本的字符串.
+     *
      * @param text 文本
      * @return {@link Fenix} 实例
      */
@@ -208,6 +227,15 @@ public final class Fenix {
 
     /**
      * 拼接并带上 'OR' 关键字的字符串.
+     *
+     * @return {@link Fenix} 实例
+     */
+    public Fenix or() {
+        return this.concat(SqlKeyConst.OR);
+    }
+
+    /**
+     * 拼接并带上 'OR' 关键字和其他文本的字符串.
      *
      * @param text 文本
      * @return {@link Fenix} 实例

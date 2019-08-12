@@ -213,4 +213,48 @@ public class FenixTest {
         assertEquals(6, sqlInfo.getParams().size());
     }
 
+    /**
+     * 测试 大于、小于、大于等于、小于等于 等系列方法.
+     */
+    @Test
+    public void testThan() {
+        SqlInfo sqlInfo = Fenix.start()
+                .select("u")
+                .from("User")
+                .where()
+                .greaterThan("u.age", 18)
+                .and("").greaterThan("u.age", 25, false)
+                .andGreaterThan("u.birthday", "1990-02-17", false)
+                .orGreaterThan("u.age", 30, true)
+                .orGreaterThan("u.salary", 5000)
+                .or("")
+                .or().lessThan("u.age", 19)
+                .and().lessThan("u.age", 27, true)
+                .andLessThan("u.birthday", "1990-07-15", false)
+                .orLessThan("u.age", 56)
+                .orLessThan("u.salary", 8000, true)
+                .union()
+                .select("u")
+                .from("userBak")
+                .where("1 = 1")
+                .greaterThanEqual("u.age", 18)
+                .and().greaterThanEqual("u.age", 25, false)
+                .andGreaterThanEqual("u.birthday", "1990-02-17", false)
+                .orGreaterThanEqual("u.age", 29)
+                .orGreaterThanEqual("u.salary", 4500, true)
+                .and().lessThanEqual("u.age", 19)
+                .and().lessThanEqual("u.age", 27, true)
+                .andLessThanEqual("u.birthday", "1990-07-15", false)
+                .orLessThanEqual("u.salary", 9700)
+                .orLessThanEqual("u.age", 85, false)
+                .end();
+
+        // 断言并输出sql信息
+        assertEquals("SELECT u FROM User WHERE u.age > :u_age AND OR u.age > :u_age OR u.salary > :u_salary "
+                + "OR OR u.age < :u_age AND u.age < :u_age OR u.age < :u_age OR u.salary < :u_salary UNION SELECT u "
+                + "FROM userBak WHERE 1 = 1 u.age >= :u_age AND OR u.age >= :u_age OR u.salary >= :u_salary AND "
+                + "u.age <= :u_age AND u.age <= :u_age OR u.salary <= :u_salary", sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+    }
+
 }
