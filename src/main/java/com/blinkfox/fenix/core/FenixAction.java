@@ -6,7 +6,7 @@ import java.util.Map;
  * 执行任意自定义操作的函数式接口，目的是方便使用者可自定义任何 SQL 拼接处理等的相关操作.
  *
  * @author blinkfox on 2019-08-11.
- * @see FenixKhala
+ * @see Fenix
  */
 @FunctionalInterface
 public interface FenixAction {

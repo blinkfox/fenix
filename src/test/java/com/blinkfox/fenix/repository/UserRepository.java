@@ -1,12 +1,11 @@
 package com.blinkfox.fenix.repository;
 
-import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
+import com.blinkfox.fenix.provider.UserSqlProvider;
 
 import java.util.List;
 
-import com.blinkfox.fenix.provider.UserSqlProvider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

@@ -49,9 +49,9 @@ public final class FenixConfigManager {
             + "     \\/      \\/     \\/         \\/\n";
 
     /**
-     * fenix 的常量.
+     * fenix 目录名的常量.
      */
-    private static final String FENIX = "fenix";
+    private static final String FENIX_DIR_NAME = "fenix";
     
     /**
      * 初始化的 {@link FenixConfigManager} 单实例.
@@ -158,7 +158,7 @@ public final class FenixConfigManager {
      * @param handlerLocations Fenix 的自定义 handler 处理器所在的位置
      */
     private void scanLocations(String xmlLocations, String handlerLocations) {
-        this.xmlLocations = StringHelper.isBlank(this.xmlLocations) ? FENIX : this.xmlLocations;
+        this.xmlLocations = StringHelper.isBlank(xmlLocations) ? FENIX_DIR_NAME : this.xmlLocations;
         new XmlScanner().scan(this.xmlLocations);
         new TaggerScanner().scan(handlerLocations);
     }
@@ -170,7 +170,7 @@ public final class FenixConfigManager {
      * @return {@link FenixConfigManager} 的全局唯一实例
      */
     public FenixConfigManager initLoadXmlLocations(String xmlLocations) {
-        this.xmlLocations = StringHelper.isBlank(xmlLocations) ? FENIX : xmlLocations;
+        this.xmlLocations = StringHelper.isBlank(xmlLocations) ? FENIX_DIR_NAME : xmlLocations;
         new XmlScanner().scan(this.xmlLocations);
         this.cachingXmlAndEval();
         return this;

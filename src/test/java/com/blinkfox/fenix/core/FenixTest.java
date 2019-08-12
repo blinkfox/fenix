@@ -39,7 +39,7 @@ public class FenixTest {
         context.put("ids", Arrays.asList("1", "2", "3", "9", "10"));
         context.put("blog", new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()));
         Stalker.run(Options.of(5).warmups(5),
-                () -> Assert.assertNotNull(Fenix.getSqlInfo("BlogRepository.queryBlogs2", context)));
+                () -> Assert.assertNotNull(Fenix.getXmlSqlInfo("BlogRepository.queryBlogs2", context)));
     }
 
 }

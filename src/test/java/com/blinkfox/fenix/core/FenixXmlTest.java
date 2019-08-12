@@ -55,7 +55,7 @@ public class FenixXmlTest {
      */
     @Test
     public void testEqual() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.equal", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.equal", context);
         assertEquals(BASE_QUERY + " u.id = :user_id AND u.name = :user_name OR u.email = :email",
                 sqlInfo.getSql());
 
@@ -70,7 +70,7 @@ public class FenixXmlTest {
      */
     @Test
     public void notEqual() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notEqual", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.notEqual", context);
         assertEquals(BASE_QUERY + " u.id <> :user_id AND u.name <> :user_name OR u.email <> :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -81,7 +81,7 @@ public class FenixXmlTest {
      */
     @Test
     public void greaterThan() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.greaterThan", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.greaterThan", context);
         assertEquals(BASE_QUERY + " u.id > :user_id AND u.name > :user_name OR u.email > :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -92,7 +92,7 @@ public class FenixXmlTest {
      */
     @Test
     public void lessThan() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.lessThan", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.lessThan", context);
         assertEquals(BASE_QUERY + " u.id < :user_id AND u.name < :user_name OR u.email < :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -103,7 +103,7 @@ public class FenixXmlTest {
      */
     @Test
     public void greaterThanEqual() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.greaterThanEqual", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.greaterThanEqual", context);
         assertEquals(BASE_QUERY + " u.id >= :user_id AND u.name >= :user_name OR u.email >= :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -114,7 +114,7 @@ public class FenixXmlTest {
      */
     @Test
     public void lessThanEqual() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.lessThanEqual", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.lessThanEqual", context);
         assertEquals(BASE_QUERY + " u.id <= :user_id AND u.name <= :user_name OR u.email <= :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -125,7 +125,7 @@ public class FenixXmlTest {
      */
     @Test
     public void like() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.like", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.like", context);
         assertEquals(BASE_QUERY + " u.id LIKE :user_id AND u.name LIKE :user_name OR u.email LIKE '%@163.com'",
                 sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
@@ -136,7 +136,7 @@ public class FenixXmlTest {
      */
     @Test
     public void notLike() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notLike", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.notLike", context);
         assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name "
                         + "OR u.email NOT LIKE '%@163.com'",
                 sqlInfo.getSql());
@@ -148,7 +148,7 @@ public class FenixXmlTest {
      */
     @Test
     public void startsWith() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.startsWith", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.startsWith", context);
         assertEquals(BASE_QUERY + " u.id LIKE :user_id AND u.name LIKE :user_name OR u.email LIKE :email",
                 sqlInfo.getSql());
 
@@ -162,7 +162,7 @@ public class FenixXmlTest {
      */
     @Test
     public void notStartsWith() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notStartsWith", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.notStartsWith", context);
         assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name OR u.email NOT LIKE :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -173,7 +173,7 @@ public class FenixXmlTest {
      */
     @Test
     public void endsWith() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.endsWith", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.endsWith", context);
         assertEquals(BASE_QUERY + " u.id LIKE :user_id AND u.name LIKE :user_name OR u.email LIKE :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -184,7 +184,7 @@ public class FenixXmlTest {
      */
     @Test
     public void notEndsWith() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notEndsWith", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.notEndsWith", context);
         assertEquals(BASE_QUERY + " u.id NOT LIKE :user_id AND u.name NOT LIKE :user_name OR u.email NOT LIKE :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -216,7 +216,7 @@ public class FenixXmlTest {
         context.put("startBirthday", null);
         context.put("endBirthday", "2019-08-07");
 
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.between", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.between", context);
         assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge "
                         + "OR u.birthday <= :endBirthday", sqlInfo.getSql());
         assertEquals(4, sqlInfo.getParams().size());
@@ -228,7 +228,7 @@ public class FenixXmlTest {
     @Test
     public void in() {
         this.buildInParams();
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.in", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.in", context);
         assertEquals(BASE_QUERY + " u.id IN :user_id AND u.name IN :names OR u.email IN :emails",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -240,7 +240,7 @@ public class FenixXmlTest {
     @Test
     public void notIn() {
         this.buildInParams();
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.notIn", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.notIn", context);
         assertEquals(BASE_QUERY + " u.id NOT IN :user_id AND u.name NOT IN :names OR u.email NOT IN :emails",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -251,7 +251,7 @@ public class FenixXmlTest {
      */
     @Test
     public void isNull() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.isNull", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.isNull", context);
         assertEquals(BASE_QUERY + " u.id IS NULL AND u.name IS NULL OR u.email IS NULL", sqlInfo.getSql());
         assertEquals(0, sqlInfo.getParams().size());
     }
@@ -261,7 +261,7 @@ public class FenixXmlTest {
      */
     @Test
     public void isNotNull() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.isNotNull", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.isNotNull", context);
         assertEquals(BASE_QUERY + " u.id IS NOT NULL AND u.name IS NOT NULL OR u.email IS NOT NULL",
                 sqlInfo.getSql());
         assertEquals(0, sqlInfo.getParams().size());
@@ -272,7 +272,7 @@ public class FenixXmlTest {
      */
     @Test
     public void text() {
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.text", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.text", context);
         assertEquals(BASE_QUERY + " u.id = :userId AND u.name = :userName AND u.email LIKE :email",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -284,7 +284,7 @@ public class FenixXmlTest {
     @Test
     public void testImport() {
         context.put("names", new String[] {NAME, "Maliu"});
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.import", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.import", context);
         assertEquals("SELECT u.id, u.name, u.email FROM User WHERE u.id IS NOT NULL "
                         + "AND u.name IN :names OR u.email LIKE :email",
                 sqlInfo.getSql());
@@ -297,7 +297,7 @@ public class FenixXmlTest {
     @Test
     public void choose() {
         context.put("age", 25);
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.choose", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.choose", context);
         assertEquals("UPDATE t_user SET u.c_sex = 'female' , u.c_status = 'no' , u.c_age = '青年' WHERE u.c_id = '123'",
                 sqlInfo.getSql());
         assertEquals(0, sqlInfo.getParams().size());
@@ -309,7 +309,7 @@ public class FenixXmlTest {
     @Test
     public void set() {
         context.put("age", 25);
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.set", context);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.set", context);
         assertEquals("UPDATE User SET name = :name, email = :email, sex = :sex WHERE u.c_id = '123'",
                 sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
@@ -325,7 +325,7 @@ public class FenixXmlTest {
         contextParams.put(world, world);
         contextParams.put("Blinkfox", "Blinkfox");
         contextParams.put("Fenix", "Fenix");
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.helloTagger", contextParams);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.helloTagger", contextParams);
         assertEquals("Hello = :World AND Hello = :Blinkfox OR Hello = :Fenix", sqlInfo.getSql());
         assertEquals(3, sqlInfo.getParams().size());
         assertEquals(world, sqlInfo.getParams().get("World"));
@@ -340,7 +340,7 @@ public class FenixXmlTest {
         Map<String, Object> contextParams = new HashMap<>(4);
         contextParams.put(name, name);
         contextParams.put("HanMeiMei", name);
-        SqlInfo sqlInfo = Fenix.getSqlInfo("fenix.hiTagger", contextParams);
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.hiTagger", contextParams);
         assertEquals("Hello :LiLei AND Hello LIKE :HanMeiMei", sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
         assertEquals(name, sqlInfo.getParams().get(name));

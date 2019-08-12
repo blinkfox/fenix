@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SqlKeyConst {
 
-    /* SQL中常用的拼接关键字. */
+    /**
+     * 空格.
+     */
     public static final String SPACE = " ";
+
     public static final String SELECT = "SELECT";
     public static final String UPDATE = "UPDATE";
     public static final String DELETE_FROM = "DELETE FROM";

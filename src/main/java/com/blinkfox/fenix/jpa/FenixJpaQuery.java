@@ -94,7 +94,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.contextParams = this.buildContextParams(values);
         String fenixId = queryFenix.value();
         if (StringHelper.isNotBlank(fenixId)) {
-            this.sqlInfo = Fenix.getSqlInfo(fenixId, this.contextParams);
+            this.sqlInfo = Fenix.getXmlSqlInfo(fenixId, this.contextParams);
         } else if (queryFenix.providerCls() != Void.class && StringHelper.isNotBlank(queryFenix.method())) {
             this.sqlInfo = FenixProviderInvoker.invoke(queryFenix.providerCls(),
                     queryFenix.method(), this.contextParams);
@@ -216,7 +216,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 如果计数查询的 SQL 不为空，就重新构建 SqlInfo 信息，否则就替换查询字符串中的字段值为 'count(*)'.
         String countSql;
         if (StringHelper.isNotBlank(queryFenix.countQuery())) {
-            this.sqlInfo = Fenix.getSqlInfo(queryFenix.countQuery(), this.contextParams);
+            this.sqlInfo = Fenix.getXmlSqlInfo(queryFenix.countQuery(), this.contextParams);
             countSql = this.sqlInfo.getSql();
         } else {
             countSql = this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
