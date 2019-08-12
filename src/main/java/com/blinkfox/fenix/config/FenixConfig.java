@@ -1,10 +1,9 @@
 package com.blinkfox.fenix.config;
 
-import static com.blinkfox.fenix.consts.SymbolConst.*;
-
 import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.config.entity.XmlContext;
+import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixHandlerFactory;
 import com.blinkfox.fenix.core.concrete.BetweenHandler;
@@ -55,89 +54,89 @@ public class FenixConfig {
 
     static {
         // “等于”的相关标签：equal、andEqual、orEqual.
-        add("equal", NormalHandler::new, EQUAL);
-        add("andEqual", AND, NormalHandler::new, EQUAL);
-        add("orEqual", OR, NormalHandler::new, EQUAL);
+        add("equal", NormalHandler::new, SymbolConst.EQUAL);
+        add("andEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.EQUAL);
+        add("orEqual", SymbolConst.OR, NormalHandler::new, SymbolConst.EQUAL);
 
         // “不等于”的相关标签：notEqual、andNotEqual、orNotEqual.
-        add("notEqual", NormalHandler::new, NOT_EQUAL);
-        add("andNotEqual", AND, NormalHandler::new, NOT_EQUAL);
-        add("orNotEqual", OR, NormalHandler::new, NOT_EQUAL);
+        add("notEqual", NormalHandler::new, SymbolConst.NOT_EQUAL);
+        add("andNotEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.NOT_EQUAL);
+        add("orNotEqual", SymbolConst.OR, NormalHandler::new, SymbolConst.NOT_EQUAL);
 
         // “大于”的相关标签：greaterThan、andGreaterThan、orGreaterThan.
-        add("greaterThan", NormalHandler::new, GT);
-        add("andGreaterThan", AND, NormalHandler::new, GT);
-        add("orGreaterThan", OR, NormalHandler::new, GT);
+        add("greaterThan", NormalHandler::new, SymbolConst.GT);
+        add("andGreaterThan", SymbolConst.AND, NormalHandler::new, SymbolConst.GT);
+        add("orGreaterThan", SymbolConst.OR, NormalHandler::new, SymbolConst.GT);
 
         // “小于”的相关标签：lessThan、andLessThan、orLessThan.
-        add("lessThan", NormalHandler::new, LT);
-        add("andLessThan", AND, NormalHandler::new, LT);
-        add("orLessThan", OR, NormalHandler::new, LT);
+        add("lessThan", NormalHandler::new, SymbolConst.LT);
+        add("andLessThan", SymbolConst.AND, NormalHandler::new, SymbolConst.LT);
+        add("orLessThan", SymbolConst.OR, NormalHandler::new, SymbolConst.LT);
 
         // “大于等于”的相关标签：greaterThanEqual、andGreaterThanEqual、orGreaterThanEqual.
-        add("greaterThanEqual", NormalHandler::new, GTE);
-        add("andGreaterThanEqual", AND, NormalHandler::new, GTE);
-        add("orGreaterThanEqual", OR, NormalHandler::new, GTE);
+        add("greaterThanEqual", NormalHandler::new, SymbolConst.GTE);
+        add("andGreaterThanEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.GTE);
+        add("orGreaterThanEqual", SymbolConst.OR, NormalHandler::new, SymbolConst.GTE);
 
         // “小于等于”的相关标签：lessThanEqual、andLessThanEqual、orLessThanEqual.
-        add("lessThanEqual", NormalHandler::new, LTE);
-        add("andLessThanEqual", AND, NormalHandler::new, LTE);
-        add("orLessThanEqual", OR, NormalHandler::new, LTE);
+        add("lessThanEqual", NormalHandler::new, SymbolConst.LTE);
+        add("andLessThanEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.LTE);
+        add("orLessThanEqual", SymbolConst.OR, NormalHandler::new, SymbolConst.LTE);
 
         // "LIKE" 的相关标签：like、andLike、orLike.
-        add("like", LikeHandler::new, LIKE);
-        add("andLike", AND, LikeHandler::new, LIKE);
-        add("orLike", OR, LikeHandler::new, LIKE);
+        add("like", LikeHandler::new, SymbolConst.LIKE);
+        add("andLike", SymbolConst.AND, LikeHandler::new, SymbolConst.LIKE);
+        add("orLike", SymbolConst.OR, LikeHandler::new, SymbolConst.LIKE);
 
         // "NOT LIKE" 的相关标签：notLike、andNotLike、orNotLike.
-        add("notLike", LikeHandler::new, NOT_LIKE);
-        add("andNotLike", AND, LikeHandler::new, NOT_LIKE);
-        add("orNotLike", OR, LikeHandler::new, NOT_LIKE);
+        add("notLike", LikeHandler::new, SymbolConst.NOT_LIKE);
+        add("andNotLike", SymbolConst.AND, LikeHandler::new, SymbolConst.NOT_LIKE);
+        add("orNotLike", SymbolConst.OR, LikeHandler::new, SymbolConst.NOT_LIKE);
 
         // "LIKE 前缀匹配" 的相关标签：startsWith、andStartsWith、orStartsWith.
-        add("startsWith", StartsWithHandler::new, LIKE);
-        add("andStartsWith", AND, StartsWithHandler::new, LIKE);
-        add("orStartsWith", OR, StartsWithHandler::new, LIKE);
+        add("startsWith", StartsWithHandler::new, SymbolConst.LIKE);
+        add("andStartsWith", SymbolConst.AND, StartsWithHandler::new, SymbolConst.LIKE);
+        add("orStartsWith", SymbolConst.OR, StartsWithHandler::new, SymbolConst.LIKE);
 
         // "NOT LIKE 前缀匹配" 的相关标签：notStartsWith、andNotStartsWith、orNotStartsWith.
-        add("notStartsWith", StartsWithHandler::new, NOT_LIKE);
-        add("andNotStartsWith", AND, StartsWithHandler::new, NOT_LIKE);
-        add("orNotStartsWith", OR, StartsWithHandler::new, NOT_LIKE);
+        add("notStartsWith", StartsWithHandler::new, SymbolConst.NOT_LIKE);
+        add("andNotStartsWith", SymbolConst.AND, StartsWithHandler::new, SymbolConst.NOT_LIKE);
+        add("orNotStartsWith", SymbolConst.OR, StartsWithHandler::new, SymbolConst.NOT_LIKE);
 
         // "LIKE 后缀匹配" 的相关标签：endsWith、andEndsWith、orEndsWith.
-        add("endsWith", EndsWithHandler::new, LIKE);
-        add("andEndsWith", AND, EndsWithHandler::new, LIKE);
-        add("orEndsWith", OR, EndsWithHandler::new, LIKE);
+        add("endsWith", EndsWithHandler::new, SymbolConst.LIKE);
+        add("andEndsWith", SymbolConst.AND, EndsWithHandler::new, SymbolConst.LIKE);
+        add("orEndsWith", SymbolConst.OR, EndsWithHandler::new, SymbolConst.LIKE);
 
         // "NOT LIKE 后缀匹配" 的相关标签：notEndsWith、andNotEndsWith、orNotEndsWith.
-        add("notEndsWith", EndsWithHandler::new, NOT_LIKE);
-        add("andNotEndsWith", AND, EndsWithHandler::new, NOT_LIKE);
-        add("orNotEndsWith", OR, EndsWithHandler::new, NOT_LIKE);
+        add("notEndsWith", EndsWithHandler::new, SymbolConst.NOT_LIKE);
+        add("andNotEndsWith", SymbolConst.AND, EndsWithHandler::new, SymbolConst.NOT_LIKE);
+        add("orNotEndsWith", SymbolConst.OR, EndsWithHandler::new, SymbolConst.NOT_LIKE);
 
         // "BETWEEN" 的相关标签：between、andBetween、orBetween.
         add("between", BetweenHandler::new);
-        add("andBetween", AND, BetweenHandler::new);
-        add("orBetween", OR, BetweenHandler::new);
+        add("andBetween", SymbolConst.AND, BetweenHandler::new);
+        add("orBetween", SymbolConst.OR, BetweenHandler::new);
 
         // "IN" 的相关标签：in、andIn、orIn.
-        add("in", InHandler::new, IN);
-        add("andIn", AND, InHandler::new, IN);
-        add("orIn", OR, InHandler::new, IN);
+        add("in", InHandler::new, SymbolConst.IN);
+        add("andIn", SymbolConst.AND, InHandler::new, SymbolConst.IN);
+        add("orIn", SymbolConst.OR, InHandler::new, SymbolConst.IN);
 
         // "NOT IN" 的相关标签：notIn、andNotIn、orNotIn.
-        add("notIn", InHandler::new, NOT_IN);
-        add("andNotIn", AND, InHandler::new, NOT_IN);
-        add("orNotIn", OR, InHandler::new, NOT_IN);
+        add("notIn", InHandler::new, SymbolConst.NOT_IN);
+        add("andNotIn", SymbolConst.AND, InHandler::new, SymbolConst.NOT_IN);
+        add("orNotIn", SymbolConst.OR, InHandler::new, SymbolConst.NOT_IN);
 
         // "IS NULL" 的相关标签：isNull、andIsNull、orIsNull.
-        add("isNull", IsNullHandler::new, IS_NULL);
-        add("andIsNull", AND, IsNullHandler::new, IS_NULL);
-        add("orIsNull", OR, IsNullHandler::new, IS_NULL);
+        add("isNull", IsNullHandler::new, SymbolConst.IS_NULL);
+        add("andIsNull", SymbolConst.AND, IsNullHandler::new, SymbolConst.IS_NULL);
+        add("orIsNull", SymbolConst.OR, IsNullHandler::new, SymbolConst.IS_NULL);
 
         // "IS NOT NULL" 的相关标签：isNotNull、andIsNotNull、orIsNotNull.
-        add("isNotNull", IsNullHandler::new, IS_NOT_NULL);
-        add("andIsNotNull", AND, IsNullHandler::new, IS_NOT_NULL);
-        add("orIsNotNull", OR, IsNullHandler::new, IS_NOT_NULL);
+        add("isNotNull", IsNullHandler::new, SymbolConst.IS_NOT_NULL);
+        add("andIsNotNull", SymbolConst.AND, IsNullHandler::new, SymbolConst.IS_NOT_NULL);
+        add("orIsNotNull", SymbolConst.OR, IsNullHandler::new, SymbolConst.IS_NOT_NULL);
 
         // 其他标签：text、import、choose.
         add("text", TextHandler::new);

@@ -47,7 +47,7 @@ public final class Const {
     public static final int OBJTYPE_ARRAY = 1;
 
     /**
-     * Java集合.
+     * Java 集合.
      */
     public static final int OBJTYPE_COLLECTION = 2;
 

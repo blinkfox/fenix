@@ -55,6 +55,7 @@ public class UserRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             FenixConfigManager.getInstance()
+                    .initLoadXmlLocations("myxml/")
                     .initLoadHandlerLocations("com.blinkfox.fenix.handler")
                     .initLoad(new FenixConfig());
             userRepository.saveAll(
