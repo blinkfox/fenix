@@ -32,6 +32,11 @@ public final class XpathConst {
     public static final String ATTR_ID = "attribute::id";
 
     /**
+     * 用于表示 “removeIfExist” 的属性 XPATH 常量.
+     */
+    public static final String ATTR_REMOVE = "attribute::removeIfExist";
+
+    /**
      * 用于表示 “匹配” 的属性 XPATH 常量.
      */
     public static final String ATTR_MATCH = "attribute::match";

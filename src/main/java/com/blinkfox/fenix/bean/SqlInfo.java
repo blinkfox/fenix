@@ -38,4 +38,16 @@ public class SqlInfo {
         this.params = new HashMap<>();
     }
 
+    /**
+     * 如果存在某子 SQL 字符串，则移除该子 SQL 字符串，常用于来消除 'WHERE 1 = 1 AND' 或其他不需要的SQL字符串的场景.
+     * 注意该方法不会移除其对应的参数，所以，这里只应该移除静态 SQL 字符串，不应该移除包含命名参数占位符的 SQL.
+     *
+     * @param subSql 静态子 SQL 片段
+     * @return SqlInfo实例
+     */
+    public SqlInfo removeIfExist(String subSql) {
+        this.sql = subSql != null && sql.contains(subSql) ? sql.replaceAll(subSql, "") : sql;
+        return this;
+    }
+
 }

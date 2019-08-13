@@ -121,10 +121,11 @@ public final class FenixXmlBuilder {
             }
         }
 
-        // 根据标签拼接的 SQL 信息来生成最终的 SQL.
-        // 得到生成的 SQL，如果有 MVEL 的模板表达式，则执行计算出该表达式来生成最终的 SQL.
+        // 根据标签拼接得到 SqlInfo 信息，如果有 MVEL 的模板表达式，则执行计算出该表达式，并移除多余的空白字符.
+        // 如果 fenix 节点中，removeIfExist 属性值内容不为空，就移除指定的内容.
         sqlInfo.setSql(StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), context)));
-        return sqlInfo;
+        String removeText = XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_REMOVE);
+        return StringHelper.isNotBlank(removeText) ? sqlInfo.removeIfExist(removeText) : sqlInfo;
     }
 
 }
