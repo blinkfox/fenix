@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.bean.SqlInfo;
+import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
@@ -186,24 +187,41 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 否则，两者皆为空时，则默认视为 provider 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
         Class<?> provider = queryFenix.provider();
         String method = queryFenix.method();
-        String fullFenixId = queryFenix.value();
+        String fenixId = queryFenix.value();
         if (provider != Void.class) {
             if (StringHelper.isNotBlank(method)) {
                 this.sqlInfo = ClassMethodInvoker.invoke(provider, method, this.contextParams);
-            } else if (StringHelper.isNotBlank(fullFenixId)) {
-                this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
+            } else if (StringHelper.isNotBlank(fenixId)) {
+                this.getXmlSqlInfo(fenixId);
             } else {
                 this.sqlInfo = ClassMethodInvoker.invoke(provider, getQueryMethod().getName(), this.contextParams);
             }
             return;
         }
 
-        // 如果 QueryFenix 注解中 value 不为空，即表明 fullFenixId 不为空，则说明是使用 XML 的方式来拼接 SQL 的.
+        // 如果 QueryFenix 注解中 value 不为空，即表明 fenixId 不为空，则说明是使用 XML 的方式来拼接 SQL 的.
         // 否则将执行类的全路径名和方法名来分别对应 XML 中的 namespace 和 fenixId 来对应进行查找，生成 SqlInfo 信息.
-        if (StringHelper.isNotBlank(fullFenixId)) {
-            this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
+        if (StringHelper.isNotBlank(fenixId)) {
+            this.getXmlSqlInfo(fenixId);
         } else {
             this.sqlInfo = Fenix.getXmlSqlInfo(queryClass.getName(), getQueryMethod().getName(), this.contextParams);
+        }
+    }
+
+    /**
+     * 根据 fenixId 来构建 SqlInfo 信息.
+     *
+     * <p>区分该 fenixId 是否有 '.' 号，如果有就分割 namespace 和 fenixId，
+     *      否则就用查询方法所在的 class 全路径名来作为 namespace.</p>
+     *
+     * @param fenixId fenix XML 中的 id，可能包含 namespace.
+     */
+    private void getXmlSqlInfo(String fenixId) {
+        if (fenixId.contains(Const.DOT)) {
+            int i = fenixId.lastIndexOf(Const.DOT);
+            this.sqlInfo = Fenix.getXmlSqlInfo(fenixId.substring(0, i), fenixId.substring(i + 1), this.contextParams);
+        } else {
+            this.sqlInfo = Fenix.getXmlSqlInfo(queryClass.getName(), fenixId, this.contextParams);
         }
     }
 
@@ -279,20 +297,16 @@ public class FenixJpaQuery extends AbstractJpaQuery {
                 return this.sqlInfo.getSql();
             }
             if (StringHelper.isNotBlank(xmlCountQuery)) {
-                this.sqlInfo = Fenix.getXmlSqlInfo(xmlCountQuery, this.contextParams);
+                this.getXmlSqlInfo(xmlCountQuery);
                 return this.sqlInfo.getSql();
             }
             return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
         }
 
-        // 接下来则是优先查询 countQuery，其次是 countMethod，得到新的 sqlInfo.
-        // 如果两者都没有，则默认将之前的查询 SQL 结果替换修改成求 count(*) 的 SQL.
+        // 接下来则是查询 countQuery，得到新的 sqlInfo.
+        // 如果没有 countQuery，则默认将之前的查询 SQL 结果替换修改成求 count(*) 的 SQL.
         if (StringHelper.isNotBlank(xmlCountQuery)) {
-            this.sqlInfo = Fenix.getXmlSqlInfo(xmlCountQuery, this.contextParams);
-            return this.sqlInfo.getSql();
-        }
-        if (StringHelper.isNotBlank(countMethod)) {
-            this.sqlInfo = ClassMethodInvoker.invoke(provider, countMethod, this.contextParams);
+            this.getXmlSqlInfo(xmlCountQuery);
             return this.sqlInfo.getSql();
         }
         return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);

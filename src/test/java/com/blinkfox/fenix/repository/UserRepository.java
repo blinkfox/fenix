@@ -28,7 +28,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
-    @QueryFenix("com.blinkfox.fenix.repository.UserRepository.queryUserWithIdEmail")
+    @QueryFenix("queryUserWithIdEmail")
     List<User> queryUserWithIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 
     /**
@@ -70,9 +70,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param pageable 分页对象
      * @return 分页数据
      */
-    @QueryFenix(
-            countQuery = "com.blinkfox.fenix.repository.UserRepository.queryAllUsersCount",
-            countMethod = "queryUsersCount")
+    @QueryFenix(countQuery = "queryAllUsersCount", countMethod = "queryUsersCount")
     Page<User> queryUserByIds(@Param("userMap") Map<String, Object> userMap, Pageable pageable);
 
     /**

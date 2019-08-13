@@ -60,7 +60,7 @@ public final class FenixXmlBuilder {
      */
     static SqlInfo getXmlSqlInfo(String namespace, String fenixId, Object context) {
         if (StringHelper.isBlank(namespace) || StringHelper.isBlank(fenixId)) {
-            throw new FenixException("【Fenix 异常】请输入有效的 namespace 或者 fenixId 的值!");
+            throw new FenixException("【Fenix 异常】请输入有效的 namespace 或者 fenixId 的值，两者之间用点号('.')隔开!");
         }
 
         // 获取 namespace 文档中的指定的 fenixId 的节点对应的 Node 节点，如果是 debug 模式，则实时获取；否则从缓存中获取.
