@@ -2,6 +2,7 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.core.Fenix;
+import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
@@ -53,7 +55,14 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     /**
      * 标注了 {@link QueryFenix} 注解的注解实例.
      */
+    @Setter
     private QueryFenix queryFenix;
+
+    /**
+     * 执行 {@link QueryFenix} 注解的执行的类 class.
+     */
+    @Setter
+    private Class<?> queryClass;
 
     /**
      * 用作 {@link Fenix} 构建 SQL 信息的上下文参数.
@@ -76,9 +85,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * @param method JpaQueryMethod
      * @param em EntityManager
      */
-    FenixJpaQuery(JpaQueryMethod method, EntityManager em, QueryFenix queryFenix) {
+    FenixJpaQuery(JpaQueryMethod method, EntityManager em) {
         super(method, em);
-        this.queryFenix = queryFenix;
     }
 
     /**
@@ -89,11 +97,11 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     @Override
     protected Query doCreateQuery(Object[] values) {
+        // 获取 QueryFenix 上下文参数，来从 XML 文件或 Java 中动态构建出 SQL 信息.
         this.jpaParams = getQueryMethod().getParameters();
-        // 获取 QueryFenix 注解中的全 fenixId 和上下文参数，来从 XML 文件中动态构建出 SQL 信息.
         this.contextParams = this.buildContextParams(values);
         this.getSqlInfoByFenix();
-        this.querySql = sqlInfo.getSql();
+        this.querySql = this.sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
         Pageable pageable = this.buildPagableAndSortSql(values);
@@ -149,10 +157,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * @return Map
      */
     private Map<String, Object> buildContextParams(Object[] values) {
-        int len = jpaParams.getNumberOfParameters();
+        int len = this.jpaParams.getNumberOfParameters();
         Map<String, Object> context = new HashMap<>(len);
         for (int i = 0; i < len; i++) {
-            Parameter parameter = jpaParams.getParameter(i);
+            Parameter parameter = this.jpaParams.getParameter(i);
             if (parameter.isSpecialParameter()) {
                 continue;
             }
@@ -167,24 +175,30 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     }
 
     /**
-     * 根据 {@link QueryFenix} 注解来获取 {@link SqlInfo} 信息，
-     * 并区分判断 Java 或者 XML 两种方式来构建 {@link SqlInfo} 信息.
+     * 根据 {@link QueryFenix} 注解来生成并获取 {@link SqlInfo} 信息.
+     *
+     * <p>并区分判断 Java 或者 XML 两种方式来构建 {@link SqlInfo} 信息，基于约定优于配置的方式来查找对应的生成 SqlInfo 的方式.</p>
      */
     private void getSqlInfoByFenix() {
-        // 如果 QueryFenix 注解中 providerCls 和 method 两个都不为空，说明是用 Java 代码的方式来拼接 SQL 的.
+        // 在 QueryFenix 注解中 providerCls 不为空的情况下，
+        // 如果 method 不为空，将直接反射调用该 providerCls 下的 method 方法；
+        // 如果 method 为空，则默认视为 providerCls 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
         Class<?> providerCls = queryFenix.providerCls();
         String method = queryFenix.method();
-        if (providerCls != Void.class && StringHelper.isNotBlank(method)) {
-            this.sqlInfo = FenixProviderInvoker.invoke(providerCls, method, this.contextParams);
+        if (providerCls != Void.class) {
+            this.sqlInfo = ClassMethodInvoker.invoke(providerCls,
+                    StringHelper.isBlank(method) ? super.getQueryMethod().getName() : method, this.contextParams);
             return;
         }
 
         // 如果 QueryFenix 注解中 value 不为空，即表明 fullFenixId 不为空，则说明是使用 XML 的方式来拼接 SQL 的.
+        // 否则将执行类的全路径名和方法名来分别对应 XML 中的 namespace 和 fenixId 来对应进行查找，生成 SqlInfo 信息.
         String fullFenixId = queryFenix.value();
         if (StringHelper.isNotBlank(fullFenixId)) {
             this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
         } else {
-
+            log.info("queryClass Name: {}", queryClass.getName());
+            this.sqlInfo = Fenix.getXmlSqlInfo(queryClass.getName(), getQueryMethod().getName(), this.contextParams);
         }
     }
 
@@ -195,8 +209,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     private Pageable buildPagableAndSortSql(Object[] values) {
         Pageable pageable = null;
-        if (jpaParams.hasPageableParameter()) {
-            pageable = (Pageable) (values[jpaParams.getPageableIndex()]);
+        if (this.jpaParams.hasPageableParameter()) {
+            pageable = (Pageable) (values[this.jpaParams.getPageableIndex()]);
             if (pageable != null) {
                 Sort sort = pageable.getSort();
                 if (sort != null) {
@@ -207,9 +221,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         }
 
         // 判断是否有排序参数，如果有，就追加排序相关的参数.
-        if (jpaParams.hasSortParameter()) {
-            this.querySql = QueryUtils.applySorting(this.querySql, new ParametersParameterAccessor(jpaParams, values)
-                    .getSort(), QueryHelper.detectAlias(this.querySql));
+        if (this.jpaParams.hasSortParameter()) {
+            this.querySql = QueryUtils.applySorting(this.querySql,
+                    new ParametersParameterAccessor(this.jpaParams, values).getSort(),
+                    QueryHelper.detectAlias(this.querySql));
         }
         return pageable;
     }

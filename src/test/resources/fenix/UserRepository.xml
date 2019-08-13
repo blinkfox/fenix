@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
-<fenixs namespace="UserRepository">
+<fenixs namespace="com.blinkfox.fenix.repository.UserRepository">
 
     <fenix id="UserHeader">
         SELECT u FROM User AS u
@@ -22,6 +22,12 @@
         WHERE
         <userIdEmail idField="u.id" emailField="u.email"
                      idValue="userId" emailValue="userEmail" match="(?userId != empty) || (?userEmail != empty)"/>
+    </fenix>
+
+    <!-- 多条件模糊查询用户信息，测试 id 和 执行的方法名一样的情况. -->
+    <fenix id="queryUsersWithSameName">
+        <import fenixId="queryUserByIds"/>
+        <andLike match="user.name != empty" field="u.name" value="user.name"/>
     </fenix>
 
 </fenixs>

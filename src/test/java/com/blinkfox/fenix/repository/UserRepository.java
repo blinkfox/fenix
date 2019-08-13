@@ -2,9 +2,10 @@ package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
-import com.blinkfox.fenix.provider.UserSqlProvider;
+import com.blinkfox.fenix.provider.UserSqlInfoProvider;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -25,18 +26,39 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
-    @QueryFenix("UserRepository.queryUserWithIdEmail")
+    @QueryFenix("com.blinkfox.fenix.repository.UserRepository.queryUserWithIdEmail")
     List<User> queryUserWithIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 
     /**
-     * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来根据用户 ID 和 Email 来查询用户信息.
+     * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来查询用户信息，不指定 method 将默认跟方法名保持一致的查询.
      *
      * @param userId 用户 ID
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
-    @QueryFenix(providerCls = UserSqlProvider.class, method = "getUsers")
-    List<User> queryWithJava(@Param("userId") String userId, @Param("user") User user,
+    @QueryFenix(providerCls = UserSqlInfoProvider.class)
+    List<User> queryUsersWithJava(@Param("userId") String userId, @Param("user") User user,
             @Param("myAge") Integer age, @Param("userEmail") String userEmail);
+
+    /**
+     * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来查询用户信息，指定 method 来查询.
+     *
+     * @param userId 用户 ID
+     * @param userEmail 用户邮箱
+     * @return 用户信息集合
+     */
+    @QueryFenix(providerCls = UserSqlInfoProvider.class, method = "queryUsersWithJava")
+    List<User> queryUsersWithJava2(@Param("userId") String userId, @Param("user") User user,
+            @Param("myAge") Integer age, @Param("userEmail") String userEmail);
+
+    /**
+     * 使用 {@link QueryFenix} 注解没有任何元数据参数时，使用默认约定来查询用户信息的方法.
+     *
+     * @param userMap 用户信息 map
+     * @param user 用户实体
+     * @return 用户信息集合
+     */
+    @QueryFenix
+    List<User> queryUsersWithSameName(@Param("userMap") Map<String, Object> userMap, @Param("user") User user);
 
 }

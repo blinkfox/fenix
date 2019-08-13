@@ -191,7 +191,7 @@
 
     <!-- 测试 import 相关标签的查询. -->
     <fenix id="testImport">
-        <import namespace="UserRepository" fenixId="queryUserByIds"/>
+        <import namespace="com.blinkfox.fenix.repository.UserRepository" fenixId="queryUserByIds"/>
         <import fenixId="commonLike"/>
     </fenix>
 
