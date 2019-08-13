@@ -27,7 +27,7 @@ public final class UserSqlInfoProvider {
      * @param userEmail 用户邮箱
      * @return sqlInfo 对象
      */
-    public static SqlInfo queryUsersWithJava(@Param("userId") String userId, @Param("userEmail") String userEmail,
+    public SqlInfo queryUsersWithJava(@Param("userId") String userId, @Param("userEmail") String userEmail,
             @Param("user") User user, @Param("blog") Blog blog, @Param("myAge") Integer myAge) {
         log.info("获取到的 blog: {}", blog);
         return Fenix.start()
@@ -46,7 +46,7 @@ public final class UserSqlInfoProvider {
      * @param userMap 用户 Map
      * @return sqlInfo 对象
      */
-    public static SqlInfo queryUsersCount(@Param("userMap") Map<String, Object> userMap) {
+    public SqlInfo queryUsersCount(@Param("userMap") Map<String, Object> userMap) {
         return Fenix.start()
                 .select("count(*)")
                 .from("User").as("u")
