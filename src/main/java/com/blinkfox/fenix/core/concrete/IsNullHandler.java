@@ -5,7 +5,6 @@ import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.helper.ParseHelper;
-import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 
 import org.dom4j.Node;
@@ -41,8 +40,7 @@ public class IsNullHandler implements FenixHandler {
     @Override
     public void buildSqlInfo(BuildSource source) {
         Node node = source.getNode();
-        String matchText = XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH);
-        if (StringHelper.isBlank(matchText) || ParseHelper.isTrue(matchText, source.getContext())) {
+        if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             new XmlSqlInfoBuilder(source)
                     .buildIsNullSql(XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD));
         }
