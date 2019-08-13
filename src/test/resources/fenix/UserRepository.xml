@@ -32,7 +32,7 @@
     <!-- 多条件模糊查询用户信息，测试 id 和 执行的方法名一样的情况. -->
     <fenix id="queryUsersWithSameName">
         <import fenixId="queryUserByIds"/>
-        <andLike match="user.name != empty" field="u.name" value="user.name"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
     </fenix>
 
 </fenixs>

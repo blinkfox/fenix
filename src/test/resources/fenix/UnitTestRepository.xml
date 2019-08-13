@@ -185,8 +185,8 @@
 
     <!-- 用于测试 import 标签导入而设计的 XML 节点. -->
     <fenix id="commonLike">
-        <andIn match="userMap.names != empty" field="u.name" value="userMap.names"/>
-        <andEndsWith match="user.email != empty" field="u.email" value="user.email"/>
+        <andIn field="u.name" value="userMap.names" match="userMap.names != empty"/>
+        <andEndsWith field="u.email" value="user.email" match="user.email != empty"/>
     </fenix>
 
     <!-- 测试 import 相关标签的查询. -->

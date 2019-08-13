@@ -7,10 +7,10 @@
         SELECT u FROM @{entityName}
         WHERE
         <equal field="u.id" value="user.id"/>
-        <andEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orEqual match="" field="u.email" value="email"/>
+        <andEqual field="u.name" value="user.name" match="user.name != empty"/>
+        <orEqual field="u.email" value="email" match=""/>
         <!-- 使用 '?' 号，即使不存在这个属性，解析时也不会报错. -->
-        <orEqual match="?abc != empty" field="u.abc" value="user.def"/>
+        <orEqual field="u.abc" value="user.def" match="?abc != empty"/>
     </fenix>
 
     <!-- 用于单元测试 notEqual 标签生成的 JPQL 语句和参数. -->
@@ -18,8 +18,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <notEqual field="u.id" value="user.id"/>
-        <andNotEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orNotEqual match="" field="u.email" value="email"/>
+        <andNotEqual field="u.name" value="user.name" match="user.name != empty"/>
+        <orNotEqual field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 greaterThan 标签生成的 JPQL 语句和参数. -->
@@ -27,8 +27,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <greaterThan field="u.id" value="user.id"/>
-        <andGreaterThan match="user.name != empty" field="u.name" value="user.name"/>
-        <orGreaterThan match="" field="u.email" value="email"/>
+        <andGreaterThan field="u.name" value="user.name" match="user.name != empty"/>
+        <orGreaterThan field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 lessThan 标签生成的 JPQL 语句和参数. -->
@@ -36,8 +36,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <lessThan field="u.id" value="user.id"/>
-        <andLessThan match="user.name != empty" field="u.name" value="user.name"/>
-        <orLessThan match="" field="u.email" value="email"/>
+        <andLessThan field="u.name" value="user.name" match="user.name != empty"/>
+        <orLessThan field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
@@ -45,8 +45,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <greaterThanEqual field="u.id" value="user.id"/>
-        <andGreaterThanEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orGreaterThanEqual match="" field="u.email" value="email"/>
+        <andGreaterThanEqual field="u.name" value="user.name" match="user.name != empty"/>
+        <orGreaterThanEqual field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 greaterThanEqual 标签生成的 JPQL 语句和参数. -->
@@ -54,8 +54,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <lessThanEqual field="u.id" value="user.id"/>
-        <andLessThanEqual match="user.name != empty" field="u.name" value="user.name"/>
-        <orLessThanEqual match="" field="u.email" value="email"/>
+        <andLessThanEqual field="u.name" value="user.name" match="user.name != empty"/>
+        <orLessThanEqual field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 like 标签生成的 JPQL 语句和参数. -->
@@ -63,8 +63,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <like field="u.id" value="user.id"/>
-        <andLike match="user.name != empty" field="u.name" value="user.name"/>
-        <orLike match="" field="u.email" pattern="%@163.com"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        <orLike field="u.email" pattern="%@163.com" match=""/>
     </fenix>
 
     <!-- 用于单元测试 notLike 标签生成的 JPQL 语句和参数. -->
@@ -72,8 +72,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <notLike field="u.id" value="user.id"/>
-        <andNotLike match="user.name != empty" field="u.name" value="user.name"/>
-        <orNotLike match="" field="u.email" pattern="%@163.com"/>
+        <andNotLike field="u.name" value="user.name" match="user.name != empty"/>
+        <orNotLike field="u.email" pattern="%@163.com" match=""/>
     </fenix>
 
     <!-- 用于单元测试 startsWith 标签生成的 JPQL 语句和参数. -->
@@ -81,8 +81,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <startsWith field="u.id" value="user.id"/>
-        <andStartsWith match="user.name != empty" field="u.name" value="user.name"/>
-        <orStartsWith match="" field="u.email" value="email"/>
+        <andStartsWith field="u.name" value="user.name" match="user.name != empty"/>
+        <orStartsWith field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 notStartsWith 标签生成的 JPQL 语句和参数. -->
@@ -90,8 +90,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <notStartsWith field="u.id" value="user.id"/>
-        <andNotStartsWith match="user.name != empty" field="u.name" value="user.name"/>
-        <orNotStartsWith match="" field="u.email" value="email"/>
+        <andNotStartsWith field="u.name" value="user.name" match="user.name != empty"/>
+        <orNotStartsWith field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 endsWith 标签生成的 JPQL 语句和参数. -->
@@ -99,8 +99,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <endsWith field="u.id" value="user.id"/>
-        <andEndsWith match="user.name != empty" field="u.name" value="user.name"/>
-        <orEndsWith match="" field="u.email" value="email"/>
+        <andEndsWith field="u.name" value="user.name" match="user.name != empty"/>
+        <orEndsWith field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 notEndsWith 标签生成的 JPQL 语句和参数. -->
@@ -108,17 +108,17 @@
         SELECT u FROM @{entityName}
         WHERE
         <notEndsWith field="u.id" value="user.id"/>
-        <andNotEndsWith match="user.name != empty" field="u.name" value="user.name"/>
-        <orNotEndsWith match="" field="u.email" value="email"/>
+        <andNotEndsWith field="u.name" value="user.name" match="user.name != empty"/>
+        <orNotEndsWith field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 between 标签生成的 JPQL 语句和参数，并一起测试 between 退化成大于等于或者小于等于的情况. -->
     <fenix id="between">
         SELECT u FROM @{entityName}
         WHERE
-        <between match="(?startId != empty) || (?endId != empty)" field="u.id" start="startId" end="endId"/>
-        <andBetween match="(?startAge != empty) || (?endAge != empty)" field="u.age" start="startAge" end="endAge"/>
-        <orBetween match="(?startBirthday != null) || (endBirthday != null)" field="u.birthday" start="startBirthday" end="endBirthday"/>
+        <between field="u.id" start="startId" end="endId" match="(?startId != empty) || (?endId != empty)"/>
+        <andBetween field="u.age" start="startAge" end="endAge" match="(?startAge != empty) || (?endAge != empty)"/>
+        <orBetween field="u.birthday" start="startBirthday" end="endBirthday" match="(?startBirthday != null) || (endBirthday != null)"/>
     </fenix>
 
     <!-- 用于单元测试 in 标签生成的 JPQL 语句和参数. -->
@@ -126,8 +126,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <in field="u.id" value="user.id"/>
-        <andIn match="names != empty" field="u.name" value="names"/>
-        <orIn match="" field="u.email" value="emails"/>
+        <andIn field="u.name" value="names" match="names != empty"/>
+        <orIn field="u.email" value="emails" match=""/>
     </fenix>
 
     <!-- 用于单元测试 notIn 标签生成的 JPQL 语句和参数. -->
@@ -135,8 +135,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <notIn field="u.id" value="user.id"/>
-        <andNotIn match="names != empty" field="u.name" value="names"/>
-        <orNotIn match="" field="u.email" value="emails"/>
+        <andNotIn field="u.name" value="names" match="names != empty"/>
+        <orNotIn field="u.email" value="emails" match=""/>
     </fenix>
 
     <!-- 用于单元测试 isNull 标签生成的 JPQL 语句和参数. -->
@@ -144,8 +144,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <isNull field="u.id"/>
-        <andIsNull match="user.name != empty" field="u.name"/>
-        <orIsNull match="" field="u.email"/>
+        <andIsNull field="u.name" match="user.name != empty"/>
+        <orIsNull field="u.email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 isNotNull 标签生成的 JPQL 语句和参数. -->
@@ -153,8 +153,8 @@
         SELECT u FROM @{entityName}
         WHERE
         <isNotNull field="u.id"/>
-        <andIsNotNull match="user.name != empty" field="u.name"/>
-        <orIsNotNull match="" field="u.email"/>
+        <andIsNotNull field="u.name" match="user.name != empty"/>
+        <orIsNotNull field="u.email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 text 标签生成的 JPQL 语句和参数. -->
@@ -165,7 +165,7 @@
             u.id = :userId
         </text>
         <!-- 含义是：当用户名和邮箱都不为空（对 '&&' 符号做了转义）时，才生成下面的 JPQL 语句，value 中是 Map 型参数. -->
-        <text match="user.name != empty &amp;&amp; email != empty" value="['userName': user.name, 'email': '%163.com']">
+        <text value="['userName': user.name, 'email': '%163.com']" match="user.name != empty &amp;&amp; email != empty">
             AND u.name = :userName AND u.email LIKE :email
         </text>
     </fenix>
@@ -178,8 +178,8 @@
     <!-- 用于测试 import 标签导入而设计的 XML 节点. -->
     <fenix id="commonConditions">
         <isNotNull field="u.id" value="user.id"/>
-        <andIn match="names != empty" field="u.name" value="names"/>
-        <orEndsWith match="" field="u.email" value="email"/>
+        <andIn field="u.name" value="names" match="names != empty"/>
+        <orEndsWith field="u.email" value="email" match=""/>
     </fenix>
 
     <!-- 用于单元测试 import 标签生成的 JPQL 语句和参数. -->
@@ -188,7 +188,7 @@
         <import fenixId="commonFields"/>
         FROM @{entityName}
         WHERE
-        <import match="user.name != empty &amp;&amp; email != empty" fenixId="commonConditions"/>
+        <import fenixId="commonConditions" match="user.name != empty &amp;&amp; email != empty"/>
     </fenix>
 
     <!-- 用于单元测试 choose 标签生成的 JPQL 语句和参数. -->

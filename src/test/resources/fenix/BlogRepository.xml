@@ -14,9 +14,9 @@
         SELECT b FROM Blog AS b
         WHERE
         <in field="b.id" value="ids"/>
-        <andEqual match="blog.author != empty" field="b.author" value="blog.author"/>
-        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
-        <andBetween match="(?blog.createTime != empty) || (?blog.updateTime != empty)" field="b.createTime" start="blog.createTime" end="blog.updateTime"/>
+        <andEqual field="b.author" value="blog.author" match="blog.author != empty"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andBetween field="b.createTime" start="blog.createTime" end="blog.updateTime" match="(?blog.createTime != empty) || (?blog.updateTime != empty)"/>
     </fenix>
 
     <!-- 查询我的博客信息的总数. -->
@@ -24,9 +24,9 @@
         SELECT count(*) FROM Blog AS b
         WHERE
         <in field="b.id" value="ids"/>
-        <andEqual match="blog.author != empty" field="b.author" value="blog.author"/>
-        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
-        <andBetween match="(?blog.createTime != empty) || (?blog.updateTime != empty)" field="b.createTime" start="blog.createTime" end="blog.updateTime"/>
+        <andEqual field="b.author" value="blog.author" match="blog.author != empty"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andBetween field="b.createTime" start="blog.createTime" end="blog.updateTime" match="(?blog.createTime != empty) || (?blog.updateTime != empty)"/>
     </fenix>
 
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
@@ -39,8 +39,8 @@
         WHERE
             u.id = b.userId
         <andEqual field="b.userId" value="userId"/>
-        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
-        <andLike match="blog.content != empty" field="b.content" value="blog.content"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
@@ -53,8 +53,8 @@
         WHERE
             u.id = b.userId
         <andEqual field="b.userId" value="userId"/>
-        <andLike match="blog.title != empty" field="b.title" value="blog.title"/>
-        <andLike match="blog.content != empty" field="b.content" value="blog.content"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义投影信息）. -->
@@ -71,8 +71,8 @@
         WHERE
             u.c_id = b.c_user_id
         <andEqual field="b.c_user_id" value="userId"/>
-        <andLike match="blog.title != empty" field="b.c_title" value="blog.title"/>
-        <andLike match="blog.content != empty" field="b.c_content" value="blog.content"/>
+        <andLike field="b.c_title" value="blog.title" match="blog.title != empty"/>
+        <andLike field="b.c_content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
 </fenixs>
