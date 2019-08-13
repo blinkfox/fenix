@@ -180,10 +180,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * <p>并区分判断 Java 或者 XML 两种方式来构建 {@link SqlInfo} 信息，基于约定优于配置的方式来查找对应的生成 SqlInfo 的方式.</p>
      */
     private void getSqlInfoByFenix() {
-        // 在 QueryFenix 注解中 providerCls 不为空的情况下，
-        // 如果 method 不为空，将直接反射调用该 providerCls 下的 method 方法；
-        // 如果 method 为空，则默认视为 providerCls 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
-        Class<?> providerCls = queryFenix.providerCls();
+        // 在 QueryFenix 注解中 provider 不为空的情况下，
+        // 如果 method 不为空，将直接反射调用该 provider 下的 method 方法；
+        // 如果 method 为空，则默认视为 provider 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
+        Class<?> providerCls = queryFenix.provider();
         String method = queryFenix.method();
         if (providerCls != Void.class) {
             this.sqlInfo = ClassMethodInvoker.invoke(providerCls,
@@ -232,10 +232,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     /**
      * 根据给定的数组参数创建一个 {@link Query}，用于查询分页时的记录数.
      *
-     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 的值。</p>
+     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 和 {@link QueryFenix#countMethod()} 的值。</p>
      * <ul>
-     *     <li>如果没有设置这个值，就默认使用先前的 SQL 来处理为查询条数的SQL；</li>
-     *     <li>如果设置了这个值，就构建设置的 SQL 作为查询条数的SQL；</li>
+     *     <li>如果没有设置这个两个值，就默认使用先前的 SQL 来替换处理为查询条数的SQL；</li>
+     *     <li>如果设置了这两个值，就依据优先级来构建新的 {@link SqlInfo} 对象，得到查询条数的 SQL；</li>
      * </ul>
      *
      * @param values 参数数组
@@ -243,15 +243,9 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     @Override
     protected Query doCreateCountQuery(Object[] values) {
-        // 如果计数查询的 SQL 不为空，就重新构建 SqlInfo 信息，否则就替换查询字符串中的字段值为 'count(*)'.
-        String countSql;
-        if (StringHelper.isNotBlank(queryFenix.countQuery())) {
-            this.sqlInfo = Fenix.getXmlSqlInfo(queryFenix.countQuery(), this.contextParams);
-            countSql = this.sqlInfo.getSql();
-        } else {
-            countSql = this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
-        }
-        log.info("【Fenix 提示】分页查询时的总记录数 SQL:\n{}", countSql);
+        // 如果计数查询的 SQL 不为空（区分 Java和 Xml 两者方式），就重新构建 SqlInfo 信息，
+        // 否则就替换查询字符串中的字段值为 'count(*)'.
+        String countSql = this.getCountSql();
 
         // 创建 Query，并循环设置命名绑定参数.
         EntityManager em = getEntityManager();
@@ -261,6 +255,42 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.sqlInfo.getParams().forEach(query::setParameter);
 
         return query;
+    }
+
+    /**
+     * 获取总记录数查询的 JPQL 或者 SQL 语句.
+     *
+     * @return 总记录数 SQL 语句
+     */
+    private String getCountSql() {
+        // 在 QueryFenix 注解中 provider 不为空的情况下，优先查询 countMethod，其次是 countQuery，得到新的 sqlInfo.
+        // 如果两者都没有，则默认将之前的查询 SQL 结果替换修改成求 count(*) 的 SQL.
+        Class<?> provider = queryFenix.provider();
+        String xmlCountQuery = queryFenix.countQuery();
+        String countMethod = queryFenix.countMethod();
+        if (provider != Void.class) {
+            if (StringHelper.isNotBlank(countMethod)) {
+                this.sqlInfo = ClassMethodInvoker.invoke(provider, countMethod, this.contextParams);
+                return this.sqlInfo.getSql();
+            }
+            if (StringHelper.isNotBlank(xmlCountQuery)) {
+                this.sqlInfo = Fenix.getXmlSqlInfo(xmlCountQuery, this.contextParams);
+                return this.sqlInfo.getSql();
+            }
+            return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
+        }
+
+        // 接下来则是优先查询 countQuery，其次是 countMethod，得到新的 sqlInfo.
+        // 如果两者都没有，则默认将之前的查询 SQL 结果替换修改成求 count(*) 的 SQL.
+        if (StringHelper.isNotBlank(xmlCountQuery)) {
+            this.sqlInfo = Fenix.getXmlSqlInfo(xmlCountQuery, this.contextParams);
+            return this.sqlInfo.getSql();
+        }
+        if (StringHelper.isNotBlank(countMethod)) {
+            this.sqlInfo = ClassMethodInvoker.invoke(provider, countMethod, this.contextParams);
+            return this.sqlInfo.getSql();
+        }
+        return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
     }
 
 }

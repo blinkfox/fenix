@@ -52,7 +52,7 @@ public @interface QueryFenix {
      *
      * @return Class
      */
-    Class<?> providerCls() default Void.class;
+    Class<?> provider() default Void.class;
 
     /**
      * 使用 Java 来做 SQL 拼接的提供类的方法名.
@@ -60,5 +60,12 @@ public @interface QueryFenix {
      * @return 方法名
      */
     String method() default "";
+
+    /**
+     * 使用 Java 来 countQuery 记录总数 SQL 拼接的提供类方法名.
+     *
+     * @return 方法名
+     */
+    String countMethod() default "";
 
 }

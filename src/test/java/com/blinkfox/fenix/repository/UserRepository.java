@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
-    @QueryFenix(providerCls = UserSqlInfoProvider.class)
+    @QueryFenix(provider = UserSqlInfoProvider.class)
     List<User> queryUsersWithJava(@Param("userId") String userId, @Param("user") User user,
             @Param("myAge") Integer age, @Param("userEmail") String userEmail);
 
@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
-    @QueryFenix(providerCls = UserSqlInfoProvider.class, method = "queryUsersWithJava")
+    @QueryFenix(provider = UserSqlInfoProvider.class, method = "queryUsersWithJava")
     List<User> queryUsersWithJava2(@Param("userId") String userId, @Param("user") User user,
             @Param("myAge") Integer age, @Param("userEmail") String userEmail);
 
