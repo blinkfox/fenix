@@ -81,6 +81,13 @@ public final class FenixConfigManager {
     }
 
     /**
+     * 初始化加载默认的 Fenix 的配置信息到内存中.
+     */
+    public void initLoad() {
+        this.initLoad(new FenixConfig());
+    }
+
+    /**
      * 初始化加载 Fenix 的配置信息到内存中.
      *
      * @param configClass 系统中 {@link FenixConfig} 的子类的 class 路径
