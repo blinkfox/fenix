@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来 XML 文件在自定义. -->
+<fenixs namespace="otherFenix">
+
+    <fenix id="queryUsersByName">
+        SELECT u FROM User AS u
+        WHERE
+        <like match="user.name != empty" field="u.name" value="user.name"/>
+    </fenix>
+
+</fenixs>

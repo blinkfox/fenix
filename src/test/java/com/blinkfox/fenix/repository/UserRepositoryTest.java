@@ -59,8 +59,7 @@ public class UserRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             FenixConfigManager.getInstance()
-                    .initLoadHandlerLocations("com.blinkfox.fenix.handler")
-                    .initLoad(new FenixConfig());
+                    .initLoad(new FenixConfig(), "my/xml, fenix", "com.blinkfox.fenix.handler");
             userRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
             setIsLoad(true);
@@ -112,6 +111,14 @@ public class UserRepositoryTest {
         Page<User> userPage = userRepository.queryUserByIds(userMap,
                 PageRequest.of(0, 2, Sort.by(Sort.Order.desc("id"))));
         Assert.assertFalse(userPage.getContent().isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 来根据名称分页查询其它目录下的 xml 文件的数据..
+     */
+    @Test
+    public void queryUsersByName() {
+        Assert.assertFalse(userRepository.queryUsersByName(new User().setName("姓名-")).isEmpty());
     }
 
 }

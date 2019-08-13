@@ -75,4 +75,13 @@ public interface UserRepository extends JpaRepository<User, String> {
             countMethod = "queryUsersCount")
     Page<User> queryUserByIds(@Param("userMap") Map<String, Object> userMap, Pageable pageable);
 
+    /**
+     * 根据名称分页查询其它目录下的 xml 文件的数据.
+     *
+     * @param user 用户信息
+     * @return 分页数据
+     */
+    @QueryFenix("otherFenix.queryUsersByName")
+    List<User> queryUsersByName(@Param("user") User user);
+
 }
