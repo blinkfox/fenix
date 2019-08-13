@@ -7,6 +7,8 @@ import com.blinkfox.fenix.provider.UserSqlInfoProvider;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -60,5 +62,17 @@ public interface UserRepository extends JpaRepository<User, String> {
      */
     @QueryFenix
     List<User> queryUsersWithSameName(@Param("userMap") Map<String, Object> userMap, @Param("user") User user);
+
+    /**
+     * 分页查询数据.
+     *
+     * @param userMap 用户 Map 信息
+     * @param pageable 分页对象
+     * @return 分页数据
+     */
+    @QueryFenix(
+            countQuery = "com.blinkfox.fenix.repository.UserRepository.queryAllUsersCount",
+            countMethod = "queryUsersCount")
+    Page<User> queryUserByIds(@Param("userMap") Map<String, Object> userMap, Pageable pageable);
 
 }

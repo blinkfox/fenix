@@ -13,6 +13,11 @@
         <in field="u.id" value="userMap.ids"/>
     </fenix>
 
+    <!-- 根据多个 ID 来查询用户的总记录数. -->
+    <fenix id="queryAllUsersCount">
+        SELECT count(*) FROM User AS u
+    </fenix>
+
     <!-- 根据自定义的 userIdEmail 标签来查询用户信息. -->
     <fenix id="queryUserWithIdEmail">
         SELECT

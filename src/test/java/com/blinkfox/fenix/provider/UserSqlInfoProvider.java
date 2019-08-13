@@ -4,14 +4,16 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
-
 import com.blinkfox.fenix.helper.StringHelper;
+
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.repository.query.Param;
 
 /**
- * UserSqlInfoProvider.
+ * 使用 Java 拼接用户动态 SQL 的 Java 类.
  *
  * @author blinkfox on 2019-08-11.
  */
@@ -35,6 +37,22 @@ public final class UserSqlInfoProvider {
                 .andLike("u.name", user.getName(), StringHelper.isNotBlank(user.getName()))
                 .andLike("u.email", userEmail)
                 .andGreaterThan("u.age", myAge)
+                .end();
+    }
+
+    /**
+     * 获取用户信息总数.
+     *
+     * @param userMap 用户 Map
+     * @return sqlInfo 对象
+     */
+    public static SqlInfo queryUsersCount(@Param("userMap") Map<String, Object> userMap) {
+        return Fenix.start()
+                .select("count(*)")
+                .from("User").as("u")
+                .where()
+                .in("u.id", (Object[]) userMap.get("ids"))
+                .andNotEqual("u.id", "2")
                 .end();
     }
 

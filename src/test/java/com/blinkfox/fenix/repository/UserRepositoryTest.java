@@ -22,6 +22,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
@@ -97,6 +100,18 @@ public class UserRepositoryTest {
         userMap.put("ids", new String[] {"2", "4", "6", "8", "10"});
         List<User> users = userRepository.queryUsersWithSameName(userMap, new User().setName("姓名"));
         Assert.assertFalse(users.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解没有任何元数据参数时，使用默认约定来查询用户信息的方法.
+     */
+    @Test
+    public void queryUserByIds() {
+        Map<String, Object> userMap = new HashMap<>(2);
+        userMap.put("ids", new String[] {"2", "4", "6", "8", "10"});
+        Page<User> userPage = userRepository.queryUserByIds(userMap,
+                PageRequest.of(0, 2, Sort.by(Sort.Order.desc("id"))));
+        Assert.assertFalse(userPage.getContent().isEmpty());
     }
 
 }

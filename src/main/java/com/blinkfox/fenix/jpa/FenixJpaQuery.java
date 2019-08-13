@@ -182,22 +182,27 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private void getSqlInfoByFenix() {
         // 在 QueryFenix 注解中 provider 不为空的情况下，
         // 如果 method 不为空，将直接反射调用该 provider 下的 method 方法；
-        // 如果 method 为空，则默认视为 provider 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
-        Class<?> providerCls = queryFenix.provider();
+        // 如果 method 为空，但 fullFenixId 不为空，则视为使用 XML 的方式来生成和构建 SqlInfo 信息.
+        // 否则，两者皆为空时，则默认视为 provider 中存在与本查询方法相同方法名，直接使用该查询的方法名来进行执行.
+        Class<?> provider = queryFenix.provider();
         String method = queryFenix.method();
-        if (providerCls != Void.class) {
-            this.sqlInfo = ClassMethodInvoker.invoke(providerCls,
-                    StringHelper.isBlank(method) ? super.getQueryMethod().getName() : method, this.contextParams);
+        String fullFenixId = queryFenix.value();
+        if (provider != Void.class) {
+            if (StringHelper.isNotBlank(method)) {
+                this.sqlInfo = ClassMethodInvoker.invoke(provider, method, this.contextParams);
+            } else if (StringHelper.isNotBlank(fullFenixId)) {
+                this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
+            } else {
+                this.sqlInfo = ClassMethodInvoker.invoke(provider, getQueryMethod().getName(), this.contextParams);
+            }
             return;
         }
 
         // 如果 QueryFenix 注解中 value 不为空，即表明 fullFenixId 不为空，则说明是使用 XML 的方式来拼接 SQL 的.
         // 否则将执行类的全路径名和方法名来分别对应 XML 中的 namespace 和 fenixId 来对应进行查找，生成 SqlInfo 信息.
-        String fullFenixId = queryFenix.value();
         if (StringHelper.isNotBlank(fullFenixId)) {
             this.sqlInfo = Fenix.getXmlSqlInfo(fullFenixId, this.contextParams);
         } else {
-            log.info("queryClass Name: {}", queryClass.getName());
             this.sqlInfo = Fenix.getXmlSqlInfo(queryClass.getName(), getQueryMethod().getName(), this.contextParams);
         }
     }
