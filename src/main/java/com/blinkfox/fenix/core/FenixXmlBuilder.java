@@ -14,6 +14,8 @@ import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,11 @@ import org.dom4j.Node;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixXmlBuilder {
+
+    /**
+     * 用于解析出 '#{' 和 '}' 符号之间文本内容的正则表达式 Pattern（包含 '#{' 和 '}').
+     */
+    private static final Pattern PATTERN = Pattern.compile("(#\\{[^}]+})");
 
     /**
      * 通过传入 fullFenixId（命名空间和 Fenix 节点的 ID）和上下文参数，
@@ -123,9 +130,37 @@ public final class FenixXmlBuilder {
 
         // 根据标签拼接得到 SqlInfo 信息，如果有 MVEL 的模板表达式，则执行计算出该表达式，并移除多余的空白字符.
         // 如果 fenix 节点中，removeIfExist 属性值内容不为空，就移除指定的内容.
-        sqlInfo.setSql(StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), context)));
+        renderSqlAndOtherParams(sqlInfo, context);
         String removeText = XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_REMOVE);
         return StringHelper.isNotBlank(removeText) ? sqlInfo.removeIfExist(removeText) : sqlInfo;
+    }
+
+    /**
+     * 根据构建出的 {@link SqlInfo} 信息再做最后的模板渲染，SQL 内容去多余的空白，替换其他命名参数等.
+     *
+     * <p>该方法主要做如下操作：</p>
+     * <ul>
+     *     <li>1. 使用 MVEL 渲染 SQL 字符串模板；</li>
+     *     <li>2. 替换多余的空白、换行符等为一个空格；</li>
+     *     <li>3. 替换 '#{xxx}' 中的内容为 ':xxx' 形式的命名参数；</li>
+     * </ul>
+     *
+     * @param sqlInfo {@link SqlInfo} 信息
+     * @param context 上下文参数（一般是 Bean 或者 map）
+     */
+    private static void renderSqlAndOtherParams(SqlInfo sqlInfo, Object context) {
+        String sql = StringHelper.replaceBlank(ParseHelper.parseTemplate(sqlInfo.getJoin().toString(), context));
+
+        // 获取并替换 SQL 字符串中 '#{xxx}' 的内容，并更换成命名参数的方式.
+        Matcher matcher = PATTERN.matcher(sql);
+        while (matcher.find()) {
+            String hashTagText = matcher.group(1);
+            String text = hashTagText.substring(2, hashTagText.length() - 1);
+            String namedText = StringHelper.fixDot(text);
+            sqlInfo.getParams().put(namedText, ParseHelper.parseExpressWithException(text, context));
+            sql = sql.replace(hashTagText, Const.COLON + namedText);
+        }
+        sqlInfo.setSql(sql);
     }
 
 }

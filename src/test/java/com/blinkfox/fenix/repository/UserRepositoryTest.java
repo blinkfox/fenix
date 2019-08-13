@@ -116,7 +116,9 @@ public class UserRepositoryTest {
      */
     @Test
     public void queryUsersByName() {
-        Assert.assertFalse(userRepository.queryUsersByName(new User().setName("姓名-").setEmail("qq")).isEmpty());
+        List<User> users = userRepository.queryUsersByName(new User()
+                        .setName("姓名-").setEmail("qq").setAge(22).setStatus("0"));
+        Assert.assertFalse(users.isEmpty());
     }
 
 }

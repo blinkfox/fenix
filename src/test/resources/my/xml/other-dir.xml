@@ -8,6 +8,8 @@
         WHERE
         1 = 1
         <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        AND u.age > #{user.age}
+        AND u.status = #{user.status}
         <andLike field="u.email" value="user.email" match="user.email != empty"/>
     </fenix>
 
