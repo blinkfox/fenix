@@ -9,7 +9,6 @@ import com.blinkfox.fenix.helper.StringHelper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 追加构建动态 JPQL 或者 SQL 语句及参数的上下文协调类.
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
  * @see FenixHandlerFactory
  * @see FenixHandler
  */
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class FenixContext {
 

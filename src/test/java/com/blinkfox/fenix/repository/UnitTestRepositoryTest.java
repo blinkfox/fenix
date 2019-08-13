@@ -18,7 +18,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +34,6 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author blinkfox on 2019-08-08.
  */
-@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class UnitTestRepositoryTest {

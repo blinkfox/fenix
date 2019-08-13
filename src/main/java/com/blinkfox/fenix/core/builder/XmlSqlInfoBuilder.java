@@ -38,8 +38,8 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     /**
      * 追加构建 'LIKE' 模糊查询的 {@link SqlInfo} 信息.
      *
-     * @param fieldText 字段文本值
-     * @param valueText 参数值
+     * @param fieldText   字段文本值
+     * @param valueText   参数值
      * @param patternText 模式字符串文本
      */
     public void buildLikeSql(String fieldText, String valueText, String patternText) {
@@ -57,7 +57,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      *
      * @param fieldText 字段文本值
      * @param startText 开始文本
-     * @param endText 结束文本
+     * @param endText   结束文本
      */
     public void buildBetweenSql(String fieldText, String startText, String endText) {
         super.buildBetweenSql(fieldText, startText, ParseHelper.parseExpress(startText, context),
@@ -87,6 +87,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      *
      * @param valueText value 文本值
      */
+    @SuppressWarnings("unchecked")
     public void buildTextSqlParams(String valueText) {
         // 获取 value 值为空，则直接退出本方法.
         Object obj;
@@ -105,11 +106,8 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
         for (Map.Entry<String, Object> entry : ((Map<String, Object>) obj).entrySet()) {
             // 如果 value 是数组，就需要转换成集合，否则 JPA 的执行会报错.
             Object value = entry.getValue();
-            if (value != null && value.getClass().isArray()) {
-                params.put(entry.getKey(), Arrays.asList((Object[]) value));
-            } else {
-                params.put(entry.getKey(), value);
-            }
+            params.put(entry.getKey(),
+                    value != null && value.getClass().isArray() ? Arrays.asList((Object[]) value) : value);
         }
     }
 

@@ -15,7 +15,6 @@ import javax.persistence.Query;
 import javax.persistence.Tuple;
 
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,7 +34,6 @@ import org.springframework.data.repository.query.ReturnedType;
  *
  * @author blinkfox on 2019-08-04.
  */
-@Slf4j
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
