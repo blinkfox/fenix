@@ -14,7 +14,7 @@
         SELECT b FROM Blog AS b
         WHERE
         <in field="b.id" value="ids"/>
-        <andEqual field="b.author" value="blog.author" match="blog.author != empty"/>
+        <andLike field="b.author" value="blog.author" match="blog.author != empty"/>
         <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
         <andBetween field="b.createTime" start="blog.createTime" end="blog.updateTime" match="(?blog.createTime != empty) || (?blog.updateTime != empty)"/>
     </fenix>
@@ -24,7 +24,7 @@
         SELECT count(*) FROM Blog AS b
         WHERE
         <in field="b.id" value="ids"/>
-        <andEqual field="b.author" value="blog.author" match="blog.author != empty"/>
+        <andLike field="b.author" value="blog.author" match="blog.author != empty"/>
         <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
         <andBetween field="b.createTime" start="blog.createTime" end="blog.updateTime" match="(?blog.createTime != empty) || (?blog.updateTime != empty)"/>
     </fenix>

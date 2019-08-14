@@ -37,15 +37,15 @@ import org.springframework.util.FileCopyUtils;
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class UnitTestRepositoryTest {
 
-    private static final String NAME = "name-姓名-5";
+    private static final String NAME = "name-5";
 
     private static final String QQ_SUFFIX = "@qq.com";
 
-    private static final String NAME_11 = "name-姓-11";
+    private static final String NAME_11 = "myname-11";
 
-    private static final String SEX_11 = "sex-性-11";
+    private static final String SEX_11 = "mysex-11";
 
-    private static final String EMAIL_11 = "email-11@163.com";
+    private static final String EMAIL_11 = "myemail-11@163.com";
 
     /**
      * 是否加载过的标识.
@@ -156,8 +156,8 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testLike() {
-        List<User> users = unitTestRepository.testLike(new User().setAge(25).setName("姓名").setSex("sex-性别-9"));
-        Assert.assertEquals(4, users.size());
+        List<User> likeUsers = unitTestRepository.testLike(new User().setAge(25).setName("name").setSex("sex-9"));
+        Assert.assertEquals(5, likeUsers.size());
     }
 
     /**
@@ -165,8 +165,9 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeLike() {
-        List<User> users = unitTestRepository.testNativeLike(new User().setAge(25).setName("姓名").setSex("sex-性别-9"));
-        Assert.assertEquals(4, users.size());
+        List<User> nativeLikeUsers = unitTestRepository.testNativeLike(new User()
+                .setAge(25).setName("name").setSex("sex-9"));
+        Assert.assertEquals(5, nativeLikeUsers.size());
     }
 
     /**
@@ -174,8 +175,8 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testStartsWith() {
-        List<User> users = unitTestRepository.testStartsWith(new User().setName("name-姓").setSex("sex-性别"));
-        Assert.assertEquals(1, users.size());
+        List<User> startUsers = unitTestRepository.testStartsWith(new User().setName("name").setSex(""));
+        Assert.assertEquals(9, startUsers.size());
     }
 
     /**
@@ -183,8 +184,8 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeStartsWith() {
-        List<User> users = unitTestRepository.testNativeStartsWith(new User().setName("name-姓").setSex("sex-性别"));
-        Assert.assertEquals(1, users.size());
+        List<User> nativeusers = unitTestRepository.testNativeStartsWith(new User().setName("name").setSex(""));
+        Assert.assertEquals(9, nativeusers.size());
     }
 
     /**
@@ -192,7 +193,7 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testEndsWith() {
-        List<User> users = unitTestRepository.testEndsWith(new User().setName("名-8").setEmail(QQ_SUFFIX));
+        List<User> users = unitTestRepository.testEndsWith(new User().setName("-8").setEmail(QQ_SUFFIX));
         Assert.assertEquals(2, users.size());
     }
 
@@ -201,7 +202,7 @@ public class UnitTestRepositoryTest {
      */
     @Test
     public void testNativeEndsWith() {
-        List<User> users = unitTestRepository.testNativeEndsWith(new User().setName("名-8").setEmail(QQ_SUFFIX));
+        List<User> users = unitTestRepository.testNativeEndsWith(new User().setName("-8").setEmail(QQ_SUFFIX));
         Assert.assertEquals(2, users.size());
     }
 
@@ -250,12 +251,12 @@ public class UnitTestRepositoryTest {
         context.put("ids", new String[]{"1", "3", "5", "7", "9"});
 
         Set<String> names = new HashSet<>(4);
-        names.add("name-姓名-1");
-        names.add("name-姓名-3");
+        names.add("name-1");
+        names.add("name-3");
         names.add(NAME);
         context.put("names", names);
 
-        context.put("sexs", "sex-性别-1");
+        context.put("sexs", "sex-1");
         return context;
     }
 
@@ -299,7 +300,7 @@ public class UnitTestRepositoryTest {
         // 设置开始和结束的年龄.
         Map<String, Object> context = new HashMap<>(8);
         context.put("ids", new String[] {"1", "3", "5", "7", "9"});
-        Assert.assertEquals(4, unitTestRepository.testText(context, new User().setName("姓名").setEmail("1")).size());
+        Assert.assertEquals(4, unitTestRepository.testText(context, new User().setName("name").setEmail("1")).size());
     }
 
     /**
@@ -312,9 +313,9 @@ public class UnitTestRepositoryTest {
         context.put("ids", new String[] {"1", "3", "5", "7", "9"});
 
         List<String> names = new ArrayList<>(4);
-        names.add("name-姓名-3");
+        names.add("name-3");
         names.add(NAME);
-        names.add("name-姓名-7");
+        names.add("name-7");
         context.put("names", names);
         Assert.assertEquals(1, unitTestRepository.testImport(context, new User().setEmail(QQ_SUFFIX)).size());
     }

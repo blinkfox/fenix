@@ -109,8 +109,8 @@ public class BlogRepositoryTest {
     @Test
     public void queryBlogs2() {
         Page<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
-                new Blog().setAuthor("张三").setTitle("Spring").setUpdateTime(new Date()),
-                PageRequest.of(1, 1, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
+                new Blog().setAuthor("ZhangSan").setTitle("Spring").setUpdateTime(new Date()),
+                PageRequest.of(0, 1, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -129,7 +129,7 @@ public class BlogRepositoryTest {
     @Test
     public void queryUserBlogsByTitleWithFenix() {
         List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
-                new Blog().setTitle(SPRING).setContent("一"));
+                new Blog().setTitle(SPRING).setContent("-"));
         Assert.assertFalse(blogs.isEmpty());
     }
 
@@ -139,7 +139,7 @@ public class BlogRepositoryTest {
     @Test
     public void queryUserBlogsByProjection() {
         List<UserBlogProjection> blogs = blogRepository.queryUserBlogsByProjection("1",
-                new Blog().setTitle(SPRING).setContent("一"));
+                new Blog().setTitle(SPRING).setContent("-"));
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.get(0).getDescription());
     }
@@ -160,7 +160,7 @@ public class BlogRepositoryTest {
     @Test
     public void queryFenixNativeByProjection() {
         Page<UserBlogProjection> blogs = blogRepository.queryFenixNativeByProjection("1",
-                new Blog().setTitle(SPRING).setContent("一"),
+                new Blog().setTitle(SPRING).setContent("-"),
                 PageRequest.of(0, 3, Sort.by(Sort.Order.asc("dt_create_time"), Sort.Order.desc("c_id"))));
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.getContent().get(0).getDescription());

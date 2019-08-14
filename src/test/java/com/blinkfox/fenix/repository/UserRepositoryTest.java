@@ -60,6 +60,8 @@ public class UserRepositoryTest {
                     .initLoad(new FenixConfig(), "my/xml, fenix", "com.blinkfox.fenix.handler");
             userRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
+            List<User> users = userRepository.findAll();
+            System.out.println("This is all Users info:" + users);
             setIsLoad(true);
         }
     }
@@ -95,7 +97,7 @@ public class UserRepositoryTest {
     public void queryUsersWithSameName() {
         Map<String, Object> userMap = new HashMap<>(2);
         userMap.put("ids", new String[] {"2", "4", "6", "8", "10"});
-        List<User> users = userRepository.queryUsersWithSameName(userMap, new User().setName("姓名"));
+        List<User> users = userRepository.queryUsersWithSameName(userMap, new User().setName("name-"));
         Assert.assertFalse(users.isEmpty());
     }
 
@@ -117,7 +119,8 @@ public class UserRepositoryTest {
     @Test
     public void queryUsersByName() {
         List<User> users = userRepository.queryUsersByName(new User()
-                        .setName("姓名-").setEmail("qq").setAge(22).setStatus("0"));
+                        .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
+        System.out.println("queryUsersByName users:【】" + users);
         Assert.assertFalse(users.isEmpty());
     }
 
