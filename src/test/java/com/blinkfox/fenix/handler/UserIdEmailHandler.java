@@ -29,7 +29,7 @@ public class UserIdEmailHandler implements FenixHandler {
      */
     @Override
     public void buildSqlInfo(BuildSource source) {
-        /* 获取拼接的参数和Zealot节点 */
+        /* 获取拼接的参数和 Fenix 节点 */
         Node node = source.getNode();
 
         /* 获取 match 属性值,如果匹配中 字符值没有，则认为是必然生成项. */

@@ -54,7 +54,7 @@ public class StringHelperTest {
     public void isXmlFile() {
         Assert.assertFalse(StringHelper.isXmlFile(null));
         Assert.assertFalse(StringHelper.isXmlFile("ab/.xmls"));
-        Assert.assertTrue(StringHelper.isXmlFile("zealot/ab.xml"));
+        Assert.assertTrue(StringHelper.isXmlFile("fenix/ab.xml"));
     }
 
     /**
@@ -64,7 +64,7 @@ public class StringHelperTest {
     public void isJavaFile() {
         Assert.assertFalse(StringHelper.isJavaFile(null));
         Assert.assertFalse(StringHelper.isJavaFile("ab/.jav"));
-        Assert.assertTrue(StringHelper.isJavaFile("com.blinkfox.zealot.Hello.java"));
+        Assert.assertTrue(StringHelper.isJavaFile("com.blinkfox.fenix.Hello.java"));
     }
 
     /**
@@ -74,7 +74,7 @@ public class StringHelperTest {
     public void isClassFile() {
         Assert.assertFalse(StringHelper.isClassFile(null));
         Assert.assertFalse(StringHelper.isClassFile("com.blinkfox.Test.classes"));
-        Assert.assertTrue(StringHelper.isClassFile("com.blinkfox.zealot.Hello.class"));
+        Assert.assertTrue(StringHelper.isClassFile("com.blinkfox.fenix.Hello.class"));
     }
 
 }

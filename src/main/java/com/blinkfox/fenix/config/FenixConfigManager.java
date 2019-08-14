@@ -242,7 +242,7 @@ public final class FenixConfigManager {
      * 缓存 XML、打印 banner 并做初次计算.
      */
     private void cachingXmlAndEval() {
-        this.cachingXmlZealots();
+        this.cachingFenixXmls();
         this.printBanner(NormalConfig.getInstance().isPrintBanner());
         this.testFirstEvaluate();
     }
@@ -261,7 +261,7 @@ public final class FenixConfigManager {
     /**
      * 将每个 Fenix XML 配置文件的 key 和文档缓存到 ConcurrentHashMap 内存缓存中.
      */
-    private void cachingXmlZealots() {
+    private void cachingFenixXmls() {
         Map<String, String> xmlMaps = XmlContext.getInstance().getXmlPathMap();
 
         // 遍历所有的 XML 文档，将每个 fenix 节点缓存到 ConcurrentHashMap 内存缓存中.

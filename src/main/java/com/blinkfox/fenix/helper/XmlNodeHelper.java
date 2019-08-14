@@ -50,7 +50,7 @@ public final class XmlNodeHelper {
      */
     public static Node getNodeBySpaceAndId(String namespace, String fenixId) {
         Document doc = XmlNodeHelper.getDocument(XmlContext.getInstance().getXmlPathMap().get(namespace));
-        return doc == null ? null : XmlNodeHelper.getZealotNodeById(doc, fenixId);
+        return doc == null ? null : XmlNodeHelper.getFenixNodeById(doc, fenixId);
     }
 
     /**
@@ -60,7 +60,7 @@ public final class XmlNodeHelper {
      * @param xmlPath XML 路径
      * @return 该 XML 文件的 Fenix 命名空间 namespace
      */
-    public static String getZealotXmlNameSpace(String xmlPath) {
+    public static String getFenixXmlNameSpace(String xmlPath) {
         Document doc;
         try {
             doc = new SAXReader().read(Thread.currentThread().getContextClassLoader().getResourceAsStream(xmlPath));
@@ -92,7 +92,7 @@ public final class XmlNodeHelper {
      * @param id fenix 节点的 id
      * @return dom4j 的 Node 节点
      */
-    public static Node getZealotNodeById(Document doc, String id) {
+    public static Node getFenixNodeById(Document doc, String id) {
         return doc.selectSingleNode("/fenixs/fenix[@id='" + id + "']");
     }
 

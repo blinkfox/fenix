@@ -63,7 +63,7 @@ public final class XmlScanner implements Scanner {
         }
 
         // 从 xmlPaths 的 Set 集合中获取的如果是 Fenix 的 XML 文件的话，则将其添加到 XmlContext 上下文中.
-        this.addZealotXmlInContext();
+        this.addFenixXmlInContext();
     }
 
     /**
@@ -128,9 +128,9 @@ public final class XmlScanner implements Scanner {
     /**
      * 从 xmlPaths 的 Set 集合中解析判断是否是 Fenix 的 XML 文件，如果是的话则将其添加到 XmlContext 上下文中，供后面解析.
      */
-    private void addZealotXmlInContext() {
+    private void addFenixXmlInContext() {
         for (String xmlPath: xmlPaths) {
-            String namespace = XmlNodeHelper.getZealotXmlNameSpace(xmlPath);
+            String namespace = XmlNodeHelper.getFenixXmlNameSpace(xmlPath);
             if (StringHelper.isNotBlank(namespace)) {
                 XmlContext.getInstance().add(namespace, xmlPath);
             }
