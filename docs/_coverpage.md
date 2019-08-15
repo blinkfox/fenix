@@ -1,11 +1,12 @@
-![logo](media/logo.png)
+![logo](assets/images/logo.png)
 
-# Fenix
+# Fenix <small>1.0.0</small>
 
-> 这是一个比 MyBatis 更强大的，用于解决 Spring Data JPA 复杂或动态 SQL 查询的扩展库。
+> 为解决复杂动态 SQL 而生的 Spring Data JPA 扩展库
 
-- 简单、动态、轻量级 (72kb)
-- 支持 Java 流式 API 和 XML文件 两种方式书写SQL
+- 简单、可扩展、轻量级  (~87kB jar)
+- 比 MyBatis 更加强大的动态 SQL 能力
+- 支持 XML 文件和 Java 链式 API 两种方式书写SQL
 
 [GitHub](https://github.com/blinkfox/fenix/)
-[开始使用](introduction)
+[开始使用](README)
