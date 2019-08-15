@@ -22,4 +22,8 @@
 
 为了便于开发人员书写一般中短长度的动态 SQL，Fenix 还提供了 Java 链式 `API` 书写动态 SQL 的方式，使 SQL 可读性和紧凑性更好，如果要书写静态或动态的中、长 SQL，则推荐使用 `XML` 方式，便于集中阅读、调试和维护 SQL。
 
-> **注**：本 Fenix 扩展库开发的核心思想来源于我几年前写的动态 SQL 拼接库 [Zealot](https://github.com/blinkfox/zealot)。如果你熟悉星际争霸的话，大概能理解其中的关系。
+> **注**：本 `Fenix` 扩展库开发的核心思想来源于我几年前写的动态 SQL 拼接库 [Zealot](https://github.com/blinkfox/zealot)。如果你熟悉星际争霸的话，大概能理解其中的关系。
+
+## 开源许可证
+
+本 `Fenix` 的 Spring Data JPA 扩展库遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) 许可证。
