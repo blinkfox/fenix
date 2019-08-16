@@ -2,7 +2,7 @@
 
 适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上。
 
-## Spring Boot 项目集成
+## Spring Boot 项目集成 :id=spring-boot-integrations
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并激活 `FenixJpaRepositoryFactoryBean`。
 
