@@ -2,8 +2,8 @@
   - [简介](README)
   - [快速集成](quick-install)
   - [快速开始](quick-start)
+  - [@QueryFenix 注解](queryfenix-introduction)
 - XML方式
-  - [快速开始](xml/quickstart)
   - [动态SQL标签](xml/main-tags)
   - [自定义标签](xml/custom-tag)
   - [流程控制标签](xml/flow-tags)
