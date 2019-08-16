@@ -42,23 +42,36 @@ Fenix 的流程控制语法使用的是 `MVEL` 模板引擎，所以，支持所
 
 `@{}` 表达式是最基本的插值语法，当然 `${}` 语法也可以，但我更建议你使用官方的 `@{}` 语法。它包含对一个对字符串求值的值表达式，并附加到输出的模板中。例如：
 
-```java
-Hello, my name is @{person.name}
+```sql
+-- 如果 user id 为 '5'，将生成为:
+-- SELECT u FROM User AS u WHERE u.id = '5'.
+SELECT u FROM User AS u WHERE u.id = '@{user.id}'
+```
+
+### #{} 表达式
+
+`#{}` 表达式不是 `MVEL` 提供的语法，是 `Fenix` 增强的语法，主要用来渲染生成 `JPQL` 语句中的命名参数，可以防止 SQL 注入。例如：
+
+```sql
+-- 如果 user id 为 '5'，将生成为: 
+-- SELECT u FROM User AS u WHERE u.id = :user_id. 其中 user_id 为 '5'
+SELECT u FROM User AS u WHERE u.id = @{user.id}
 ```
 
 ### @code{} 静默代码标签
 
-静默代码标记允许您在模板中执行MVEL表达式代码。它不返回值，并且不以任何方式影响模板的格式。
+静默代码标记允许您在模板中执行 `MVEL`表达式代码。它不返回值，并且不以任何方式影响模板的格式。
 
 ```java
 @code{age = 23; name = 'John Doe'}
 @{name} is @{age} years old
 ```
-该模板将计算出：John Doe is 23 years old。
 
-### @if{}@else{} 控制流标签
+该模板将计算出：`John Doe is 23 years old`。
 
-``@if{}`和`@else{}`标签在MVEL模板中提供了完全的`if-then-else`功能。 例如：
+### @if{} @else{} 分支选择标签
+
+`@if{}` 和 `@else{}` 标签在 `MVEL` 模板中提供了完全的 `if-then-else` 功能。 例如：
 
 ```java
 @if{foo != bar}
@@ -70,16 +83,18 @@ Hello, my name is @{person.name}
 @end{}
 ```
 
-MVEL模板中的所有块必须用`@end{}`标签来终止，除非是`if-then-else`结构，其中`@else{}`标记表示前一个控制语句的终止。
+`MVEL` 模板中的所有块必须用 `@end{}` 标签来终止，除非是 `if-then-else` 结构，其中 `@else{}` 标记表示前一个控制语句的终止。
 
-### @foreach{} Foreach迭代
+### @foreach{} 循环迭代
 
 `foreach`标签允许您在模板中迭代集合或数组。
 
-!> 注意：foreach的语法已经在MVEL模板2.0中改变，以使用foreach符号来标记MVEL语言本身的符号。
+!> 注意：`foreach` 的语法已经在 `MVEL` 模板 2.0 中改变，以使用 `foreach` 符号来标记 `MVEL` 语言本身的符号。
 
 ```java
 @foreach{item : products}
  - @{item.serialNumber}
 @end{}
 ```
+
+以上只是几个你可能会用到的逻辑控制标签。当然，还有其他[更多的 `MVEL` 模版语法](http://mvel.documentnode.com/#mvel-2.0-templating-guide) 你可以参考。
