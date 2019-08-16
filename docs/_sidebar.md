@@ -5,7 +5,7 @@
   - [@QueryFenix 注解](queryfenix-introduction)
 - XML方式
   - [逻辑控制语法](xml/logic-control)
-  - [动态 XML 标签](xml/main-tags)
+  - [动态 XML 标签](xml/xml-tags)
   - [自定义标签](xml/custom-tag)
 - Java方式
   - [使用介绍](java/use-intro)
