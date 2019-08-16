@@ -264,7 +264,7 @@ public class BlogRepositoryTest {
      * 测试使用 {@link com.blinkfox.fenix.jpa.QueryFenix} 注解根据任意参数多条件模糊分页查询博客信息.
      */
     @Test
-    public void querySpringBlogs() {
+    public void queryMyBlogs() {
         // 构造查询的相关参数.
         List<String> ids = Arrays.asList("1", "2", "3", "4", "5", "6");
         Blog blog = new Blog().setAuthor("ZhangSan").setUpdateTime(new Date());

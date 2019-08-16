@@ -4,9 +4,9 @@
   - [快速开始](quick-start)
   - [@QueryFenix 注解](queryfenix-introduction)
 - XML方式
+  - [逻辑控制语法](xml/logic-control)
   - [动态SQL标签](xml/main-tags)
   - [自定义标签](xml/custom-tag)
-  - [流程控制标签](xml/flow-tags)
 - Java方式
   - [使用介绍](java/use-intro)
   - [总体示例](java/general-example)

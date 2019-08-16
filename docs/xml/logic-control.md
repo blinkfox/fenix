@@ -1,0 +1,85 @@
+前面的示例中使用到了 Fenix 的一些内置语义标签，其实 Fenix 一开始就是像 `Mybatis` 一样支持灵活的逻辑控制的，我没有像 `MyBatis` 一样选用 `ONGL` 来做逻辑控制，而是选用了更好的 [MVEL](http://mvel.documentnode.com/) 模版和表达式解析引擎来达到动态控制 SQL 的功能。
+
+!> **注意**：插值语法 `@{}`（或者 `${}`），不能实现绑定命名参数的方式来生成 `JPQL` 语句，某些情况下可能有 SQL 注入的风险，请视具体情况使用。如果要想使用 `JPQL` 绑定命名参数的特性，请使用 `#{}` 的插值语法。
+
+## 使用示例
+
+Fenix 中的**语义化标签和流程控制语法是可以混合使用的**，请看下面的 Fenix SQL 书写方式，即可容易理解：
+
+```xml
+<!-- 根据 MVEL 模版语法和表达式来查询 SQL. -->
+<fenix id="queryBlogsByTemplate">
+    SELECT
+       b
+    FROM
+       Blog AS b
+    WHERE
+    b.id in #{ids}
+    <andLike field="b.author" value="blog.author"/>
+    @if{?blog.title != empty}
+       AND b.title LIKE '%@{blog.title}%'
+    @end{}
+</fenix>
+```
+
+当传入的博客信息的 `title` 为空时就会生成类似如下的 SQL 了:
+
+```sql
+--------------------------------- Fenix 生成的 SQL 信息 ----------------------------------
+-- Fenix xml: fenix/BlogRepository.xml -> queryBlogsByTemplate
+-------- SQL: SELECT b FROM Blog AS b WHERE b.id in :ids AND b.author LIKE :blog_author
+----- Params: {blog_author=%ZhangSan%, ids=[1, 2, 3, 4, 5, 6]}
+-----------------------------------------------------------------------------------------
+```
+
+!> **注**：`?blog.title != empty` 中的 `?` 是一种更安全的对象属性访问语法，如果你传递的参数是 `Map`，可能 `Map` 中没有这个属性，那么就会报错，如果加上 `?` 的话，可以直接判定为 `false`，而不是报错。
+
+## 常用标签
+
+Fenix 的流程控制语法使用的是 `MVEL` 模板引擎，所以，支持所有 `MVEL2.0` 及以上的模板标签，这也预示着 Fenix 动态 SQL 的强大特性。关于 `MVEL2.x` 的表达式语法和模板语法[请参考这里](http://mvel.documentnode.com/)。
+
+### @{} 表达式
+
+`@{}` 表达式是最基本的插值语法，当然 `${}` 语法也可以，但我更建议你使用官方的 `@{}` 语法。它包含对一个对字符串求值的值表达式，并附加到输出的模板中。例如：
+
+```java
+Hello, my name is @{person.name}
+```
+
+### @code{} 静默代码标签
+
+静默代码标记允许您在模板中执行MVEL表达式代码。它不返回值，并且不以任何方式影响模板的格式。
+
+```java
+@code{age = 23; name = 'John Doe'}
+@{name} is @{age} years old
+```
+该模板将计算出：John Doe is 23 years old。
+
+### @if{}@else{} 控制流标签
+
+``@if{}`和`@else{}`标签在MVEL模板中提供了完全的`if-then-else`功能。 例如：
+
+```java
+@if{foo != bar}
+   Foo not a bar!
+@else{bar != cat}
+   Bar is not a cat!
+@else{}
+   Foo may be a Bar or a Cat!
+@end{}
+```
+
+MVEL模板中的所有块必须用`@end{}`标签来终止，除非是`if-then-else`结构，其中`@else{}`标记表示前一个控制语句的终止。
+
+### @foreach{} Foreach迭代
+
+`foreach`标签允许您在模板中迭代集合或数组。
+
+!> 注意：foreach的语法已经在MVEL模板2.0中改变，以使用foreach符号来标记MVEL语言本身的符号。
+
+```java
+@foreach{item : products}
+ - @{item.serialNumber}
+@end{}
+```
