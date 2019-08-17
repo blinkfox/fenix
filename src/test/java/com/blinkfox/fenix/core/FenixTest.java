@@ -149,8 +149,8 @@ public class FenixTest {
     public void testText() {
         SqlInfo sqlInfo = Fenix.start()
                 .text("select u.id, u.nickName from User as u where ")
-                .text("u.id = :id ").param("id", 5)
-                .text("and u.nickName like :nickName ").param("nickName", "lisi")
+                .text("u.id = :id ", "id", 5)
+                .text("and u.nickName like :nickName ", "nickName", "lisi")
                 .text("and u.sex in :sex ").param("sex", new Integer[]{2, 3, 4})
                 .text("and u.city in :city ", "city", context.get("citys"))
                 .end();

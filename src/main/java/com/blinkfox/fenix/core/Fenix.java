@@ -415,20 +415,7 @@ public final class Fenix {
     }
 
     /**
-     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数.
-     *
-     * @param text 文本
-     * @param paramMap Map 型参数
-     * @return {@link Fenix} 实例
-     */
-    public Fenix text(String text, Map<String, Object> paramMap) {
-        this.source.getSqlInfo().getJoin().append(text);
-        this.params(paramMap);
-        return this;
-    }
-
-    /**
-     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数.
+     * 在 SQL 后追加任何文本字符串，并设置该 SQL 字符串的命名参数，其中 key 为命名参数名称，value 为参数值.
      *
      * @param text 文本
      * @param key 命名参数 key
@@ -442,19 +429,20 @@ public final class Fenix {
     }
 
     /**
-     * 在 SQL 后追加任何文本字符串，后可追加自定义可变参数，如果 match 为 true 时，才生成此 SQL 文本和参数.
+     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数，Map 中的 key 为命名参数名称，value 为参数值.
      *
-     * @param match 匹配条件
      * @param text 文本
      * @param paramMap Map 型参数
      * @return {@link Fenix} 实例
      */
-    public Fenix text(boolean match, String text, Map<String, Object> paramMap) {
-        return match ? this.text(text, paramMap) : this;
+    public Fenix text(String text, Map<String, Object> paramMap) {
+        this.source.getSqlInfo().getJoin().append(text);
+        this.params(paramMap);
+        return this;
     }
 
     /**
-     * 在 SQL 后追加任何文本字符串，后可追加自定义可变参数，如果 match 为 true 时，才生成此 SQL 文本和参数.
+     * 在 SQL 后追加任何文本字符串，并设置该 SQL 字符串的命名参数，如果 match 为 true 时，才生成此 SQL 文本和参数.
      *
      * @param match 匹配条件
      * @param text 文本
@@ -467,7 +455,19 @@ public final class Fenix {
     }
 
     /**
-     * 在 SQL 的参数集合后key, value 参数对象，其中 key 是 JPQL 中命名参数名称，value 是该参数对应的值.
+     * 在 SQL 后追加任何文本字符串，后可追加 Map 型参数，如果 match 为 true 时，才生成此 SQL 文本和参数.
+     *
+     * @param match 匹配条件
+     * @param text 文本
+     * @param paramMap Map 型参数
+     * @return {@link Fenix} 实例
+     */
+    public Fenix text(boolean match, String text, Map<String, Object> paramMap) {
+        return match ? this.text(text, paramMap) : this;
+    }
+
+    /**
+     * 在 SQL 的参数集合中添加命名参数，其中 key 是 JPQL 中的命名参数名称，value 是该参数对应的值.
      *
      * @param key 命名参数名称
      * @param value 命名参数的值
@@ -482,7 +482,7 @@ public final class Fenix {
     }
 
     /**
-     * 在 SQL 的参数集合后追加任何的一个 Map 集合，其中 Map 中的 key 是 JPQL 中命名参数名称，value 是该参数对应的值.
+     * 在 SQL 的参数集合后添加 Map 集合中的命名参数，Map 中的 key 是 JPQL 中的命名参数名称，value 是该参数对应的值.
      *
      * @param paramMap 存放在 Map 中的参数键值对
      * @return {@link Fenix} 实例
