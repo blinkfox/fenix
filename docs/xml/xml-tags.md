@@ -92,12 +92,80 @@ AND email = :user_email
 
 ```xml
 <andLike field="u.email" value="email" match="?email != empty"/>
-<!-- 如果 email 不等于空时，才生成下面的这条 SQL 片段和参数. -->
+<!-- 如果 email 不等于空时，才生成下面的这条 SQL 片段，参数为: {email: '%ZhangSan%'}. -->
 AND u.email LIKE :email
 
 <notLike field="u.email" pattern="%@gmail.com"/ >
 <!-- 匹配所有不是 gmail 的邮箱，将生成下面这这样的 SQL 片段. -->
 u.email NOT LIKE '%@gmail.com'
+```
+
+## startsWith
+
+`startsWith` 是 `like` 标签的特殊形式，表示按前缀来做模糊匹配。
+
+### 标签
+
+```xml
+<startsWith field="" value="" match=""/>
+<andStartsWith field="" value="" match=""/>
+<orStartsWith field="" value="" match=""/>
+
+<notStartsWith field="" value="" match=""/>
+<andNotStartsWith field="" value="" match=""/>
+<orNotStartsWith field="" value="" match=""/>
+```
+
+### 属性介绍
+
+- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按前缀来匹配的，即：`xxx%`。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+
+### 使用示例
+
+```xml
+<startsWith field="u.name" value="user.name" match="user.name != empty"/>
+<!-- 如果用户的 name 不为空时，才生成下面的这条 SQL 片段，参数为: {user_name: 'ZhangSan%'}. -->
+u.name LIKE :user_name
+
+<andNotStartsWith field="u.name" value="user.name"/>
+<!-- 将生成下面的这条 SQL 片段，参数为: {user_name: 'ZhangSan%'}. -->
+AND u.name NOT LIKE :user_name
+```
+
+## endsWith
+
+`endsWith` 也是 `like` 标签的特殊形式，同 `startsWith` 标签相反，表示按后缀来做模糊匹配。
+
+### 标签
+
+```xml
+<endsWith field="" value="" match=""/>
+<andEndsWith field="" value="" match=""/>
+<orEndsWith field="" value="" match=""/>
+
+<notEndsWith field="" value="" match=""/>
+<andNotEndsWith field="" value="" match=""/>
+<orNotEndsWith field="" value="" match=""/>
+```
+
+### 属性介绍
+
+- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按后缀来匹配的，即：`%xxx`。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+
+### 使用示例
+
+```xml
+<endsWith field="u.name" value="user.name" match="user.name != empty"/>
+<!-- 如果用户的 name 不为空时，才生成下面的这条 SQL 片段，参数为: {user_name: '%ZhangSan'}. -->
+u.name LIKE :user_name
+
+<andNotEndsWith field="u.name" value="user.name"/>
+<!-- 将生成下面的这条 SQL 片段，参数为: {user_name: '%ZhangSan'}. -->
+AND u.name NOT LIKE :user_name
 ```
 
 ## between
@@ -207,7 +275,7 @@ AND u.n_age IS NULL
 - **value**，表示 `text` 块中需要传递的 `Map` 型参数。**非必填**属性。`Map` 中的 `key` 必须是“死”字符串，用于和 `JPQL` 的命名参数相呼应，`value` 的值才可以被动态解析；
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
-### 使用生成示例
+### 使用示例
 
 ```xml
 <!-- value 值必须是 MVEL 表达式中的 Map 类型，其 key 应该与绑定参数 :userId 向同. -->
@@ -241,7 +309,7 @@ AND u.n_age IS NULL
 - **value**，表示需要传入到要引用的 `<fenix></fenix>` 节点中的上下文参数值，**非必填**属性。如果不填此属性，则会传递和使用最顶层的上下文参数。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
-### 使用生成示例
+### 使用示例
 
 ```xml
 <!-- 一些公共字段的 fenix 节点. -->
@@ -312,16 +380,16 @@ AND u.n_age IS NULL
         when2="" then2=""
         when3="" then3=""
         ...
-        else="" />
+        else=""/>
 ```
 
 ### 属性介绍
 
-- **when**，表示匹配条件，可以写“无数”个，对应于Java中的 `if/else if` 条件。**必填**属性，如果不填此属性，表示 `false`，将直接进入 `else` 的表达式逻辑块中。
-- **then**，表示需要执行的逻辑，和 `when` 向对应，可以写“无数”个，内容是字符串或者是 `MVEL` 的字符串模版，**必填**属性。如果如果不填此属性，即使满足了对应的 `when` 条件，也不会做 SQL 的拼接操作。
+- **when{x}**，表示匹配条件，可以写“无数”个，对应于Java中的 `if/else if` 条件。**必填**属性，如果不填此属性，表示 `false`，将直接进入 `else` 的表达式逻辑块中。
+- **then{x}**，表示需要执行的逻辑，和 `when` 向对应，可以写“无数”个，内容是字符串或者是 `MVEL` 的字符串模版，**必填**属性。如果如果不填此属性，即使满足了对应的 `when` 条件，也不会做 SQL 的拼接操作。
 - **else**，表示所有 `when` 条件都不满足时才执行的逻辑，内容是字符串或者 `MVEL` 的字符串模版，**非必填**属性。如果不填此属性，则表示什么都不做（这样就无任何意义了）。
 
-### 使用生成示例
+### 使用示例
 
 ```xml
 <!-- choose 标签的使用示例. -->
@@ -339,5 +407,48 @@ AND u.n_age IS NULL
             when4="age > 10" then4="'少年'"
             else="'幼年'" />
     WHERE u.c_id = '@{user.id}'
+</fenix>
+```
+
+## set
+
+`set` 标签主要用于动态生成 `update` 语句中的 SQL 片段。
+
+### 标签
+
+```xml
+<set field="" value="" match=""
+        field2="" value2=""
+        field3="" value3="" match3=""
+        field4="" value4="" match4=""/>
+```
+
+### 属性介绍
+
+- **field{x}**，表示对应数据库或实体的字段，可以写“无数”个。**必填**属性。
+- **value{x}**，表示对应字段的值，可以写“无数”个，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等，与相同序号的 `field` 值相对应。**非必填**属性。不填写此值则是 `null` 值。
+- **match{x}**，表示匹配条件，可以写“无数”个，与相同序号的 `field` 和 `value` 值相对应。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
+
+### 使用示例
+
+```xml
+<!-- 测试 set 相关标签的更新. -->
+<fenix id="testSet">
+    UPDATE User
+    <set field="name" value="user.name" match1="user.name != empty"
+            field2="email" value2="user.email"
+            field3="age" value3="user.age" match3="user.?age != empty"
+            field4="sex" value4="user.sex" match4="" />
+    WHERE id = '@{user.id}'
+</fenix>
+
+<!-- 测试使用原生 SQL 来做 更新. -->
+<fenix id="testNativeSet">
+    UPDATE t_user
+    <set field="c_name" value="user.name" match1="user.name != empty"
+            field2="c_email" value2="user.email"
+            field3="n_age" value3="user.age" match3="user.?age != empty"
+            field4="c_sex" value4="user.sex" match4="" />
+    WHERE c_id = '@{user.id}'
 </fenix>
 ```

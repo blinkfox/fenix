@@ -211,7 +211,7 @@
     <!-- 用于单元测试 set 标签生成的 JPQL 语句和参数. -->
     <fenix id="set">
         UPDATE User
-        <set field="name" value="user.name" match1="user.name != empty"
+        <set field="name" value="user.name" match="user.name != empty"
              field2="email" value2="email"
              field3="age" value3="user.age" match3="?abc != empty"
              field4="sex" value4="2" match4="" />
