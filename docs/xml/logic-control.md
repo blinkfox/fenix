@@ -69,7 +69,7 @@ SELECT u FROM User AS u WHERE u.id = @{user.id}
 
 该模板将计算出：`John Doe is 23 years old`。
 
-### @if{} @else{} 分支选择标签
+### @if{} @else{} 分支选择标签 :id=if-else
 
 `@if{}` 和 `@else{}` 标签在 `MVEL` 模板中提供了完全的 `if-then-else` 功能。 例如：
 
