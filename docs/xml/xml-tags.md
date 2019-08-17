@@ -115,7 +115,7 @@ u.email NOT LIKE '%@gmail.com'
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
 - **start**，表示区间匹配条件的开始参数值，对应 `MVEL` 表达式，条件必填。
 - **end**，表示区间匹配条件的结束参数值，对应 `MVEL` 表达式，条件必填。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
 !> **注意**：Fenix 中对 start 和 end 的空判断是检测是否是 `null`，而不是空字符串，`0`等情况。所以，如果 `start` 和 `end` 的某一个值为 `null` 时，区间查询将退化为大于等于（`>=`）或者小于等于（`<=`）的查询。
 
@@ -151,9 +151,9 @@ u.email NOT LIKE '%@gmail.com'
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
 - **value**，表示参数的集合，值可以是数组，也可以是 `Collection` 集合，还可以是单个的值。必填属性。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
+- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
-### 使用生成示例
+### 使用示例
 
 ```xml
 <andIn field="u.sex" value="userMap.sexs" match="?userMap.sexs != empty"/>
@@ -161,66 +161,64 @@ u.email NOT LIKE '%@gmail.com'
 AND u.sex in :userMap_sexs
 ```
 
-## is null
+## is null :id=is-null
 
 ### 标签
 
 ```xml
-<isNull match="" field="" />
-<andIsNull match="" field=""  />
-<orIsNull match="" field="" />
+<!-- IS NULL 相关的标签. -->
+<isNull field="" match=""/>
+<andIsNull field="" match=""/>
+<orIsNull field="" match=""/>
 
 <!-- IS NOT NULL 相关的标签. -->
-<isNotNull match="" field="" />
-<andIsNotNull match="" field="" />
-<orIsNotNull match="" field="" />
+<isNotNull field="" match=""/>
+<andIsNotNull field="" match=""/>
+<orIsNotNull field="" match=""/>
 ```
 
 ### 属性介绍
 
-- **match**，表示匹配条件。非必要（填）属性，如果不写（填）此属性，则视为必然生成此条件SQL片段；否则匹配结果为true时才生成，匹配结果为false时，不生成。
-- **field**，表示对应数据库的字段，可以是数据库的表达式、函数等。必要（填）属性。
+- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
+- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
-### 使用生成示例
+### 使用示例
 
-```markup
-<andIsNull match="?id != empty" field="s.n_age" />
-
-SQL片段的生成结果：AND s.n_age IS NULL
-
-解释：如果 id 不等于空时，才生成此条SQL片段和参数
+```xml
+<andIsNull field="u.n_age" match="?id != empty"/>
+<!-- 如果 id 不等于空时，才生成下面这条 SQL 片段和参数 -->
+AND u.n_age IS NULL
 ```
 
 ## text
 
-text标签主要用于在标签内部自定义需要的文本和需要传递的各种参数，为SQL书写提供灵活性。
+`text` 标签主要用于在标签内部自定义任何需要的文本和传递的参数，为 SQL 书写提供更多的灵活性。
 
 ### 标签
 
 ```xml
-<text match="" value="">
-    ...
+<text value="" match="">
+    <!-- 在 text 块中可以书写任何文本内容，value 值的类型必须是 Map 类型. -->
 </text>
 ```
 
 ### 属性介绍
 
-- **match**，同上。
-- **value**，表示参数的集合，值可以是数组，也可以是Collection集合，还可以是单个的值。必填
+- **value**，表示 `text` 块中需要传递的 `Map` 型参数。必填属性。`Map` 中的 `key` 必须是“死”字符串，用于和 `JPQL` 的命名参数相呼应，`value` 的值才可以被动态解析；
+- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
 ### 使用生成示例
 
 ```xml
-<text match="" value="{name1, name2, email}">
-    and name in (?, ?)
-    and email = ?
+<!-- value 值必须是 MVEL 表达式中的 Map 类型，其 key 应该与绑定参数 :userId 向同. -->
+<text value="['userId': user.id]">
+    u.id = :userId
 </text>
-```
 
-```markup
-SQL片段的生成结果：and name in (?, ?) and email = ?
-
-解释：如果match为true、不填写或无match标签时，才生成此条SQL片段和自定义传递的参数，参数就是通过`name1`、`name2`和`email`组合成的数组或集合，或者直接传递集合或数组（此处组合而成的数组，如果是集合就把'{'换成'['即可）。
+<!-- 当用户名和邮箱都不为空（要对 '&&' 符号做转义）时，才生成下面的 JPQL 语句. -->
+<text value="['userName': user.name, 'email': '%163.com']" match="user.name != empty &amp;&amp; email != empty">
+    AND u.name = :userName AND u.email LIKE :email
+</text>
 ```
 
 ## import
