@@ -124,7 +124,7 @@ public class RegionAuthHandler implements FenixHandler {
 }
 ```
 
-### 配置标签和处理器的映射关系
+## 配置标签和处理器的映射关系
 
 上面的 `RegionAuthHandler` 类中其实已经使用 `@Tagger` 注解配置了标签和处理器之间的映射关系了。`@Tagger` 是一个重复注解，可以在类中配置多个。
 
@@ -133,7 +133,7 @@ public class RegionAuthHandler implements FenixHandler {
 @Tagger(value = "andRegionAuth", prefix = " AND ")
 ```
 
-除了注解来表达映射关系，你还需要告诉 Fenix 扫描哪些包下 `Handler` 注解，这样才能将注解和处理器类之间的映射扫描加载到内存中。
+然后，你还需要告诉 Fenix 扫描哪些包下 `Handler` 注解，这样才能将注解和处理器类之间的映射扫描加载到内存中。这样以后的其他自定义标签处理器也都可以存放到这个包下。
 
 所以，你需要在 `application.yml` 文件中，配置扫描你自定义的标签处理器的包路径或者 Java 文件的路径。
 
@@ -152,7 +152,7 @@ fenix:
 - `prefix()` 元素是前缀，如：`AND`、`OR` 等，默认值是空字符串，你也可以设置为其他值。
 - `symbol()` 元素是操作符，我们的标签中没用这个值，你也可以把他当任何的参数来传，这样 `BuildSource` 参数中就能获取到这个值，你就可以任意拼接参数了。
 
-### 使用示例
+## 使用示例
 
 由于我是模拟的业务场景，就不再真实的去创建表、初始化数据，并执行 SQL 了，以下就列出使用场景的示例，供你参考即可：
 
