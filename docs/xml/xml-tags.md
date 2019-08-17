@@ -29,9 +29,9 @@ Fenix 中提供了大量常见场景下的 XML 标签供开发者使用，且这
 
 ### 属性介绍
 
-- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。必填属性。
-- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。必要填属性。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL（`JPQL`） 片段；否则解析出的匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL（`JPQL`） 片段；否则解析出的匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
 ### 使用示例
 
@@ -83,10 +83,10 @@ AND email = :user_email
 
 ### 属性介绍
 
-- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。必填属性。
-- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。条件必填属性。`pattern` 和 `value` 只能存在一个，`value` 生成的 SQL 片段默认是两边模糊，即：`%%`。
-- **pattern**，表示 `like` 匹配的模式，如：`abc%`、`_bc`等，只能是静态文本内容。条件必填属性。`pattern` 和 `value` 只能存在一个，`pattern` 用来指定自定义的匹配模式。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+- **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**条件必填**属性。`pattern` 和 `value` 只能存在一个，`value` 生成的 SQL 片段默认是两边模糊，即：`%%`。
+- **pattern**，表示 `like` 匹配的模式，如：`abc%`、`_bc`等，只能是静态文本内容。**条件必填**属性。`pattern` 和 `value` 只能存在一个，`pattern` 用来指定自定义的匹配模式。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
 ### 使用示例
 
@@ -112,10 +112,10 @@ u.email NOT LIKE '%@gmail.com'
 
 ### 属性介绍
 
-- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
-- **start**，表示区间匹配条件的开始参数值，对应 `MVEL` 表达式，条件必填。
-- **end**，表示区间匹配条件的结束参数值，对应 `MVEL` 表达式，条件必填。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
+- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
+- **start**，表示区间匹配条件的开始参数值，对应 `MVEL` 表达式，**条件必填**。
+- **end**，表示区间匹配条件的结束参数值，对应 `MVEL` 表达式，**条件必填**。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
 !> **注意**：Fenix 中对 start 和 end 的空判断是检测是否是 `null`，而不是空字符串，`0`等情况。所以，如果 `start` 和 `end` 的某一个值为 `null` 时，区间查询将退化为大于等于（`>=`）或者小于等于（`<=`）的查询。
 
@@ -149,9 +149,9 @@ u.email NOT LIKE '%@gmail.com'
 
 ### 属性介绍
 
-- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
-- **value**，表示参数的集合，值可以是数组，也可以是 `Collection` 集合，还可以是单个的值。必填属性。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
+- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
+- **value**，表示参数的集合，值可以是数组，也可以是 `Collection` 集合，还可以是单个的值。**必填**属性。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
 ### 使用示例
 
@@ -179,8 +179,8 @@ AND u.sex in :userMap_sexs
 
 ### 属性介绍
 
-- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。必填属性。
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
+- **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
 ### 使用示例
 
@@ -204,8 +204,8 @@ AND u.n_age IS NULL
 
 ### 属性介绍
 
-- **value**，表示 `text` 块中需要传递的 `Map` 型参数。必填属性。`Map` 中的 `key` 必须是“死”字符串，用于和 `JPQL` 的命名参数相呼应，`value` 的值才可以被动态解析；
-- **match**，表示匹配条件。非必填属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
+- **value**，表示 `text` 块中需要传递的 `Map` 型参数。**非必填**属性。`Map` 中的 `key` 必须是“死”字符串，用于和 `JPQL` 的命名参数相呼应，`value` 的值才可以被动态解析；
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
 ### 使用生成示例
 
@@ -223,72 +223,121 @@ AND u.n_age IS NULL
 
 ## import
 
-import标签主要用于在zealot标签中导入其它公共的zealot节点，便于程序代码逻辑的复用。
+`import` 标签主要用于在 Fenix 标签中导入其它的 `<fenix></fenix>` 节点，便于 SQL 逻辑的进一步复用。
 
 ### 标签
 
 ```xml
-<import zealotid="" />
-<import match="" zealotid="" />
-<import match="" namespace="" zealotid="" value="" />
+<import fenixId=""/>
+<import fenixId="" match=""/>
+<import fenixId="" value="" match=""/>
+<import namespace="" fenixId="" value="" match=""/>
 ```
 
 ### 属性介绍
 
-- **match**，表示匹配条件。非必要（填）属性，如果不写（填）此属性，则视为必然生成此条件SQL片段；否则匹配结果为true时才生成，匹配结果为false时，不生成。
-- **namespace**，表示需要引用导入的节点所在的xml文件的命名空间，非必填属性。如果如果不写（填）此属性，则视为仅在本xml文件中查找对应的zealotId的节点。
-- **zealotid**，表示要引用导入的zealot节点的ID，必填属性。
-- **value**，表示需要传入到要引用的zealot节点中的上下文参数值，非必填属性。如果不写（填）此属性，则传递最顶层的上下文参数。
+- **namespace**，表示需要引用导入的节点所在的 `XML` 文件的命名空间，**非必填**属性。如果如果不填此属性，则视为仅从本 `XML` 文件中查找和导入 `fenixId` 的节点。
+- **fenixId**，表示要引用导入的 `<fenix></fenix>` 节点的 `id`，**必填**属性。
+- **value**，表示需要传入到要引用的 `<fenix></fenix>` 节点中的上下文参数值，**非必填**属性。如果不填此属性，则会传递和使用最顶层的上下文参数。
+- **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
 ### 使用生成示例
 
 ```xml
-<zealot id="commonStuCondition">
-    <andMoreEqual match="?age > 0" field="s.n_age" value="age" />
-    <andBetween match="(?startBirthday != null) || (?endBirthday != null)" field="s.d_birthday" start="startBirthday" end="endBirthday" />
-</zealot>
+<!-- 一些公共字段的 fenix 节点. -->
+<fenix id="commonFields">
+    u.id, u.name, u.email
+</fenix>
 
-<zealot id="queryStudents">
-    ...
-    <import zealotid="commonStuCondition" />
-    ...
-</zealot>
+<!-- 一些公共查询条件的 fenix 节点. -->
+<fenix id="commonConditions">
+    <isNotNull field="u.id" value="user.id"/>
+    <andIn field="u.name" value="names" match="names != empty"/>
+    <orEndsWith field="u.email" value="email" match=""/>
+</fenix>
+
+<!-- 可以使用 import 标签导入本 XML 文件中的其他 fenix 节点. -->
+<fenix id="testImport">
+    SELECT
+    <import fenixId="commonFields"/>
+    FROM @{entityName} AS u
+    WHERE
+    <import fenixId="commonConditions" match="user.name != empty &amp;&amp; email != empty"/>
+</fenix>
 ```
 
-```markup
-SQL片段的生成结果：AND s.n_age >= ? AND s.d_birthday BETWEEN ? AND ?
+下面是用于从另一个 `UserRepository.xml` 文件中导入（`import`）`<fenix></fenix>` 节点 `id`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UserRepository. -->
+<fenixs namespace="com.blinkfox.fenix.repository.UserRepository">
+
+    <fenix id="UserHeader">
+        SELECT u FROM User AS u
+        WHERE
+    </fenix>
+
+    <!-- 根据多个 ID 来查询用户信息. -->
+    <fenix id="queryUserByIds">
+        <import fenixId="UserHeader"/>
+        <in field="u.id" value="userMap.ids"/>
+    </fenix>
+
+</fenixs>
+```
+
+```xml
+<!-- 用于测试 import 标签导入而设计的 XML 节点. -->
+<fenix id="commonSql">
+    <andIn field="u.name" value="userMap.names" match="userMap.names != empty"/>
+    <andEndsWith field="u.email" value="user.email" match="user.email != empty"/>
+</fenix>
+
+<!-- 从本 XML 文件和 UserRepository.xml 中 import 导入 sql 片段. -->
+<fenix id="testImport2">
+    <import namespace="com.blinkfox.fenix.repository.UserRepository" fenixId="queryUserByIds"/>
+    <import fenixId="commonSql"/>
+</fenix>
 ```
 
 ## choose
 
-choose标签主要用于解决"无数的"多分支条件选择逻辑，对应的即是Java中`if/else if/ ... /else if/else`这种逻辑。
+`choose` 标签主要用于解决"较多的"多分支条件选择逻辑，对应的即是Java中 `if/else if/ ... /else if/else` 这种逻辑。
 
 ### 标签
 
 ```xml
-<choose when="" then="" when2="" then2="" ... whenx="" thenx="" else="" />
+<choose when="" then=""
+        when2="" then2=""
+        when3="" then3=""
+        ...
+        else="" />
 ```
 
 ### 属性介绍
 
-- **when**，表示匹配条件，可以写无数个，对应于Java中的`if/else if`条件。必要（填）属性，如果不写（填）此属性，表示false，直接进入`else`的逻辑块中。
-- **then**，表示需要执行的逻辑，和`when`向对应，可以写无数个，内容是字符串或者zealot的字符串模版，必要（填）属性。如果如果不写（填）此属性，即使满足了对应的`when`条件，也不会做SQL的拼接操作。
-- **else**，表示所有when条件都不满足时才执行的逻辑，内容是字符串或者zealot的字符串模版，非必填属性。如果不写（填）此属性，则表示什么都不做（这样就无任何意义了）。
+- **when**，表示匹配条件，可以写“无数”个，对应于Java中的 `if/else if` 条件。**必填**属性，如果不填此属性，表示 `false`，将直接进入 `else` 的表达式逻辑块中。
+- **then**，表示需要执行的逻辑，和 `when` 向对应，可以写“无数”个，内容是字符串或者是 `MVEL` 的字符串模版，**必填**属性。如果如果不填此属性，即使满足了对应的 `when` 条件，也不会做 SQL 的拼接操作。
+- **else**，表示所有 `when` 条件都不满足时才执行的逻辑，内容是字符串或者 `MVEL` 的字符串模版，**非必填**属性。如果不填此属性，则表示什么都不做（这样就无任何意义了）。
 
 ### 使用生成示例
 
 ```xml
-<zealot id="queryByChoose">
-    UPDATE t_student SET s.c_sex =
-    <choose when="?sex == 0" then="'female'" when2="?sex == 1" then2="'male'" else="unknown" />
-    , s.c_status =
-    <choose when="?state" then="'yes'" else="'no'" />
-    , s.c_age =
-    <choose when="age > 60" then="'老年'" when2="age > 40" then2="'中年'" when3="age > 20" then3="'青年'" when4="age > 10" then4="'少年'" else="'幼年'" />
-    WHERE s.c_id = '@{stuId}'
-</zealot>
-```
-
-```markup
-SQL片段的生成结果：UPDATE t_student SET s.c_sex = 'male' , s.c_status = 'no' , s.c_age = '幼年' WHERE s.c_id = '123'
+<!-- choose 标签的使用示例. -->
+<fenix id="choose">
+    UPDATE t_user SET u.c_sex =
+    <choose when="user.sex == '0'" then="'female'"
+            when2="user.sex == '1'" then2="'male'"
+            else="unknown" />
+    , u.c_status =
+    <choose when="?state != empty" then="'yes'" else="'no'" />
+    , u.c_age =
+    <choose when="age > 60" then="'老年'"
+            when2="age > 35" then2="'中年'"
+            when3="age > 20" then3="'青年'"
+            when4="age > 10" then4="'少年'"
+            else="'幼年'" />
+    WHERE u.c_id = '@{user.id}'
+</fenix>
 ```
