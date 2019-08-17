@@ -1,4 +1,4 @@
-- 入门
+- 快速入门
   - [简介](README)
   - [快速集成](quick-install)
   - [快速开始](quick-start)
@@ -8,8 +8,7 @@
   - [SQL 语义化标签](xml/xml-tags)
   - [自定义标签](xml/custom-tag)
 - Java方式
-  - [使用介绍](java/use-intro)
-  - [总体示例](java/general-example)
+  - [总体示例](java/example)
   - [主要方法](java/main-method)
 - [更多功能](more-features)
 - [版本更新记录](CHANGELOG)
