@@ -6,6 +6,8 @@ import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.consts.SqlKeyConst;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.builder.JavaSqlInfoBuilder;
+import com.blinkfox.fenix.core.concrete.EndsWithHandler;
+import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.SqlInfoPrinter;
 import com.blinkfox.fenix.helper.StringHelper;
@@ -24,6 +26,16 @@ public final class Fenix {
     private static final String START = "_start";
 
     private static final String END = "_end";
+
+    /**
+     * LIKE 按前缀匹配时传递的 map 参数.
+     */
+    private static Map<String, Object> startMap = StartsWithHandler.getStartMap();
+
+    /**
+     * LIKE 按后缀匹配时传递的 map 参数.
+     */
+    private static Map<String, Object> endMap = EndsWithHandler.getEndsMap();
 
     /**
      * 封装了 {@link SqlInfo}、应用中提供的上下文参数、前缀等信息.
@@ -1081,6 +1093,7 @@ public final class Fenix {
 
     /**
      * 生成 LIKE 模糊查询的 SQL 片段.
+     *
      * @param field 数据库字段
      * @param value 值
      * @return {@link Fenix} 实例
@@ -1231,6 +1244,144 @@ public final class Fenix {
      */
     public Fenix orNotLike(String field, Object value, boolean match) {
         return this.doLike(SymbolConst.OR, field, value, match, false, null);
+    }
+
+    /**
+     * 生成 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix startsWith(String field, Object value) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, startMap);
+    }
+
+    /**
+     * 生成 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix startsWith(String field, Object value, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andStartsWith(String field, Object value) {
+        return this.doLike(SymbolConst.AND, field, value, true, true, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andStartsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.AND, field, value, match, true, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orStartsWith(String field, Object value) {
+        return this.doLike(SymbolConst.OR, field, value, true, true, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orStartsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.OR, field, value, match, true, startMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix notStartsWith(String field, Object value) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, startMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix notStartsWith(String field, Object value, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andNotStartsWith(String field, Object value) {
+        return this.doLike(SymbolConst.AND, field, value, true, false, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andNotStartsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.AND, field, value, match, false, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orNotStartsWith(String field, Object value) {
+        return this.doLike(SymbolConst.OR, field, value, true, false, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orNotStartsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.OR, field, value, match, false, startMap);
     }
 
     /**

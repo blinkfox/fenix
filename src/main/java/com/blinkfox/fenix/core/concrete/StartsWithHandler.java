@@ -8,6 +8,8 @@ import com.blinkfox.fenix.core.FenixHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * 用于生成 'LIKE' 前缀匹配查询的动态 JPQL 或者 SQL 片段的 {@link FenixHandler} 接口的实现类，
  * 该类是 {@link LikeHandler} 的子类.
@@ -33,6 +35,7 @@ public class StartsWithHandler extends LikeHandler {
     /**
      * 用于后续生成 LIKE 前缀匹配 SQL 片段的额外参数 Map.
      */
+    @Getter
     private static Map<String, Object> startMap = new HashMap<>(2);
 
     static {

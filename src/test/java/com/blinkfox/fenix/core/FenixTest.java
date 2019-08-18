@@ -309,6 +309,56 @@ public class FenixTest {
     }
 
     /**
+     * StartsWith 片段相关方法的测试.
+     */
+    @Test
+    public void testStartsWith() {
+        SqlInfo sqlInfo = Fenix.start()
+                .startsWith("u.id", context.get("id"), "4".equals(context.get("id")))
+                .startsWith("u.nickName", context.get("name"))
+                .startsWith("u.email", context.get("myEmail"), context.get("myEmail") != null)
+                .andStartsWith("u.age", context.get("myAge"))
+                .andStartsWith("u.trueAge", context.get("myAge"))
+                .andStartsWith("u.trueAge", context.get("myAge"), context.get("myAge") != null)
+                .andStartsWith("u.email", context.get("myAge"), context.get("myEmail") == null)
+                .startsWith("u.nickName", context.get("name"))
+                .orStartsWith("u.email", context.get("myEmail"))
+                .orStartsWith("u.birthday", context.get("myBirthday"))
+                .orStartsWith("u.birthday", context.get("myBirthday"), context.get("myBirthday") != null)
+                .orStartsWith("u.nickName", context.get("myBirthday"), context.get("name") == null)
+                .startsWith("u.id", context.get("id"))
+                .end();
+
+        assertEquals("u.nickName LIKE :u_nickName u.email LIKE :u_email AND u.age LIKE :u_age AND u.trueAge "
+                + "LIKE :u_trueAge AND u.trueAge LIKE :u_trueAge u.nickName LIKE :u_nickName OR u.email LIKE :u_email "
+                + "OR u.birthday LIKE :u_birthday OR u.birthday LIKE :u_birthday u.id LIKE :u_id", sqlInfo.getSql());
+        assertEquals(6, sqlInfo.getParams().size());
+    }
+
+    /**
+     * NotStartsWith 片段相关方法的测试.
+     */
+    @Test
+    public void testNotStartsWith() {
+        SqlInfo sqlInfo = Fenix.start()
+                .notStartsWith("u.id", context.get("id"), "4".equals(context.get("id")))
+                .notStartsWith("u.nickName", context.get("name"))
+                .notStartsWith("u.email", context.get("myEmail"), context.get("myEmail") != null)
+                .andNotStartsWith("u.age", context.get("myAge"))
+                .andNotStartsWith("u.trueAge", context.get("myAge"), context.get("myAge") != null)
+                .andNotStartsWith("u.email", context.get("myAge"), context.get("myEmail") == null)
+                .orNotStartsWith("u.email", context.get("myEmail"))
+                .orNotStartsWith("u.birthday", context.get("myBirthday"), context.get("myBirthday") != null)
+                .orNotStartsWith("u.nickName", context.get("myBirthday"), context.get("name") == null)
+                .end();
+
+        assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
+                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                sqlInfo.getSql());
+        assertEquals(5, sqlInfo.getParams().size());
+    }
+
+    /**
      * 根据指定模式生成 LIKE 片段相关方法的测试.
      */
     @Test
