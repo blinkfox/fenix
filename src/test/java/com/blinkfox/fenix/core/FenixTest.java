@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.helper.ParamWrapper;
+import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -509,8 +510,8 @@ public class FenixTest {
                 .from("User AS u")
                 .leftJoin("UserDetail AS d").on("u.id = d.userId")
                 .where("u.id != ''")
-                .andLike("u.name", userName)
-                .doAny(true, (join, params) -> {
+                .andLike("u.name", userName, StringHelper.isNotBlank(userName))
+                .doAny((join, params) -> {
                     join.append(" AND 1 = 1");
                     params.put("abc", 5);
                     log.info("执行了自定义操作，你可以任意拼接 SQL 字符串和命名参数.");
