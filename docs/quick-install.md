@@ -75,7 +75,7 @@ fenix:
   handler-locations: 
 ```
 
-## 非 SpringBoot 项目集成
+## 非 SpringBoot 项目集成 :id=not-spring-boot-project
 
 如果你**不是 Spring Boot 项目**，而是通过其他方式来使用 Spring Data JPA。那么，你可以通过以下的方式来集成原生的 `fenix` 库，除了激活 `FenixJpaRepositoryFactoryBean` 之外，**最重要的是需要在你应用启动的过程中，手动加载 Fenix 配置信息到内存中**。
 

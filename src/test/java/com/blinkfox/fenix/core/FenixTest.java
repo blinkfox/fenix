@@ -353,7 +353,7 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
-                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
     }
@@ -403,7 +403,7 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
-                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
     }
