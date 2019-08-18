@@ -9,6 +9,6 @@
   - [自定义标签](xml/custom-tag)
 - Java方式
   - [总体示例](java/example)
-  - [主要方法](java/main-method)
+  - [API 方法](java/main-method)
 - [更多功能](more-features)
 - [版本更新记录](CHANGELOG)

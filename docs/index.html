@@ -8,6 +8,9 @@
   <meta name="description" content="Fenix, fenix-spring-boot-starter, JPA, Spring Data JPA, Mybatis, Zealot">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.bootcss.com/docsify/4.9.4/themes/vue.css">
+  <style>
+  
+  </style>
 </head>
 
 <body>
@@ -17,18 +20,28 @@
     window.$docsify = {
       name: 'Fenix',
       repo: 'https://github.com/blinkfox/fenix',
+      // logo: 'assets/images/logo.png',
       coverpage: true,
 		  loadSidebar: true,
 		  subMaxLevel: 2,
       auto2top: true,
-      //homepage: 'introduction.md',
 		  mergeNavbar: true,
-		  // 完整配置参数
 		  search: {
 			  maxAge: 86400000, // 过期时间，单位毫秒，默认一天
 			  placeholder: '搜索...',
 		  	noData: '找不到结果!'
-		  }
+		  },
+      plugins: [
+        function (hook, vm) {
+          hook.beforeEach(function (html) {
+              var url = 'https://github.com/blinkfox/fenix/tree/develop/docs/' + vm.route.file
+              var editHtml = '[📝 编辑文档](' + url + ')\n'
+
+              return editHtml
+                  + html;
+          })
+        }
+      ]
     }
   </script>
   <script src="//cdn.bootcss.com/docsify/4.9.4/docsify.min.js"></script>
@@ -38,5 +51,6 @@
   <script src="//cdn.bootcss.com/prism/1.16.0/components/prism-yaml.min.js"></script>
   <script src="//cdn.bootcss.com/docsify/4.9.4/plugins/search.min.js"></script>
   <script src="//cdn.bootcss.com/docsify/4.9.4/plugins/emoji.min.js"></script>
+
 </body>
 </html>

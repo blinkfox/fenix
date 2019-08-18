@@ -9,4 +9,4 @@
 - 支持 XML 文件和 Java 链式 API 两种方式书写SQL
 
 [GitHub](https://github.com/blinkfox/fenix/)
-[开始使用](README)
+[开始阅读](README)
