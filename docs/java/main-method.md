@@ -180,7 +180,12 @@ orEqual(String field, Object value, boolean match)
 - `lessThan`：小于
 - `greaterThanEqual`：大于等于
 - `lessThanEqual`：小于等于
-- `like`：模糊查询
+- `like`：模糊匹配
+- `notLike`：不按模糊匹配
+- `startsWith`：按前缀匹配
+- `notStartsWith`：不按前缀匹配
+- `endsWith`：按后缀匹配
+- `notEndsWith`：不按后缀匹配
 - `likePattern`：根据自定义模式来匹配
 
 !> 以上各系列的方法和参数也同 `equal`，这里就不再赘述了。

@@ -1385,6 +1385,144 @@ public final class Fenix {
     }
 
     /**
+     * 生成 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix endsWith(String field, Object value) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, endMap);
+    }
+
+    /**
+     * 生成 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix endsWith(String field, Object value, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andEndsWith(String field, Object value) {
+        return this.doLike(SymbolConst.AND, field, value, true, true, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andEndsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.AND, field, value, match, true, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orEndsWith(String field, Object value) {
+        return this.doLike(SymbolConst.OR, field, value, true, true, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orEndsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.OR, field, value, match, true, endMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix notEndsWith(String field, Object value) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, endMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix notEndsWith(String field, Object value, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andNotEndsWith(String field, Object value) {
+        return this.doLike(SymbolConst.AND, field, value, true, false, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix andNotEndsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.AND, field, value, match, false, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orNotEndsWith(String field, Object value) {
+        return this.doLike(SymbolConst.OR, field, value, true, false, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     */
+    public Fenix orNotEndsWith(String field, Object value, boolean match) {
+        return this.doLike(SymbolConst.OR, field, value, match, false, endMap);
+    }
+
+    /**
      * 根据指定的模式字符串生成 LIKE 模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Java%"} 两个参数，生成的SQL片段为：" b.title LIKE 'Java%' "</p>
