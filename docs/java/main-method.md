@@ -467,3 +467,4 @@ public void testSql() {
             + "AND u.sex IN :u_sex AND u.state IS NOT NULL ORDER BY d.birthday DESC", sqlInfo.getSql());
     assertEquals(7, sqlInfo.getParams().size());
 }
+```
