@@ -75,7 +75,7 @@ public final class Fenix {
     }
 
     /**
-     * 通过传入 Fenix XML 文件对应的命名空间、Fenix 节点的 ID 以及 Map 型参数对象，
+     * 通过传入 Fenix XML 文件对应的命名空间、Fenix 节点的 ID 以及上下文参数对象，
      * 来生成和获取 {@link SqlInfo} 信息(有参的SQL).
      *
      * @param namespace XML 命名空间
