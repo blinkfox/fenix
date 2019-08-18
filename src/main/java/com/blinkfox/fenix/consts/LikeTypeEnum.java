@@ -15,6 +15,6 @@ public enum LikeTypeEnum {
     /**
      * 按后缀匹配的类型.
      */
-    ENDS_WITH;
+    ENDS_WITH
 
 }

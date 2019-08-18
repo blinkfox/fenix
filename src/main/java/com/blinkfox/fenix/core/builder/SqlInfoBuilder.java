@@ -13,12 +13,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * 构建拼接 JPQL 或者 SQL 语句片段和参数的构建器类.
  *
  * @author blinkfox on 2019-08-06.
  * @see XmlSqlInfoBuilder
+ * @see JavaSqlInfoBuilder
  */
+@Getter
 public class SqlInfoBuilder {
 
     /**
@@ -39,7 +43,7 @@ public class SqlInfoBuilder {
     /**
      * SQL 标记操作符.
      */
-    protected String symbol;
+    private String symbol;
 
     /**
      * 其它数据.
@@ -47,14 +51,14 @@ public class SqlInfoBuilder {
      * <p>注：通常情况下这个值是 NULL，如果某些情况下，你需要传递额外的参数值，可以通过这个属性来传递，
      *      是为了方便传递或处理数据而设计的.</p>
      */
-    protected Map<String, Object> others;
+    private Map<String, Object> others;
 
     /**
      * 私有构造方法.
      *
      * @param source 构建资源参数
      */
-    public SqlInfoBuilder(BuildSource source) {
+    SqlInfoBuilder(BuildSource source) {
         this.sqlInfo = source.getSqlInfo();
         this.context = source.getContext();
         this.prefix = source.getPrefix();

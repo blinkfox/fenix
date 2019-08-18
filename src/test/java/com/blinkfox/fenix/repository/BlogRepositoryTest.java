@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import lombok.Setter;
 
@@ -164,6 +165,14 @@ public class BlogRepositoryTest {
                 PageRequest.of(0, 3, Sort.by(Sort.Order.asc("dt_create_time"), Sort.Order.desc("c_id"))));
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.getContent().get(0).getDescription());
+    }
+
+    /**
+     * 单测执行完毕之后，清空资源.
+     */
+    @PreDestroy
+    public void destroy() {
+        FenixConfigManager.getInstance().clear();
     }
 
 }

@@ -2,6 +2,7 @@ package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.consts.XpathConst;
+import com.blinkfox.fenix.exception.ConfigNotFoundException;
 import com.blinkfox.fenix.exception.FieldEmptyException;
 import com.blinkfox.fenix.exception.XmlParseException;
 
@@ -70,13 +71,14 @@ public final class XmlNodeHelper {
             return null;
         }
 
-        // 获取 XML 文件的根节点，判断其根节点是否为 '<fenixs></fenixs>'，如果是则获取其属性 namespace 的值.
+        // 获取 XML 文件的根节点，如果根节点是 '<fenixs></fenixs>'，说明是 Fenix XML 文件
+        // 然后获取其属性 namespace 的值，为空就抛出异常.
         Node root = doc.getRootElement();
         if (root != null && ROOT_NAME.equals(root.getName())) {
             String namespace = getNodeText(root.selectSingleNode(XpathConst.ATTR_NAMESPACE));
             if (StringHelper.isBlank(namespace)) {
-                log.warn("【Fenix 警示】Fenix XML 文件:【" + xmlPath + "】的根节点 namespace 命名空间属性未配置，请配置，否则将被忽略!");
-                return null;
+                throw new ConfigNotFoundException("【Fenix 警示】Fenix XML 文件:【" + xmlPath + "】的根节点 namespace "
+                        + "命名空间属性未配置，请配置，否则将被忽略!");
             }
             return namespace;
         }

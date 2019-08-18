@@ -17,7 +17,6 @@ import javax.persistence.Tuple;
 import lombok.Setter;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
@@ -233,11 +232,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         if (this.jpaParams.hasPageableParameter()) {
             pageable = (Pageable) (values[this.jpaParams.getPageableIndex()]);
             if (pageable != null) {
-                Sort sort = pageable.getSort();
-                if (sort != null) {
-                    this.querySql = QueryUtils.applySorting(this.querySql, sort,
-                            QueryHelper.detectAlias(this.querySql));
-                }
+                this.querySql = QueryUtils.applySorting(this.querySql, pageable.getSort(),
+                        QueryHelper.detectAlias(this.querySql));
             }
         }
 
@@ -297,8 +293,9 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             if (StringHelper.isNotBlank(xmlCountQuery)) {
                 this.getXmlSqlInfo(xmlCountQuery);
                 return this.sqlInfo.getSql();
+            } else {
+                return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
             }
-            return this.sqlInfo.getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
         }
 
         // 接下来则是查询 countQuery，得到新的 sqlInfo.

@@ -191,9 +191,7 @@ public class FenixVfs extends AbstractVfs {
             if (!entry.isDirectory()) {
                 // 如果路径最前面没有 "/"，就添加 "/".
                 String name = entry.getName();
-                if (!name.startsWith(SLASH)) {
-                    name = SLASH + name;
-                }
+                name = name.startsWith(SLASH) ? name : SLASH + name;
 
                 // 判断名称是否匹配，如果匹配就去除掉前面的 "/"，并添加到 resources 集合中.
                 if (name.startsWith(path)) {

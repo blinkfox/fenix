@@ -4,6 +4,8 @@
 
 下面我将以一个新的 `Spring Boot` 项目来演示 Fenix 的使用。
 
+!> 本文档中的一些示例可以在 Fenix 示例项目源码 [fenix-example](https://github.com/blinkfox/fenix-example) 中查看，其他更多的使用示例可以在 Fenix 源码的[单元测试](https://github.com/blinkfox/fenix/tree/develop/src/test/java/com/blinkfox/fenix/repository)中找到。
+
 ## 项目和数据准备
 
 !> **注**：下面“项目和数据准备”的内容，除了集成 Fenix 配置之外，基本上与 Fenix 无关，你大概体验和预览下内容就行。
