@@ -15,9 +15,9 @@ import org.dom4j.Node;
  * <p>常规 SQL 处理包括：等值、大于、小于、大于等于、小于等于、...</p>
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<equal match="" field="" value="" />'</li>
- *     <li>'<andEqual match="" field="" value="" />'</li>
- *     <li>'<orEqual match="" field="" value="" />'</li>
+ *     <li>'&lt;equal match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;andEqual match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;orEqual match="" field="" value="" /&gt;'</li>
  * </ul>
  * <p>注：获取到 match 字段的值，如果没有或者为 true，就通过 field, value 来生成此 SQL 片段.</p>
  *

@@ -16,9 +16,9 @@ import lombok.Getter;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<endsWith match="" field="" value="" />'</li>
- *     <li>'<andEndsWith match="" field="" value="" />'</li>
- *     <li>'<orEndsWith match="" field="" value="" />'</li>
+ *     <li>'&lt;endsWith match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;andEndsWith match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;orEndsWith match="" field="" value="" /&gt;'</li>
  * </ul>
  * <p>注：</p>
  * <ul>

@@ -14,9 +14,9 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<isNull match="" field="" />'</li>
- *     <li>'<andIsNull match="" field="" />'</li>
- *     <li>'<orIsNull match="" field="" />'</li>
+ *     <li>'&lt;isNull match="" field="" /&gt;'</li>
+ *     <li>'&lt;andIsNull match="" field="" /&gt;'</li>
+ *     <li>'&lt;orIsNull match="" field="" /&gt;'</li>
  * </ul>
  * <p>注：</p>
  * <ul>

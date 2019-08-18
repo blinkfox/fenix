@@ -16,7 +16,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<import match="" namespace="" fenixId="" value="" />'</li>
+ *     <li>'&lt;import match="" namespace="" fenixId="" value="" /&gt;'</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -34,7 +34,7 @@ import org.dom4j.Node;
 public class ImportHandler implements FenixHandler {
 
     /**
-     * 根据 {@link BuildSource} 参数构建 '<import />' 标签中的 JPQL 或者 SQL 语句片段的信息.
+     * 根据 {@link BuildSource} 参数构建 '&lt;import /&gt;' 标签中的 JPQL 或者 SQL 语句片段的信息.
      *
      * <p>如果 match 属性为空或者 match 属性中的表达式的值是 true，则生成此 JPQL 或者 SQL 的语句和参数.</p>
      *

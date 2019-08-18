@@ -17,7 +17,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<choose when="" then="" when2="" then2="" else="" />'</li>
+ *     <li>'&lt;choose when="" then="" when2="" then2="" else="" /&gt;'</li>
  * </ul>
  * <p>注：</p>
  * <ul>

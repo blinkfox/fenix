@@ -53,7 +53,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     }
 
     /**
-     * 追加构建 'BETWEEN ? AND ?'、'>='、'<=' 的区间查询的 {@link SqlInfo} 信息.
+     * 追加构建 'BETWEEN ? AND ?'、'大于等于'、'小于等于' 的区间查询的 {@link SqlInfo} 信息.
      *
      * @param fieldText 字段文本值
      * @param startText 开始文本

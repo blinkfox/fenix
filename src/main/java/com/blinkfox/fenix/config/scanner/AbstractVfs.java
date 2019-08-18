@@ -71,6 +71,8 @@ public abstract class AbstractVfs {
 
     /**
      * 获取 {@link AbstractVfs} 单例实现. 如果在当前环境找不到 {@link AbstractVfs} 的实现，就返回 null.
+     *
+     * @return {@link AbstractVfs} 单例
      */
     public static AbstractVfs getInstance() {
         return VfsHolder.INSTANCE;
@@ -89,6 +91,9 @@ public abstract class AbstractVfs {
 
     /**
      * 按名称获取 class，如果找不到该类，则返回 null.
+     *
+     * @param className 类名
+     * @return Class
      */
     protected static Class<?> getClass(String className) {
         try {
@@ -107,6 +112,7 @@ public abstract class AbstractVfs {
      * @param clazz 方法所属的 class.
      * @param methodName 方法名称
      * @param parameterTypes 方法接受的参数类型.
+     * @return Method 实例
      */
     protected static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         if (clazz == null) {
@@ -130,7 +136,8 @@ public abstract class AbstractVfs {
      * @param method 调用的方法.
      * @param object 要调用该方法的实例或类（用于静态方法）.
      * @param parameters 传递给方法的参数.
-     * @return Whatever 返回值.
+     * @param <T> 泛型类型
+     * @return 泛型类型的返回值.
      * @throws IOException IO 异常
      */
     @SuppressWarnings("unchecked")

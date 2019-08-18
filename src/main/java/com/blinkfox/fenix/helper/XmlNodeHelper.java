@@ -56,7 +56,7 @@ public final class XmlNodeHelper {
 
     /**
      * 根据 XML 文件的路径判断该 XML 文件是否是 Fenix XML 文件，如果是则返回 namespace.
-     * <p>注：这里简单判断是否有 '<fenixs></fenixs>' 根节点即可.</p>
+     * <p>注：这里简单判断是否有 '&lt;fenixs&gt;&lt;/fenixs&gt;' 根节点即可.</p>
      *
      * @param xmlPath XML 路径
      * @return 该 XML 文件的 Fenix 命名空间 namespace

@@ -44,6 +44,8 @@ public @interface QueryFenix {
 
     /**
      * 是否原生 SQL 查询，默认为 false.
+     *
+     * @return 布尔值
      */
     boolean nativeQuery() default false;
 

@@ -14,9 +14,9 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'<in match="" field="" value="" />'</li>
- *     <li>'<andIn match="" field="" value="" />'</li>
- *     <li>'<orIn match="" field="" value="" />'</li>
+ *     <li>'&lt;in match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;andIn match="" field="" value="" /&gt;'</li>
+ *     <li>'&lt;orIn match="" field="" value="" /&gt;'</li>
  * </ul>
  * <p>注：</p>
  * <ul>
