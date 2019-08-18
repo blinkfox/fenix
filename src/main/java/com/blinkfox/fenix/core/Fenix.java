@@ -533,7 +533,7 @@ public final class Fenix {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(symbol);
             new JavaSqlInfoBuilder(this.source).buildNormalSql(field, field, value);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -548,11 +548,14 @@ public final class Fenix {
      * @param positive true则表示是like，否则是not like
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doLike(String prefix, String field, Object value, boolean match, boolean positive) {
+    private Fenix doLike(String prefix, String field, Object value, boolean match,
+            boolean positive, Map<String, Object> likeTypeMap) {
         if (match) {
-            this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE);
+            this.source.setPrefix(prefix)
+                    .setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE)
+                    .setOthers(likeTypeMap);
             new JavaSqlInfoBuilder(this.source).buildLikeSql(field, field, value);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -571,7 +574,7 @@ public final class Fenix {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE);
             new JavaSqlInfoBuilder(this.source).buildLikePatternSql(field, pattern);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -591,7 +594,7 @@ public final class Fenix {
             this.source.setPrefix(prefix);
             new JavaSqlInfoBuilder(this.source)
                     .buildBetweenSql(field, field + START, startValue, field + END, endValue);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -610,7 +613,7 @@ public final class Fenix {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.IN : SymbolConst.NOT_IN);
             new JavaSqlInfoBuilder(this.source).buildInSql(field, field, value);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -658,7 +661,7 @@ public final class Fenix {
             this.source = this.source.setPrefix(prefix)
                     .setSymbol(positive ? SymbolConst.IS_NULL : SymbolConst.IS_NOT_NULL);
             new JavaSqlInfoBuilder(this.source).buildIsNullSql(field);
-            this.source.resetPrefix();
+            this.source.reset();
         }
         return this;
     }
@@ -1083,7 +1086,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix like(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, true);
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, null);
     }
 
     /**
@@ -1095,7 +1098,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix like(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, true);
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, null);
     }
 
     /**
@@ -1106,7 +1109,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLike(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, true);
+        return this.doLike(SymbolConst.AND, field, value, true, true, null);
     }
 
     /**
@@ -1118,7 +1121,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, true);
+        return this.doLike(SymbolConst.AND, field, value, match, true, null);
     }
 
     /**
@@ -1129,7 +1132,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLike(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, true);
+        return this.doLike(SymbolConst.OR, field, value, true, true, null);
     }
 
     /**
@@ -1141,7 +1144,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, true);
+        return this.doLike(SymbolConst.OR, field, value, match, true, null);
     }
 
     /**
@@ -1155,7 +1158,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notLike(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, false);
+        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, null);
     }
 
     /**
@@ -1170,7 +1173,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notLike(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, false);
+        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, null);
     }
 
     /**
@@ -1184,7 +1187,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotLike(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, false);
+        return this.doLike(SymbolConst.AND, field, value, true, false, null);
     }
 
     /**
@@ -1199,7 +1202,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, false);
+        return this.doLike(SymbolConst.AND, field, value, match, false, null);
     }
 
     /**
@@ -1213,7 +1216,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotLike(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, false);
+        return this.doLike(SymbolConst.OR, field, value, true, false, null);
     }
 
     /**
@@ -1227,7 +1230,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, false);
+        return this.doLike(SymbolConst.OR, field, value, match, false, null);
     }
 
     /**

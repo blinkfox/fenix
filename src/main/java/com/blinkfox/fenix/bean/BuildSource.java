@@ -106,4 +106,13 @@ public final class BuildSource {
         this.symbol = Const.SPACE;
     }
 
+    /**
+     * 重置前缀、 SQL 操作符、和 others 参数的值.
+     */
+    public void reset() {
+        this.prefix = Const.SPACE;
+        this.symbol = Const.SPACE;
+        this.others = null;
+    }
+
 }
