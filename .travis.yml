@@ -2,7 +2,6 @@ language: java
 sudo: false # faster builds
 
 jdk:
-  - oraclejdk8
   - openjdk8
 
 script: "mvn cobertura:cobertura"
