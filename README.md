@@ -1,5 +1,7 @@
 # Fenix
 
+[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![HitCount](http://hits.dwyl.io/blinkfox/fenix.svg)](http://hits.dwyl.io/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![Maven Central](https://img.shields.io/maven-central/v/com.blinkfox/fenix.svg)](https://search.maven.org/artifact/com.blinkfox/fenix/1.0.0/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
+
 > [Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 `XML` 和 Java 链式 `API` 两种方式来书写动态 SQL。
 
 - [详细使用文档](https://blinkfox.github.io/fenix)
