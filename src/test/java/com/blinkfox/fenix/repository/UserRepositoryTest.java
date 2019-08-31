@@ -56,8 +56,9 @@ public class UserRepositoryTest {
     @PostConstruct
     public void init() throws IOException {
         if (!isLoad) {
-            FenixConfigManager.getInstance()
-                    .initLoad(new FenixConfig(), "my/xml, fenix", "com.blinkfox.fenix.handler");
+            FenixConfigManager.getInstance().initLoad(new FenixConfig()
+                    .setXmlLocations("my/xml, fenix").setHandlerLocations("com.blinkfox.fenix.handler"));
+
             userRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
             List<User> users = userRepository.findAll();

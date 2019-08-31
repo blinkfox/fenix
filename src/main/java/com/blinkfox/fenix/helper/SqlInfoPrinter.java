@@ -1,8 +1,8 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.config.entity.XmlContext;
 
+import com.blinkfox.fenix.consts.Const;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -63,8 +63,7 @@ public final class SqlInfoPrinter {
      */
     private SqlInfoPrinter buildXmlInfo(String namespace, String fenixId) {
         builder.append("-- Fenix xml: ")
-                .append(XmlContext.getInstance().getXmlPathMap().get(namespace))
-                .append(" -> ").append(fenixId).append(LINE_BREAK);
+                .append(namespace).append(Const.DOT).append(fenixId).append(LINE_BREAK);
         return this;
     }
 

@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.helper;
 
-import com.blinkfox.fenix.config.entity.XmlContext;
+import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.ConfigNotFoundException;
 import com.blinkfox.fenix.exception.FieldEmptyException;
@@ -50,8 +51,7 @@ public final class XmlNodeHelper {
      * @return dom4j的Node节点
      */
     public static Node getNodeBySpaceAndId(String namespace, String fenixId) {
-        Document doc = XmlNodeHelper.getDocument(XmlContext.getInstance().getXmlPathMap().get(namespace));
-        return doc == null ? null : XmlNodeHelper.getFenixNodeById(doc, fenixId);
+        return FenixConfig.getFenixs().get(StringHelper.concat(namespace, Const.DOT, fenixId));
     }
 
     /**

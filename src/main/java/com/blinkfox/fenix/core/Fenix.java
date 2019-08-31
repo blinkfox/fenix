@@ -2,7 +2,8 @@ package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.config.entity.NormalConfig;
+import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.consts.SqlKeyConst;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.builder.JavaSqlInfoBuilder;
@@ -68,7 +69,10 @@ public final class Fenix {
     public SqlInfo end() {
         SqlInfo sqlInfo = this.source.getSqlInfo();
         sqlInfo.setSql(StringHelper.replaceBlank(sqlInfo.getJoin().toString()));
-        if (NormalConfig.getInstance().isPrintSqlInfo()) {
+
+        // 判断是否打印 SqlInfo 信息.
+        FenixConfig fenixConfig = FenixConfigManager.getInstance().getFenixConfig();
+        if (fenixConfig != null && fenixConfig.isPrintSqlInfo()) {
             new SqlInfoPrinter().print(sqlInfo);
         }
         return sqlInfo;

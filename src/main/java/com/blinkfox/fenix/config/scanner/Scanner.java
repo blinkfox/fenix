@@ -5,7 +5,6 @@ package com.blinkfox.fenix.config.scanner;
  *
  * @author blinkfox on 2019-08-04.
  * @see TaggerScanner
- * @see XmlScanner
  */
 public interface Scanner {
 

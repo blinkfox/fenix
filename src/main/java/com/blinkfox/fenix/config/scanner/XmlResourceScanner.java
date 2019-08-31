@@ -1,0 +1,110 @@
+package com.blinkfox.fenix.config.scanner;
+
+import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.consts.XpathConst;
+import com.blinkfox.fenix.exception.ConfigNotFoundException;
+import com.blinkfox.fenix.exception.FenixException;
+import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.helper.XmlNodeHelper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.dom4j.Document;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
+
+/**
+ * 用于扫描指定路径下 Fenix XML 文件资源的扫描器类.
+ *
+ * @author blinkfox on 2019-08-31.
+ */
+@Slf4j
+public class XmlResourceScanner {
+
+    /**
+     * 扫描指定路径下的相关文件(可以是目录，也可以是具体的文件)，并配置存储起来.
+     *
+     * @param xmlLocations 文件位置路径，可以是多个，用逗号隔开
+     */
+    public List<XmlResource> scan(String xmlLocations) {
+        List<XmlResource> xmlResources = new ArrayList<>();
+        if (StringHelper.isBlank(xmlLocations)) {
+            return xmlResources;
+        }
+
+        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 xmlPaths 的 Set 集合中，
+        // 否则就代表是xml资源目录，并解析目录下所有的xml文件，将这些xml文件存放到xmlPaths的Set集合中，
+        String[] xmlLocationArr = xmlLocations.split(Const.COMMA);
+        for (String xmlLocation: xmlLocationArr) {
+            if (StringHelper.isNotBlank(xmlLocation)) {
+                String location = xmlLocation.trim();
+                this.buildXmlResourcesByLocations(xmlResources,
+                        StringHelper.isXmlFile(location) ? location : location.replace('.', '/') + "/*.xml");
+            }
+        }
+        return xmlResources;
+    }
+
+    /**
+     * 根据指定的一个包扫描其下所有的 XML 文件.
+     *
+     * @param location XML 位置，可以是一个包，也可以是一个具体的文件路径
+     */
+    private void buildXmlResourcesByLocations(List<XmlResource> xmlResources, String location) {
+        try {
+            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(
+                    new PathMatchingResourcePatternResolver()).getResources(location);
+            for (Resource resource: resources) {
+                try (InputStream in = resource.getInputStream()) {
+                    XmlResource xmlResource = this.getFenixXmlResource(in, resource.getURL().getPath());
+                    if (xmlResource != null) {
+                        xmlResources.add(xmlResource);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new FenixException("【Fenix 异常】初始化读取【" + location + "】下的 Fenix XML 文件出错，请检查！", e);
+        }
+    }
+
+    /**
+     * 根据输入流获取 Fenix 的 XML 文件资源信息，并封装到 XmlResource 对象中.
+     *
+     * @param in 资源文件输入流
+     * @param path 文件路径
+     * @return Fenix XML 资源
+     */
+    private XmlResource getFenixXmlResource(InputStream in, String path) {
+        Document doc;
+        try {
+            doc = new SAXReader().read(in);
+        } catch (Exception expected) {
+            // 由于只是判断该文件是否能被正确解析，所有这里就不抛出异常堆栈信息了.
+            log.info("【Fenix 提示】解析路径为:【" + path + "】的 Fenix XML 文件异常，将忽略此文件!");
+            return null;
+        }
+
+        // 获取 XML 文件的根节点，如果根节点是 '<fenixs></fenixs>'，说明是 Fenix XML 文件
+        // 然后获取其属性 namespace 的值，如果命名空间为空，就抛出异常.
+        Node root = doc.getRootElement();
+        if (root != null && XpathConst.FENIX_ROOT_NAME.equals(root.getName())) {
+            String namespace = XmlNodeHelper.getNodeText(root.selectSingleNode(XpathConst.ATTR_NAMESPACE));
+            if (StringHelper.isBlank(namespace)) {
+                throw new ConfigNotFoundException("【Fenix 警示】Fenix XML 文件 " + path + " 的根节点 namespace "
+                        + "命名空间属性未配置，请配置!");
+            }
+            return new XmlResource().setNamespace(namespace).setPath(path).setDocument(doc);
+        }
+
+        return null;
+    }
+
+}

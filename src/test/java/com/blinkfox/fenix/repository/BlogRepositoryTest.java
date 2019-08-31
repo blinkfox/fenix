@@ -2,10 +2,11 @@ package com.blinkfox.fenix.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
+import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
-import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
+import com.blinkfox.fenix.handler.HelloTagHandler;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
@@ -67,7 +68,12 @@ public class BlogRepositoryTest {
     @PostConstruct
     public void init() throws IOException {
         if (!isLoad) {
-            FenixConfigManager.getInstance().initLoad(new MyFenixConfig());
+            // 初始化定义 FenixConfig 的实例和一些配置 // TODO 这里可能有初始化逻辑错误.
+            FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(true);
+            FenixConfig.add("hi", HelloTagHandler.class);
+            FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");
+
+            FenixConfigManager.getInstance().initLoad(myFenixConfig);
             blogRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(blogResource.getFile())), Blog.class));
             userRepository.saveAll(

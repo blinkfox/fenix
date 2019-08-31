@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 public final class XpathConst {
 
     /**
+     * FENIX XML 标签中的根节点名称.
+     */
+    public static final String FENIX_ROOT_NAME = "fenixs";
+
+    /**
      * 查找 FENIX 标签的 XPATH 常量.
      */
     public static final String FENIX_TAG = "fenixs/fenix";

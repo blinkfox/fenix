@@ -35,7 +35,7 @@ public class FenixPerformanceTest {
     public static void init() {
         // 初始化 Fenix 配置信息.
         FenixConfigManager.getInstance()
-                .initLoad(new FenixConfig().setDebug(false).setPrintBanner(true).setPrintSqlInfo(false));
+                .initLoad(new FenixConfig().setPrintBanner(true).setPrintSqlInfo(false));
 
         // 设置上下文参数.
         context = new HashMap<>(4);

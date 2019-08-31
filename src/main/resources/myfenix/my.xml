@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来 XML 文件在自定义的目录中. -->
+<fenixs namespace="defaultFenix">
+
+    <!-- 测试该多个 and 时移除 "1 = 1 AND " 的 SQL 片段 -->
+    <fenix id="queryUsersByName" removeIfExist="1 = 1 AND ">
+        SELECT u FROM User AS u
+        WHERE
+        1 = 1
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        AND u.age > #{user.age}
+        AND u.status = #{user.status}
+        <andLike field="u.email" value="user.email" match="user.email != empty"/>
+    </fenix>
+
+</fenixs>

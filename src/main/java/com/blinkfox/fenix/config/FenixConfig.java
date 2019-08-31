@@ -1,8 +1,6 @@
 package com.blinkfox.fenix.config;
 
-import com.blinkfox.fenix.config.entity.NormalConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
-import com.blinkfox.fenix.config.entity.XmlContext;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixHandlerFactory;
@@ -30,11 +28,38 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-04.
  * @see FenixConfigManager
- * @see NormalConfig
  * @see FenixHandlerFactory
  * @see TagHandler
  */
+@Getter
 public class FenixConfig {
+
+    /**
+     * 默认的用来存放 fenix XML 文件的目录名常量.
+     */
+    private static final String DEFAULT_FENIX_XML_DIR = "fenix";
+
+    /**
+     * Fenix 加载完成后是否打印启动的 banner，默认打印.
+     */
+    private boolean printBanner = true;
+
+    /**
+     * 是否打印 SqlInfo 信息.
+     */
+    private boolean printSqlInfo;
+
+    /**
+     * Fenix 的 XML 文件所在的位置，多个用逗号隔开，可以是目录也可以是具体的 XML 文件
+     * ，默认是 'fenix' 目录.
+     */
+    protected String xmlLocations = DEFAULT_FENIX_XML_DIR;
+
+    /**
+     * Fenix 自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
+     */
+    protected String handlerLocations;
 
     /**
      * 所有 Fenix XML 文档的缓存 map.
@@ -50,9 +75,9 @@ public class FenixConfig {
     @Getter
     private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>(128);
     
-    /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
-
     static {
+        /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
+
         // “等于”的相关标签：equal、andEqual、orEqual.
         add("equal", NormalHandler::new, SymbolConst.EQUAL);
         add("andEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.EQUAL);
@@ -146,49 +171,13 @@ public class FenixConfig {
     }
 
     /**
-     * 配置 Fenix 的普通配置信息(默认配置方法，开发者可覆盖此方法来做一些自定义配置).
-     *
-     * @param normalConfig 常规配置实例
-     */
-    public void configNormal(NormalConfig normalConfig) {
-        // 子类可重写此方法，来增加常规配置信息.
-    }
-
-    /**
-     * 配置 XML 文件的标识和资源路径.
-     *
-     * @param ctx xmlContext 实例
-     */
-    public void configXml(XmlContext ctx) {
-        // 子类可重写此方法，来增加新的 XML 及命名空间的配置.
-    }
-
-    /**
-     * 配置标签和其对应的处理类(默认了许多常用的标签，开发者可覆盖此方法来配置更多的自定义标签).
-     */
-    public void configTagHandler() {
-        // 子类可重写此方法，来增加新的 SQL 标签和该标签对应的处理器.
-    }
-
-    /**
-     * 设置是否开启调试模式，开启了调试模式之后，每次就会动态获取 XML 文件中的 SQL.
-     *
-     * @param enabled 是否开启 debug 模式的标识
-     * @return {@link FenixConfig} 实例自身
-     */
-    public FenixConfig setDebug(boolean enabled) {
-        NormalConfig.getInstance().setDebug(enabled);
-        return this;
-    }
-
-    /**
      * 设置是否打印 Fenix 的 Banner 信息.
      *
      * @param enabled 是否开启打印 banner 的标识
      * @return {@link FenixConfig} 实例自身
      */
     public FenixConfig setPrintBanner(boolean enabled) {
-        NormalConfig.getInstance().setPrintBanner(enabled);
+        this.printBanner = enabled;
         return this;
     }
 
@@ -199,7 +188,30 @@ public class FenixConfig {
      * @return {@link FenixConfig} 实例自身
      */
     public FenixConfig setPrintSqlInfo(boolean enabled) {
-        NormalConfig.getInstance().setPrintSqlInfo(enabled);
+        this.printSqlInfo = enabled;
+        return this;
+    }
+
+    /**
+     * 设置 Fenix XML 文件的所在位置，多个用逗号隔开，可以是资源目录也可以是具体的 XML 资源文件.
+     *
+     * @param xmlLocations XML 位置
+     * @return {@link FenixConfig} 实例自身
+     */
+    public FenixConfig setXmlLocations(String xmlLocations) {
+        this.xmlLocations = xmlLocations;
+        return this;
+    }
+
+    /**
+     * 设置自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     *     多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
+     *
+     * @param handlerLocations handler 的包路径位置，如：'com.blinkfox.handler'.
+     * @return {@link FenixConfig} 实例自身
+     */
+    public FenixConfig setHandlerLocations(String handlerLocations) {
+        this.handlerLocations = handlerLocations;
         return this;
     }
 
@@ -209,7 +221,7 @@ public class FenixConfig {
      * @param tagName 标签名称
      * @param handlerCls 标签处理器类的 Class
      */
-    protected static void add(String tagName, Class<? extends FenixHandler> handlerCls) {
+    public static void add(String tagName, Class<? extends FenixHandler> handlerCls) {
         tagHandlerMap.put(tagName, new TagHandler(handlerCls));
     }
 
@@ -219,7 +231,7 @@ public class FenixConfig {
      * @param tagName 标签名称
      * @param handlerFactory 标签处理器工厂
      */
-    protected static void add(String tagName, FenixHandlerFactory handlerFactory) {
+    public static void add(String tagName, FenixHandlerFactory handlerFactory) {
         tagHandlerMap.put(tagName, new TagHandler(handlerFactory));
     }
 
@@ -230,7 +242,7 @@ public class FenixConfig {
      * @param prefix SQL 片段前缀
      * @param handlerCls 标签处理器类的 Class
      */
-    protected static void add(String tagName, String prefix, Class<? extends FenixHandler> handlerCls) {
+    public static void add(String tagName, String prefix, Class<? extends FenixHandler> handlerCls) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls));
     }
 
@@ -241,7 +253,7 @@ public class FenixConfig {
      * @param prefix SQL 片段前缀
      * @param handlerFactory 标签处理器工厂
      */
-    protected static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory) {
+    public static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerFactory));
     }
 
@@ -252,7 +264,7 @@ public class FenixConfig {
      * @param handlerCls 标签处理器类的 Class
      * @param symbol SQL 操作符
      */
-    protected static void add(String tagName, Class<? extends FenixHandler> handlerCls, String symbol) {
+    public static void add(String tagName, Class<? extends FenixHandler> handlerCls, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(handlerCls, symbol));
     }
 
@@ -263,7 +275,7 @@ public class FenixConfig {
      * @param handlerFactory 标签处理器工厂
      * @param symbol SQL 操作符
      */
-    protected static void add(String tagName, FenixHandlerFactory handlerFactory, String symbol) {
+    public static void add(String tagName, FenixHandlerFactory handlerFactory, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(handlerFactory, symbol));
     }
 
@@ -275,7 +287,7 @@ public class FenixConfig {
      * @param handlerCls 标签处理器类的 Class
      * @param symbol SQL 操作符
      */
-    protected static void add(String tagName, String prefix, Class<? extends FenixHandler> handlerCls, String symbol) {
+    public static void add(String tagName, String prefix, Class<? extends FenixHandler> handlerCls, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerCls, symbol));
     }
 
@@ -287,7 +299,7 @@ public class FenixConfig {
      * @param handlerFactory 标签处理器工厂
      * @param symbol SQL 操作符
      */
-    protected static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory, String symbol) {
+    public static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerFactory, symbol));
     }
 

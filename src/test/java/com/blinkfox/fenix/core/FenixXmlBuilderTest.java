@@ -3,9 +3,10 @@ package com.blinkfox.fenix.core;
 import static org.junit.Assert.assertEquals;
 
 import com.blinkfox.fenix.bean.SqlInfo;
+import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
-import com.blinkfox.fenix.config.MyFenixConfig;
 import com.blinkfox.fenix.entity.User;
+import com.blinkfox.fenix.handler.HelloTagHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +42,11 @@ public class FenixXmlBuilderTest {
      */
     @BeforeClass
     public static void init() {
-        FenixConfigManager.getInstance()
-                .initLoadHandlerLocations("com.blinkfox.fenix.handler")
-                .initLoad(new MyFenixConfig());
+        FenixConfig.add("hi", HelloTagHandler.class);
+        FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");
+        FenixConfig fenixConfig = new FenixConfig().setHandlerLocations("com.blinkfox.fenix.handler");
+        FenixConfigManager.getInstance().initLoad(fenixConfig);
+
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
         context.put("user", new User().setId("123").setName(NAME).setSex("0"));
