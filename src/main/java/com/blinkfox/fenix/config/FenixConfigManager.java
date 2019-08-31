@@ -83,7 +83,7 @@ public final class FenixConfigManager {
 
         // 扫描和缓存 Fenix XML 文件资源信息、扫描和配置自定义的 Fenix 标签处理器实例类.
         this.fenixConfig = fenixConfig;
-        this.cachingFenixXmlResources(new XmlScanner().scan(this.fenixConfig.getXmlLocations()).values());
+        this.cachingFenixXmlResources(new XmlScanner().scan(this.fenixConfig.getXmlLocations()));
         new TaggerScanner().scan(this.fenixConfig.getHandlerLocations());
 
         // 判断和打印 banner 信息，并初步测试 表达式引擎是否能够正确计算.
@@ -104,9 +104,15 @@ public final class FenixConfigManager {
     /**
      * 将每个 Fenix XML 配置文件的 key 和文档缓存到 ConcurrentHashMap 内存缓存中.
      *
-     * @param xmlResources XML 资源集合
+     * @param xmlResourceMap XML 资源的 Map 集合
      */
-    private void cachingFenixXmlResources(Collection<XmlResource> xmlResources) {
+    private void cachingFenixXmlResources(Map<String, XmlResource> xmlResourceMap) {
+        if (log.isInfoEnabled()) {
+            log.info("【Fenix 提示】扫描到了这些 Fenix XML 文件：【{}】.", xmlResourceMap.keySet());
+        }
+
+        // 遍历各个 XML 资源文件信息，将 fenixId 和 对应的 Node 节点缓存起来.
+        Collection<XmlResource> xmlResources = xmlResourceMap.values();
         for (XmlResource xmlResource : xmlResources) {
             String namespace = xmlResource.getNamespace();
             for (Node fenixNode: xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
