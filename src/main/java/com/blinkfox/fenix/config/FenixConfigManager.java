@@ -2,7 +2,7 @@ package com.blinkfox.fenix.config;
 
 import com.blinkfox.fenix.config.scanner.TaggerScanner;
 import com.blinkfox.fenix.config.scanner.XmlResource;
-import com.blinkfox.fenix.config.scanner.XmlResourceScanner;
+import com.blinkfox.fenix.config.scanner.XmlScanner;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.FenixException;
@@ -12,7 +12,7 @@ import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import lombok.AccessLevel;
@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.dom4j.Document;
 import org.dom4j.Node;
 
 /**
@@ -84,13 +83,13 @@ public final class FenixConfigManager {
 
         // 扫描和缓存 Fenix XML 文件资源信息、扫描和配置自定义的 Fenix 标签处理器实例类.
         this.fenixConfig = fenixConfig;
-        this.cachingFenixXmlResources(new XmlResourceScanner().scan(this.fenixConfig.getXmlLocations()));
+        this.cachingFenixXmlResources(new XmlScanner().scan(this.fenixConfig.getXmlLocations()).values());
         new TaggerScanner().scan(this.fenixConfig.getHandlerLocations());
 
         // 判断和打印 banner 信息，并初步测试 表达式引擎是否能够正确计算.
         this.printBanner();
         this.testFirstEvaluate();
-        log.warn("【Fenix 提示】加载 Fenix 的配置信息完成.");
+        log.warn("【Fenix 提示】初始化加载 Fenix 配置信息完成.");
     }
 
     /**
@@ -104,13 +103,13 @@ public final class FenixConfigManager {
 
     /**
      * 将每个 Fenix XML 配置文件的 key 和文档缓存到 ConcurrentHashMap 内存缓存中.
+     *
+     * @param xmlResources XML 资源集合
      */
-    private void cachingFenixXmlResources(List<XmlResource> xmlResources) {
+    private void cachingFenixXmlResources(Collection<XmlResource> xmlResources) {
         for (XmlResource xmlResource : xmlResources) {
             String namespace = xmlResource.getNamespace();
-            Document doc = xmlResource.getDocument();
-            List<Node> fenixNodes = doc.selectNodes(XpathConst.FENIX_TAG);
-            for (Node fenixNode: fenixNodes) {
+            for (Node fenixNode: xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
                 String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
                     throw new NodeNotFoundException("【Fenix 异常提示】命名空间为【" + namespace + "】的 Fenix XML 文件中有"

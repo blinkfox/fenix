@@ -9,8 +9,9 @@ import com.blinkfox.fenix.helper.XmlNodeHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,30 +28,47 @@ import org.springframework.core.io.support.ResourcePatternUtils;
  * @author blinkfox on 2019-08-31.
  */
 @Slf4j
-public class XmlResourceScanner {
+public class XmlScanner {
+
+    /**
+     * 用于查找某个目录及目录下所有 XML 文件的模式常量.
+     */
+    private static final String DIR_XML_PATTERN = "**/*.xml";
 
     /**
      * 扫描指定路径下的相关文件(可以是目录，也可以是具体的文件)，并配置存储起来.
      *
      * @param xmlLocations 文件位置路径，可以是多个，用逗号隔开
      */
-    public List<XmlResource> scan(String xmlLocations) {
-        List<XmlResource> xmlResources = new ArrayList<>();
+    public Map<String, XmlResource> scan(String xmlLocations) {
+        Map<String, XmlResource> xmlResourceMap = new HashMap<>();
         if (StringHelper.isBlank(xmlLocations)) {
-            return xmlResources;
+            return xmlResourceMap;
         }
 
-        // 对配置的 XML 路径按逗号分割的规则来解析，如果是 XML 文件则直接将该 XML 文件存放到 xmlPaths 的 Set 集合中，
-        // 否则就代表是xml资源目录，并解析目录下所有的xml文件，将这些xml文件存放到xmlPaths的Set集合中，
+        // 对配置的 XML 路径按逗号分割的规则来解析.
         String[] xmlLocationArr = xmlLocations.split(Const.COMMA);
+        if (log.isDebugEnabled()) {
+            log.debug("【Fenix 提示】将扫描这些位置的 Fenix XML 文件：【{}】", Arrays.asList(xmlLocationArr));
+        }
+
         for (String xmlLocation: xmlLocationArr) {
-            if (StringHelper.isNotBlank(xmlLocation)) {
-                String location = xmlLocation.trim();
-                this.buildXmlResourcesByLocations(xmlResources,
-                        StringHelper.isXmlFile(location) ? location : location.replace('.', '/') + "/*.xml");
+            if (StringHelper.isBlank(xmlLocation)) {
+                continue;
+            }
+
+            // 将该 XML 位置去除两边空白. 如果是 XML 文件则直接查找该 XML 文件，否则替换掉 '.' 号为 '/' 号，就代表资源目录.
+            // 然后解析该目录下所有的 XML 文件，将这些 Fenix XML 文件解析出来，然后构建出 XmlResource 的集合，
+            String location = xmlLocation.trim();
+            if (StringHelper.isXmlFile(location)) {
+                this.buildXmlResourcesByLocations(xmlResourceMap, location);
+            } else {
+                location = location.replace(Const.DOT, Const.SLASH);
+                location = location.endsWith(Const.SLASH) ? location : location + Const.SLASH;
+                this.buildXmlResourcesByLocations(xmlResourceMap, location + DIR_XML_PATTERN);
             }
         }
-        return xmlResources;
+        return xmlResourceMap;
     }
 
     /**
@@ -58,15 +76,22 @@ public class XmlResourceScanner {
      *
      * @param location XML 位置，可以是一个包，也可以是一个具体的文件路径
      */
-    private void buildXmlResourcesByLocations(List<XmlResource> xmlResources, String location) {
+    private void buildXmlResourcesByLocations(Map<String, XmlResource> xmlResourceMap, String location) {
         try {
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(
                     new PathMatchingResourcePatternResolver()).getResources(location);
             for (Resource resource: resources) {
+                String path = resource.getURL().getPath();
+                if (xmlResourceMap.containsKey(path)) {
+                    log.debug("【Fenix 提示】已经扫描过了【" + path + "】文件，将跳过该 XML 文件的初始化加载.");
+                    continue;
+                }
+
+                // 获取该资源文件中的 Fenix XML 文件的 Document 对象，并存入到 Map 中.
                 try (InputStream in = resource.getInputStream()) {
-                    XmlResource xmlResource = this.getFenixXmlResource(in, resource.getURL().getPath());
+                    XmlResource xmlResource = this.getFenixXmlResource(in, path);
                     if (xmlResource != null) {
-                        xmlResources.add(xmlResource);
+                        xmlResourceMap.put(path, xmlResource);
                     }
                 }
             }

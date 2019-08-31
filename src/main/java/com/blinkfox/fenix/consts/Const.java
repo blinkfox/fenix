@@ -37,6 +37,11 @@ public final class Const {
     public static final String QUOTE = "'";
 
     /**
+     * 路径符号.
+     */
+    public static final String SLASH = "/";
+
+    /**
      * 含一个空格的字符串.
      */
     public static final String SPACE = " ";

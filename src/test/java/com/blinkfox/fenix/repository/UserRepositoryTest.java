@@ -57,7 +57,8 @@ public class UserRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             FenixConfigManager.getInstance().initLoad(new FenixConfig()
-                    .setXmlLocations("my/xml, fenix").setHandlerLocations("com.blinkfox.fenix.handler"));
+                    .setXmlLocations("my, fenix ,   others/fenix-xml.xml")
+                    .setHandlerLocations("com.blinkfox.fenix.handler"));
 
             userRepository.saveAll(
                     JSON.parseArray(new String(FileCopyUtils.copyToByteArray(userResource.getFile())), User.class));
@@ -121,7 +122,6 @@ public class UserRepositoryTest {
     public void queryUsersByName() {
         List<User> users = userRepository.queryUsersByName(new User()
                         .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
-        System.out.println("queryUsersByName users:【】" + users);
         Assert.assertFalse(users.isEmpty());
     }
 

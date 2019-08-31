@@ -68,7 +68,7 @@ public class BlogRepositoryTest {
     @PostConstruct
     public void init() throws IOException {
         if (!isLoad) {
-            // 初始化定义 FenixConfig 的实例和一些配置 // TODO 这里可能有初始化逻辑错误.
+            // 初始化定义 FenixConfig 的实例和一些配置.
             FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(true);
             FenixConfig.add("hi", HelloTagHandler.class);
             FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");

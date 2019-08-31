@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试当配置了具体的 XML 文件路径时是否能扫描到该 XML 文件. -->
+<fenixs namespace="myFenixXml">
+
+    <!-- 查询所有用户信息. -->
+    <fenix id="queryAllUsers">
+        SELECT u FROM User AS u
+    </fenix>
+
+</fenixs>
