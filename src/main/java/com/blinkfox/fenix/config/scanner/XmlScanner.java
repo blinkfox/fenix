@@ -61,11 +61,11 @@ public class XmlScanner {
             // 然后解析该目录下所有的 XML 文件，将这些 Fenix XML 文件解析出来，然后构建出 XmlResource 的集合，
             String location = xmlLocation.trim();
             if (StringHelper.isXmlFile(location)) {
-                this.buildXmlResourcesByLocations(xmlResourceMap, location);
+                this.buildXmlResourcesByLocation(xmlResourceMap, location);
             } else {
                 location = location.replace(Const.DOT, Const.SLASH);
                 location = location.endsWith(Const.SLASH) ? location : location + Const.SLASH;
-                this.buildXmlResourcesByLocations(xmlResourceMap, location + DIR_XML_PATTERN);
+                this.buildXmlResourcesByLocation(xmlResourceMap, location + DIR_XML_PATTERN);
             }
         }
         return xmlResourceMap;
@@ -74,12 +74,14 @@ public class XmlScanner {
     /**
      * 根据指定的一个包扫描其下所有的 XML 文件.
      *
+     * @param xmlResourceMap XML 资源文件 Map
      * @param location XML 位置，可以是一个包，也可以是一个具体的文件路径
      */
-    private void buildXmlResourcesByLocations(Map<String, XmlResource> xmlResourceMap, String location) {
+    private void buildXmlResourcesByLocation(Map<String, XmlResource> xmlResourceMap, String location) {
+        // 根据位置获取对应的 XML 资源实例.
+        Resource[] resources = this.getResourcesByLocation(location);
+
         try {
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(
-                    new PathMatchingResourcePatternResolver()).getResources(location);
             for (Resource resource: resources) {
                 String path = resource.getURL().getPath();
                 if (xmlResourceMap.containsKey(path)) {
@@ -97,6 +99,23 @@ public class XmlScanner {
             }
         } catch (IOException e) {
             throw new FenixException("【Fenix 异常】初始化读取【" + location + "】下的 Fenix XML 文件出错，请检查！", e);
+        }
+    }
+
+
+    /**
+     * 根据资源文件位置的匹配规则查找到其下对应的 Fenix XML 文件资源的数组.
+     *
+     * @param location 资源文件位置的匹配规则字符串
+     * @return XML 文件资源数组
+     */
+    private Resource[] getResourcesByLocation(String location) {
+        try {
+            return ResourcePatternUtils.getResourcePatternResolver(
+                    new PathMatchingResourcePatternResolver()).getResources(location);
+        } catch (IOException expected) {
+            log.warn("【Fenix 警示】未查找到匹配规则【" + location + "】下的 Fenix XML 文件.", expected.getMessage());
+            return new Resource[0];
         }
     }
 
