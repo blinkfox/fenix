@@ -107,8 +107,8 @@ public final class FenixConfigManager {
      * @param xmlResourceMap XML 资源的 Map 集合
      */
     private void cachingFenixXmlResources(Map<String, XmlResource> xmlResourceMap) {
-        if (log.isInfoEnabled()) {
-            log.info("【Fenix 提示】扫描到了这些 Fenix XML 文件：【{}】.", xmlResourceMap.keySet());
+        if (log.isDebugEnabled()) {
+            log.debug("【Fenix 提示】扫描到了这些 Fenix XML 文件：【{}】.", xmlResourceMap.keySet());
         }
 
         // 遍历各个 XML 资源文件信息，将 fenixId 和 对应的 Node 节点缓存起来.
