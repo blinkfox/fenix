@@ -39,6 +39,7 @@ public class XmlScanner {
      * 扫描指定路径下的相关文件(可以是目录，也可以是具体的文件)，并配置存储起来.
      *
      * @param xmlLocations 文件位置路径，可以是多个，用逗号隔开
+     * @return XML 资源的 Map
      */
     public Map<String, XmlResource> scan(String xmlLocations) {
         Map<String, XmlResource> xmlResourceMap = new HashMap<>();
