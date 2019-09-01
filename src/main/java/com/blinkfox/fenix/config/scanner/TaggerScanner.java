@@ -31,7 +31,12 @@ import lombok.extern.slf4j.Slf4j;
  * @author blinkfox on 2019-08-04.
  */
 @Slf4j
-public final class TaggerScanner implements Scanner {
+public final class TaggerScanner {
+
+    /**
+     * 文件协议标识符.
+     */
+    private static final String FILE_PROTOCOL = "file";
 
     /**
      * 存放所有扫描位置下的 class 对象的 Set 集合.
@@ -51,7 +56,6 @@ public final class TaggerScanner implements Scanner {
      *
      * @param handlerLocations {@link TagHandler} 实现类所在的位置，即可以是目录也可以是文件，多个用逗号隔开
      */
-    @Override
     public void scan(String handlerLocations) {
         if (StringHelper.isBlank(handlerLocations)) {
             return;
@@ -111,7 +115,7 @@ public final class TaggerScanner implements Scanner {
         while (urlEnum.hasMoreElements()) {
             URL url = urlEnum.nextElement();
             String protocol = url.getProtocol();
-            if (FenixVfs.FILE_PROTOCOL.equals(protocol)) {
+            if (FILE_PROTOCOL.equals(protocol)) {
                 try {
                     this.addClassesByFile(classLoader, packageName,
                             URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.toString()));
@@ -229,13 +233,15 @@ public final class TaggerScanner implements Scanner {
     private void addTagHanderInMap() {
         for (Class<?> cls: classSet) {
             // 如果是 Tagger 注解，则将其 Tagger 信息存放到 Map 中.
-            if (cls.isAnnotationPresent(Tagger.class) && isImplConditHandlerClass(cls)) {
-                Class<? extends FenixHandler> conditCls = (Class<? extends FenixHandler>) cls;
-                this.addTagHandlerInMapByTagger(conditCls, conditCls.getAnnotation(Tagger.class));
+            if (cls.isAnnotationPresent(Tagger.class) && isImplFenixHandlerClass(cls)) {
+                Class<? extends FenixHandler> taggerCls = (Class<? extends FenixHandler>) cls;
+                log.debug("【Fenix 提示】扫描到实现了 FenixHandler 接口，且含 @Tagger 注解的类：【{}】", taggerCls.getName());
+                this.addTagHandlerInMapByTagger(taggerCls, taggerCls.getAnnotation(Tagger.class));
             }
 
             // 如果是 Taggers 注解，则解析出其下所有的 Tagger 来存放到 Map 中.
-            if (cls.isAnnotationPresent(Taggers.class) && isImplConditHandlerClass(cls)) {
+            if (cls.isAnnotationPresent(Taggers.class) && isImplFenixHandlerClass(cls)) {
+                log.debug("【Fenix 提示】扫描到实现了 FenixHandler 接口，且含多个 @Tagger 注解的类：【{}】", cls.getName());
                 Tagger[] taggerArr = cls.getAnnotation(Taggers.class).value();
                 for (Tagger tagger: taggerArr) {
                     this.addTagHandlerInMapByTagger((Class<? extends FenixHandler>) cls, tagger);
@@ -252,7 +258,7 @@ public final class TaggerScanner implements Scanner {
      * @param implCls 待判断的 class
      * @return 布尔值
      */
-    private boolean isImplConditHandlerClass(Class<?> implCls) {
+    private boolean isImplFenixHandlerClass(Class<?> implCls) {
         Class<?>[] classes = implCls.getInterfaces();
         if (classes == null) {
             return false;

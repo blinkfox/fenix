@@ -62,7 +62,7 @@ public final class SqlInfoPrinter {
      * 构建 XML 相关的信息到 builder 中.
      */
     private SqlInfoPrinter buildXmlInfo(String namespace, String fenixId) {
-        builder.append("-- Fenix xml: ")
+        builder.append("-- Fenix XML: ")
                 .append(namespace).append(Const.DOT).append(fenixId).append(LINE_BREAK);
         return this;
     }
