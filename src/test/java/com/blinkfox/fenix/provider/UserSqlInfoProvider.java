@@ -56,4 +56,13 @@ public final class UserSqlInfoProvider {
                 .end();
     }
 
+    /**
+     * 私有构造方法，用于测试异常的情况.
+     *
+     * @return sqlInfo 对象
+     */
+    private SqlInfo privateMethod() {
+        return Fenix.start().end();
+    }
+
 }

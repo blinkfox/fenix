@@ -69,9 +69,14 @@ public class BlogRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             // 初始化定义 FenixConfig 的实例和一些配置.
-            FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(true);
+            final FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(true);
             FenixConfig.add("hi", HelloTagHandler.class);
             FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");
+
+            // 下面可以随便写一些带前缀或者标志符的.
+            FenixConfig.add("andHello", " AND ", HelloTagHandler.class);
+            FenixConfig.add("hello", HelloTagHandler.class, "=");
+            FenixConfig.add("orHello", " OR ", HelloTagHandler.class, "=");
 
             FenixConfigManager.getInstance().initLoad(myFenixConfig);
             blogRepository.saveAll(

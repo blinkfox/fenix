@@ -46,7 +46,7 @@ public final class ClassMethodInvoker {
             }
         }
 
-        throw new FenixException("【Fenix 异常】未找到【" + cls.getName() + "】类中可执行的【" + method + "】方法，"
+        throw new FenixException("【Fenix 异常】未找到【" + cls.getName() + "】类中可执行的公共【" + method + "】方法，"
                 + "请检查该方法是否存在或者访问权限是 public 型的！");
     }
 
@@ -62,11 +62,9 @@ public final class ClassMethodInvoker {
         try {
             m.setAccessible(true);
             return (SqlInfo) m.invoke(cls.newInstance(), paramValues.toArray());
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new FenixException("【Fenix 异常】创建【" + cls.getName() + "】类的实例异常，请检查构造方法是否是无参 public 型的！", e);
-        } catch (InvocationTargetException e) {
-            throw new FenixException("【Fenix 异常】调用【" + cls.getName() + "】类中的【" + m.getName() + "】方法异常，"
-                    + "请检查该方法是否是 public 型的！", e);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new FenixException("【Fenix 异常】创建【" + cls.getName() + "】类的实例异常，请检查构造方法是否是无参 public 型的，"
+                    + "或者检查调用的【" + m.getName() + "】方法是否是 public 型的！", e);
         }
     }
 
