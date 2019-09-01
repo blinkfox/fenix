@@ -57,6 +57,11 @@ public final class Const {
     public static final int OBJTYPE_COLLECTION = 2;
 
     /**
+     * 默认的用来存放 fenix XML 文件的目录名常量.
+     */
+    public static final String DEFAULT_FENIX_XML_DIR = "fenix";
+
+    /**
      * 节点类型 - 文本节点.
      */
     public static final String NODETYPE_TEXT = "Text";

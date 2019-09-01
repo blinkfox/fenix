@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.config;
 
 import com.blinkfox.fenix.config.entity.TagHandler;
+import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixHandlerFactory;
@@ -35,11 +36,6 @@ import org.dom4j.Node;
 public class FenixConfig {
 
     /**
-     * 默认的用来存放 fenix XML 文件的目录名常量.
-     */
-    private static final String DEFAULT_FENIX_XML_DIR = "fenix";
-
-    /**
      * Fenix 加载完成后是否打印启动的 banner，默认打印.
      */
     private boolean printBanner = true;
@@ -53,7 +49,7 @@ public class FenixConfig {
      * Fenix 的 XML 文件所在的位置，多个用逗号隔开，可以是目录也可以是具体的 XML 文件
      * ，默认是 'fenix' 目录.
      */
-    protected String xmlLocations = DEFAULT_FENIX_XML_DIR;
+    protected String xmlLocations = Const.DEFAULT_FENIX_XML_DIR;
 
     /**
      * Fenix 自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，

@@ -77,19 +77,32 @@ public final class FenixConfigManager {
      * @param fenixConfig {@link FenixConfig} 的子类配置类实例
      */
     public void initLoad(FenixConfig fenixConfig) {
+        // 初始化设置 FenixConfig 实例和其中的一些属性.
+        this.initFenixConfig(fenixConfig);
+
+        // 初始化加载 Fenix XML 文件和自定义的标签处理器类.
+        this.cachingFenixXmlResources(new XmlScanner().scan(this.fenixConfig.getXmlLocations()));
+        new TaggerScanner().scan(this.fenixConfig.getHandlerLocations());
+
+        // 初次测试表达式引擎是否能够正确工作和打印 banner 信息.
+        this.testFirstEvaluate();
+        this.printBanner();
+    }
+
+    /**
+     * 初始化设置 {@link FenixConfig} 实例.
+     *
+     * @param fenixConfig {@link FenixConfig} 实例
+     */
+    private void initFenixConfig(FenixConfig fenixConfig) {
         if (fenixConfig == null) {
             throw new FenixException("【Fenix 异常】初始化加载的 FenixConfig 配置信息实例为空，请检查！");
         }
 
         // 扫描和缓存 Fenix XML 文件资源信息、扫描和配置自定义的 Fenix 标签处理器实例类.
+        String xmlLocations = fenixConfig.getXmlLocations();
+        fenixConfig.setXmlLocations(StringHelper.isBlank(xmlLocations) ? Const.DEFAULT_FENIX_XML_DIR : xmlLocations);
         this.fenixConfig = fenixConfig;
-        this.cachingFenixXmlResources(new XmlScanner().scan(this.fenixConfig.getXmlLocations()));
-        new TaggerScanner().scan(this.fenixConfig.getHandlerLocations());
-
-        // 判断和打印 banner 信息，并初步测试 表达式引擎是否能够正确计算.
-        this.printBanner();
-        this.testFirstEvaluate();
-        log.warn("【Fenix 提示】初始化加载 Fenix 配置信息完成.");
     }
 
     /**
@@ -99,6 +112,7 @@ public final class FenixConfigManager {
         if (this.fenixConfig.isPrintBanner()) {
             log.warn(BANNER_TEXT);
         }
+        log.warn("【Fenix 提示】初始化加载 Fenix 配置信息完成.");
     }
 
     /**

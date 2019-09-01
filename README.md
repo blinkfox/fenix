@@ -22,7 +22,9 @@
 
 ## Spring Boot 项目集成
 
-如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并激活 `FenixJpaRepositoryFactoryBean`。如果不是 Spring Boot 项目，请参看[这里](https://blinkfox.github.io/fenix/#/quick-install?id=not-spring-boot-project)。
+如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并激活 `FenixJpaRepositoryFactoryBean`。
+
+如果你**不是 Spring Boot 项目**，请参看[这里](https://blinkfox.github.io/fenix/#/quick-install?id=not-spring-boot-project) 的配置方式。
 
 ### Maven
 
@@ -30,14 +32,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:1.0.0'
+compile 'com.blinkfox:fenix-spring-boot-starter:1.0.1'
 ```
 
 ### 激活 Fenix FactoryBean
@@ -64,21 +66,23 @@ public class DemoApplication {
 
 > **注**： `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解。
 
-### application.yml 配置项
+### application.yml 配置（可选的）
 
-要修改 Fenix 的配置信息，你需要在你的 Spring Boot 项目中，在 `application.yml` 或者 `application.properties` 中去修改配置信息。
+> **注**：Fenix 采用了**约定优于配置**的方式，所以通常情况下，你可以不用做任何的 Fenix 配置。
 
-以下通过 `application.yml` 文件来说明 Fenix 中的几个配置项、默认值和说明信息，供你参考。
+如果你要修改 Fenix 的配置信息，你需要在你的 Spring Boot 项目中，在 `application.yml` 或者 `application.properties` 中去修改配置信息。
+
+以下通过 `application.yml` 文件来展示 Fenix 中的几个配置项、默认值和说明信息，供你参考。
 
 ```yaml
-# Fenix 的几个配置项、默认值及详细说明.
+# Fenix 的几个配置项、默认值及详细说明，通常情况下你不需要填写这些配置信息.
 fenix:
-  # 是否开启 debug 模式，默认 false，一般情况下，不建议开启此配置项.
-  debug: false
   # 成功加载 Fenix 配置信息后，是否打印启动 banner，默认 true.
   print-banner: true
-  # 是否打印 Fenix 生成的 SQL 信息，默认为 true. 切记，生产环境一定要改为 false.
-  print-sql: true
+  # 是否打印 Fenix 生成的 SQL 信息，默认为空.
+  # 当该值为空时，会读取 'spring.jpa.show-sql' 的值，为 true 就打印 SQL 信息，否则不打印.
+  # 当该值为 true 时，就打印 SQL 信息，否则不打印. 生产环境不建议设置为 true.
+  print-sql:
   # 扫描 Fenix XML 文件的所在位置，默认是 fenix 目录及子目录，可以用 yaml 文件方式配置多个值.
   xml-locations: fenix
   # 扫描你自定义的 XML 标签处理器的位置，默认为空，可以是包路径，也可以是 Java 或 class 文件的全路径名

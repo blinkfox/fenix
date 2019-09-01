@@ -15,8 +15,9 @@
 在 [start.spring.io](https://start.spring.io/) 中创建一个自己的 SpringBoot2.x 项目，目前最新稳定版本是 `2.1.7`。选出了一些组件来生成项目，我这里仅选了如下几个：
 
 - `JPA`: 这是**必须**组件，就是用来试用 `Spring Data JPA` 的 Fenix 扩展的
-- `Lombok`: 可以通过注解大量减少 Java 中重复代码的书写
-- `HSQLDB`: 内存数据库，用来做测试。
+- `Web`: Spring Boot Web 项目，用来测试打包后的 SQL 执行情况，**非必须**组件
+- `Lombok`: 可以通过注解大量减少 Java 中重复代码的书写，**非必须**组件
+- `HSQLDB`: 内存数据库，用来做测试，**非必须**组件
 
 生成之后直接导入 IDE 开发工具，然后根据前面的 Fenix [Spring Boot 项目集成](quick-install?id=spring-boot-integrations) 的文档集成 Fenix 库到项目中即可，这里不再赘述。你也可以 [点击这里下载](https://github.com/blinkfox/fenix-example) 本示例项目的源码查看。
 
@@ -157,11 +158,10 @@ spring:
     hibernate:
       ddl-auto: update
 
-# Fenix 的几个配置，都有默认值，所以你视具体情况配置即可.
+# Fenix 的几个配置，都有默认值. 所以通常不需要配置，你视具体情况配置即可.
 fenix:
-  debug: false
   print-banner: true
-  print-sql: true
+  print-sql:
   xml-locations:
   handler-locations:
 ```
