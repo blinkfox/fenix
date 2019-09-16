@@ -103,7 +103,6 @@ public class XmlScanner {
         }
     }
 
-
     /**
      * 根据资源文件位置的匹配规则查找到其下对应的 Fenix XML 文件资源的数组.
      *
