@@ -18,13 +18,15 @@
 
 ## 支持场景
 
-适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上。
+适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。因为后续版本的 Spring Data JPA 对其中 `QueryLookupStrategy` 的代码有较大改动。
 
 ## Spring Boot 项目集成
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并激活 `FenixJpaRepositoryFactoryBean`。
 
 如果你**不是 Spring Boot 项目**，请参看[这里](https://blinkfox.github.io/fenix/#/quick-install?id=not-spring-boot-project) 的配置方式。
+
+> **注**：请确保你使用的 Spring Boot 版本是 **`2.1.5.RELEASE` 及以上**。
 
 ### Maven
 
