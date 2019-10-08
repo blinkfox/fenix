@@ -9,6 +9,7 @@ import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.handler.HelloTagHandler;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogInfo;
+import com.blinkfox.fenix.vo.UserBlogInfo2;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.io.IOException;
@@ -139,8 +140,27 @@ public class BlogRepositoryTest {
      * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
      */
     @Test
+    public void queryUserBlogsWithFenixNative() {
+        List<UserBlogInfo2> blogs = blogRepository.queryUserBlogsWithFenixNative("1", SPRING);
+        Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
+     */
+    @Test
     public void queryUserBlogsByTitleWithFenix() {
         List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
+                new Blog().setTitle(SPRING).setContent("-"));
+        Assert.assertFalse(blogs.isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
+     */
+    @Test
+    public void queryUserBlogsWithFenixResultType() {
+        List<UserBlogInfo2> blogs = blogRepository.queryUserBlogsWithFenixResultType("1",
                 new Blog().setTitle(SPRING).setContent("-"));
         Assert.assertFalse(blogs.isEmpty());
     }

@@ -3,10 +3,13 @@ package com.blinkfox.fenix.jpa;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.Fenix;
+import com.blinkfox.fenix.exception.FenixException;
+import com.blinkfox.fenix.helper.AopTargetHelper;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +18,10 @@ import javax.persistence.Query;
 import javax.persistence.Tuple;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+import org.hibernate.query.NativeQuery;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
@@ -33,6 +39,7 @@ import org.springframework.data.repository.query.ReturnedType;
  *
  * @author blinkfox on 2019-08-04.
  */
+@Slf4j
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
@@ -115,8 +122,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             } else {
                 query = em.createNativeQuery(this.querySql, type);
             }
+            query = this.buildNativeQueryResultType(query);
         } else {
             query = em.createQuery(this.querySql);
+            query = this.buildResultType(query);
         }
 
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
@@ -126,6 +135,42 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             query.setMaxResults(pageable.getPageSize());
         }
         return query;
+    }
+
+    private Query buildNativeQueryResultType(Query query) {
+        // 如果没有自定义返回类型，就直接返回.
+        String resultType = this.sqlInfo.getResultType();
+        resultType = "com.blinkfox.fenix.vo.UserBlogInfo2";
+        if (StringHelper.isBlank(resultType)) {
+            return query;
+        }
+
+        // 获取该查询对应的 NativeQuery，设置转换类型.
+        NativeQuery nativeQuery = AopTargetHelper.getTarget(query);
+        try {
+            nativeQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
+        } catch (ClassNotFoundException e) {
+            throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
+        }
+        return nativeQuery;
+    }
+
+    private Query buildResultType(Query query) {
+        // 如果没有自定义返回类型，就直接返回.
+        String resultType = this.sqlInfo.getResultType();
+        resultType = "com.blinkfox.fenix.vo.UserBlogInfo2";
+        if (StringHelper.isBlank(resultType)) {
+            return query;
+        }
+
+        // 获取该查询对应的 NativeQuery，设置转换类型.
+        org.hibernate.query.Query hibernateQuery = AopTargetHelper.getTarget(query);
+        try {
+            hibernateQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
+        } catch (ClassNotFoundException e) {
+            throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
+        }
+        return hibernateQuery;
     }
 
     /**

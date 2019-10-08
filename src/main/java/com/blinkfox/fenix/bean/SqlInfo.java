@@ -31,6 +31,11 @@ public class SqlInfo {
     private String sql;
 
     /**
+     * 返回的结果类型.
+     */
+    private String resultType;
+
+    /**
      * 默认构造方法.
      */
     public SqlInfo() {

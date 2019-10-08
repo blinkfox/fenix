@@ -14,36 +14,36 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserBlogInfo {
+public class UserBlogInfo2 {
 
     /**
      * 用户 ID.
      */
-    private String userId;
+    private String USERID;
 
     /**
      * 用户名称.
      */
-    private String name;
+    private String NAME;
 
     /**
      * 用户博客 ID.
      */
-    private String blogId;
+    private String BLOGID;
 
     /**
      * 博客标题.
      */
-    private String title;
+    private String TITLE;
 
     /**
      * 博客原作者.
      */
-    private String author;
+    private String AUTHOR;
 
     /**
      * 博客内容.
      */
-    private String content;
+    private String CONTENT;
 
 }
