@@ -76,7 +76,7 @@
     </fenix>
 
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义投影信息）. -->
-    <fenix id="queryUserBlogsWithFenixNative" resultType="">
+    <fenix id="queryUserBlogsWithFenixNative" resultType="com.blinkfox.fenix.vo.UserBlogInfo2">
         SELECT
             u.c_id as userId,
             u.c_name as name,
@@ -93,7 +93,7 @@
     </fenix>
 
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
-    <fenix id="queryUserBlogsWithFenixResultType">
+    <fenix id="queryUserBlogsWithFenixResultType" resultType="com.blinkfox.fenix.vo.UserBlogInfo2">
         SELECT
             u.id, u.name, b.id, b.title, b.author, b.content
         FROM
@@ -101,7 +101,7 @@
             com.blinkfox.fenix.entity.User as u
         WHERE
             u.id = b.userId
-<!--        <andEqual field="b.userId" value="userId"/>-->
+        <andEqual field="b.userId" value="userId"/>
 <!--        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>-->
 <!--        <andLike field="b.content" value="blog.content" match="blog.content != empty"/>-->
     </fenix>

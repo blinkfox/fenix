@@ -99,7 +99,10 @@ public final class FenixXmlBuilder {
      * @return 返回 {@link SqlInfo} 对象
      */
     private static SqlInfo buildNewSqlInfo(String namespace, Node node, Object context) {
-        return buildSqlInfo(namespace, new SqlInfo(), node, context);
+        // 创建 SqlInfo 对象，并获取设置 resultType 的属性值.
+        SqlInfo sqlInfo = new SqlInfo();
+        sqlInfo.setResultType(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_RESULT_TYPE));
+        return buildSqlInfo(namespace, sqlInfo, node, context);
     }
 
     /**

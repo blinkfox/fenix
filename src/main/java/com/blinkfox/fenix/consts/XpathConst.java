@@ -37,6 +37,11 @@ public final class XpathConst {
     public static final String ATTR_ID = "attribute::id";
 
     /**
+     * 用于表示 {@code resultType} 的属性 XPATH 常量.
+     */
+    public static final String ATTR_RESULT_TYPE = "attribute::resultType";
+
+    /**
      * 用于表示 “removeIfExist” 的属性 XPATH 常量.
      */
     public static final String ATTR_REMOVE = "attribute::removeIfExist";

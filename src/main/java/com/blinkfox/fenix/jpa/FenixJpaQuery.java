@@ -4,12 +4,11 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.exception.FenixException;
-import com.blinkfox.fenix.helper.AopTargetHelper;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
+import com.blinkfox.fenix.helper.ProxyHelper;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -140,13 +139,12 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private Query buildNativeQueryResultType(Query query) {
         // 如果没有自定义返回类型，就直接返回.
         String resultType = this.sqlInfo.getResultType();
-        resultType = "com.blinkfox.fenix.vo.UserBlogInfo2";
         if (StringHelper.isBlank(resultType)) {
             return query;
         }
 
         // 获取该查询对应的 NativeQuery，设置转换类型.
-        NativeQuery nativeQuery = AopTargetHelper.getTarget(query);
+        NativeQuery nativeQuery = ProxyHelper.getTarget(query);
         try {
             nativeQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
         } catch (ClassNotFoundException e) {
@@ -158,13 +156,12 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private Query buildResultType(Query query) {
         // 如果没有自定义返回类型，就直接返回.
         String resultType = this.sqlInfo.getResultType();
-        resultType = "com.blinkfox.fenix.vo.UserBlogInfo2";
         if (StringHelper.isBlank(resultType)) {
             return query;
         }
 
         // 获取该查询对应的 NativeQuery，设置转换类型.
-        org.hibernate.query.Query hibernateQuery = AopTargetHelper.getTarget(query);
+        org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(query);
         try {
             hibernateQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
         } catch (ClassNotFoundException e) {
