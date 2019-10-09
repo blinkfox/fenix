@@ -2,7 +2,191 @@
 
 Fenix 中除了上面介绍的一些功能之外，还有其他额外的辅助、简化开发的功能，以下作简要介绍。
 
-## 从 XML 中获取 SQL 信息
+## 1. 返回自定义的实体对象
+
+### (1) 初衷
+
+JPA 本身支持通过“[投影](https://docs.spring.io/spring-data/jpa/docs/2.2.0.RELEASE/reference/html/#projections)”的方式来返回自定义的实体对象，但使用起来不那么“自然”。主要原因是：
+
+- **基于接口的投影**需要创建的是查询结果的接口，接口中的方法是各个结果列属性的 `Getter` 方法，这样查询的结果就是这个接口的匿名实例或实例的集合，并非真正意义上的 `Java Bean`。
+- **基于类的投影**创建的是一个实体类（`Java Bean`），但必须保证该类中含有查询结果列的构造方法，且还比须保证查询结果列与构造方法参数的顺序要一一对应，增加了后期维护的难度。而且该方式的 JPQL 语句必须使用 `new com.xxx.BlogDto(...)` 形式，比较奇怪，而且不能用于原生 SQL 的场景。
+
+基于以上原因，Fenix 从 `v1.1.0` 版本开始新增了更加简单、自然的方式来返回自定义的实体对象（`Java Bean`）。下面依然通过 XML 和 Java 两种情况来做示例演示和说明。
+
+### (2) XML 中的使用示例
+
+首先，定义一个自定义的数据传输实体用户博客信息类（DTO） `UserBlogInfo.java`，用来作为查询的返回结果，各属性请保证必须至少含有可公开访问的 `Setter` 方法：
+
+```java
+package com.blinkfox.fenix.vo;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * 用户博客信息的自定义业务实体类，用于测试 JPA 返回自定义实体的使用.
+ *
+ * @author blinkfox on 2019/8/9.
+ */
+@Getter
+@Setter
+public class UserBlogInfo {
+
+    /**
+     * 用户 ID.
+     */
+    private String userId;
+
+    /**
+     * 用户名称.
+     */
+    private String name;
+
+    /**
+     * 用户博客 ID.
+     */
+    private String blogId;
+
+    /**
+     * 博客标题.
+     */
+    private String title;
+
+    /**
+     * 博客原作者.
+     */
+    private String author;
+
+    /**
+     * 博客内容.
+     */
+    private String content;
+
+}
+```
+
+在 `BlogRepository.java` 接口中定义查询的接口方法，接口返回的是我们刚才定义的 `UserBlogInfo` 分页信息：
+
+```java
+/**
+ * 使用 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体分页信息.
+ *
+ * @param userId 用户ID
+ * @param blog 博客实体信息
+ * @return 用户博客信息集合
+ */
+@QueryFenix("BlogRepository.queryUserBlogsWithFenixResultType")
+Page<UserBlogInfo> queryUserBlogPageWithFenixResultType(@Param("userId") String userId, @Param("blog") Blog blog, Pageable pageable);
+```
+
+然后，在 `BlogRepository.xml` 的 XML 文件中，书写 SQL 语句，通过 `resultType` 来额外表明返回的结果为我们刚才自定义的实体类：
+
+```xml
+<!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（用于测试返回自定义的实体信息）. -->
+<fenix id="queryUserBlogsWithFenixResultType" resultType="com.blinkfox.fenix.vo.UserBlogInfo">
+    SELECT
+        u.id as userId,
+        u.name as name,
+        b.id as blogId,
+        b.title as title,
+        b.author as author,
+        b.content as content
+    FROM
+        Blog as b,
+        User as u
+    WHERE
+        u.id = b.userId
+    <andEqual field="b.userId" value="userId"/>
+    <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+    <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
+</fenix>
+```
+
+!> **注**：
+> 1. 上面的代码关键之处，就在 fenix 节点中配置了 `resultType` 属性的值为我们定义的**实体类的全路径名** `com.blinkfox.fenix.vo.UserBlogInfo`。这样查询结果返回的时候就能自动识别并返回了。
+> 2. 另一个要点是所有查询列**都必须使用 as**来返回一个“别名”，且**这个“别名”必须跟实体类的属性名一致，不区分大小写**。
+
+### (3) Java 中的使用示例
+
+在 Java 中的使用示例同 XML 中相似，只不过是将 SQL 写到了 Java 代码中了而已，且通过 `setResultTypeClass` 方法来设置返回的结果类型。
+
+书写 SQL 的 Provider 类代码如下：
+
+```java
+public final class BlogSqlInfoProvider {
+
+    /**
+     * 使用 Java 拼接 SQL 的方式来拼接查询用户博客信息的 SQL 信息.
+     *
+     * @param userId 用户 ID
+     * @param title 标题
+     * @return SQL 信息
+     */
+    public SqlInfo queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title) {
+        return Fenix.start()
+                .select("u.id AS userId, u.name AS name, b.id AS blogId, b.title AS title, b.author AS author, "
+                        + "b.content AS content")
+                .from("Blog as b, User as u")
+                .where("u.id = b.userId")
+                .andEqual("b.userId", userId)
+                .andLike("b.title", title, StringHelper.isNotBlank(title))
+                .end()
+                .setResultTypeClass(UserBlogInfo.class);
+    }
+
+}
+```
+
+`BlogRepository.java` 接口中定义查询方法如下：
+
+```java
+/**
+ * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来连表模糊查询并返回自定义的用户博客信息.
+ *
+ * @param userId 用户 ID
+ * @param title 标题
+ * @return 自定义的用户博客信息集合
+ */
+@QueryFenix(provider = BlogSqlInfoProvider.class)
+List<UserBlogInfo> queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title);
+```
+
+## 2. 消除 1 = 1 等无用 SQL
+
+### (1) 在 XML 中消除
+
+在 Fenix XML 文件中，可以在 `<fenix></fenix>` 节点中配置 `removeIfExist` 属性，填入需要移除的多余字符串即可。
+
+代码示例如下：
+
+```xml
+<!-- 测试该多个 and 时移除 "1 = 1 AND " 的 SQL 片段 -->
+<fenix id="queryUsersByName" removeIfExist="1 = 1 AND ">
+    SELECT u FROM User AS u
+    WHERE
+    1 = 1
+    <andLike field="u.name" value="user.name" match="user.name != empty"/>
+    AND u.age > #{user.age}
+    AND u.status = #{user.status}
+    <andLike field="u.email" value="user.email" match="user.email != empty"/>
+</fenix>
+```
+
+### (2) 在 Java 中消除
+
+如果你使用的是 Java API，那么你可以通过在生成完的 SqlInfo 对象中调用 `removeIfExist(subSql)` 方法来消除它，其他类似的子 SQL 也都可以消除。使用示例如下：
+
+```java
+SqlInfo sqlInfo = Fenix.start()
+        ...
+        .end()
+        .removeIfExist(" 1 = 1 AND");
+
+或者
+sqlInfo.removeIfExist(" 1 <> 1");
+```
+
+## 3. 从 XML 中获取 SQL 信息
 
 Fenix 中会自动从 `XML` 中获取到 SQL 信息。如果你想手动从 `XML` 中获取到 SQL 信息（`SqlInfo`），也可以使用 `Fenix.java` 提供的 `API` 来获取。
 
@@ -11,14 +195,14 @@ Fenix 中会自动从 `XML` 中获取到 SQL 信息。如果你想手动从 `XML
 Fenix.getXmlSqlInfo(String fullFenixId, Object context)
 
 // 通过传入 Fenix XML 文件对应的命名空间、Fenix 节点的 ID 以及上下文参数对象，来生成和获取 SqlInfo 信息.
-getXmlSqlInfo(String namespace, String fenixId, Object context)
+Fenix.getXmlSqlInfo(String namespace, String fenixId, Object context)
 ```
 
-## 表达式、模版解析器
+## 4. 表达式、模版解析器
 
 在 Fenix 中解析 XML 标签中的表达式或者模版是通过 `Mvel` 表达式语言来实现的，主要方法解析方法是封装在了`ParseHelper.java` 的工具类中，通过该类让开发人员自己测试表达式也是极为方便的。以下作简要介绍。
 
-### 解析表达式
+### (1) 解析表达式
 
 #### 主要方法
 
@@ -54,7 +238,7 @@ public void testParseStr2() {
 }
 ```
 
-### 解析模版
+### (2) 解析模版
 
 #### 主要方法
 
@@ -76,13 +260,13 @@ public void testParseTemplate2() {
 }
 ```
 
-## 上下文参数包装类
+## 5. 上下文参数包装类
 
-Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWrapper` 工具类，其本质上就是对 `HashMap` 方法的一个简单链式封装。
+Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWrapper` 工具类，其本质上就是对 `HashMap` 方法的一个**简单链式封装**。
 
 > **注**：提供该包装器类的主要目的是方便开发者封装较多的散参数或者多个 Java 对象为一个 `Map` 型的上下文参数。
 
-### ParamWrapper主要方法
+### (1) ParamWrapper主要方法
 
 - `newInstance()`，创建新的`ParamWrapper`实例。
 - `newInstance(Map<String, Object> paramMap)`，传入已有的`Map`型对象，并创建新的`ParamWrapper`实例。
@@ -90,7 +274,7 @@ Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWr
 - `put(String key, Object value)`，向参数包装器中，`put`对应的key和value值。
 - `toMap()`，返回填充了key、value后的Map对象。
 
-### 对比的示例
+### (2) 对比的示例
 
 以前需要开发者自己封装Map：
 
@@ -108,7 +292,7 @@ Map<String, Object> context = ParamWrapper.newInstance("sex", "1").put("stuId", 
 
 前后对比来看，再仅仅只需要传入个别自定义参数时，能简化部分代码量和参数传递。
 
-## 表达式的真假判断
+## 6. 表达式的真假判断
 
 **主要方法**：
 
@@ -121,39 +305,4 @@ isNotMatch(String match, Object context)
 
 // 是否为 true，只有当解析值确实为 true 时，才为 true.
 isTrue(String exp, Object context)
-```
-
-## 消除 1 = 1 等无用 SQL
-
-### 在 XML 中消除
-
-在 Fenix XML 文件中，可以在 `<fenix></fenix>` 节点中配置 `removeIfExist` 属性，填入需要移除的多余字符串即可。
-
-代码示例如下：
-
-```xml
-<!-- 测试该多个 and 时移除 "1 = 1 AND " 的 SQL 片段 -->
-<fenix id="queryUsersByName" removeIfExist="1 = 1 AND ">
-    SELECT u FROM User AS u
-    WHERE
-    1 = 1
-    <andLike field="u.name" value="user.name" match="user.name != empty"/>
-    AND u.age > #{user.age}
-    AND u.status = #{user.status}
-    <andLike field="u.email" value="user.email" match="user.email != empty"/>
-</fenix>
-```
-
-### 在 Java 中消除
-
-如果你使用的是 Java API，那么你可以通过在生成完的 SqlInfo 对象中调用 `removeIfExist(subSql)` 方法来消除它，其他类似的子 SQL 也都可以消除。使用示例如下：
-
-```java
-SqlInfo sqlInfo = Fenix.start()
-        ...
-        .end()
-        .removeIfExist(" 1 = 1 AND");
-
-或者
-sqlInfo.removeIfExist(" 1 <> 1");
 ```

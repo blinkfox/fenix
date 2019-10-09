@@ -1,8 +1,8 @@
-# 与 MyBatis 的 SQL 比较
+# 与 MyBatis 的 SQL 写法比较
 
 ## 假设业务查询场景
 
-下面将通过一个多条件查询**操作日志**的功能，来初步了解和比较 `MyBatis` 与 `Fenix` 在写“**多条件模糊分页**”查询时 SQL 写法的一些差异。
+下面将通过一个多条件查询**操作日志**的功能，来初步了解和比较 `MyBatis` 与 `Fenix` 在写“**多条件模糊分页**”查询时 SQL 写法的一些差异和各自的特点。
 
 ![查询页面](assets/images/search.png)
 
@@ -104,8 +104,8 @@
 
 `MyBatis` 和 `Fenix` 的 SQL 有以下几个差异点：
 
-- MyBatis 只能写原生 SQL，无法享受跨数据库时的兼容性；由于 Fenix 是基于 Spring Data JPA 的扩展，即可以写 `JPQL` 语句，也可以写原生 `SQL` 语句，上述示例中写的是 `JPQL` 语句，SQL 的字段表达上更简洁。
-- MyBatis 书写动态 SQL 依赖只能 `if/else`、`foreach` 等分支循环操作，灵活性高，但是代码量和重复性较高；而 Fenix 也有 `if/else`、`foreach` 等分支循环操作，但内置了大量的更加简单、强大和语义化的 XML [SQL 标签](xml/xml-tags)，使用语义化的 SQL 标签，使得 SQL 的语义简单明了，再通过 `match` 属性的值来确定是否生成此条 SQL，来达到动态性。
+- MyBatis 只能写原生 SQL，无法享受跨数据库时的兼容性；由于 Fenix 是基于 Spring Data JPA 的扩展，即可以写 `JPQL` 语句，也可以写原生 `SQL` 语句，上述示例中写的是 `JPQL` 语句，SQL 的字段表达上更简洁，也不需要再定义 `resultMap` 映射关系。
+- MyBatis 书写动态 SQL 依赖只能使用 `if/else`、`foreach` 等分支选择、循环等操作，保证了灵活性，但是代码量和重复性较高，且 SQL 嵌套多层，视觉上比较混乱，可读写差；而 Fenix 也有 `if/else`、`foreach` 等分支循环操作，但内置了大量的更加简单、强大和语义化的 XML [SQL 标签](xml/xml-tags)，使用语义化的 SQL 标签，使得 SQL 的语义简单明了，没有多层嵌套，可读写更好，通过 `match` 属性的值来确定是否生成此条 SQL，来达到动态性。
 - MyBatis 通过 `trim` 标签消除 `WHERE` 语句后的 `1 =1 AND`，而 `Fenix` 是通过在 `<fenix />` 节点中声明 `removeIfExist` 属性（非必填）来声明式的消除。
 - MyBatis 的动态 SQL 解析引擎是 [OGNL](http://commons.apache.org/proper/commons-ognl/)，而 Fenix 的解析引擎是 [MVEL](http://mvel.documentnode.com/)，功能和性能上都更优一些。
 

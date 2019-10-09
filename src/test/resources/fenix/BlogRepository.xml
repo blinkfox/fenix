@@ -111,6 +111,24 @@
         <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（用于测试返回自定义的实体信息）. -->
+    <fenix id="queryUserBlogsWithFenixResultType2" resultType="com.blinkfox.fenix.vo.UserBlogDto">
+        SELECT
+            u.id as userId,
+            u.name as name,
+            b.id as blogId,
+            b.title as title,
+            b.author as author
+        FROM
+            Blog as b,
+            User as u
+        WHERE
+            u.id = b.userId
+        <andEqual field="b.userId" value="userId"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
+    </fenix>
+
     <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（用于测试返回自 map 的情况）. -->
     <fenix id="queryUserBlogMapWithFenix">
         SELECT new map (

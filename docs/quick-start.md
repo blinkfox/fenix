@@ -12,7 +12,7 @@
 
 ### 创建项目
 
-在 [start.spring.io](https://start.spring.io/) 中创建一个自己的 SpringBoot2.x 项目，目前最新稳定版本是 `2.1.7`。选出了一些组件来生成项目，我这里仅选了如下几个：
+在 [start.spring.io](https://start.spring.io/) 中创建一个自己的 SpringBoot2.x 项目，目前最新稳定版本是 `2.1.7`（后续会陆续升级）。选出了一些组件来生成项目，我这里仅选了如下几个：
 
 - `JPA`: 这是**必须**组件，就是用来试用 `Spring Data JPA` 的 Fenix 扩展的
 - `Web`: Spring Boot Web 项目，用来测试打包后的 SQL 执行情况，**非必须**组件
@@ -294,3 +294,5 @@ public class BlogRepositoryTest {
 ```
 
 通过以上的示例，简单的演示了 Fenix 的使用，关于 [QueryFenix](http://localhost:3000/#/queryfenix-introduction) 注解的高级使用请继续往下查看。
+
+!> **注**: 通过后续的章节介绍可以知道，建议你保证 `BlogRepository.xml` 中的 `namespace` 的值与 `BlogRepository.java` 接口的全路径名一致，还有就是 `fenixId` 与接口方法名一致，这样一一对应的话，注解就可以直接简写成 `@QueryFenix` 即可，上面的示例中没有这样做，是为了通过演示让你知道 `BlogRepository.java` 和 `BlogRepository.xml` 之间的对应查找机制。

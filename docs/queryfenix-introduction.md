@@ -1,11 +1,11 @@
 ## 注解元数据介绍
 
-- `value()`: 完整的 `fenix id` 标记，该值由 XML 文件的命名空间（`namespace`）、点（`.`）号和 Fenix XML 标签中的 fenix id 组成。如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号，且如果 fenix id 与对应的查询方法名一样，那么 `value()` 值可以为空。
-- `countQuery()`: 表示查询分页查询情况下查询总记录数时需要执行的 SQL。该值仅分页查询时用到，值的规则同上面的 `value()` 一样，如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号。
-- `nativeQuery()`: 表示原生 SQL 查询，默认为 `false`。
-- `provider()`: 表示通过 Java 来拼接 SQL 语句的提供类的 class。
-- `method()`: 表示通过 Java 来拼接 SQL 语句的提供类的方法。
-- `countMethod()`: 表示通过 Java 来拼接分页查询时查询总记录数 SQL 语句的提供类的方法。
+- **`value()`**: 完整的 `fenix id` 标记，该值由 XML 文件的命名空间（`namespace`）、点（`.`）号和 Fenix XML 标签中的 fenix id 组成。如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号，且如果 fenix id 与对应的查询方法名一样，那么 `value()` 值就可以为空。
+- **`countQuery()`**: 表示查询分页查询情况下查询总记录数时需要执行的 SQL。该值仅分页查询时用到，值的规则同上面的 `value()` 一样，如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号。
+- **`nativeQuery()`**: 表示原生 SQL 查询，默认为 `false`。
+- **`provider()`**: 表示通过 Java 来拼接 SQL 语句的提供类的 class。
+- **`method()`**: 表示通过 Java 来拼接 SQL 语句的提供类的方法。
+- **`countMethod()`**: 表示通过 Java 来拼接分页查询时查询总记录数 SQL 语句的提供类的方法。
 
 ## @QueryFenix 注解使用简化
 
@@ -69,4 +69,4 @@ Page<Blog> queryMyBlogs(@Param("ids") List<String> ids, @Param("blog") Blog blog
 
 ## 使用 Java 代码拼接 SQL
 
-关于如何用 Java 代码来拼接动态 SQL，请参看后续篇章。
+关于如何用 Java 代码来拼接动态 SQL，请参看[后续篇章](java/example)。

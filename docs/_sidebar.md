@@ -1,6 +1,6 @@
 - 快速入门
   - [简介](README)
-  - [与 MyBatis 的 SQL 比较](compare-mybatis)
+  - [与 MyBatis 的 SQL 写法比较](compare-mybatis)
   - [快速集成](quick-install)
   - [快速开始](quick-start)
   - [@QueryFenix 注解](queryfenix-introduction)

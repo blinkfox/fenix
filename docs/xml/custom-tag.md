@@ -20,7 +20,7 @@
 1. 第一种，使用模板引擎中的逻辑控制语法（[@if{} @else{}](xml/logic-control?id=if-else)），在每个查询语句中都复制粘贴这条 SQL。或者更好点儿的办法，是将其做成一个单独的 `fenix` XML 节点，每个用到的地方都用 [import](xml/xml-tags?id=import) 标签来导入即可，能最大限度的防止代码重复。
 2. 第二种，使用 [<choose />](xml/xml-tags?id=choose) 标签来做逻辑控制，将其做成一个单独的 `fenix` XML 节点，每个用到的地方都用 [import](xml/xml-tags?id=import) 标签来导入即可，能最大限度的防止代码重复。
 
-以上两种方案，都可行，也都能防止 SQL 代码重复。但我认为还不是最好的。我们可以将以上逻辑做成一个语义化的 XML SQL 标签，只需要传递一个 `userId` 参数，然后通过我们书写一些 Java 的逻辑代码来根据 userId 的情况，生成不同的 SQL 片段和参数即可。
+以上两种方案，都可行，也都能防止 SQL 代码重复。但我认为还不是最好的。我们可以将以上逻辑做成一个语义化的 XML SQL 标签，只需要传递待查询的字段 `field` 和 `userId` 参数，然后通过我们书写一些 Java 的逻辑代码来根据 userId 的情况，生成不同的 SQL 片段和参数即可。
 
 Fenix 也为开发者扩展自己的 XML SQL 语义化标签提供了支持。
 
