@@ -4,6 +4,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Collection;
@@ -89,8 +90,9 @@ public class FenixResultTransformer<T> implements ResultTransformer {
         // 构造结果实例.
         T resultObject;
         try {
-            resultObject = this.resultClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            resultObject = this.resultClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
             throw new FenixException("实例化【" + this.resultClass + "】类出错，请检查该类是否包含可公开访问的无参构造方法！", e);
         }
 

@@ -61,8 +61,9 @@ public final class ClassMethodInvoker {
     private static SqlInfo invokeMethod(Class<?> cls, Method m, List<Object> paramValues) {
         try {
             m.setAccessible(true);
-            return (SqlInfo) m.invoke(cls.newInstance(), paramValues.toArray());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return (SqlInfo) m.invoke(cls.getDeclaredConstructor().newInstance(), paramValues.toArray());
+        } catch (InstantiationException | NoSuchMethodException
+                | IllegalAccessException | InvocationTargetException e) {
             throw new FenixException("【Fenix 异常】创建【" + cls.getName() + "】类的实例异常，请检查构造方法是否是无参 public 型的，"
                     + "或者检查调用的【" + m.getName() + "】方法是否是 public 型的！", e);
         }

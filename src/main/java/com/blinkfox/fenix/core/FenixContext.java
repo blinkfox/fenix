@@ -7,6 +7,8 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.StringHelper;
 
+import java.lang.reflect.InvocationTargetException;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -44,10 +46,11 @@ final class FenixContext {
 
         try {
             // 否则就调用 getHandlerCls() 方法来使用反射获取该 Handler 对应的实例，并执行方法.
-            handler.getHandlerCls().newInstance().buildSqlInfo(source);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new FenixException(StringHelper
-                    .format("【Fenix 异常】访问或实例化【{}】class 出错!", handler.getHandlerCls().getName()), e);
+            handler.getHandlerCls().getDeclaredConstructor().newInstance().buildSqlInfo(source);
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
+            throw new FenixException(StringHelper.format("【Fenix 异常】访问或实例化【{}】class 出错!",
+                    handler.getHandlerCls().getName()), e);
         }
     }
 
