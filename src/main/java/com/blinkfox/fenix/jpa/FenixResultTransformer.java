@@ -1,11 +1,13 @@
 package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
+import com.blinkfox.fenix.helper.StringHelper;
 
 import java.beans.PropertyDescriptor;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.BlobType;
 import org.hibernate.type.descriptor.java.DataHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -40,9 +43,9 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     private Class<T> resultClass;
 
     /**
-     * 字段间的映射关系 Map.
+     * 返回结果各属性字段名称及对应的对象间的映射关系 Map.
      */
-    private Map<String, PropertyDescriptor> fieldMap;
+    private final transient Map<String, PropertyDescriptor> fieldMap;
 
     static {
         // 添加一些默认的 ConversionService.
@@ -62,6 +65,13 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     public FenixResultTransformer(Class<T> resultClass) {
         Assert.notNull(resultClass, "【Fenix 异常】resultClass cannot be null.");
         this.resultClass = resultClass;
+
+        // 将返回结果类中的所有属性保存到 Map 中，便于后续快速获取和判断.
+        this.fieldMap = new HashMap<>();
+        PropertyDescriptor[] propDescriptors = BeanUtils.getPropertyDescriptors(this.resultClass);
+        for (PropertyDescriptor propDescriptor : propDescriptors) {
+            this.fieldMap.put(propDescriptor.getName().toLowerCase(), propDescriptor);
+        }
     }
 
     /**
@@ -73,28 +83,35 @@ public class FenixResultTransformer<T> implements ResultTransformer {
      */
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
+        // 构造结果实例.
         T resultObject;
         try {
             resultObject = this.resultClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new FenixException("实例化【】类出错，请检查该类是否包含可公开访问的无参构造方法！", e);
+            throw new FenixException("实例化【" + this.resultClass + "】类出错，请检查该类是否包含可公开访问的无参构造方法！", e);
         }
 
         BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(resultObject);
         beanWrapper.setConversionService(conversionService);
 
+        // 遍历设置各个属性对应的值.
         for (int i = 0, len = aliases.length; i < len; i++) {
             String column = aliases[i];
-            PropertyDescriptor propertyDescriptor = this.fieldMap.get(column.replaceAll(" ", "").toLowerCase());
-            if (propertyDescriptor == null) {
+            if (column == null || StringHelper.isBlank(column)) {
+                throw new FenixException("【Fenix 异常】要映射为【" + this.resultClass + "】实体的查询结果列为空，"
+                        + "请检查并保证每一个查询结果列都必须用【as】后加“别名”的方式！");
+            }
+
+            PropertyDescriptor propDescriptor = this.fieldMap.get(column.replaceAll(" ", "").toLowerCase());
+            if (propDescriptor == null) {
                 continue;
             }
 
             try {
-                beanWrapper.setPropertyValue(propertyDescriptor.getName(), tuple[i]);
+                beanWrapper.setPropertyValue(propDescriptor.getName(), tuple[i]);
             } catch (NotWritablePropertyException | TypeMismatchException e) {
                 throw new FenixException("【Fenix 异常】设置字段【" + column + "】的值到属性【"
-                        + propertyDescriptor.getName() + "】中出错，请检查该字段或属性是否存在或者可公开访问！", e);
+                        + propDescriptor.getName() + "】中出错，请检查该字段或属性是否存在或者可公开访问！", e);
             }
         }
         return resultObject;

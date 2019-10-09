@@ -3,7 +3,6 @@ package com.blinkfox.fenix.repository;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogInfo;
-import com.blinkfox.fenix.vo.UserBlogInfo2;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.util.List;
@@ -81,7 +80,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 用户博客信息集合
      */
     @QueryFenix(value = "BlogRepository.queryUserBlogsWithFenixNative", nativeQuery = true)
-    List<UserBlogInfo2> queryUserBlogsWithFenixNative(@Param("userId") String userId, @Param("title") String title);
+    List<UserBlogInfo> queryUserBlogsWithFenixNative(@Param("userId") String userId, @Param("title") String title);
 
     /**
      * 使用 {@link QueryFenix} 注解来连表模糊查询用户博客信息.
@@ -101,7 +100,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * @return 用户博客信息集合
      */
     @QueryFenix("BlogRepository.queryUserBlogsWithFenixResultType")
-    List<UserBlogInfo2> queryUserBlogsWithFenixResultType(@Param("userId") String userId, @Param("blog") Blog blog);
+    List<UserBlogInfo> queryUserBlogsWithFenixResultType(@Param("userId") String userId, @Param("blog") Blog blog);
 
     /**
      * 使用 {@link QueryFenix} 注解来连表模糊查询用户博客信息到自定义的 {@link com.blinkfox.fenix.vo.UserBlogProjection} 投影接口中.

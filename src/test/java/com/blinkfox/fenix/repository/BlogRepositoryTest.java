@@ -7,9 +7,9 @@ import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.handler.HelloTagHandler;
+import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogInfo;
-import com.blinkfox.fenix.vo.UserBlogInfo2;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.io.IOException;
@@ -95,6 +95,7 @@ public class BlogRepositoryTest {
     public void queryBlogsByTitle() {
         List<Blog> blogs = blogRepository.queryBlogsByTitle(new String[] {"1", "2", "3", "9", "10"}, SPRING);
         Assert.assertFalse(blogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(blogs.get(0).getTitle()));
     }
 
     /**
@@ -102,9 +103,10 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogsByIds() {
-        Page<Blog> blogs = blogRepository.queryBlogsByIds(new String[] {"1", "2", "3", "5", "7"},
+        Page<Blog> blogPage = blogRepository.queryBlogsByIds(new String[] {"1", "2", "3", "5", "7"},
                 PageRequest.of(1, 3, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
-        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(blogPage.getContent().get(0).getTitle()));
     }
 
     /**
@@ -114,6 +116,7 @@ public class BlogRepositoryTest {
     public void querySimplyDemo() {
         List<Blog> blogs = blogRepository.querySimplyDemo(new Blog().setId("1"));
         Assert.assertFalse(blogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(blogs.get(0).getTitle()));
     }
 
     /**
@@ -121,10 +124,11 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogs2() {
-        Page<Blog> blogs = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
+        Page<Blog> blogPage = blogRepository.queryBlogs2(new String[] {"1", "2", "3", "9", "10"},
                 new Blog().setAuthor("ZhangSan").setTitle("Spring").setUpdateTime(new Date()),
                 PageRequest.of(0, 1, Sort.by(Sort.Order.asc("createTime"), Sort.Order.desc("id"))));
-        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(blogPage.getContent().get(0).getTitle()));
     }
 
     /**
@@ -132,8 +136,9 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryUserBlogsByTitle() {
-        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitle("1", SPRING);
-        Assert.assertFalse(blogs.isEmpty());
+        List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsByTitle("1", SPRING);
+        Assert.assertFalse(userBlogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
     }
 
     /**
@@ -141,8 +146,9 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryUserBlogsWithFenixNative() {
-        List<UserBlogInfo2> blogs = blogRepository.queryUserBlogsWithFenixNative("1", SPRING);
-        Assert.assertFalse(blogs.isEmpty());
+        List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsWithFenixNative("1", SPRING);
+        Assert.assertFalse(userBlogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
     }
 
     /**
@@ -150,9 +156,10 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryUserBlogsByTitleWithFenix() {
-        List<UserBlogInfo> blogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
+        List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsByTitleWithFenix("1",
                 new Blog().setTitle(SPRING).setContent("-"));
-        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertFalse(userBlogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
     }
 
     /**
@@ -160,9 +167,10 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryUserBlogsWithFenixResultType() {
-        List<UserBlogInfo2> blogs = blogRepository.queryUserBlogsWithFenixResultType("1",
+        List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsWithFenixResultType("1",
                 new Blog().setTitle(SPRING).setContent("-"));
-        Assert.assertFalse(blogs.isEmpty());
+        Assert.assertFalse(userBlogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
     }
 
     /**

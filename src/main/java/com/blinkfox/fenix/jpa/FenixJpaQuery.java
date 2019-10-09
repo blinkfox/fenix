@@ -20,7 +20,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.query.NativeQuery;
-import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
@@ -146,7 +145,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 获取该查询对应的 NativeQuery，设置转换类型.
         NativeQuery nativeQuery = ProxyHelper.getTarget(query);
         try {
-            nativeQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
+            nativeQuery.setResultTransformer(new FenixResultTransformer<>(Class.forName(resultType)));
         } catch (ClassNotFoundException e) {
             throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
         }
@@ -163,7 +162,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 获取该查询对应的 NativeQuery，设置转换类型.
         org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(query);
         try {
-            hibernateQuery.setResultTransformer(new AliasToBeanResultTransformer(Class.forName(resultType)));
+            hibernateQuery.setResultTransformer(new FenixResultTransformer<>(Class.forName(resultType)));
         } catch (ClassNotFoundException e) {
             throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
         }
