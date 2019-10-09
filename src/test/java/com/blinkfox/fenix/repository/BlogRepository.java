@@ -2,6 +2,7 @@ package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.jpa.QueryFenix;
+import com.blinkfox.fenix.provider.BlogSqlInfoProvider;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 
@@ -72,6 +73,16 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
             + "from Blog as b, com.blinkfox.fenix.entity.User as u"
             + " where u.id = b.userId and b.userId = :userId and b.title like :title")
     List<UserBlogInfo> queryUserBlogsByTitle(@Param("userId") String userId, @Param("title") String title);
+
+    /**
+     * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来连表模糊查询并返回自定义的用户博客信息.
+     *
+     * @param userId 用户 ID
+     * @param title 标题
+     * @return 自定义的用户博客信息集合
+     */
+    @QueryFenix(provider = BlogSqlInfoProvider.class)
+    List<UserBlogInfo> queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title);
 
     /**
      * 使用原生的 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体信息.

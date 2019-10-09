@@ -144,6 +144,16 @@ public class BlogRepositoryTest {
     }
 
     /**
+     * 测试使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来模糊查询并得到自定义的用户博客实体信息.
+     */
+    @Test
+    public void queryUserBlogsWithFenixJava() {
+        List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsWithFenixJava("1", SPRING);
+        Assert.assertFalse(userBlogs.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
+    }
+
+    /**
      * 测试使用 {@link QueryFenix} 注解来模糊查询自定义的用户博客实体信息.
      */
     @Test

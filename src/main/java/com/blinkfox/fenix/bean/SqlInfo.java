@@ -58,4 +58,15 @@ public class SqlInfo {
         return this;
     }
 
+    /**
+     * 设置查询的自定义返回结果类型的 class，这里主要是指实体 Bean 类的 class 实例.
+     *
+     * @param resultTypeClass 实体 Bean 类的 class 实例
+     * @since v1.1.0
+     */
+    public SqlInfo setResultTypeClass(Class<?> resultTypeClass) {
+        this.resultType = resultTypeClass.getName();
+        return this;
+    }
+
 }
