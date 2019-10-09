@@ -3,9 +3,7 @@ package com.blinkfox.fenix.jpa;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.Fenix;
-import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
-import com.blinkfox.fenix.helper.ProxyHelper;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 
@@ -19,7 +17,6 @@ import javax.persistence.Tuple;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import org.hibernate.query.NativeQuery;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
@@ -107,7 +104,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.querySql = this.sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
-        Pageable pageable = this.buildPagableAndSortSql(values);
+        final Pageable pageable = this.buildPagableAndSortSql(values);
 
         // 构建出 SQL 查询和相关的参数，区分是否是原生 SQL 的查询.
         Query query;
@@ -115,15 +112,15 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         if (queryFenix.nativeQuery()) {
             Class<?> type = this.getTypeToQueryFor(getQueryMethod().getResultProcessor().withDynamicProjection(
                     new ParametersParameterAccessor(getQueryMethod().getParameters(), values)).getReturnedType());
-            if (type == null) {
-                query = em.createNativeQuery(this.querySql);
-            } else {
-                query = em.createNativeQuery(this.querySql, type);
-            }
-            query = this.buildNativeQueryResultType(query);
+            query = type == null ? em.createNativeQuery(this.querySql) : em.createNativeQuery(this.querySql, type);
         } else {
             query = em.createQuery(this.querySql);
-            query = this.buildResultType(query);
+        }
+
+        // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
+        String resultType = this.sqlInfo.getResultType();
+        if (StringHelper.isNotBlank(resultType)) {
+            query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
         }
 
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
@@ -133,40 +130,6 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             query.setMaxResults(pageable.getPageSize());
         }
         return query;
-    }
-
-    private Query buildNativeQueryResultType(Query query) {
-        // 如果没有自定义返回类型，就直接返回.
-        String resultType = this.sqlInfo.getResultType();
-        if (StringHelper.isBlank(resultType)) {
-            return query;
-        }
-
-        // 获取该查询对应的 NativeQuery，设置转换类型.
-        NativeQuery nativeQuery = ProxyHelper.getTarget(query);
-        try {
-            nativeQuery.setResultTransformer(new FenixResultTransformer<>(Class.forName(resultType)));
-        } catch (ClassNotFoundException e) {
-            throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
-        }
-        return nativeQuery;
-    }
-
-    private Query buildResultType(Query query) {
-        // 如果没有自定义返回类型，就直接返回.
-        String resultType = this.sqlInfo.getResultType();
-        if (StringHelper.isBlank(resultType)) {
-            return query;
-        }
-
-        // 获取该查询对应的 NativeQuery，设置转换类型.
-        org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(query);
-        try {
-            hibernateQuery.setResultTransformer(new FenixResultTransformer<>(Class.forName(resultType)));
-        } catch (ClassNotFoundException e) {
-            throw new FenixException("【Fenix 异常】将查询结果映射为【" + resultType + "】类型出错！", e);
-        }
-        return hibernateQuery;
     }
 
     /**

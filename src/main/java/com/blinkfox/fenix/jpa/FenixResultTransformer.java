@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
  *
  * @param <T> 要转换的范型 T
  * @author blinkfox on 2019-10-08.
+ * @since v1.1.0
  */
 @Slf4j
 public class FenixResultTransformer<T> implements ResultTransformer {
