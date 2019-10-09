@@ -6,6 +6,7 @@ import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,7 +74,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     List<UserBlogInfo> queryUserBlogsByTitle(@Param("userId") String userId, @Param("title") String title);
 
     /**
-     * 使用原生的 {@link Query} 注解来连表模糊查询自定义的用户博客实体信息.
+     * 使用原生的 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体信息.
      *
      * @param userId 用户 ID
      * @param title 标题
@@ -156,5 +157,39 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
     @QueryFenix(value = "BlogRepository.queryFenixNativeByProjection", nativeQuery = true)
     Page<UserBlogProjection> queryFenixNativeByProjection(@Param("userId") String userId,
             @Param("blog") Blog blog, Pageable pageable);
+
+    /**
+     * 使用原生的 {@link Query} 注解来连表模糊查询用户博客信息，并以 {@code List<Map<String, Object>>} 的形式返回.
+     *
+     * @param userId 用户 ID
+     * @param title 标题
+     * @return 用户博客信息集合
+     */
+    @Query("select new map(u.id AS userId, u.name AS name, b.id AS blogId, b.title AS title, b.author AS author, "
+            + "b.content AS content) from Blog as b, User as u "
+            + "where u.id = b.userId and b.userId = :userId and b.title like :title")
+    List<Map<String, Object>> queryUserBlogMap(@Param("userId") String userId, @Param("title") String title);
+
+    /**
+     * 使用原生的 {@link Query} 注解来连表模糊查询用户博客信息，并以 {@code List<Map<String, Object>>} 的形式返回.
+     *
+     * @param userId 用户 ID
+     * @param title 标题
+     * @return 用户博客信息集合
+     */
+    @Query(value = "select u.c_id AS userId, u.c_name, b.c_id AS blogId, b.c_title, b.c_author AS author, "
+            + "b.c_content AS content from t_blog as b, t_user as u "
+            + "where u.c_id = b.c_user_id and b.c_user_id = :userId and b.c_title like :title", nativeQuery = true)
+    List<Map<String, Object>> queryUserBlogMapNative(@Param("userId") String userId, @Param("title") String title);
+
+    /**
+     * 使用 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客信息，并以 {@code List<Map<String, Object>>} 的形式返回.
+     *
+     * @param userId 用户 ID
+     * @param blog 博客信息
+     * @return 用户博客信息集合
+     */
+    @QueryFenix(value = "BlogRepository.queryUserBlogMapWithFenix")
+    List<Map<String, Object>> queryUserBlogMapWithFenix(@Param("userId") String userId, @Param("blog") Blog blog);
 
 }

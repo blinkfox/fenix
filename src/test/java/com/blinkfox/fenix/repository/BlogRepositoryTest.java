@@ -15,6 +15,8 @@ import com.blinkfox.fenix.vo.UserBlogProjection;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -226,6 +228,37 @@ public class BlogRepositoryTest {
                 PageRequest.of(0, 3, Sort.by(Sort.Order.asc("dt_create_time"), Sort.Order.desc("c_id"))));
         Assert.assertFalse(blogs.isEmpty());
         Assert.assertNotNull(blogs.getContent().get(0).getDescription());
+    }
+
+    /**
+     * 测试使用原生 {@code Query} 注解来模糊查询用户博客信息，以 Map 的形式返回.
+     */
+    @Test
+    public void queryUserBlogMap() {
+        List<Map<String, Object>> userBlogMaps = blogRepository.queryUserBlogMap("1", SPRING);
+        Assert.assertFalse(userBlogMaps.isEmpty());
+        Assert.assertTrue(userBlogMaps.get(0).containsKey(("userId")));
+    }
+
+    /**
+     * 测试使用原生 {@code Query} 注解和原生 SQL 来模糊查询用户博客信息，以 Map 的形式返回.
+     */
+    @Test
+    public void queryUserBlogMapNative() {
+        List<Map<String, Object>> userBlogMaps = blogRepository.queryUserBlogMapNative("1", SPRING);
+        Assert.assertFalse(userBlogMaps.isEmpty());
+        Assert.assertTrue(userBlogMaps.get(0).containsKey(("userId")));
+    }
+
+    /**
+     * 测试使用原生 {@code Query} 注解来模糊查询用户博客信息，以 Map 的形式返回.
+     */
+    @Test
+    public void queryUserBlogMapWithFenix() {
+        List<Map<String, Object>> userBlogMaps = blogRepository.queryUserBlogMapWithFenix("1",
+                new Blog().setTitle(SPRING).setContent("-"));
+        Assert.assertFalse(userBlogMaps.isEmpty());
+        Assert.assertTrue(userBlogMaps.get(0).containsKey(("content")));
     }
 
     /**
