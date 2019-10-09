@@ -75,4 +75,40 @@
         <andLike field="b.c_content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义投影信息）. -->
+    <fenix id="queryUserBlogsWithFenixNative" resultType="com.blinkfox.fenix.vo.UserBlogInfo">
+        SELECT
+            u.c_id as userId,
+            u.c_name as name,
+            b.c_id as blogId,
+            b.c_title as title,
+            b.c_author as author,
+            b.c_content as content
+        FROM
+            t_blog as b, t_user as u
+        WHERE
+            u.c_id = b.c_user_id
+<!--        and b.c_user_id = :userId-->
+<!--        and b.c_title like :title-->
+    </fenix>
+
+    <!-- 根据用户ID、博客信息查询该用户发表的用户博客信息（自定义实体信息）. -->
+    <fenix id="queryUserBlogsWithFenixResultType" resultType="com.blinkfox.fenix.vo.UserBlogInfo">
+        SELECT
+            u.id as userId,
+            u.name as name,
+            b.id as blogId,
+            b.title as title,
+            b.author as author,
+            b.content as content
+        FROM
+            Blog as b,
+            User as u
+        WHERE
+            u.id = b.userId
+        <andEqual field="b.userId" value="userId"/>
+        <andLike field="b.title" value="blog.title" match="blog.title != empty"/>
+        <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
+    </fenix>
+
 </fenixs>

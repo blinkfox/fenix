@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import javax.persistence.Tuple;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
@@ -33,6 +34,7 @@ import org.springframework.data.repository.query.ReturnedType;
  *
  * @author blinkfox on 2019-08-04.
  */
+@Slf4j
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
@@ -102,7 +104,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         this.querySql = this.sqlInfo.getSql();
 
         // 判断是否有分页参数.如果有的话，就设置分页参数.
-        Pageable pageable = this.buildPagableAndSortSql(values);
+        final Pageable pageable = this.buildPagableAndSortSql(values);
 
         // 构建出 SQL 查询和相关的参数，区分是否是原生 SQL 的查询.
         Query query;
@@ -110,13 +112,15 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         if (queryFenix.nativeQuery()) {
             Class<?> type = this.getTypeToQueryFor(getQueryMethod().getResultProcessor().withDynamicProjection(
                     new ParametersParameterAccessor(getQueryMethod().getParameters(), values)).getReturnedType());
-            if (type == null) {
-                query = em.createNativeQuery(this.querySql);
-            } else {
-                query = em.createNativeQuery(this.querySql, type);
-            }
+            query = type == null ? em.createNativeQuery(this.querySql) : em.createNativeQuery(this.querySql, type);
         } else {
             query = em.createQuery(this.querySql);
+        }
+
+        // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
+        String resultType = this.sqlInfo.getResultType();
+        if (StringHelper.isNotBlank(resultType)) {
+            query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
         }
 
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.

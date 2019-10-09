@@ -1,6 +1,8 @@
 package com.blinkfox.fenix.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,6 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserBlogInfo {
 
     /**
@@ -42,22 +46,4 @@ public class UserBlogInfo {
      */
     private String content;
 
-    /**
-     * 用户博客信息构造方法.
-     *
-     * @param userId 用户 ID
-     * @param name 用户名称
-     * @param blogId 博客 ID
-     * @param title 标题
-     * @param author 作者
-     * @param content 内容
-     */
-    public UserBlogInfo(String userId, String name, String blogId, String title, String author, String content) {
-        this.userId = userId;
-        this.name = name;
-        this.blogId = blogId;
-        this.title = title;
-        this.author = author;
-        this.content = content;
-    }
 }
