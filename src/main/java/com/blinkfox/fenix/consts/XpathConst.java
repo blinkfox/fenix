@@ -38,6 +38,8 @@ public final class XpathConst {
 
     /**
      * 用于表示 {@code resultType} 的属性 XPATH 常量.
+     *
+     * @since v1.1.0
      */
     public static final String ATTR_RESULT_TYPE = "attribute::resultType";
 

@@ -7,7 +7,6 @@ import com.blinkfox.fenix.exception.FieldEmptyException;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.dom4j.Node;
 
@@ -16,7 +15,6 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-04.
  */
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XmlNodeHelper {
 

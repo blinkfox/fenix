@@ -61,6 +61,7 @@ public final class UserSqlInfoProvider {
      *
      * @return sqlInfo 对象
      */
+    @SuppressWarnings("unused")
     private SqlInfo privateMethod() {
         return Fenix.start().end();
     }

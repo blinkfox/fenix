@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.BlobType;
 import org.hibernate.type.descriptor.java.DataHelper;
@@ -33,8 +31,12 @@ import org.springframework.util.Assert;
  * @author blinkfox on 2019-10-08.
  * @since v1.1.0
  */
-@Slf4j
 public class FenixResultTransformer<T> implements ResultTransformer {
+
+    /**
+     * serialVersionUID.
+     */
+    private static final long serialVersionUID = 4519223959994503529L;
 
     private static final DefaultConversionService conversionService = new DefaultConversionService();
 
@@ -124,8 +126,9 @@ public class FenixResultTransformer<T> implements ResultTransformer {
      * @param list 集合.
      * @return 集合
      */
+    @SuppressWarnings("rawtypes")
     @Override
-    public List transformList(List list) {
+    public List<?> transformList(List list) {
         return list;
     }
 

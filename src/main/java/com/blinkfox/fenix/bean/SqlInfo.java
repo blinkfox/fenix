@@ -31,7 +31,10 @@ public class SqlInfo {
     private String sql;
 
     /**
-     * 返回的结果类型.
+     * 返回的结果类型字符串.
+     * 通常情况下是实体 Bean 类的全路径名.
+     *
+     * @since v1.1.0
      */
     private String resultType;
 

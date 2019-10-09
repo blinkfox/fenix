@@ -9,9 +9,10 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
 
 /**
- * 构建 {@link Query} 对象实例的构建器类.
+ * 构建 {@link Query} 对象实例的自定义返回结果的构建器类.
  *
- * <p>注：构造的 Query 要区分是原生 SQL 还是 JPQL.</p>
+ * <p>注：构造的 Query 要区分是原生 SQL 还是 JPQL，
+ * 通过设置 {@link ResultTransformer} 来达到自定义返回结果的目的.</p>
  *
  * @author blinkfox on 2019-10-09.
  * @see FenixJpaQuery
@@ -47,11 +48,12 @@ final class QueryResultBuilder {
      * @param isNative 是否原生 SQL
      * @return 额外改造后的 {@code Query} 实例.
      */
+    @SuppressWarnings({"deprecation", "rawtypes"})
     Query build(boolean isNative) {
         ResultTransformer resultTransformer = new FenixResultTransformer<>(this.getResultTypeClass());
         if (isNative) {
             // 获取该查询对应的 NativeQuery，设置转换类型.
-            NativeQuery nativeQuery = ProxyHelper.getTarget(query);
+            NativeQuery<?> nativeQuery = ProxyHelper.getTarget(query);
             nativeQuery.setResultTransformer(resultTransformer);
             return nativeQuery;
         } else {

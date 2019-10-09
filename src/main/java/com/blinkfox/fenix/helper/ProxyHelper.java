@@ -12,9 +12,10 @@ import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.util.ClassUtils;
 
 /**
- * 代理相关处理的工具类.
+ * 代理处理相关的工具类.
  *
  * @author blinkfox 2019-10-08.
+ * @since v1.1.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProxyHelper {
