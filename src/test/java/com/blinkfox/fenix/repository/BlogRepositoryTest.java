@@ -142,13 +142,24 @@ public class BlogRepositoryTest {
     }
 
     /**
-     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
+     * 测试使用 {@link QueryFenix} 注解来模糊查询自定义的用户博客实体信息.
      */
     @Test
     public void queryUserBlogsWithFenixNative() {
         List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsWithFenixNative("1", SPRING);
         Assert.assertFalse(userBlogs.isEmpty());
         Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询自定义的用户博客实体分页信息.
+     */
+    @Test
+    public void queryUserBlogPageWithFenixNative() {
+        Page<UserBlogInfo> userBlogPage = blogRepository.queryUserBlogPageWithFenixNative("1", SPRING,
+                PageRequest.of(0, 3, Sort.by(Sort.Order.desc("c_id"))));
+        Assert.assertFalse(userBlogPage.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogPage.getContent().get(0).getName()));
     }
 
     /**
@@ -171,6 +182,17 @@ public class BlogRepositoryTest {
                 new Blog().setTitle(SPRING).setContent("-"));
         Assert.assertFalse(userBlogs.isEmpty());
         Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解来模糊查询用户博客信息.
+     */
+    @Test
+    public void queryUserBlogPageWithFenixResultType() {
+        Page<UserBlogInfo> userBlogPage = blogRepository.queryUserBlogPageWithFenixResultType("1",
+                new Blog().setTitle(SPRING).setContent("-"), PageRequest.of(0, 3, Sort.by(Sort.Order.desc("id"))));
+        Assert.assertFalse(userBlogPage.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogPage.getContent().get(0).getName()));
     }
 
     /**

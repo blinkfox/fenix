@@ -104,7 +104,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 判断是否有分页参数.如果有的话，就设置分页参数.
         final Pageable pageable = this.buildPagableAndSortSql(values);
 
-        // 构建出 SQL 查询和相关的参数，区分是否是原生 SQL 的查询.
+        // 构建出 SQL 语句相关的 Query 实例，要区分是否是原生 SQL.
         Query query;
         EntityManager em = super.getEntityManager();
         if (queryFenix.nativeQuery()) {
@@ -115,18 +115,19 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             query = em.createQuery(this.querySql);
         }
 
-        // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
-        String resultType = this.sqlInfo.getResultType();
-        if (StringHelper.isNotBlank(resultType)) {
-            query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
-        }
-
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
         this.sqlInfo.getParams().forEach(query::setParameter);
         if (pageable != null) {
             query.setFirstResult((int) pageable.getOffset());
             query.setMaxResults(pageable.getPageSize());
         }
+
+        // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
+        String resultType = this.sqlInfo.getResultType();
+        if (StringHelper.isNotBlank(resultType)) {
+            query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
+        }
+
         return query;
     }
 
