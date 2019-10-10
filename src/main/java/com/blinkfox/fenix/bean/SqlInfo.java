@@ -51,7 +51,7 @@ public class SqlInfo {
      * 注意该方法不会移除其对应的参数，所以，这里只应该移除静态 SQL 字符串，不应该移除包含命名参数占位符的 SQL.
      *
      * @param subSql 静态子 SQL 片段
-     * @return SqlInfo实例
+     * @return {@code SqlInfo} 实例
      */
     public SqlInfo removeIfExist(String subSql) {
         this.sql = subSql != null && sql.contains(subSql) ? sql.replaceAll(subSql, "") : sql;
@@ -62,6 +62,7 @@ public class SqlInfo {
      * 设置查询的自定义返回结果类型的 class，这里主要是指实体 Bean 类的 class 实例.
      *
      * @param resultTypeClass 实体 Bean 类的 class 实例
+     * @return {@code SqlInfo} 实例
      * @since v1.1.0
      */
     public SqlInfo setResultTypeClass(Class<?> resultTypeClass) {
