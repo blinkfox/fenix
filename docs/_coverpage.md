@@ -1,6 +1,6 @@
 ![logo](assets/images/logo.png)
 
-# Fenix <small>1.1.0</small>
+# Fenix <small>1.1.1</small>
 
 > 为解决复杂动态 SQL 而生的 Spring Data JPA 扩展库
 

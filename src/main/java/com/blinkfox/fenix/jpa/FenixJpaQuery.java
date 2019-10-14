@@ -36,14 +36,14 @@ import org.springframework.data.repository.query.ReturnedType;
 public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
-     * 用来替换 'select ... from' 为 'select count(*) from ' 的正则表达式.
+     * 用来替换 'select ... from' 为 'select count(*) as count from ' 的正则表达式.
      */
     private static final String REGX_SELECT_FROM = "((?i)select)([\\s\\S]*?)((?i)from)";
 
     /**
-     * 用来替换 'select ... from' 为 'select count(*) from ' 的求 count(*) 的常量.
+     * 用来替换 'select ... from' 为 'select count(*) as count from ' 的求 count(*) 的常量.
      */
-    private static final String SELECT_COUNT = "select count(*) from ";
+    private static final String SELECT_COUNT = "select count(*) as count from ";
 
     /**
      * JPA 参数对象.
@@ -264,7 +264,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     @Override
     protected Query doCreateCountQuery(Object[] values) {
         // 如果计数查询的 SQL 不为空（区分 Java和 Xml 两者方式），就重新构建 SqlInfo 信息，
-        // 否则就替换查询字符串中的字段值为 'count(*)'.
+        // 否则就替换查询字符串中的字段值为 'count(*) as count'.
         String countSql = this.getCountSql();
 
         // 创建 Query，并循环设置命名绑定参数.

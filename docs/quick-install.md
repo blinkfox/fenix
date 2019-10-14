@@ -14,14 +14,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:1.1.0'
+compile 'com.blinkfox:fenix-spring-boot-starter:1.1.1'
 ```
 
 ### 激活 Fenix FactoryBean
@@ -90,14 +90,14 @@ fenix:
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix:1.1.0'
+compile 'com.blinkfox:fenix:1.1.1'
 ```
 
 ### 激活 Fenix FactoryBean
