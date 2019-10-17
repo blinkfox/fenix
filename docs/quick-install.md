@@ -6,7 +6,7 @@
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并激活 `FenixJpaRepositoryFactoryBean`。
 
-!> **注**：请确保你使用的 Spring Boot 版本是 **`2.1.5.RELEASE` 及以上**。
+!> **注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**，如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。
 
 ### Maven
 
@@ -14,14 +14,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:1.1.1'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.0.0'
 ```
 
 ### 激活 Fenix FactoryBean
@@ -82,7 +82,7 @@ fenix:
 
 如果你**不是 Spring Boot 项目**，而是通过其他方式来使用 Spring Data JPA。那么，你可以通过以下的方式来集成原生的 `fenix` 库，除了激活 `FenixJpaRepositoryFactoryBean` 之外，**最重要的是需要在你应用启动的过程中，手动加载 Fenix 配置信息到内存中**。
 
-!> **注**：请确保你引入的 Spring Data JPA 版本是 **`2.1.8.RELEASE` 及以上**。
+!> **注**：请确保你引入的 Spring Data JPA 版本是 **`2.1.8.RELEASE` 及以上**，如果 Spring Data JPA 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。。
 
 ### Maven
 
@@ -90,14 +90,14 @@ fenix:
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix:1.1.1'
+compile 'com.blinkfox:fenix:2.0.0'
 ```
 
 ### 激活 Fenix FactoryBean
