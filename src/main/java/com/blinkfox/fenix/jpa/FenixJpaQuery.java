@@ -19,17 +19,21 @@ import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
+import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.repository.query.Parameter;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.ReturnedType;
 
 /**
- * 继承了 {@link AbstractJpaQuery} 抽象类，
- * 并隐性实现了 {@link RepositoryQuery} 接口的 JPA 查询处理器类，
+ * 继承了 {@code AbstractJpaQuery} 抽象类，
+ * 并隐性实现了 {@code RepositoryQuery} 接口的 JPA 查询处理器类，
  * 该类主要用来处理标注了 {@link QueryFenix} 注解的 JPA 查询.
+ *
+ * <p>v2.0.0 修改记录：升级 Spring-data-jpa 的版本为 {@code 2.2.0.RELEASE} 之后，
+ * 由于 {@code AbstractJpaQuery} 抽象类重写了 {@code doCreateQuery} 和 {@code doCreateCountQuery} 方法。
+ * 所以，本 Fenix 库在 v2.0.0 也必须跟着重写这两个方法，才能正常使用. </p>
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -51,13 +55,13 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private JpaParameters jpaParams;
 
     /**
-     * 标注了 {@link QueryFenix} 注解的注解实例.
+     * 标注了 {@code QueryFenix} 注解的注解实例.
      */
     @Setter
     private QueryFenix queryFenix;
 
     /**
-     * 执行 {@link QueryFenix} 注解的执行的类 class.
+     * 执行 {@code QueryFenix} 注解的执行的类 class.
      */
     @Setter
     private Class<?> queryClass;
@@ -78,7 +82,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private String querySql;
 
     /**
-     * Creates a new {@link AbstractJpaQuery} from the given {@link JpaQueryMethod}.
+     * Creates a new {@code AbstractJpaQuery} from the given {@code JpaQueryMethod}.
      *
      * @param method JpaQueryMethod
      * @param em EntityManager
@@ -88,15 +92,17 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     }
 
     /**
-     * Creates a {@link Query} instance for the given values.
+     * 基于 {@code JpaParametersParameterAccessor} 实例参数创建 {@code Query} 实例.
      *
-     * @param values must not be {@literal null}.
-     * @return Query
+     * @param accessor 访问器.
+     * @return {@code Query} 实例
      */
     @Override
-    protected Query doCreateQuery(Object[] values) {
+    protected Query doCreateQuery(JpaParametersParameterAccessor accessor) {
         // 获取 QueryFenix 上下文参数，来从 XML 文件或 Java 中动态构建出 SQL 信息.
-        this.jpaParams = getQueryMethod().getParameters();
+        JpaQueryMethod jpaMethod = super.getQueryMethod();
+        this.jpaParams = jpaMethod.getParameters();
+        Object[] values = accessor.getValues();
         this.contextParams = this.buildContextParams(values);
         this.getSqlInfoByFenix();
         this.querySql = this.sqlInfo.getSql();
@@ -108,8 +114,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         Query query;
         EntityManager em = super.getEntityManager();
         if (queryFenix.nativeQuery()) {
-            Class<?> type = this.getTypeToQueryFor(getQueryMethod().getResultProcessor().withDynamicProjection(
-                    new ParametersParameterAccessor(getQueryMethod().getParameters(), values)).getReturnedType());
+            Class<?> type = this.getTypeToQueryFor(jpaMethod.getResultProcessor().withDynamicProjection(
+                    new ParametersParameterAccessor(jpaMethod.getParameters(), values)).getReturnedType());
             query = type == null ? em.createNativeQuery(this.querySql) : em.createNativeQuery(this.querySql, type);
         } else {
             query = em.createQuery(this.querySql);
@@ -128,6 +134,33 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
         }
 
+        return query;
+    }
+
+    /**
+     * 根据给定的参数访问对象创建一个 {@code Query} 对象，用于查询分页时的记录数.
+     *
+     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 和 {@link QueryFenix#countMethod()} 的值。</p>
+     * <ul>
+     *     <li>如果没有设置这个两个值，就默认使用先前的 SQL 来替换处理为查询条数的SQL；</li>
+     *     <li>如果设置了这两个值，就依据优先级来构建新的 {@link SqlInfo} 对象，得到查询条数的 SQL；</li>
+     * </ul>
+     *
+     * @param accessor JPA 参数访问对象
+     * @return Query
+     */
+    @Override
+    protected Query doCreateCountQuery(JpaParametersParameterAccessor accessor) {
+        // 如果计数查询的 SQL 不为空（区分 Java和 Xml 两者方式），就重新构建 SqlInfo 信息，
+        // 否则就替换查询字符串中的字段值为 'count(*) as count'.
+        String countSql = this.getCountSql();
+
+        // 创建 Query，并循环设置命名绑定参数，并返回 Query 实例.
+        EntityManager em = getEntityManager();
+        Query query = this.queryFenix.nativeQuery()
+                ? em.createNativeQuery(countSql)
+                : em.createQuery(countSql, Long.class);
+        this.sqlInfo.getParams().forEach(query::setParameter);
         return query;
     }
 
@@ -154,7 +187,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     /**
      * 根据 JPA 参数和值的数组来分析构建出 JPQL 语句和参数的 Map 型上下文参数.
      *
-     * @param values JPA 参数值
+     * @param values JPA 的有序数组参数
      * @return Map
      */
     private Map<String, Object> buildContextParams(Object[] values) {
@@ -247,34 +280,6 @@ public class FenixJpaQuery extends AbstractJpaQuery {
                     QueryHelper.detectAlias(this.querySql));
         }
         return pageable;
-    }
-
-    /**
-     * 根据给定的数组参数创建一个 {@link Query}，用于查询分页时的记录数.
-     *
-     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 和 {@link QueryFenix#countMethod()} 的值。</p>
-     * <ul>
-     *     <li>如果没有设置这个两个值，就默认使用先前的 SQL 来替换处理为查询条数的SQL；</li>
-     *     <li>如果设置了这两个值，就依据优先级来构建新的 {@link SqlInfo} 对象，得到查询条数的 SQL；</li>
-     * </ul>
-     *
-     * @param values 参数数组
-     * @return Query
-     */
-    @Override
-    protected Query doCreateCountQuery(Object[] values) {
-        // 如果计数查询的 SQL 不为空（区分 Java和 Xml 两者方式），就重新构建 SqlInfo 信息，
-        // 否则就替换查询字符串中的字段值为 'count(*) as count'.
-        String countSql = this.getCountSql();
-
-        // 创建 Query，并循环设置命名绑定参数.
-        EntityManager em = getEntityManager();
-        Query query = this.queryFenix.nativeQuery()
-                ? em.createNativeQuery(countSql)
-                : em.createQuery(countSql, Long.class);
-        this.sqlInfo.getParams().forEach(query::setParameter);
-
-        return query;
     }
 
     /**
