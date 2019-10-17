@@ -96,13 +96,25 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      *
      * @param accessor 访问器.
      * @return {@code Query} 实例
+     * @since v2.0.0
      */
     @Override
     protected Query doCreateQuery(JpaParametersParameterAccessor accessor) {
         // 获取 QueryFenix 上下文参数，来从 XML 文件或 Java 中动态构建出 SQL 信息.
+        return this.doCreateQuery(accessor.getValues());
+    }
+
+    /**
+     * 原 {@code spring-data-jpa 2.1.x} 版本用来创建 {@link Query} 实例的方法.
+     * 从 {@code spring-data-jpa 2.2.0} 版本开始抛弃了这个方法，我们这里目前仍然保留，便于兼容以前的 Fenix 版本.
+     *
+     * @param values must not be {@literal null}.
+     * @return Query
+     */
+    protected Query doCreateQuery(Object[] values) {
+        // 获取 QueryFenix 上下文参数，来从 XML 文件或 Java 中动态构建出 SQL 信息.
         JpaQueryMethod jpaMethod = super.getQueryMethod();
         this.jpaParams = jpaMethod.getParameters();
-        Object[] values = accessor.getValues();
         this.contextParams = this.buildContextParams(values);
         this.getSqlInfoByFenix();
         this.querySql = this.sqlInfo.getSql();
@@ -148,9 +160,29 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      *
      * @param accessor JPA 参数访问对象
      * @return Query
+     * @since v2.0.0
      */
     @Override
     protected Query doCreateCountQuery(JpaParametersParameterAccessor accessor) {
+        return this.doCreateCountQuery(accessor.getValues());
+    }
+
+    /**
+     * 根据给定的数组参数创建一个 {@link Query}，用于查询分页时的记录数.
+     *
+     * <p>这里要区分是否手动设置了 {@link QueryFenix#countQuery()} 和 {@link QueryFenix#countMethod()} 的值。</p>
+     * <ul>
+     *     <li>如果没有设置这个两个值，就默认使用先前的 SQL 来替换处理为查询条数的SQL；</li>
+     *     <li>如果设置了这两个值，就依据优先级来构建新的 {@link SqlInfo} 对象，得到查询条数的 SQL；</li>
+     * </ul>
+     *
+     * <p>注：原 {@code spring-data-jpa 2.1.x} 版本用来创建 {@link Query} 实例的方法.
+     *     从 {@code spring-data-jpa 2.2.0} 版本开始抛弃了这个方法，我们这里目前仍然保留，便于兼容以前的 Fenix 版本.</p>
+     *
+     * @param values 参数数组
+     * @return Query
+     */
+    protected Query doCreateCountQuery(Object[] values) {
         // 如果计数查询的 SQL 不为空（区分 Java和 Xml 两者方式），就重新构建 SqlInfo 信息，
         // 否则就替换查询字符串中的字段值为 'count(*) as count'.
         String countSql = this.getCountSql();
