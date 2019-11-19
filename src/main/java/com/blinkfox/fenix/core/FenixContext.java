@@ -38,21 +38,20 @@ public final class FenixContext {
         // 如果是要追加 WHERE 关键字的情况，就是使用 <where> 标签的情况，就需要先追加 WHERE 关键字，
         // 然后判断去除掉后面是否紧跟了 AND 或者 OR 的关键字的情况.
         if (sqlInfo.isPrependWhere()) {
-            StringBuilder join = sqlInfo.getJoin();
-            join.append(SymbolConst.WHERE);
             String text = StringHelper.replaceBlank(plainText);
-            if (StringUtils.startsWithIgnoreCase(text, "AND ")) {
-                join.append(text.substring(4));
-            } else if (StringUtils.startsWithIgnoreCase(text, "OR ")) {
-                join.append(text.substring(3));
-            } else {
-                join.append(text);
+            if (StringHelper.isBlank(text)) {
+                return;
             }
-            join.append(Const.SPACE);
 
             // 前置添加完 WHERE 语句之后，必须将 prependWhere 设置为 false.
+            sqlInfo.getJoin().append(SymbolConst.WHERE);
             sqlInfo.setPrependWhere(false);
-            return;
+            if (StringUtils.startsWithIgnoreCase(text, "AND ")) {
+                text = text.substring(4);
+            } else if (StringUtils.startsWithIgnoreCase(text, "OR ")) {
+                text = text.substring(3);
+            }
+            sqlInfo.getJoin().append(text).append(Const.SPACE);
         }
 
         // 如果是不前置添加 WHERE 关键字的情况，就直接追加 SQL 纯文本即可.

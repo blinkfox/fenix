@@ -30,7 +30,12 @@ public class FenixXmlBuilderTest {
     /**
      * 基础查询的 SQL 语句.
      */
-    private static final String BASE_QUERY = "SELECT u FROM User WHERE";
+    private static final String SELECT_QUERY = "SELECT u FROM User";
+
+    /**
+     * 带 WHERE 的基础查询的 SQL 语句.
+     */
+    private static final String BASE_QUERY = SELECT_QUERY + " WHERE";
 
     /**
      * 上下文参数 Map.
@@ -347,6 +352,20 @@ public class FenixXmlBuilderTest {
         assertEquals("Hello :LiLei AND Hello LIKE :HanMeiMei", sqlInfo.getSql());
         assertEquals(2, sqlInfo.getParams().size());
         assertEquals(name, sqlInfo.getParams().get(name));
+    }
+
+    /**
+     * 测试 where 标签的情况.
+     */
+    @Test
+    public void testWhere() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere", context);
+        assertEquals(BASE_QUERY + " u.id = :user_id AND u.name LIKE :user_name",
+                sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(2, params.size());
+        assertEquals('%' + NAME + '%', params.get("user_name"));
     }
 
 }

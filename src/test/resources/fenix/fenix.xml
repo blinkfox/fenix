@@ -231,4 +231,13 @@
         <andHi value="HanMeiMei"/>
     </fenix>
 
+    <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
+    <fenix id="testWhere">
+        SELECT u FROM @{entityName}
+        <where>
+            <andEqual field="u.id" value="user.id" match="user.id != empty"/>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        </where>
+    </fenix>
+
 </fenixs>
