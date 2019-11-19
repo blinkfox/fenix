@@ -21,7 +21,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import org.dom4j.Node;
-import org.springframework.util.StringUtils;
 
 /**
  * 用于读取和构建 XML 文件中的 {@link SqlInfo} JPQL 片段和参数的构建器，
