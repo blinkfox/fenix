@@ -39,6 +39,16 @@ public class SqlInfo {
     private String resultType;
 
     /**
+     * 是否前置追加 {@code WHERE} 关键字.
+     *
+     * <p>用于 {@code <where>} 标签时在第一个条件成立的动态 SQL 语句前添加 {@code WHERE} 关键字，
+     * 并去除 {@code WHERE} 关键字后紧跟着的 {@code AND} 或 {@code OR} 关键字.</p>
+     *
+     * @since v2.1.0
+     */
+    private boolean prependWhere;
+
+    /**
      * 默认构造方法.
      */
     public SqlInfo() {

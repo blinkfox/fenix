@@ -13,6 +13,13 @@ public final class SymbolConst {
 
     /**
      * 等于.
+     *
+     * @since v2.1.0
+     */
+    public static final String WHERE = " WHERE ";
+
+    /**
+     * 等于.
      */
     public static final String EQUAL = " = ";
 

@@ -1,8 +1,11 @@
 package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
+import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.entity.TagHandler;
+import com.blinkfox.fenix.consts.Const;
+import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.StringHelper;
@@ -12,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import org.springframework.util.StringUtils;
+
 /**
  * 追加构建动态 JPQL 或者 SQL 语句及参数的上下文协调类.
  *
@@ -20,7 +25,39 @@ import lombok.NoArgsConstructor;
  * @see FenixHandler
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class FenixContext {
+public final class FenixContext {
+
+    /**
+     * 构建纯文本的 {@link com.blinkfox.fenix.bean.SqlInfo} 信息.
+     *
+     * @param sqlInfo SQL 信息实例
+     * @param plainText 纯文本字符串.
+     * @since v2.1.0
+     */
+    public static void buildPlainTextSqlInfo(SqlInfo sqlInfo, String plainText) {
+        // 如果是要追加 WHERE 关键字的情况，就是使用 <where> 标签的情况，就需要先追加 WHERE 关键字，
+        // 然后判断去除掉后面是否紧跟了 AND 或者 OR 的关键字的情况.
+        if (sqlInfo.isPrependWhere()) {
+            StringBuilder join = sqlInfo.getJoin();
+            join.append(SymbolConst.WHERE);
+            String text = StringHelper.replaceBlank(plainText);
+            if (StringUtils.startsWithIgnoreCase(text, "AND ")) {
+                join.append(text.substring(4));
+            } else if (StringUtils.startsWithIgnoreCase(text, "OR ")) {
+                join.append(text.substring(3));
+            } else {
+                join.append(text);
+            }
+            join.append(Const.SPACE);
+
+            // 前置添加完 WHERE 语句之后，必须将 prependWhere 设置为 false.
+            sqlInfo.setPrependWhere(false);
+            return;
+        }
+
+        // 如果是不前置添加 WHERE 关键字的情况，就直接追加 SQL 纯文本即可.
+        sqlInfo.getJoin().append(plainText);
+    }
 
     /**
      * 根据标签名称和对应的构建参数构造出对应标签的 JPQL (或者 SQL)与参数.

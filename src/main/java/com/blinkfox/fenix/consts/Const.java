@@ -47,6 +47,13 @@ public final class Const {
     public static final String SPACE = " ";
 
     /**
+     *空字符串.
+     *
+     * @since v2.1.0
+     */
+    public static final String EMPTY = "";
+
+    /**
      * 普通数组.
      */
     public static final int OBJTYPE_ARRAY = 1;

@@ -1,8 +1,10 @@
 package com.blinkfox.fenix.core.concrete;
 
 import com.blinkfox.fenix.bean.BuildSource;
+import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
+import com.blinkfox.fenix.core.FenixContext;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.exception.FenixException;
@@ -45,10 +47,10 @@ public class TextHandler implements FenixHandler {
         Node node = source.getNode();
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             // 获取所有子节点，如果子节点 node 是文本节点，则直接获取其文本，并将其拼接起来.
-            StringBuilder join = source.getSqlInfo().getJoin();
+            SqlInfo sqlInfo = source.getSqlInfo();
             for (Node n: node.selectNodes(XpathConst.ATTR_CHILD)) {
                 if (Const.NODETYPE_TEXT.equals(n.getNodeTypeName())) {
-                    join.append(n.getText());
+                    FenixContext.buildPlainTextSqlInfo(sqlInfo, n.getText());
                 } else {
                     throw new FenixException("【Fenix 异常提示】<text></text> 标签中包含了【" + n.getName() + "】的 XML 标签，"
                             + "只能是文本元素，请检查！");

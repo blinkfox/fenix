@@ -16,6 +16,7 @@ import com.blinkfox.fenix.core.concrete.NormalHandler;
 import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
+import com.blinkfox.fenix.core.concrete.WhereHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,6 +165,7 @@ public class FenixConfig {
         add("import", ImportHandler::new);
         add("choose", ChooseHandler::new);
         add("set", SetHandler::new);
+        add("where", WhereHandler::new);
     }
 
     /**

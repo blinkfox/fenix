@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 构建拼接 JPQL 或者 SQL 语句片段和参数的构建器类.
@@ -22,6 +23,7 @@ import lombok.Getter;
  * @see XmlSqlInfoBuilder
  * @see JavaSqlInfoBuilder
  */
+@Slf4j
 @Getter
 public class SqlInfoBuilder {
 
@@ -67,6 +69,20 @@ public class SqlInfoBuilder {
     }
 
     /**
+     * 在 {@code <where>} 标签后的 SQL 语句中前置添加 {@code WHERE} 关键字，
+     * 并判断去除掉 {@code WHERE} 关键字后面紧跟着的 {@code AND} 或者 {@code OR} 关键字的情况.
+     */
+    private void doPrependWhere() {
+        if (sqlInfo.isPrependWhere()) {
+            sqlInfo.getJoin().append(SymbolConst.WHERE);
+            if (SymbolConst.AND.equalsIgnoreCase(this.prefix) || SymbolConst.OR.equalsIgnoreCase(this.prefix)) {
+                this.prefix = Const.EMPTY;
+            }
+            sqlInfo.setPrependWhere(false);
+        }
+    }
+
+    /**
      * 追加构建常规 SQL 片段的 {@link SqlInfo} 信息.
      * <p>如：'u.id = :id'.</p>
      *
@@ -75,9 +91,12 @@ public class SqlInfoBuilder {
      * @param value 解析后的表达式的值
      */
     public void buildNormalSql(String fieldText, String valueText, Object value) {
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+
         String namedText = StringHelper.fixDot(valueText);
-        sqlInfo.getJoin().append(this.prefix).append(fieldText)
-                .append(this.symbol).append(Const.COLON).append(namedText);
+        sqlInfo.getJoin().append(this.prefix)
+                .append(fieldText).append(this.symbol).append(Const.COLON).append(namedText);
         sqlInfo.getParams().put(namedText, value);
     }
 
@@ -90,6 +109,9 @@ public class SqlInfoBuilder {
      * @param value 参数值
      */
     public void buildLikeSql(String fieldText, String valueText, Object value) {
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+
         String namedText = StringHelper.fixDot(valueText);
         sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
@@ -117,7 +139,9 @@ public class SqlInfoBuilder {
      * @param pattern LIKE 匹配的模式
      */
     public void buildLikePatternSql(String fieldText, String pattern) {
-        sqlInfo.getJoin().append(prefix).append(fieldText)
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+        sqlInfo.getJoin().append(this.prefix).append(fieldText)
                 .append(StringHelper.isBlank(this.symbol) ? SymbolConst.LIKE : this.symbol)
                 .append(Const.QUOTE).append(pattern).append(Const.QUOTE);
     }
@@ -135,23 +159,31 @@ public class SqlInfoBuilder {
      */
     public void buildBetweenSql(String fieldText, String startText, Object startValue,
             String endText, Object endValue) {
+        if (startValue == null && endValue == null) {
+            log.warn("between 区间查询的开始值和结束值均为 null，将直接跳过.");
+            return;
+        }
+
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+
         // 开始值不为空，结束值为空时，转为"大于"的情况.
         if (startValue != null && endValue == null) {
             String startNamed = StringHelper.fixDot(startText);
-            sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.GTE)
+            sqlInfo.getJoin().append(this.prefix).append(fieldText).append(SymbolConst.GTE)
                     .append(Const.COLON).append(startNamed);
             sqlInfo.getParams().put(startNamed, startValue);
         } else if (startValue == null && endValue != null) {
             // 开始值为空，结束值不为空时，转为"小于"的情况.
             String endNamed = StringHelper.fixDot(endText);
-            sqlInfo.getJoin().append(prefix).append(fieldText).append(SymbolConst.LTE)
+            sqlInfo.getJoin().append(this.prefix).append(fieldText).append(SymbolConst.LTE)
                     .append(Const.COLON).append(endNamed);
             sqlInfo.getParams().put(endNamed, endValue);
         } else {
             // 开始值不为空，结束值也不为空时，转为 "BETWEEN :xxx AND :yyy" 的情况.
             String startNamed = StringHelper.fixDot(startText);
             String endNamed = StringHelper.fixDot(endText);
-            sqlInfo.getJoin().append(prefix).append(fieldText)
+            sqlInfo.getJoin().append(this.prefix).append(fieldText)
                     .append(SymbolConst.BETWEEN).append(Const.COLON).append(startNamed)
                     .append(SymbolConst.AND).append(Const.COLON).append(endNamed);
             Map<String, Object> params = sqlInfo.getParams();
@@ -168,11 +200,15 @@ public class SqlInfoBuilder {
      * @param obj IN 查询范围的值，如果不是集合或数组，就将单个的值包装数组
      */
     public void buildInSql(String fieldText, String valueText, Object obj) {
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+
         String endNamed = StringHelper.fixDot(valueText);
         sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol)
                 .append(Const.COLON).append(endNamed);
 
-        // 封装 IN 查询的参数，如果解析到的值是一个数组，需要转换成 List 集合，不然 JPA 执行会报错，如果只有单个元素就包装成 List 集合.
+        // 封装 IN 查询的参数，如果解析到的值是一个数组，需要转换成 List 集合，不然 JPA 执行会报错，
+        // 如果只有单个元素就包装成 List 集合.
         if (obj instanceof Collection) {
             sqlInfo.getParams().put(endNamed, obj);
         } else if (obj.getClass().isArray()) {
@@ -191,7 +227,9 @@ public class SqlInfoBuilder {
      * @param fieldText 字段文本
      */
     public void buildIsNullSql(String fieldText) {
-        sqlInfo.getJoin().append(prefix).append(fieldText).append(this.symbol);
+        // 对如果是有 where 标签的情况进行处理，添加 WHERE 关键字，去掉其后的 AND 或者 OR.
+        this.doPrependWhere();
+        sqlInfo.getJoin().append(this.prefix).append(fieldText).append(this.symbol);
     }
 
 }

@@ -21,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 
 /**
  * 用于读取和构建 XML 文件中的 {@link SqlInfo} JPQL 片段和参数的构建器，
@@ -123,7 +124,7 @@ public final class FenixXmlBuilder {
         for (Node n: nodes) {
             String nodeTypeName = n.getNodeTypeName();
             if (Const.NODETYPE_TEXT.equals(nodeTypeName)) {
-                sqlInfo.getJoin().append(n.getText());
+                FenixContext.buildPlainTextSqlInfo(sqlInfo, n.getText());
             } else if (Const.NODETYPE_ELEMENT.equals(nodeTypeName)) {
                 FenixContext.buildSqlInfo(new BuildSource(namespace, sqlInfo, n, context), n.getName());
             }
