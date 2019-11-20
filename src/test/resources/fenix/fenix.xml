@@ -234,29 +234,26 @@
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere">
         SELECT u FROM @{entityName}
-        <where>
-            <andEqual field="u.id" value="user.id" match="user.id != empty"/>
-            <andLike field="u.name" value="user.name" match="user.name != empty"/>
-        </where>
+        <where />
+        <andEqual field="u.id" value="user.id" match="user.id != empty"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere2">
         SELECT u FROM @{entityName}
-        <where>
-            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-            <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
-        </where>
+        <where />
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere3">
         SELECT u FROM @{entityName}
-        <where>
-            anD u.id = #{user.id}
-            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-            <andLike field="u.name" value="user.name" match="user.name != empty"/>
-        </where>
+        <where />
+        anD u.id = #{user.id}
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
         ORDER BY
             u.updateTime DESC
     </fenix>

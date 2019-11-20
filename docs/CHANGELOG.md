@@ -1,6 +1,6 @@
-## v2.1.0 新增 <where> 标签和对应的 Java API (2019-11-20)
+## v2.1.0 新增 <where> 标签和对应的 Java API (2019-11-21)
 
-- 新增了 `<where>` 标签和 `where(Consumer<Fenix> consumer)` API，用来消除全动态 SQL 中 `WHERE` 关键字后的 `AND` 或者 `OR` 关键字；
+- 新增了 `<where>` 标签和动态 `where` 的 Java API，用来消除在全动态 SQL 中场景中，`WHERE` 关键字后的 `AND` 或者 `OR` 关键字；
 
 ## v2.0.0 支持 Spring Boot 的 2.2.0.RELEASE 版本 (2019-10-10)
 

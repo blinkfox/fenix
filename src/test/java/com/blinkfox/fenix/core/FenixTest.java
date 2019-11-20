@@ -664,9 +664,9 @@ public class FenixTest {
         SqlInfo sqlInfo = Fenix.start()
                 .select("u")
                 .from("User")
-                .where(fenix ->
-                        fenix.andEqual("u.id", context.get("id"), context.get("id_a") != null)
-                                .andLike("u.nickName", context.get("name"), context.get("name_b") != null))
+                .whereDynamic()
+                .andEqual("u.id", context.get("id"), context.get("id_a") != null)
+                .andLike("u.nickName", context.get("name"), context.get("name_b") != null)
                 .orderBy("u.updateTime").desc()
                 .end();
 
@@ -682,9 +682,9 @@ public class FenixTest {
         SqlInfo sqlInfo = Fenix.start()
                 .select("u")
                 .from("User")
-                .where(fenix ->
-                        fenix.andEqual("u.id", context.get("id"), context.get("id_a") != null)
-                                .andLike("u.nickName", context.get("name"), context.get("name") != null))
+                .whereDynamic()
+                .andEqual("u.id", context.get("id"), context.get("id_a") != null)
+                .andLike("u.nickName", context.get("name"), context.get("name") != null)
                 .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
                 .orderBy("u.updateTime").desc()
                 .end();

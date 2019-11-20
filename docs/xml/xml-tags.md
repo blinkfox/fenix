@@ -266,7 +266,13 @@ AND u.n_age IS NULL
 
 ### 标签
 
+下面是 `where` 标签的使用方式，两种方式是等价的，看情况选用一种方式即可。
+
 ```xml
+<!-- 直接在动态条件前加上 where 标签即可. -->
+<where />
+
+<!-- 或者将动态条件包裹在 where 标签内部也可以. -->
 <where>
     <!-- 在 where 标签块中可以书写任何文本 SQL 或者 XML 语义化 SQL 标签. -->
 </where>
@@ -279,13 +285,36 @@ AND u.n_age IS NULL
 <!-- SELECT u FROM User WHERE u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC -->
 <fenix id="testWhere">
     SELECT u FROM @{entityName}
+    <where />
+    anD u.id = #{user.id}
+    <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+    <andLike field="u.name" value="user.name" match="user.name != empty"/>
+    ORDER BY u.updateTime DESC
+</fenix>
+
+<!-- 用于演示 where 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->
+<!-- SELECT u FROM User -->
+<fenix id="testWhere2">
+    SELECT u FROM @{entityName}
+    <where />
+    <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+    <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
+</fenix>
+```
+
+下面的使用方式等价于上面的方式，看情况选用一种方式来使用即可：
+
+```xml
+<!-- 用于演示 where 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
+<!-- SELECT u FROM User WHERE u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC -->
+<fenix id="testWhere">
+    SELECT u FROM @{entityName}
     <where>
         anD u.id = #{user.id}
         <andEqual field="u.email" value="user.email" match="user.email != empty"/>
         <andLike field="u.name" value="user.name" match="user.name != empty"/>
     </where>
-    ORDER BY
-        u.updateTime DESC
+    ORDER BY u.updateTime DESC
 </fenix>
 
 <!-- 用于演示 where 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->

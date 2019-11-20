@@ -239,6 +239,18 @@ public final class Fenix {
     }
 
     /**
+     * 动态处理 WHERE 关键字.
+     *
+     * <p>使用该方法会动态处理 WHERE 关键字后的 AND 或者 OR 关键字，同 {@link #where(Consumer)} 方法类似.</p>
+     *
+     * @return {@link Fenix} 实例
+     */
+    public Fenix whereDynamic() {
+        this.source.getSqlInfo().setPrependWhere(true);
+        return this;
+    }
+
+    /**
      * 拼接并带上 'AND' 关键字的字符串.
      *
      * @return {@link Fenix} 实例

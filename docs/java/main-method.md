@@ -447,11 +447,32 @@ where(String text, String key, Object value)
 
 // 通过 Lambda 继续拼接 SQL，并动态处理 WHERE 关键字后的 AND 或者 OR 关键字.
 where(Consumer<Fenix> consumer)
+
+// 通过 Lambda 继续拼接 SQL，并动态处理 WHERE 关键字后的 AND 或者 OR 关键字.
+// 该方法等价于 XML 中的 <where></where> 标签
+where(Consumer<Fenix> consumer)
+
+// 使用该方法会动态处理 WHERE 关键字后的 AND 或者 OR 关键字，同 where(Consumer<Fenix> consumer) 方法类似.
+// 该方法等价于 XML 中的 <where /> 标签
+whereDynamic()
 ```
 
 ### 使用示例
 
-下面是 `where(Consumer<Fenix> consumer)` 的执行示例，供你参考。
+下面是动态 where（`whereDynamic()` 和 `where(Consumer<Fenix> consumer)`）的使用示例，供你参考。
+
+```java
+SqlInfo sqlInfo = Fenix.start()
+        .select("u")
+        .from("User")
+        .whereDynamic()
+        .andEqual("u.id", context.get("id"), context.get("id_a") != null)
+        .andLike("u.nickName", context.get("name"), context.get("name") != null)
+        .andLike("u.email", context.get("email"), context.get("email") != null)
+        .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
+        .orderBy("u.updateTime").desc()
+        .end();
+```
 
 ```java
 SqlInfo sqlInfo = Fenix.start()
