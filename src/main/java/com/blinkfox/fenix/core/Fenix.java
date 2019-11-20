@@ -227,14 +227,14 @@ public final class Fenix {
     }
 
     /**
-     * 拼接并带上 'WHERE' 关键字的字符串和动态参数.
+     * 通过 Lambda 继续拼接 SQL，并动态处理 WHERE 关键字后的 AND 或者 OR 关键字.
      *
-     * @param fenix Fenix {@link Consumer} 函数
+     * @param consumer Fenix {@link Consumer} 函数
      * @return {@link Fenix} 实例
      */
-    public Fenix where(Consumer<Fenix> fenix) {
+    public Fenix where(Consumer<Fenix> consumer) {
         this.source.getSqlInfo().setPrependWhere(true);
-        fenix.accept(this);
+        consumer.accept(this);
         return this;
     }
 

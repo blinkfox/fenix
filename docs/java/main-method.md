@@ -428,6 +428,44 @@ SqlInfo sqlInfo = Fenix.start()
         .end();
 ```
 
+## where
+
+`where` 方法有几个重载方法，其中 `where(Consumer<Fenix> consumer)` 方法同 XML 中的 `<where></where>` 标签是用来处理动态 SQL 中的 `WHERE` 关键之后的 `AND` 或者 `OR` 关键字的情况。
+
+```java
+// 拼接并带上 'WHERE' 关键字的 SQL 字符串.
+where()
+
+// 拼接并带上 'WHERE' 关键字及之后的字符串.
+where(String text)
+
+// 拼接并带上 'WHERE' 关键字的字符串和动态参数.
+where(String text, Map<String, Object> paramMap)
+
+// 拼接并带上 'WHERE' 关键字的字符串和动态参数.
+where(String text, String key, Object value)
+
+// 通过 Lambda 继续拼接 SQL，并动态处理 WHERE 关键字后的 AND 或者 OR 关键字.
+where(Consumer<Fenix> consumer)
+```
+
+### 使用示例
+
+下面是 `where(Consumer<Fenix> consumer)` 的执行示例，供你参考。
+
+```java
+SqlInfo sqlInfo = Fenix.start()
+        .select("u")
+        .from("User")
+        .where(fenix ->
+                fenix.andEqual("u.id", context.get("id"), context.get("id_a") != null)
+                     .andLike("u.nickName", context.get("name"), context.get("name") != null)
+                     .andLike("u.email", context.get("email"), context.get("email") != null))
+        .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
+        .orderBy("u.updateTime").desc()
+        .end();
+```
+
 ## 综合性示例
 
 下面是一个综合性的示例，来演示通过 Fenix 的链式 API 来拼接动态 SQL 的使用。

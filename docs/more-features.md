@@ -151,42 +151,7 @@ public final class BlogSqlInfoProvider {
 List<UserBlogInfo> queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title);
 ```
 
-## 2. 消除 1 = 1 等无用 SQL
-
-### (1) 在 XML 中消除
-
-在 Fenix XML 文件中，可以在 `<fenix></fenix>` 节点中配置 `removeIfExist` 属性，填入需要移除的多余字符串即可。
-
-代码示例如下：
-
-```xml
-<!-- 测试该多个 and 时移除 "1 = 1 AND " 的 SQL 片段 -->
-<fenix id="queryUsersByName" removeIfExist="1 = 1 AND ">
-    SELECT u FROM User AS u
-    WHERE
-    1 = 1
-    <andLike field="u.name" value="user.name" match="user.name != empty"/>
-    AND u.age > #{user.age}
-    AND u.status = #{user.status}
-    <andLike field="u.email" value="user.email" match="user.email != empty"/>
-</fenix>
-```
-
-### (2) 在 Java 中消除
-
-如果你使用的是 Java API，那么你可以通过在生成完的 SqlInfo 对象中调用 `removeIfExist(subSql)` 方法来消除它，其他类似的子 SQL 也都可以消除。使用示例如下：
-
-```java
-SqlInfo sqlInfo = Fenix.start()
-        ...
-        .end()
-        .removeIfExist(" 1 = 1 AND");
-
-或者
-sqlInfo.removeIfExist(" 1 <> 1");
-```
-
-## 3. 从 XML 中获取 SQL 信息
+## 2. 从 XML 中获取 SQL 信息
 
 Fenix 中会自动从 `XML` 中获取到 SQL 信息。如果你想手动从 `XML` 中获取到 SQL 信息（`SqlInfo`），也可以使用 `Fenix.java` 提供的 `API` 来获取。
 
@@ -198,7 +163,7 @@ Fenix.getXmlSqlInfo(String fullFenixId, Object context)
 Fenix.getXmlSqlInfo(String namespace, String fenixId, Object context)
 ```
 
-## 4. 表达式、模版解析器
+## 3. 表达式、模版解析器
 
 在 Fenix 中解析 XML 标签中的表达式或者模版是通过 `Mvel` 表达式语言来实现的，主要方法解析方法是封装在了`ParseHelper.java` 的工具类中，通过该类让开发人员自己测试表达式也是极为方便的。以下作简要介绍。
 
@@ -260,7 +225,7 @@ public void testParseTemplate2() {
 }
 ```
 
-## 5. 上下文参数包装类
+## 4. 上下文参数包装类
 
 Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWrapper` 工具类，其本质上就是对 `HashMap` 方法的一个**简单链式封装**。
 
@@ -292,7 +257,7 @@ Map<String, Object> context = ParamWrapper.newInstance("sex", "1").put("stuId", 
 
 前后对比来看，再仅仅只需要传入个别自定义参数时，能简化部分代码量和参数传递。
 
-## 6. 表达式的真假判断
+## 5. 表达式的真假判断
 
 **主要方法**：
 

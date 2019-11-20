@@ -260,6 +260,45 @@ AND u.sex in :userMap_sexs
 AND u.n_age IS NULL
 ```
 
+## where
+
+`where` 标签主要用于在全动态 SQL 的场景中消除 `WHERE` 关键字后面的 `AND` 或者 `OR` 关键字，防止拼接出的动态 SQL 语法不对。
+
+### 标签
+
+```xml
+<where>
+    <!-- 在 where 标签块中可以书写任何文本 SQL 或者 XML 语义化 SQL 标签. -->
+</where>
+```
+
+### 使用示例
+
+```xml
+<!-- 用于演示 where 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
+<!-- SELECT u FROM User WHERE u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC -->
+<fenix id="testWhere">
+    SELECT u FROM @{entityName}
+    <where>
+        anD u.id = #{user.id}
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+    </where>
+    ORDER BY
+        u.updateTime DESC
+</fenix>
+
+<!-- 用于演示 where 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->
+<!-- SELECT u FROM User -->
+<fenix id="testWhere2">
+    SELECT u FROM @{entityName}
+    <where>
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
+    </where>
+</fenix>
+```
+
 ## text
 
 `text` 标签主要用于在标签内部自定义任何需要的文本和传递的参数，为 SQL 书写提供更多的灵活性。
