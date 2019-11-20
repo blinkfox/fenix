@@ -231,6 +231,7 @@ public final class Fenix {
      *
      * @param consumer Fenix {@link Consumer} 函数
      * @return {@link Fenix} 实例
+     * @since v2.1.0
      */
     public Fenix where(Consumer<Fenix> consumer) {
         this.source.getSqlInfo().setPrependWhere(true);
@@ -244,6 +245,7 @@ public final class Fenix {
      * <p>使用该方法会动态处理 WHERE 关键字后的 AND 或者 OR 关键字，同 {@link #where(Consumer)} 方法类似.</p>
      *
      * @return {@link Fenix} 实例
+     * @since v2.1.0
      */
     public Fenix whereDynamic() {
         this.source.getSqlInfo().setPrependWhere(true);
