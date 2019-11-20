@@ -52,6 +52,7 @@ public final class FenixContext {
                 text = text.substring(3);
             }
             sqlInfo.getJoin().append(text).append(Const.SPACE);
+            return;
         }
 
         // 如果是不前置添加 WHERE 关键字的情况，就直接追加 SQL 纯文本即可.

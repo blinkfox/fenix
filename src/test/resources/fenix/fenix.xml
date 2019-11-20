@@ -240,4 +240,25 @@
         </where>
     </fenix>
 
+    <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
+    <fenix id="testWhere2">
+        SELECT u FROM @{entityName}
+        <where>
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
+        </where>
+    </fenix>
+
+    <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
+    <fenix id="testWhere3">
+        SELECT u FROM @{entityName}
+        <where>
+            anD u.id = #{user.id}
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        </where>
+        ORDER BY
+            u.updateTime DESC
+    </fenix>
+
 </fenixs>

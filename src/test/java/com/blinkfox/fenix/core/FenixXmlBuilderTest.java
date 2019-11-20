@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -361,6 +362,32 @@ public class FenixXmlBuilderTest {
     public void testWhere() {
         SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere", context);
         assertEquals(BASE_QUERY + " u.id = :user_id AND u.name LIKE :user_name",
+                sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(2, params.size());
+        assertEquals('%' + NAME + '%', params.get("user_name"));
+    }
+
+    /**
+     * 测试 where 标签的情况2.
+     */
+    @Test
+    public void testWhere2() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere2", context);
+        assertEquals(SELECT_QUERY, sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        Assert.assertTrue(params.isEmpty());
+    }
+
+    /**
+     * 测试 where 标签的情况3.
+     */
+    @Test
+    public void testWhere3() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere3", context);
+        assertEquals(BASE_QUERY + " u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC",
                 sqlInfo.getSql());
 
         Map<String, Object> params = sqlInfo.getParams();
