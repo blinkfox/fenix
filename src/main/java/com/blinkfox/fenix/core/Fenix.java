@@ -15,6 +15,7 @@ import com.blinkfox.fenix.helper.StringHelper;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 使用 XML 或者 Java 链式写法来拼接 JPQL 或者 SQL 语句和对应命名参数的 {@link com.blinkfox.fenix.bean.SqlInfo} 信息的核心 API 类.
@@ -121,7 +122,7 @@ public final class Fenix {
 
     /**
      * 拼接并带上 'INSERT INTO' 关键字的字符串.
-     * 
+     *
      * @param text 文本
      * @return {@link Fenix} 实例
      */
@@ -223,6 +224,18 @@ public final class Fenix {
     public Fenix where(String text, String key, Object value) {
         this.concat(SqlKeyConst.WHERE, text);
         return this.param(key, value);
+    }
+
+    /**
+     * 拼接并带上 'WHERE' 关键字的字符串和动态参数.
+     *
+     * @param fenix Fenix {@link Consumer} 函数
+     * @return {@link Fenix} 实例
+     */
+    public Fenix where(Consumer<Fenix> fenix) {
+        this.source.getSqlInfo().setPrependWhere(true);
+        fenix.accept(this);
+        return this;
     }
 
     /**
@@ -856,7 +869,7 @@ public final class Fenix {
 
     /**
      * 生成带 " AND " 前缀大于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
-     * 
+     *
      * @param field 数据库字段
      * @param value 值
      * @param match 是否匹配
@@ -1016,7 +1029,7 @@ public final class Fenix {
 
     /**
      * 生成带 " OR " 前缀大于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
-     * 
+     *
      * @param field 数据库字段
      * @param value 值
      * @param match 是否匹配
@@ -1120,7 +1133,7 @@ public final class Fenix {
 
     /**
      * 生成带 " AND " 前缀的 LIKE 模糊查询的 SQL 片段.
-     * 
+     *
      * @param field 数据库字段
      * @param value 值
      * @return {@link Fenix} 实例
@@ -1773,7 +1786,7 @@ public final class Fenix {
 
     /**
      * 生成 IN 范围查询的 SQL 片段.
-     * 
+     *
      * @param field 数据库字段
      * @param values 数组的值
      * @return {@link Fenix} 实例
@@ -1807,7 +1820,7 @@ public final class Fenix {
 
     /**
      * 生成 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
-     * 
+     *
      * @param field 数据库字段
      * @param values 集合的值
      * @param match 是否匹配
@@ -1819,7 +1832,7 @@ public final class Fenix {
 
     /**
      * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
-     * 
+     *
      * @param field 数据库字段
      * @param values 数组的值
      * @return {@link Fenix} 实例
@@ -1911,7 +1924,7 @@ public final class Fenix {
 
     /**
      * 生成 " NOT IN " 范围查询的 SQL 片段.
-     * 
+     *
      * @param field 数据库字段
      * @param values 数组的值
      * @return {@link Fenix} 实例

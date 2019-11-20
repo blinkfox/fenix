@@ -635,4 +635,63 @@ public class FenixTest {
         assertEquals(7, sqlInfo.getParams().size());
     }
 
+    /**
+     * where 动态方法的测试.
+     */
+    @Test
+    public void testWhere() {
+        SqlInfo sqlInfo = Fenix.start()
+                .select("u")
+                .from("User")
+                .where(fenix ->
+                        fenix.andEqual("u.id", context.get("id"), context.get("id") != null)
+                        .andLike("u.nickName", context.get("name"), context.get("name") != null)
+                        .andLike("u.email", context.get("email"), context.get("email") != null))
+                .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
+                .orderBy("u.updateTime").desc()
+                .end();
+
+        assertEquals("SELECT u FROM User WHERE u.id = :u_id AND u.nickName LIKE :u_nickName AND "
+                + "u.sex IN :u_sex ORDER BY u.updateTime DESC", sqlInfo.getSql());
+        assertEquals(3, sqlInfo.getParams().size());
+    }
+
+    /**
+     * where 动态方法的测试，测试动态条件都不成立的情况.
+     */
+    @Test
+    public void testWhere2() {
+        SqlInfo sqlInfo = Fenix.start()
+                .select("u")
+                .from("User")
+                .where(fenix ->
+                        fenix.andEqual("u.id", context.get("id"), context.get("id_a") != null)
+                                .andLike("u.nickName", context.get("name"), context.get("name_b") != null))
+                .orderBy("u.updateTime").desc()
+                .end();
+
+        assertEquals("SELECT u FROM User ORDER BY u.updateTime DESC", sqlInfo.getSql());
+        assertEquals(0, sqlInfo.getParams().size());
+    }
+
+    /**
+     * where 动态方法的测试，测试前缀为存文本的情况，是否能正常处理.
+     */
+    @Test
+    public void testWhere3() {
+        SqlInfo sqlInfo = Fenix.start()
+                .select("u")
+                .from("User")
+                .where(fenix ->
+                        fenix.andEqual("u.id", context.get("id"), context.get("id_a") != null)
+                                .andLike("u.nickName", context.get("name"), context.get("name") != null))
+                .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
+                .orderBy("u.updateTime").desc()
+                .end();
+
+        assertEquals("SELECT u FROM User WHERE u.nickName LIKE :u_nickName "
+                + "AND u.sex IN :u_sex ORDER BY u.updateTime DESC", sqlInfo.getSql());
+        assertEquals(2, sqlInfo.getParams().size());
+    }
+
 }
