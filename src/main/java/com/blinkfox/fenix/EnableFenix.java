@@ -14,7 +14,7 @@ import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
 
 /**
  * 
- * EnableJpaPlus
+ * EnableFenix
  * @description 开启Fenix配置
  * @author YangWenpeng
  * @date 2019年12月17日 下午6:35:12
