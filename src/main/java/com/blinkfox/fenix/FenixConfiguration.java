@@ -1,20 +1,14 @@
-/**
- * @projectName fenix
- * @package com.blinkfox.fenix
- * @className com.blinkfox.fenix.FenixConfiguration
- * @copyright Copyright 2019 Thuisoft, Inc. All rights reserved.
- */
 package com.blinkfox.fenix;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * FenixConfiguration
- * @description Fenix的Configuration
- * @author YangWenpeng
- * @date 2019年12月17日 下午5:23:59
- * @version v1.0.0
+ * Fenix 的 Spring 自动配置类.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Configuration
 @ComponentScan(basePackages = "com.blinkfox.fenix.specification")

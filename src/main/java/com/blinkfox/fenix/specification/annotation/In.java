@@ -1,14 +1,17 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * In
- * @description In条件
- * 条件中传入了大小为0的集合会出现永真和永假条件。建议使用者在调用框架之前对空集合进行过滤。
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:25:57
- * @version v1.0.0
+ * 用于“范围”({@code in})条件场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -16,26 +19,24 @@ import java.lang.annotation.*;
 public @interface In {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年3月27日 下午4:27:02
-     * @version v1.0.0
+     * 注解的值，默认空字符串.
+     *
+     * @return 值
      */
     String value() default "";
-    
+
     /**
-     * 
-     * In
-     * @description 是否允许为null
-     * @return
-     * @author YangWenpeng
-     * @date 2019年5月5日 下午5:19:39
-     * @version v1.0.0
+     * 是否允许为 {@code null} 值，默认为 {@code false}.
+     *
+     * @return 值
      */
     boolean allowNull() default false;
-    
+
+    /**
+     * 范围中值的 {@code Class} 类型，默认是字符串类型 {@code String.class}.
+     *
+     * @return {@code Class} 类型
+     */
     Class<?> type() default String.class;
+
 }
