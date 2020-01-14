@@ -25,7 +25,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
  */
 @Configuration
 @ComponentScan("com.blinkfox.fenix")
-@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
+@EnableFenix
+//@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
 public class FenixTestApplication {
 
     /**
