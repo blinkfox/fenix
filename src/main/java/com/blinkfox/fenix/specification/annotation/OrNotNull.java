@@ -1,27 +1,28 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * OrNotNull
- * @description OrNotNull条件
- * @author YangWenpeng
- * @date 2019年6月6日 下午5:27:50
- * @version v1.0.0
+ * 用于“或者不是 NULL”({@code OR field IS NOT NULL})条件场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface OrNotNull {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年6月6日 下午5:27:50
-     * @version v1.0.0
+     * 判断的字段名，默认空字符串.
+     *
+     * @return 值
      */
     String value() default "";
+
 }

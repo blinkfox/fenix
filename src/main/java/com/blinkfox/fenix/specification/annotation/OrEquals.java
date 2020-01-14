@@ -1,27 +1,27 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * OrEquals
- * @description OrEquals条件
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:25:57
- * @version v1.0.0
+ * 用于“或等于”({@code OR field = ?})场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface OrEquals{
+@Retention(RetentionPolicy.RUNTIME)
+public @interface OrEquals {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年3月27日 下午4:27:02
-     * @version v1.0.0
+     * 待比较的字符串值，默认为空字符串.
+     *
+     * @return 字符串值
      */
     String value() default "";
 }

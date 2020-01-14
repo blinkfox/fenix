@@ -7,28 +7,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
- * LikeIn
- * 
- * @description like查询数组
- * @author lichuan
- * @date 2019年9月16日 下午5:05:34
- * @version TODO
+ * 用于“模糊匹配数组”({@code LIKE})场景的注解.
+ *
+ * @author YangWenpeng 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
+// TODO 含义待明确.
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface LikeIn {
 
     /**
-     * 
-     * Likein
-     * 
-     * @description 字段名
-     * @return
-     * @author lichuan
-     * @date 2019年9月16日 下午5:09:01
-     * @version TODO
+     * 匹配的字段名，默认空字符串.
+     *
+     * @return 字符串值
      */
     String value() default "";
 

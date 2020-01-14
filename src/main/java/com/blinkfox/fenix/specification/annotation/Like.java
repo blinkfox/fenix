@@ -1,27 +1,28 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Like
- * @description Like条件
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:25:57
- * @version v1.0.0
+ * 用于“模糊匹配某个元素”({@code LIKE})场景的注解.
+ *
+ * @author YangWenpeng 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Like {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年3月27日 下午4:27:02
-     * @version v1.0.0
+     * 模糊匹配的字段名，默认空字符串.
+     *
+     * @return 值
      */
     String value() default "";
+
 }

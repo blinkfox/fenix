@@ -1,27 +1,28 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * NotEquals
- * @description 不相等条件
- * @author YangWenpeng
- * @date 2019年6月6日 下午5:29:07
- * @version v1.0.0
+ * 用于“不等于”({@code <>})场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface NotEquals{
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NotEquals {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年6月6日 下午5:29:07
-     * @version v1.0.0
+     * 比较的字段名，默认空字符串.
+     *
+     * @return 字符串值
      */
     String value() default "";
+
 }
