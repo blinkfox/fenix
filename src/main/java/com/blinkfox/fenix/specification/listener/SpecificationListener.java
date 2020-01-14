@@ -7,28 +7,24 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
 /**
- * SpecificationFilter
- * 
- * @description Sql构造监听器
- * @author YangWenpeng
- * @date 2019年3月26日 下午6:00:35
- * @version v1.2.0
+ * Spring Data JPA 中 {@link org.springframework.data.jpa.domain.Specification} 执行的 SQL 构造监听器.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
 public interface SpecificationListener {
 
     /**
-     * SpecificationListener
-     * 
-     * @description 执行监听器逻辑
-     * @param param 用来构建条件的参数实体
-     * @param field 查询对象的当前字段
-     * @param criteriaBuilder
-     * @param root
-     * @return
-     * @author YangWenpeng
-     * @date 2019年3月27日 下午4:16:48
-     * @version v1.2.0
-     * @param <T,Z,X>
+     * 执行的接口方法.
+     *
+     * @param param 对象参数
+     * @param field 对应的字段
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param root {@link From} 实例
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return 一个 {@link Predicate} 实例
      */
     <Z, X> Predicate execute(Object param, Field field, CriteriaBuilder criteriaBuilder, From<Z, X> root);
 

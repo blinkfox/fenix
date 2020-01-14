@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于“范围”({@code in})条件场景的注解.
+ * 用于“范围条件”({@code field IN ('xxx', 'yyy')})场景的注解.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-13

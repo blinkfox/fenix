@@ -1,5 +1,9 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
+import com.blinkfox.fenix.specification.annotation.In;
+import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
@@ -9,61 +13,54 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Predicate.BooleanOperator;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.blinkfox.fenix.specification.annotation.In;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
-import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
-
 /**
- * EquelsSpecificationListener
- * 
- * @description 构造相等条件监听器
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:28:03
- * @version v1.0.0
+ * 构建“范围匹配条件”({@code field IN ('xxx', 'yyy')})场景的 Specification 监听器.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
+@Slf4j
 @Component
 public class InSpecificationListener extends AbstractListener {
 
-    Logger log = LoggerFactory.getLogger(getClass());
-
     @Override
-    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String name,
-        Object value, Object annotation) {
+    protected <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
         Path<Object> path = from.get(name);
-        boolean allowNull = getAllowNull(annotation);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+        // 这里仅判断了集合，可能还需要判断数组.
         if (value instanceof Collection) {
-            Collection<?> statusList = (Collection<?>)value;
-            if (((Collection<?>)value).isEmpty()) {
-                return new FenixBooleanStaticPredicate((CriteriaBuilderImpl)criteriaBuilder, false,
-                    BooleanOperator.AND);
+            Collection<?> list = (Collection<?>) value;
+            if (list.isEmpty()) {
+                return new FenixBooleanStaticPredicate(
+                        (CriteriaBuilderImpl) criteriaBuilder, false, BooleanOperator.AND);
             } else {
-                statusList.stream().forEach(in::value);
+                list.forEach(in::value);
             }
         } else {
             in.value(value);
         }
-        return criteriaBuilder.and(allowNull ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
+
+        return criteriaBuilder.and(
+                this.isAllowNull(annotation) ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
     }
 
-    private boolean getAllowNull(Object annotation) {
+    private boolean isAllowNull(Object annotation) {
         try {
-            return (boolean)getAnnotation().getMethod("allowNull").invoke(annotation);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-            | SecurityException e1) {
-            log.error("获取@In中allowNull时失败", e1);
+            return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
+        } catch (IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            log.error("【Fenix 错误提示】获取【@In】注解中的中【allowNull】的值失败，将默认返回 false 的值.", e);
+            return false;
         }
-        return false;
     }
 
-    /**
-     * @see com.thunisoft.framework.jpaplus.specification.listener.impl.SpecificationListener#getAnnotation()
-     */
     @SuppressWarnings("unchecked")
     @Override
     public Class<In> getAnnotation() {

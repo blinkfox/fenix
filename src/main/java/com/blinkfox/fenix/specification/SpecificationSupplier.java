@@ -1,9 +1,13 @@
 package com.blinkfox.fenix.specification;
 
+import com.blinkfox.fenix.helper.CollectionHelper;
+import com.blinkfox.fenix.specification.listener.SpecificationListener;
+import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
+import com.blinkfox.fenix.specification.util.FieldUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,101 +18,101 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Predicate.BooleanOperator;
 
-import org.hibernate.query.criteria.internal.predicate.BooleanStaticAssertionPredicate;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.CollectionUtils;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import com.blinkfox.fenix.specification.listener.SpecificationListener;
-import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
-import com.blinkfox.fenix.specification.util.FieldUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
- * SpecificationSupplier
- * 
- * @description 动态生成Specification
- * @author YangWenpeng
- * @date 2019年3月26日 下午5:15:10
- * @version v1.0.0
+ * {@code Specification} 的提供者类.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SpecificationSupplier {
 
-    private static Map<Class<?>, SpecificationListener> listenerMap = new HashMap<>();
+    /**
+     * 用来缓存注解的 {@code class} 实例和 {@link SpecificationListener} 实例的 Map.
+     */
+    private static final Map<Class<?>, SpecificationListener> listenerMap = new HashMap<>();
 
-    private SpecificationSupplier() {
-
-    }
-
+    /**
+     * 根据参数对象构建 {@link Specification} 实例.
+     *
+     * @param param 参数对象
+     * @param <T>   范型 T
+     * @return {@link Specification} 实例
+     */
     public static <T> Specification<T> buildSpecification(Object param) {
         return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = paramToPredicate(root, criteriaBuilder, param);
-            Map<BooleanOperator, List<Predicate>> predicatesMap
-                = predicates.stream().collect(Collectors.groupingBy(Predicate::getOperator));
+            Map<BooleanOperator, List<Predicate>> predicatesMap = paramToPredicate(root, criteriaBuilder, param)
+                    .stream()
+                    .collect(Collectors.groupingBy(Predicate::getOperator));
+
+            // 将 AND 条件和 OR 条件进行合并.
             List<Predicate> andPredicates = predicatesMap.get(BooleanOperator.AND);
-            andPredicates = andPredicates == null ? Collections.emptyList() : andPredicates;
             List<Predicate> orPredicates = predicatesMap.get(BooleanOperator.OR);
-            orPredicates = orPredicates == null ? Collections.emptyList() : orPredicates;
-            return meragePredicate(criteriaBuilder, andPredicates, orPredicates);
+            if (CollectionHelper.isNotEmpty(andPredicates) && CollectionHelper.isNotEmpty(orPredicates)) {
+                return criteriaBuilder.or(criteriaBuilder.and(andPredicates.toArray(new Predicate[0])),
+                        criteriaBuilder.or(orPredicates.toArray(new Predicate[0])));
+            } else if (CollectionHelper.isNotEmpty(orPredicates)) {
+                return criteriaBuilder.or(orPredicates.toArray(new Predicate[0]));
+            } else if (CollectionHelper.isNotEmpty(andPredicates)) {
+                return criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
+            } else {
+                return null;
+            }
         };
     }
 
     /**
-     * SpecificationSupplier
-     * 
-     * @description 将and条件和or条件进行合并
-     * @param criteriaBuilder
-     * @param andPredicates
-     * @param orPredicates
-     * @return
-     * @author YangWenpeng
-     * @date 2019年10月31日 下午1:58:36
-     * @version v1.0.0
-     */
-    private static Predicate meragePredicate(CriteriaBuilder criteriaBuilder, List<Predicate> andPredicates,
-        List<Predicate> orPredicates) {
-        if (!CollectionUtils.isEmpty(andPredicates) && !CollectionUtils.isEmpty(orPredicates)) {
-            // 若有and和or条件
-            return criteriaBuilder.or(criteriaBuilder.and(andPredicates.toArray(new Predicate[andPredicates.size()])),
-                criteriaBuilder.or(orPredicates.toArray(new Predicate[orPredicates.size()])));
-        } else if (!CollectionUtils.isEmpty(orPredicates)) {
-            // 只有or条件
-            return criteriaBuilder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
-        } else if (!CollectionUtils.isEmpty(andPredicates)) {
-            // 只有and条件
-            return criteriaBuilder.and(andPredicates.toArray(new Predicate[andPredicates.size()]));
-        }
-        // and和or均没有
-        return null;
-    }
-
-    /**
-     * @return the listeners
+     * 获取所有的 {@link SpecificationListener} 的 Map 集合.
+     *
+     * @return Map
      */
     public static Map<Class<?>, SpecificationListener> getListeners() {
         return listenerMap;
     }
 
+    /**
+     * 根据 {@code class} 类添加 {@link SpecificationListener} 实例到 Map 集合中.
+     *
+     * @param cls      {@code class} 类
+     * @param listener {@link SpecificationListener} 实例
+     */
     public static synchronized void addListener(Class<?> cls, SpecificationListener listener) {
         SpecificationSupplier.listenerMap.put(cls, listener);
     }
 
-    public static <Z, X> List<Predicate> paramToPredicate(From<Z, X> from, CriteriaBuilder criteriaBuilder,
-        Object param) {
-        List<Predicate> predicates = new ArrayList<>();
+    /**
+     * 将参数对象转换成 {@link Predicate} 对象集合.
+     *
+     * @param from            {@link From} 实例
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param param           对象参数
+     * @param <Z>             范型 Z
+     * @param <X>             范型 X
+     * @return {@link Predicate} 对象集合
+     */
+    public static <Z, X> List<Predicate> paramToPredicate(
+            From<Z, X> from, CriteriaBuilder criteriaBuilder, Object param) {
         Field[] fields = FieldUtils.getAllFields(param.getClass());
+        List<Predicate> predicates = new ArrayList<>(fields.length);
         for (Field field : fields) {
             Annotation[] annotations = field.getAnnotations();
             if (annotations == null) {
                 continue;
             }
-            for (int i = 0; i < annotations.length; i++) {
-                Annotation annotation = annotations[i];
+
+            for (Annotation annotation : annotations) {
                 SpecificationListener specificationListener = listenerMap.get(annotation.annotationType());
-                if (null == specificationListener) {
-                    continue;
-                }
-                Predicate predicate = specificationListener.execute(param, field, criteriaBuilder, from);
-                if (null != predicate && validate(predicate)) {
-                    predicates.add(predicate);
+                if (specificationListener != null) {
+                    Predicate predicate = specificationListener.execute(param, field, criteriaBuilder, from);
+                    if (predicate != null && validate(predicate)) {
+                        predicates.add(predicate);
+                    }
                 }
             }
         }
@@ -116,38 +120,25 @@ public final class SpecificationSupplier {
     }
 
     /**
-     * SpecificationSupplier
-     * 
-     * @description 验证{@link Predicate}，有的predicate可以不用解析<br>
-     *              防止部分1=1和1=0的出现。
-     * @param predicate
-     * @return
-     * @author YangWenpeng
-     * @date 2019年12月17日 下午6:55:42
-     * @version v1.0.0
+     * 校验 {@link Predicate} 是否有效，有的 {@code predicate} 可以不用解析.
+     *
+     * @param predicate {@link Predicate} 实例
+     * @return 布尔值
      */
     private static boolean validate(Predicate predicate) {
-        if (predicate instanceof FenixBooleanStaticPredicate) {
-            return validateBooleanPredicate(predicate);
-        }
-        return true;
+        return !(predicate instanceof FenixBooleanStaticPredicate) || validateBooleanPredicate(predicate);
     }
 
     /**
-     * 
-     * SpecificationSupplier
-     * 
-     * @description 验证{@link BooleanStaticAssertionPredicate}，有的predicate可以不用解析
-     * @param predicate
-     * @return
-     * @author YangWenpeng
-     * @date 2019年12月17日 下午7:09:15
-     * @version v1.0.0
+     * 校验布尔类型的 {@link Predicate} 是否有效.
+     *
+     * @param predicate {@link Predicate} 实例
+     * @return 布尔值
      */
     private static boolean validateBooleanPredicate(Predicate predicate) {
-        FenixBooleanStaticPredicate booleanStaticAssertionPredicate = (FenixBooleanStaticPredicate)predicate;
-        return !((booleanStaticAssertionPredicate.getAssertedValue() && predicate.getOperator() == BooleanOperator.AND)
-            || (!booleanStaticAssertionPredicate.getAssertedValue() && predicate.getOperator() == BooleanOperator.OR));
+        FenixBooleanStaticPredicate booleanStatAssertPredicate = (FenixBooleanStaticPredicate) predicate;
+        return !((booleanStatAssertPredicate.getAssertedValue() && predicate.getOperator() == BooleanOperator.AND)
+                || (!booleanStatAssertPredicate.getAssertedValue() && predicate.getOperator() == BooleanOperator.OR));
     }
 
 }

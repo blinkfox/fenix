@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于“是 NULL”({@code IS NULL})条件场景的注解.
+ * 用于“是 NULL”({@code field IS NULL})条件场景的注解.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-13

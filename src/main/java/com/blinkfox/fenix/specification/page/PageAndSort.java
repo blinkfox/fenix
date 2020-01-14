@@ -1,54 +1,70 @@
 package com.blinkfox.fenix.specification.page;
 
+import com.blinkfox.fenix.specification.util.SortUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.springframework.data.domain.Sort.Order;
 
-import com.blinkfox.fenix.specification.util.SortUtils;
-
 /**
- * 
- * PageAndSort
- * 
- * @description 分页参数接收实体类
- * @author yangjunming
- * @date 2019年3月13日 下午2:38:50
- * @version 1.0
+ * 分页和排序的实体类.
+ *
+ * @author yangjunming on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
+@Getter
+@Setter
 public class PageAndSort {
-    /**
-     * 请求页index
-     */
-    private int page = PageConsts.DEFAULT_PAGE_PAGE;
-    /**
-     * 每页显示记录数
-     */
-    private int limit = PageConsts.DEFAULT_PAGE_LIMIT;
 
     /**
-     * 偏移量
+     * 分页默认每页数据量.
+     */
+    public static final Integer DEFAULT_PAGE_LIMIT = 10;
+
+    /**
+     * 分页默认当前页.
+     */
+    public static final Integer DEFAULT_PAGE_PAGE = 1;
+
+    /**
+     * 分页的默认页数.
+     */
+    private int page = DEFAULT_PAGE_PAGE;
+
+    /**
+     * 每页显示的分页条数.
+     */
+    private int limit = DEFAULT_PAGE_LIMIT;
+
+    /**
+     * 偏移量.
      */
     private Integer offset;
 
-    /** 排序 **/
+    /**
+     * 排序.
+     */
     private List<Order> orders;
 
+    /**
+     * 构造方法.
+     */
     public PageAndSort() {
         super();
     }
 
     /**
-     * PageAndSort
-     * 
-     * @description 构造
-     * @param page
-     * @param limit
-     * @param offset
-     * @param orders
-     * @author YangWenpeng
-     * @date 2019年6月10日 下午2:26:40
-     * @version v1.0.0
+     * 构造方法.
+     *
+     * @param page 页数
+     * @param limit 每页条数
+     * @param offset 开始偏移量
+     * @param orders 顺序
      */
     public PageAndSort(int page, int limit, Integer offset, Order... orders) {
         super();
@@ -59,14 +75,10 @@ public class PageAndSort {
     }
 
     /**
-     * PageAndSort
-     * 
-     * @description 构造
-     * @param page
-     * @param limit
-     * @author YangWenpeng
-     * @date 2019年6月10日 下午2:28:37
-     * @version v1.0.0
+     * 构造方法.
+     *
+     * @param page 页数
+     * @param limit 每页条数
      */
     public PageAndSort(int page, int limit) {
         super();
@@ -75,15 +87,11 @@ public class PageAndSort {
     }
 
     /**
-     * PageAndSort
-     * 
-     * @description 构造
-     * @param page
-     * @param limit
-     * @param offset
-     * @author YangWenpeng
-     * @date 2019年6月10日 下午2:28:37
-     * @version v1.0.0
+     * 构造方法.
+     *
+     * @param page 页数
+     * @param limit 每页条数
+     * @param offset 偏移量
      */
     public PageAndSort(int page, int limit, Integer offset) {
         super();
@@ -93,15 +101,11 @@ public class PageAndSort {
     }
 
     /**
-     * PageAndSort
-     * 
-     * @description 构造
-     * @param page
-     * @param limit
-     * @param orders
-     * @author YangWenpeng
-     * @date 2019年6月10日 下午2:28:37
-     * @version v1.0.0
+     * 构造方法.
+     *
+     * @param page 页数
+     * @param limit 每页条数
+     * @param orders 不定个数的排序实例
      */
     public PageAndSort(int page, int limit, Order... orders) {
         super();
@@ -111,17 +115,12 @@ public class PageAndSort {
     }
 
     /**
-     * 
-     * PageAndSort
-     * 
-     * @description 通过 sort 构造排序
-     * @param page
-     * @param limit
-     * @param offset
-     * @param sort
-     * @author lichuan
-     * @date 2019年9月10日 下午1:49:08
-     * @version v1.0.0
+     * 构造方法.
+     *
+     * @param page 页数
+     * @param limit 每页条数
+     * @param offset 偏移量
+     * @param sort 不定个数的排序实例
      */
     public PageAndSort(int page, int limit, Integer offset, String sort) {
         super();
@@ -132,60 +131,10 @@ public class PageAndSort {
     }
 
     /**
-     * @return the page
-     */
-    public int getPage() {
-        return page;
-    }
-
-    /**
-     * @param page the page to set
-     */
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    /**
-     * @return the limit
-     */
-    public int getLimit() {
-        return limit;
-    }
-
-    /**
-     * @param limit the limit to set
-     */
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public Integer getOffset() {
-        return offset;
-    }
-
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-    
-    /**
-     * 
-     * PageAndSort
-     * 
-     * @description 将 sort 字符串转换为 Order 集合<br>
-     *              例如："-fyid,create_time" -> [Order(Direction.DESC, "fyid"),Order(Direction.ASC, "create_time")]
-     * @param sort
-     * @return
-     * @author lichuan
-     * @date 2019年9月10日 下午2:00:20
-     * @version v1.0.0
+     * 将 sort 字符串转换为 {@link Order} 集合.
+     * 例如：{@code "-fyid,create_time" -> [Order(Direction.DESC, "fyid"), Order(Direction.ASC, "create_time")]}
+     *
+     * @param sort 排序字段
      */
     public void setSort(String sort) {
         this.orders = SortUtils.toOrders(sort);

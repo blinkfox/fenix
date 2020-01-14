@@ -1,46 +1,41 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
-import java.util.Collection;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Predicate.BooleanOperator;
-
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import com.blinkfox.fenix.specification.annotation.NotIn;
 import com.blinkfox.fenix.specification.listener.AbstractListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
+import java.util.Collection;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Predicate.BooleanOperator;
+
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
+import org.springframework.stereotype.Component;
+
 /**
- * EquelsSpecificationListener
- * 
- * @description 构造NotIn条件监听器
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:28:03
- * @version v1.0.0
+ * 构建“范围不匹配条件”({@code field NOT IN ('xxx', 'yyy')})场景的 Specification 监听器.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
 @Component
 public class NotInSpecificationListener extends AbstractListener {
 
-    Logger log = LoggerFactory.getLogger(getClass());
-
     @Override
-    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String name,
-        Object value, Object annotation) {
-        Path<Object> path = from.get(name);
-        CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+    protected <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+        CriteriaBuilder.In<Object> in = criteriaBuilder.in(from.get(name));
+        // TODO 这里还需要考虑数组的情况.
         if (value instanceof Collection) {
-            Collection<?> statusList = (Collection<?>)value;
-            if (((Collection<?>)value).isEmpty()) {
-                return new FenixBooleanStaticPredicate((CriteriaBuilderImpl)criteriaBuilder, true, BooleanOperator.AND);
+            Collection<?> list = (Collection<?>) value;
+            if (list.isEmpty()) {
+                return new FenixBooleanStaticPredicate(
+                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.AND);
             } else {
-                statusList.stream().forEach(in::value);
+                list.forEach(in::value);
             }
         } else {
             in.value(value);
@@ -48,12 +43,10 @@ public class NotInSpecificationListener extends AbstractListener {
         return criteriaBuilder.not(in);
     }
 
-    /**
-     * @see com.thunisoft.framework.jpaplus.specification.listener.impl.SpecificationListener#getAnnotation()
-     */
     @SuppressWarnings("unchecked")
     @Override
     public Class<NotIn> getAnnotation() {
         return NotIn.class;
     }
+
 }

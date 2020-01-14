@@ -1,40 +1,31 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
+import com.blinkfox.fenix.specification.annotation.Like;
+import com.blinkfox.fenix.specification.listener.AbstractListener;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.blinkfox.fenix.specification.annotation.Like;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
-
 /**
- * EquelsSpecificationListener
- * 
- * @description 构造相等条件监听器
- * @author YangWenpeng
- * @date 2019年3月27日 下午4:28:03
- * @version v1.0.0
+ * 构建“模糊条件”({@code field1 LIKE '%xx%'})场景的 Specification 监听器.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
 @Component
 public class LikeSpecificationListener extends AbstractListener {
 
-    Logger log = LoggerFactory.getLogger(getClass());
-
     @Override
-    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String name,
-        Object value, Object annotation) {
-        String valueStr = value.toString();
-        valueStr = valueStr.replace("%", "\\%");
-        return criteriaBuilder.and(criteriaBuilder.like(from.get(name), "%" + valueStr + "%"));
+    protected <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+        return criteriaBuilder.and(criteriaBuilder.like(from.get(name),
+                "%" + value.toString().replace("%", "\\%") + "%"));
     }
 
-    /**
-     * @see com.thunisoft.framework.jpaplus.specification.listener.SpecificationListener#getAnnotation()
-     */
     @SuppressWarnings("unchecked")
     @Override
     public Class<Like> getAnnotation() {

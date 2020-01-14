@@ -7,13 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于“模糊匹配数组”({@code LIKE})场景的注解.
+ * 用于“模糊匹配数组”({@code field1 LIKE '%xx%' OR field2 LIKE '%yyy%'})场景的注解.
  *
  * @author YangWenpeng 2019-12-17
  * @author blinkfox on 2020-01-13
  * @since v2.2.0
  */
-// TODO 含义待明确.
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
