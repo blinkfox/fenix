@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.jpa.repository.Query;
@@ -33,7 +32,6 @@ public class BookRepositoryTest {
     /**
      * 测试使用原生的 {@link Query} 注解来模糊查询博客信息.
      */
-    @Ignore
     @Test
     public void queryBooksByName() {
         BookParam bookParam = new BookParam().setName("Java");
