@@ -22,7 +22,8 @@ public class OrLikeSpecificationListener extends AbstractListener {
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        return criteriaBuilder.or(criteriaBuilder.like(from.get(name), "%" + value.toString().replace("%", "\\%") + "%"));
+        return criteriaBuilder.or(criteriaBuilder.like(from.get(name),
+                "%" + value.toString().replace("%", "\\%") + "%"));
     }
 
     @SuppressWarnings("unchecked")

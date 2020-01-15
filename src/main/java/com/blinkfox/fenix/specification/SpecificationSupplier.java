@@ -1,9 +1,9 @@
 package com.blinkfox.fenix.specification;
 
 import com.blinkfox.fenix.helper.CollectionHelper;
+import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.specification.listener.SpecificationListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
-import com.blinkfox.fenix.helper.FieldHelper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
