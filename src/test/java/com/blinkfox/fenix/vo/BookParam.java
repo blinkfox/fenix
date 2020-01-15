@@ -41,7 +41,7 @@ public class BookParam {
     /**
      * 总页数.
      */
-    @Equals
+    @Greater
     private int totalPage;
 
     /**

@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.specification.util;
+package com.blinkfox.fenix.helper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
  * @since v2.2.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FieldUtils {
+public final class FieldHelper {
 
     /**
      * 从一个类的 {@code Class} 类中获取所有的 {@link Field} 字段的数组.

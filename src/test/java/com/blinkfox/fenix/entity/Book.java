@@ -71,8 +71,8 @@ public class Book {
     /**
      * 出版日期.
      */
-    @Column(name = "d_publish_date")
-    private Date publishDate;
+    @Column(name = "c_publish_at")
+    private String publishAt;
 
     /**
      * 创建时间.
