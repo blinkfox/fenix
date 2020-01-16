@@ -22,7 +22,7 @@ import javax.persistence.criteria.JoinType;
 public @interface Join {
 
     /**
-     * 连接的字段名，默认空字符串.
+     * 注解的实体名称，默认为空或空字符串时将使用实体名称.
      *
      * @return 字符串值
      */

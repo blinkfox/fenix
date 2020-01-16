@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.specification.annotation.OrNotEquals;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class OrNotEqualsSpecificationListener extends AbstractListener {
+public class OrNotEqualsSpecificationListener extends AbstractSpecificationListener {
 
     @Override
     protected <Z, X> Predicate buildPredicate(

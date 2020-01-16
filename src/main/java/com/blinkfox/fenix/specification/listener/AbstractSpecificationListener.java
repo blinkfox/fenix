@@ -21,12 +21,12 @@ import org.springframework.beans.BeanUtils;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-public abstract class AbstractListener implements SpecificationListener {
+public abstract class AbstractSpecificationListener implements SpecificationListener {
 
     /**
      * 构造方法.
      */
-    public AbstractListener() {
+    public AbstractSpecificationListener() {
         SpecificationSupplier.addListener(this.getAnnotation(), this);
     }
 

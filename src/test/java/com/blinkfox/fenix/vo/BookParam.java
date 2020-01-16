@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.vo;
 
 import com.blinkfox.fenix.specification.annotation.Equals;
-import com.blinkfox.fenix.specification.annotation.Greater;
+import com.blinkfox.fenix.specification.annotation.GreaterThan;
 import com.blinkfox.fenix.specification.annotation.In;
 import com.blinkfox.fenix.specification.annotation.Like;
 
@@ -49,13 +49,13 @@ public class BookParam {
     /**
      * 总页数.
      */
-    @Greater
+    @GreaterThan
     private Integer totalPage;
 
     /**
      * 出版日期.
      */
-    @Greater
+    @GreaterThan
     private Date publishDate;
 
 }

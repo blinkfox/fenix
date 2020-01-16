@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 public @interface OrLike {
 
     /**
-     * 模糊匹配的字段名，默认空字符串.
+     * 注解的实体字段属性名称，默认为空或空字符串时将使用属性名称.
      *
      * @return 值
      */

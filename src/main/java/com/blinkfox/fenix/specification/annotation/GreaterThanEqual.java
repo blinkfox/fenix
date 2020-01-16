@@ -7,21 +7,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于“或者小于等于”({@code OR field <= ?})场景的注解.
+ * 用于“大于等于”({@code >=})场景的注解.
  *
  * @author YangWenpeng 2019-12-17
- * @author blinkfox on 2020-01-14
+ * @author blinkfox on 2020-01-13
  * @since v2.2.0
  */
 @Documented
-@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OrLesserOrEqual {
+@Target(ElementType.FIELD)
+public @interface GreaterThanEqual {
 
     /**
-     * 比较的字段名，默认空字符串.
+     * 注解的实体字段属性名称，默认为空或空字符串时将使用属性名称.
      *
-     * @return 字符串值
+     * @return 值
      */
     String value() default "";
 

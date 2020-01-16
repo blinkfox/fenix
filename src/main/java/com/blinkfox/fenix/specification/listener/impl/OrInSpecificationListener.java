@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.specification.annotation.OrIn;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class OrInSpecificationListener extends AbstractListener {
+public class OrInSpecificationListener extends AbstractSpecificationListener {
 
     @Override
     protected <Z, X> Predicate buildPredicate(

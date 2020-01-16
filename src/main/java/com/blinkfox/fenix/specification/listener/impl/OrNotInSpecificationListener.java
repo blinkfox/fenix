@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.specification.annotation.OrNotIn;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class OrNotInSpecificationListener extends AbstractListener {
+public class OrNotInSpecificationListener extends AbstractSpecificationListener {
 
     @Override
     protected <Z, X> Predicate buildPredicate(

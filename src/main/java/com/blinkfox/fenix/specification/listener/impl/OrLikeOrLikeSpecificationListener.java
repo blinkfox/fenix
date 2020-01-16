@@ -2,7 +2,7 @@ package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.annotation.OrLikeOrLike;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class OrLikeOrLikeSpecificationListener extends AbstractListener {
+public class OrLikeOrLikeSpecificationListener extends AbstractSpecificationListener {
 
     @SuppressWarnings("unchecked")
     @Override

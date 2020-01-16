@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
-import com.blinkfox.fenix.specification.annotation.NotNull;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.annotation.IsNotNull;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class NotNullSpecificationListener extends AbstractListener {
+public class IsNotNullSpecificationListener extends AbstractSpecificationListener {
 
     @Override
     protected <Z, X> Predicate buildPredicate(
@@ -27,8 +27,8 @@ public class NotNullSpecificationListener extends AbstractListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Class<NotNull> getAnnotation() {
-        return NotNull.class;
+    public Class<IsNotNull> getAnnotation() {
+        return IsNotNull.class;
     }
 
 }

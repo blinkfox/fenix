@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 public @interface OrIn {
 
     /**
-     * 待比较的字符串值，默认为空字符串.
+     * 注解的实体字段属性名称，默认为空或空字符串时将使用属性名称.
      *
      * @return 字符串值
      */

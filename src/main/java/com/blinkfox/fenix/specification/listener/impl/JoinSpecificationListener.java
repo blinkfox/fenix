@@ -2,7 +2,7 @@ package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.SpecificationSupplier;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class JoinSpecificationListener extends AbstractListener {
+public class JoinSpecificationListener extends AbstractSpecificationListener {
 
     @Override
     protected <Z, X> Predicate buildPredicate(

@@ -16,10 +16,10 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OrNull {
+public @interface OrIsNull {
 
     /**
-     * 判断的字段名，默认空字符串.
+     * 注解的实体字段属性名称，默认为空或空字符串时将使用属性名称.
      *
      * @return 值
      */

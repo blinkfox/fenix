@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
-import com.blinkfox.fenix.specification.annotation.Lesser;
-import com.blinkfox.fenix.specification.listener.AbstractListener;
+import com.blinkfox.fenix.specification.annotation.LessThan;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class LesserSpecificationListener extends AbstractListener {
+public class LessThanSpecificationListener extends AbstractSpecificationListener {
 
     @SuppressWarnings("unchecked")
     @Override
@@ -28,8 +28,8 @@ public class LesserSpecificationListener extends AbstractListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Class<Lesser> getAnnotation() {
-        return Lesser.class;
+    public Class<LessThan> getAnnotation() {
+        return LessThan.class;
     }
 
 }
