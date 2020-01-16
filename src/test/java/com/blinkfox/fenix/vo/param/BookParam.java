@@ -3,10 +3,11 @@ package com.blinkfox.fenix.vo.param;
 import com.blinkfox.fenix.specification.annotation.Equals;
 import com.blinkfox.fenix.specification.annotation.GreaterThan;
 import com.blinkfox.fenix.specification.annotation.In;
+import com.blinkfox.fenix.specification.annotation.IsNull;
 import com.blinkfox.fenix.specification.annotation.LessThan;
 import com.blinkfox.fenix.specification.annotation.Like;
+import com.blinkfox.fenix.specification.annotation.LikeIn;
 
-import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -44,8 +45,8 @@ public class BookParam {
     /**
      * 图书作者.
      */
-    @Like
-    private String author;
+    @LikeIn
+    private List<String> authors;
 
     /**
      * 总页数.
@@ -58,5 +59,11 @@ public class BookParam {
      */
     @LessThan
     private String publishAt;
+
+    /**
+     * 其它扩展信息.
+     */
+    @IsNull
+    private String others;
 
 }

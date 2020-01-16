@@ -3,10 +3,9 @@ package com.blinkfox.fenix.vo.param;
 import com.blinkfox.fenix.specification.annotation.Equals;
 import com.blinkfox.fenix.specification.annotation.GreaterThanEqual;
 import com.blinkfox.fenix.specification.annotation.In;
+import com.blinkfox.fenix.specification.annotation.IsNotNull;
 import com.blinkfox.fenix.specification.annotation.LessThanEqual;
 import com.blinkfox.fenix.specification.annotation.Like;
-
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,5 +56,11 @@ public class BookParam2 {
      */
     @LessThanEqual
     private String publishAt;
+
+    /**
+     * 其它扩展信息.
+     */
+    @IsNotNull
+    private String others;
 
 }

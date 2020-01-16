@@ -19,7 +19,7 @@ public class IsNullSpecificationHandler extends AbstractSpecificationHandler {
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        return criteriaBuilder.and(criteriaBuilder.isNull(from.get((String) value)));
+        return criteriaBuilder.and(criteriaBuilder.isNull(from.get(String.valueOf(value))));
     }
 
     @SuppressWarnings("unchecked")

@@ -11,7 +11,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
 /**
- * 构建“模糊条件”({@code field1 LIKE '%xx%' OR field2 LIKE '%yyy%'})场景的 Specification 监听器.
+ * 构建“模糊条件”({@code field LIKE '%xx%' OR field LIKE '%yyy%'})场景的 Specification 监听器.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-14

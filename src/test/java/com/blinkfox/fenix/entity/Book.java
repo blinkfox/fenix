@@ -86,4 +86,10 @@ public class Book {
     @Column(name = "dt_update_time")
     private Date updateTime;
 
+    /**
+     * 其它扩展信息.
+     */
+    @Column(name = "c_others")
+    private String others;
+
 }

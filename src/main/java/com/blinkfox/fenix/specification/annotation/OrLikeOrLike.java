@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于“或者模糊匹配某些元素”({@code OR ( field1 LIKE 'xxx' OR field2 LIKE 'xxx')})场景的注解.
+ * 用于“或者模糊匹配某些元素”({@code OR ( field1 LIKE 'xxx' OR field2 LIKE 'yyy')})场景的注解.
  *
  * @author YangWenpeng 2019-12-17
  * @author blinkfox on 2020-01-14
@@ -19,10 +19,17 @@ import java.lang.annotation.Target;
 public @interface OrLikeOrLike {
 
     /**
-     * 匹配的多个字段名，默认空字符串.
+     * 默认为空即可，不需要额外设置.
      *
      * @return 字符串字段的数组
      */
-    String[] fileds();
+    String value() default "";
+
+    /**
+     * 匹配的多个字段名.
+     *
+     * @return 字段数组
+     */
+    String[] fields();
 
 }

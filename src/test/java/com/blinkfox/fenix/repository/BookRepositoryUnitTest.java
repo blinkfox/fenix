@@ -6,6 +6,7 @@ import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.vo.param.BookParam;
 import com.blinkfox.fenix.vo.param.BookParam2;
+import com.blinkfox.fenix.vo.param.BookParam3;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -117,6 +118,36 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testLikeIn() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+                new BookParam().setAuthors(Arrays.asList("袁国忠", "陈"))));
+        Assert.assertEquals(4, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testLikeOrLike() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+                new BookParam3().setNameOrAuthor(Arrays.asList("Java", "袁国忠"))));
+        Assert.assertEquals(6, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testOrLikeOrLike() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+                new BookParam3().setOrNameOrAuthor(new String[]{"Java", "袁国忠"})));
+        Assert.assertEquals(6, books.size());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来范围查询图书信息.
      */
     @Test
@@ -126,6 +157,24 @@ public class BookRepositoryUnitTest {
                 .setId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
         List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
         Assert.assertEquals(7, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testIsNull() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setOthers("others")));
+        Assert.assertEquals(7, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testIsNotNull() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOthers("others")));
+        Assert.assertEquals(3, books.size());
     }
 
 }

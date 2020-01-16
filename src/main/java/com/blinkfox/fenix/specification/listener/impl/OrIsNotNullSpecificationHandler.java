@@ -19,7 +19,7 @@ public class OrIsNotNullSpecificationHandler extends AbstractSpecificationHandle
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        return criteriaBuilder.or(criteriaBuilder.isNotNull(from.get((String) value)));
+        return criteriaBuilder.or(criteriaBuilder.isNotNull(from.get(String.valueOf(value))));
     }
 
     @SuppressWarnings("unchecked")

@@ -8,6 +8,7 @@
         "totalPage": 328,
         "publishingHouse": "中国出版集团,现代出版社",
         "publishAt": "2019-10-01",
+        "others": "This is 1.",
         "createTime": 1569859200000,
         "updateTime": 1569859200000
     },
@@ -32,6 +33,7 @@
         "totalPage": 312,
         "publishingHouse": "人民邮电出版社",
         "publishAt": "2014-11-01",
+        "others": "This is 3.",
         "createTime": 1572364800000,
         "updateTime": 1572364800000
     },
@@ -80,6 +82,7 @@
         "totalPage": 880,
         "publishingHouse": "机械工业出版社",
         "publishAt": "2007-06-01",
+        "others": "This is 7.",
         "createTime": 1575129600000,
         "updateTime": 1575129600000
     },
