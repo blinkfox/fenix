@@ -5,7 +5,7 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
-import com.blinkfox.fenix.vo.BookParam;
+import com.blinkfox.fenix.vo.param.BookParam;
 
 import java.io.IOException;
 import java.util.List;

@@ -3,9 +3,9 @@ package com.blinkfox.fenix.repository;
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
-import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
-import com.blinkfox.fenix.vo.BookParam;
+import com.blinkfox.fenix.vo.param.BookParam;
+import com.blinkfox.fenix.vo.param.BookParam2;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,30 +59,65 @@ public class BookRepositoryUnitTest {
     }
 
     /**
-     * 测试使用 {@code Specification} 的方式来根据名称模糊查询图书信息.
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
      */
     @Test
     public void testEquals() {
         BookParam bookParam = new BookParam().setIsbn("9787111641247");
         List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
-        Assert.assertFalse(books.isEmpty());
         Assert.assertEquals(1, books.size());
-        Assert.assertTrue(StringHelper.isNotBlank(books.get(0).getName()));
     }
 
     /**
-     * 测试使用 {@code Specification} 的方式来根据名称模糊查询图书信息.
+     * 测试使用 {@code Specification} 的方式来大于查询图书信息.
+     */
+    @Test
+    public void testGreaterThan() {
+        BookParam bookParam = new BookParam().setTotalPage(500);
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        Assert.assertEquals(5, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来大于等于查询图书信息.
+     */
+    @Test
+    public void testGreaterThanEqual() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setTotalPage(880)));
+        Assert.assertEquals(2, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来小于查询图书信息.
+     */
+    @Test
+    public void testLessThan() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+                new BookParam().setPublishAt("2014-11-01")));
+        Assert.assertEquals(4, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来小于查询图书信息.
+     */
+    @Test
+    public void testLessThanEqual() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+                new BookParam2().setPublishAt("2014-11-01")));
+        Assert.assertEquals(5, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
      */
     @Test
     public void testLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setName("Java")));
-        Assert.assertFalse(books.isEmpty());
         Assert.assertEquals(3, books.size());
-        Assert.assertTrue(StringHelper.isNotBlank(books.get(0).getName()));
     }
 
     /**
-     * 测试使用 {@code Specification} 的方式来根据名称模糊查询图书信息.
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
      */
     @Test
     public void testIn() {
@@ -90,9 +125,7 @@ public class BookRepositoryUnitTest {
         BookParam bookParam = new BookParam()
                 .setId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
         List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
-        Assert.assertFalse(books.isEmpty());
         Assert.assertEquals(7, books.size());
-        Assert.assertTrue(StringHelper.isNotBlank(books.get(0).getName()));
     }
 
 }
