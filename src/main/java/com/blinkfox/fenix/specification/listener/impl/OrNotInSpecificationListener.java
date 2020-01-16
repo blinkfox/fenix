@@ -4,6 +4,7 @@ import com.blinkfox.fenix.specification.annotation.OrNotIn;
 import com.blinkfox.fenix.specification.listener.AbstractListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +29,10 @@ public class OrNotInSpecificationListener extends AbstractListener {
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(from.get(name));
-        // TODO 未考虑数组的场景.
+        if (value.getClass().isArray()) {
+            value = Arrays.asList((Object[]) value);
+        }
+
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {

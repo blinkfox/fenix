@@ -10,6 +10,7 @@ import com.blinkfox.fenix.helper.StringHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -215,9 +216,7 @@ public class SqlInfoBuilder {
             sqlInfo.getParams().put(endNamed, Arrays.asList((Object[]) obj));
         } else {
             // 如果只有一个元素就创建一个 List 集合.
-            List<Object> lists = new ArrayList<>(2);
-            lists.add(obj);
-            sqlInfo.getParams().put(endNamed, lists);
+            sqlInfo.getParams().put(endNamed, Collections.singletonList(obj));
         }
     }
 

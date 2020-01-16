@@ -2,9 +2,11 @@ package com.blinkfox.fenix.vo;
 
 import com.blinkfox.fenix.specification.annotation.Equals;
 import com.blinkfox.fenix.specification.annotation.Greater;
+import com.blinkfox.fenix.specification.annotation.In;
 import com.blinkfox.fenix.specification.annotation.Like;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,12 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class BookParam {
+
+    /**
+     * ID 集合.
+     */
+    @In
+    private List<String> id;
 
     /**
      * 图书的 ISBN 编号.
@@ -42,7 +50,7 @@ public class BookParam {
      * 总页数.
      */
     @Greater
-    private int totalPage;
+    private Integer totalPage;
 
     /**
      * 出版日期.

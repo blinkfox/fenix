@@ -5,6 +5,7 @@ import com.blinkfox.fenix.specification.listener.AbstractListener;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -32,8 +33,13 @@ public class InSpecificationListener extends AbstractListener {
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+        if (value.getClass().isArray()) {
+            value = Arrays.asList((Object[]) value);
+        }
+
         Path<Object> path = from.get(name);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+
         // 这里仅判断了集合，可能还需要判断数组.
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
