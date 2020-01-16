@@ -11,8 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 构建“或者模糊条件”({@code OR (field1 LIKE '%xx%' OR field2 LIKE '%yyy%')})场景的 Specification 监听器.
  *
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-@Component
 public class OrLikeOrLikeSpecificationHandler extends AbstractSpecificationHandler {
 
     @SuppressWarnings("unchecked")

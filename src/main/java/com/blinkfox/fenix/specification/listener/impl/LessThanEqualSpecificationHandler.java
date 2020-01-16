@@ -7,8 +7,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 构建“小于等于条件”({@code field <= 'xxx'})场景的 Specification 监听器.
  *
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-@Component
 public class LessThanEqualSpecificationHandler extends AbstractSpecificationHandler {
 
     @SuppressWarnings("unchecked")

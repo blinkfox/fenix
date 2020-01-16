@@ -17,7 +17,6 @@ import javax.persistence.criteria.Predicate.BooleanOperator;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.springframework.stereotype.Component;
 
 /**
  * 构建“范围匹配条件”({@code field IN ('xxx', 'yyy')})场景的 Specification 监听器.
@@ -27,16 +26,12 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Slf4j
-@Component
 public class InSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        if (value.getClass().isArray()) {
-            value = Arrays.asList((Object[]) value);
-        }
-
+        value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
         Path<Object> path = from.get(name);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
 

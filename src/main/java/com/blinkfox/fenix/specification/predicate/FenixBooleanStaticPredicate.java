@@ -17,7 +17,6 @@ import org.hibernate.query.criteria.internal.predicate.BooleanStaticAssertionPre
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox 2020-01-14
- * @see com.blinkfox.fenix.specification.SpecificationSupplier
  * @since v2.2.0
  */
 public class FenixBooleanStaticPredicate extends AbstractSimplePredicate {

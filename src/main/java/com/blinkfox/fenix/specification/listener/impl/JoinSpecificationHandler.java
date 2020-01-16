@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
-import com.blinkfox.fenix.specification.SpecificationSupplier;
+import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
 
 import java.util.List;
@@ -11,8 +11,6 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 构建“实体连接条件”({@code JOIN})场景的 Specification 监听器.
  *
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-@Component
 public class JoinSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
@@ -34,7 +31,7 @@ public class JoinSpecificationHandler extends AbstractSpecificationHandler {
 
         Join<X, ?> subJoin = from.join(name,
                 ((com.blinkfox.fenix.specification.annotation.Join) annotation).joinType());
-        List<Predicate> predicates = SpecificationSupplier.paramToPredicate(subJoin, criteriaBuilder, value);
+        List<Predicate> predicates = FenixSpecification.paramToPredicate(subJoin, criteriaBuilder, value);
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 

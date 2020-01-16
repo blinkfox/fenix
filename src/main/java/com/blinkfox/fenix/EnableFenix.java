@@ -9,7 +9,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -22,7 +21,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Documented
 @Target(TYPE)
 @Retention(RUNTIME)
-@Import(FenixConfiguration.class)
 @EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
 public @interface EnableFenix {
 

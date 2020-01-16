@@ -5,6 +5,7 @@ import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,7 +17,6 @@ import javax.persistence.criteria.Predicate.BooleanOperator;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.springframework.stereotype.Component;
 
 /**
  * 构建“或者范围匹配条件”({@code field IN ('xxx', 'yyy')})场景的 Specification 监听器.
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Slf4j
-@Component
 public class OrInSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
@@ -34,7 +33,8 @@ public class OrInSpecificationHandler extends AbstractSpecificationHandler {
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
         Path<Object> path = from.get(name);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
-        // TODO 需要考虑数组的场景.
+
+        value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {

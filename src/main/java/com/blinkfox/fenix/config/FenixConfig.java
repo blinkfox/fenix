@@ -17,9 +17,12 @@ import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.listener.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import lombok.Getter;
 
@@ -71,10 +74,22 @@ public class FenixConfig {
      */
     @Getter
     private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>(128);
-    
-    static {
-        /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
 
+    /**
+     * 初始化默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中，key 是注解 {@code Class}，value 是注解对应的处理器实例.
+     */
+    @Getter
+    private static final Map<Class<?>, AbstractSpecificationHandler> specificationHandlerMap = new HashMap<>(64);
+
+    static {
+        initDefaultTagHandler();
+        initDefaultspecificationHandler();
+    }
+
+    /**
+     * 初始化添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等.
+     */
+    private static void initDefaultTagHandler() {
         // “等于”的相关标签：equal、andEqual、orEqual.
         add("equal", NormalHandler::new, SymbolConst.EQUAL);
         add("andEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.EQUAL);
@@ -166,6 +181,38 @@ public class FenixConfig {
         add("choose", ChooseHandler::new);
         add("set", SetHandler::new);
         add("where", WhereHandler::new);
+    }
+
+    /**
+     * 初始化添加默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中等.
+     */
+    private static void initDefaultspecificationHandler() {
+        add(new EqualsSpecificationHandler());
+        add(new GreaterThanEqualSpecificationHandler());
+        add(new GreaterThanSpecificationHandler());
+        add(new InSpecificationHandler());
+        add(new IsNotNullSpecificationHandler());
+        add(new IsNullSpecificationHandler());
+        add(new JoinSpecificationHandler());
+        add(new LessThanEqualSpecificationHandler());
+        add(new LessThanSpecificationHandler());
+        add(new LikeinSpecificationHandler());
+        add(new LikeOrLikeSpecificationHandler());
+        add(new LikeSpecificationHandler());
+        add(new NotEqualsSpecificationHandler());
+        add(new NotInSpecificationHandler());
+        add(new OrEqualsSpecificationHandler());
+        add(new OrGreaterThanEqualSpecificationHandler());
+        add(new OrGreaterThanSpecificationHandler());
+        add(new OrInSpecificationHandler());
+        add(new OrIsNotNullSpecificationHandler());
+        add(new OrIsNullSpecificationHandler());
+        add(new OrLessThanEqualSpecificationHandler());
+        add(new OrLessThanSpecificationHandler());
+        add(new OrLikeOrLikeSpecificationHandler());
+        add(new OrLikeSpecificationHandler());
+        add(new OrNotEqualsSpecificationHandler());
+        add(new OrNotInSpecificationHandler());
     }
 
     /**
@@ -299,6 +346,25 @@ public class FenixConfig {
      */
     public static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerFactory, symbol));
+    }
+
+    /**
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractSpecificationHandler} 处理器实例作为 value 存入到 Map 中.
+     *
+     * @param handlerSupplier {@link AbstractSpecificationHandler} 处理器提供者
+     */
+    public static void add(Supplier<AbstractSpecificationHandler> handlerSupplier) {
+        AbstractSpecificationHandler handler = handlerSupplier.get();
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
+    }
+
+    /**
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractSpecificationHandler} 处理器实例作为 value 存入到 Map 中.
+     *
+     * @param handler {@link AbstractSpecificationHandler} 处理器实例
+     */
+    public static void add(AbstractSpecificationHandler handler) {
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
 }
