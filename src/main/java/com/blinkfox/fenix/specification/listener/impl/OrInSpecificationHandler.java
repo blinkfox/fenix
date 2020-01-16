@@ -39,7 +39,7 @@ public class OrInSpecificationHandler extends AbstractSpecificationHandler {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {
                 return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, false, BooleanOperator.OR);
+                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.OR);
             } else {
                 list.forEach(in::value);
             }

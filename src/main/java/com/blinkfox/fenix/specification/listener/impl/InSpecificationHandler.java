@@ -35,12 +35,11 @@ public class InSpecificationHandler extends AbstractSpecificationHandler {
         Path<Object> path = from.get(name);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
 
-        // 这里仅判断了集合，可能还需要判断数组.
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {
                 return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, false, BooleanOperator.AND);
+                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.AND);
             } else {
                 list.forEach(in::value);
             }

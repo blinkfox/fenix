@@ -4,7 +4,9 @@ import com.blinkfox.fenix.specification.annotation.LikeIn;
 import com.blinkfox.fenix.specification.annotation.LikeOrLike;
 import com.blinkfox.fenix.specification.annotation.OrLikeOrLike;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +31,19 @@ public class BookParam3 {
     /**
      * 图书名称或作者.
      */
+    @LikeOrLike(fields = {"name", "author"})
+    private Set<String> nameOrAuthorSet;
+
+    /**
+     * 图书名称或作者.
+     */
     @OrLikeOrLike(fields = {"name", "author"})
     private String[] orNameOrAuthor;
+
+    /**
+     * 图书名称或作者.
+     */
+    @OrLikeOrLike(fields = {"name", "author"})
+    private Set<String> orNameOrAuthorSet;
 
 }

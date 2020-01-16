@@ -3,14 +3,19 @@ package com.blinkfox.fenix.repository;
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
+import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.vo.param.BookParam;
 import com.blinkfox.fenix.vo.param.BookParam2;
 import com.blinkfox.fenix.vo.param.BookParam3;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -34,6 +39,10 @@ import org.springframework.util.FileCopyUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class BookRepositoryUnitTest {
+
+    private static final String ISBN = "9787111641247";
+
+    private static final String DATE = "2014-11-01";
 
     /**
      * 是否加载过的标识.
@@ -64,9 +73,23 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testEquals() {
-        BookParam bookParam = new BookParam().setIsbn("9787111641247");
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setIsbn(ISBN)));
         Assert.assertEquals(1, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrIsbn(ISBN)));
+        Assert.assertEquals(1, books2.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
+     */
+    @Test
+    public void testNotEquals() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setIsbn(ISBN)));
+        Assert.assertEquals(9, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrIsbn(ISBN)));
+        Assert.assertEquals(9, books2.size());
     }
 
     /**
@@ -74,9 +97,11 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testGreaterThan() {
-        BookParam bookParam = new BookParam().setTotalPage(500);
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setTotalPage(500)));
         Assert.assertEquals(5, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrTotalPage(500)));
+        Assert.assertEquals(5, books2.size());
     }
 
     /**
@@ -86,6 +111,9 @@ public class BookRepositoryUnitTest {
     public void testGreaterThanEqual() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setTotalPage(880)));
         Assert.assertEquals(2, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrTotalPage(880)));
+        Assert.assertEquals(2, books2.size());
     }
 
     /**
@@ -93,9 +121,11 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLessThan() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(
-                new BookParam().setPublishAt("2014-11-01")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setPublishAt(DATE)));
         Assert.assertEquals(4, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrPublishAt(DATE)));
+        Assert.assertEquals(4, books2.size());
     }
 
     /**
@@ -103,9 +133,11 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLessThanEqual() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(
-                new BookParam2().setPublishAt("2014-11-01")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setPublishAt(DATE)));
         Assert.assertEquals(5, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrPublishAt(DATE)));
+        Assert.assertEquals(5, books2.size());
     }
 
     /**
@@ -115,6 +147,9 @@ public class BookRepositoryUnitTest {
     public void testLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setName("Java")));
         Assert.assertEquals(3, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrName("Java")));
+        Assert.assertEquals(3, books2.size());
     }
 
     /**
@@ -148,15 +183,106 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test(expected = BuildSpecificationException.class)
+    public void testLikeOrLikeWithException() {
+        Set<String> set = new HashSet<>(2);
+        set.add("Java");
+        bookRepository.findAll(FenixSpecification.of(new BookParam3().setNameOrAuthorSet(set)));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test(expected = BuildSpecificationException.class)
+    public void testLikeOrLikeWithException2() {
+        bookRepository.findAll(FenixSpecification.of(
+                new BookParam3().setNameOrAuthor(Collections.singletonList("Java"))));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test(expected = BuildSpecificationException.class)
+    public void testLikeOrLikeWithException3() {
+        Set<String> set = new HashSet<>(2);
+        set.add("Java");
+        bookRepository.findAll(FenixSpecification.of(new BookParam3().setOrNameOrAuthorSet(set)));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test(expected = BuildSpecificationException.class)
+    public void testLikeOrLikeWithException4() {
+        bookRepository.findAll(FenixSpecification.of(
+                new BookParam3().setOrNameOrAuthor(new String[]{"Java"})));
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来范围查询图书信息.
      */
     @Test
     public void testIn() {
-        // 测试数组的情况.
         BookParam bookParam = new BookParam()
                 .setId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
         List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
         Assert.assertEquals(7, books.size());
+
+        BookParam orbookParam = new BookParam()
+                .setOrId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(orbookParam));
+        Assert.assertEquals(7, books2.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testNotIn() {
+        BookParam2 bookParam = new BookParam2()
+                .setId(new String[]{"1", "2", "3", "4", "5", "6", "7"});
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        Assert.assertEquals(3, books.size());
+
+        BookParam2 orbookParam = new BookParam2()
+                .setOrIds(new String[]{"1", "2", "3", "4", "5", "6", "7"});
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(orbookParam));
+        Assert.assertEquals(3, books2.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testInWithEmpty() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setId(new ArrayList<>())));
+        Assert.assertEquals(10, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setId(new String[]{})));
+        Assert.assertEquals(10, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrId(new ArrayList<>())));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testInWithOne() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setSingleId("3")));
+        Assert.assertEquals(1, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setSingleId("2")));
+        Assert.assertEquals(9, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrSingleId("3")));
+        Assert.assertEquals(1, books3.size());
+
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrSingleId("1")));
+        Assert.assertEquals(9, books4.size());
     }
 
     /**
@@ -166,6 +292,9 @@ public class BookRepositoryUnitTest {
     public void testIsNull() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setOthers("others")));
         Assert.assertEquals(7, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrOthers("others")));
+        Assert.assertEquals(7, books2.size());
     }
 
     /**
@@ -175,6 +304,9 @@ public class BookRepositoryUnitTest {
     public void testIsNotNull() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOthers("others")));
         Assert.assertEquals(3, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrOthers("others")));
+        Assert.assertEquals(3, books2.size());
     }
 
 }
