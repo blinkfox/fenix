@@ -15,18 +15,18 @@ import javax.persistence.criteria.Predicate;
 import org.springframework.beans.BeanUtils;
 
 /**
- * 实现了 {@link SpecificationListener} 接口的抽象类.
+ * 实现了 {@link SpecificationHandler} 接口的抽象类.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-public abstract class AbstractSpecificationListener implements SpecificationListener {
+public abstract class AbstractSpecificationHandler implements SpecificationHandler {
 
     /**
      * 构造方法.
      */
-    public AbstractSpecificationListener() {
+    public AbstractSpecificationHandler() {
         SpecificationSupplier.addListener(this.getAnnotation(), this);
     }
 

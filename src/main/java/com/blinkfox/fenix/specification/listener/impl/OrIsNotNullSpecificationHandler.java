@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.specification.annotation.OrIsNotNull;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class OrIsNotNullSpecificationListener extends AbstractSpecificationListener {
+public class OrIsNotNullSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
     protected <Z, X> Predicate buildPredicate(

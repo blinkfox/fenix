@@ -7,13 +7,13 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
 /**
- * Spring Data JPA 中 {@link org.springframework.data.jpa.domain.Specification} 执行的 SQL 构造监听器.
+ * Spring Data JPA 中构造 {@link org.springframework.data.jpa.domain.Specification} 动态 SQL 的处理器接口.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-public interface SpecificationListener {
+public interface SpecificationHandler {
 
     /**
      * 执行的接口方法.

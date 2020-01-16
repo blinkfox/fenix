@@ -2,7 +2,8 @@ package com.blinkfox.fenix.specification;
 
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
-import com.blinkfox.fenix.specification.listener.SpecificationListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.listener.SpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.annotation.Annotation;
@@ -34,9 +35,9 @@ import org.springframework.data.jpa.domain.Specification;
 public final class SpecificationSupplier {
 
     /**
-     * 用来缓存注解的 {@code class} 实例和 {@link SpecificationListener} 实例的 Map.
+     * 用来缓存注解的 {@code class} 实例和 {@link SpecificationHandler} 实例的 Map.
      */
-    private static final Map<Class<?>, SpecificationListener> listenerMap = new HashMap<>();
+    private static final Map<Class<AbstractSpecificationHandler>, SpecificationHandler> listenerMap = new HashMap<>();
 
     /**
      * 根据参数对象构建 {@link Specification} 实例.
@@ -68,21 +69,21 @@ public final class SpecificationSupplier {
     }
 
     /**
-     * 获取所有的 {@link SpecificationListener} 的 Map 集合.
+     * 获取所有的 {@link SpecificationHandler} 的 Map 集合.
      *
      * @return Map
      */
-    public static Map<Class<?>, SpecificationListener> getListeners() {
+    public static Map<Class<AbstractSpecificationHandler>, SpecificationHandler> getListeners() {
         return listenerMap;
     }
 
     /**
-     * 根据 {@code class} 类添加 {@link SpecificationListener} 实例到 Map 集合中.
+     * 根据 {@code class} 类添加 {@link SpecificationHandler} 实例到 Map 集合中.
      *
      * @param cls      {@code class} 类
-     * @param listener {@link SpecificationListener} 实例
+     * @param listener {@link SpecificationHandler} 实例
      */
-    public static synchronized void addListener(Class<?> cls, SpecificationListener listener) {
+    public static synchronized void addListener(Class<AbstractSpecificationHandler> cls, SpecificationHandler listener) {
         SpecificationSupplier.listenerMap.put(cls, listener);
     }
 
@@ -107,7 +108,7 @@ public final class SpecificationSupplier {
             }
 
             for (Annotation annotation : annotations) {
-                SpecificationListener specificationListener = listenerMap.get(annotation.annotationType());
+                SpecificationHandler specificationListener = listenerMap.get(annotation.annotationType());
                 if (specificationListener != null) {
                     Predicate predicate = specificationListener.execute(param, field, criteriaBuilder, from);
                     if (predicate != null && validate(predicate)) {

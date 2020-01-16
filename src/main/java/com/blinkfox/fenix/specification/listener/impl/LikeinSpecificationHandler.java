@@ -2,7 +2,7 @@ package com.blinkfox.fenix.specification.listener.impl;
 
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @since v2.2.0
  */
 @Component
-public class LikeinSpecificationListener extends AbstractSpecificationListener {
+public class LikeinSpecificationHandler extends AbstractSpecificationHandler {
 
     @SuppressWarnings("unchecked")
     @Override

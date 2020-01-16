@@ -1,10 +1,11 @@
 package com.blinkfox.fenix.specification.listener.impl;
 
-import com.blinkfox.fenix.specification.annotation.OrIn;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationListener;
+import com.blinkfox.fenix.specification.annotation.In;
+import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,7 +20,7 @@ import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.stereotype.Component;
 
 /**
- * 构建“或者范围匹配条件”({@code field IN ('xxx', 'yyy')})场景的 Specification 监听器.
+ * 构建“范围匹配条件”({@code field IN ('xxx', 'yyy')})场景的 Specification 监听器.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-14
@@ -27,43 +28,49 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class OrInSpecificationListener extends AbstractSpecificationListener {
+public class InSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+        if (value.getClass().isArray()) {
+            value = Arrays.asList((Object[]) value);
+        }
+
         Path<Object> path = from.get(name);
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
-        // TODO 需要考虑数组的场景.
+
+        // 这里仅判断了集合，可能还需要判断数组.
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {
                 return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, false, BooleanOperator.OR);
+                        (CriteriaBuilderImpl) criteriaBuilder, false, BooleanOperator.AND);
             } else {
                 list.forEach(in::value);
             }
         } else {
             in.value(value);
         }
-        return criteriaBuilder.or(
-                this.getAllowNull(annotation) ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
+
+        return criteriaBuilder.and(
+                this.isAllowNull(annotation) ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
     }
 
-    private boolean getAllowNull(Object annotation) {
+    private boolean isAllowNull(Object annotation) {
         try {
-            return (boolean) getAnnotation().getMethod("allowNull").invoke(annotation);
+            return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
         } catch (IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            log.error("【Fenix 错误提示】获取【@In】注解中【allowNull】时失败，将默认该值为 false.", e);
+            log.error("【Fenix 错误提示】获取【@In】注解中的中【allowNull】的值失败，将默认返回 false 的值.", e);
             return false;
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Class<OrIn> getAnnotation() {
-        return OrIn.class;
+    public Class<In> getAnnotation() {
+        return In.class;
     }
 
 }
