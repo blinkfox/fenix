@@ -1,10 +1,8 @@
 package com.blinkfox.fenix.vo.param;
 
-import com.blinkfox.fenix.specification.annotation.LikeIn;
 import com.blinkfox.fenix.specification.annotation.LikeOrLike;
 import com.blinkfox.fenix.specification.annotation.OrLikeOrLike;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

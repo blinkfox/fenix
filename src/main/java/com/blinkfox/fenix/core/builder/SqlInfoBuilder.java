@@ -7,11 +7,9 @@ import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;

@@ -16,7 +16,7 @@ import javax.persistence.criteria.Predicate;
  */
 public class OrLessThanEqualSpecificationHandler extends AbstractSpecificationHandler {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
