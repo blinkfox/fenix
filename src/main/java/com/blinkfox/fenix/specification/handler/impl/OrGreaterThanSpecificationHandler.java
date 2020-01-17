@@ -23,6 +23,11 @@ public class OrGreaterThanSpecificationHandler extends AbstractSpecificationHand
         return criteriaBuilder.or(criteriaBuilder.greaterThan(from.get(name), (Comparable) value));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<OrGreaterThan> getAnnotation() {

@@ -82,7 +82,7 @@ public abstract class AbstractSpecificationHandler {
      *
      * @param criteriaBuilder {@link CriteriaBuilder} 实例
      * @param from {@link From} 实例
-     * @param name 实体类的属性名
+     * @param fieldName 实体类的属性名
      * @param value 对应属性的值
      * @param annotation 前字段使用的注解
      * @param <Z> 范型 Z
@@ -90,6 +90,84 @@ public abstract class AbstractSpecificationHandler {
      * @return {@link Predicate} 实例
      */
     protected abstract <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation);
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation);
+
+    /**
+     * 构造 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    protected abstract <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value);
+
+    /**
+     * 构造等值查询的 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildEqualsPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return criteriaBuilder.equal(from.get(fieldName), value);
+    }
+
+    /**
+     * 构造大于等于查询的 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected <Z, X> Predicate buildGreaterThanPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        this.isValueComparable(value);
+        return criteriaBuilder.greaterThan(from.get(fieldName), (Comparable) value);
+    }
+
+    /**
+     * 构造大于等于查询的 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected <Z, X> Predicate buildGreaterThanEqualPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        this.isValueComparable(value);
+        return criteriaBuilder.greaterThanOrEqualTo(from.get(fieldName), (Comparable) value);
+    }
+
+    /**
+     * 检查值是否实现了 {@link Comparable} 接口.
+     *
+     * @param value 值
+     */
+    private void isValueComparable(Object value) {
+        if (!(value instanceof Comparable)) {
+            throw new BuildSpecificationException("【Fenix 异常】要比较的 value 值【" + value + "】不是可比较类型的，"
+                    + "该值的类型必须实现了 java.lang.Comparable 接口才能正常参与比较，才能用于大于、大于等于、小于、小于等于之类的比较场景.");
+        }
+    }
 
 }

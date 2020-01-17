@@ -51,6 +51,11 @@ public class InSpecificationHandler extends AbstractSpecificationHandler {
                 this.isAllowNull(annotation) ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     private boolean isAllowNull(Object annotation) {
         try {
             return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);

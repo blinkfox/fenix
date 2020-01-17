@@ -17,9 +17,15 @@ import javax.persistence.criteria.Predicate;
 public class EqualsSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
+    public <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return criteriaBuilder.and(super.buildEqualsPredicate(criteriaBuilder, from, fieldName, value));
+    }
+
+    @Override
     protected <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        return criteriaBuilder.and(criteriaBuilder.equal(from.get(name), value));
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return criteriaBuilder.and(super.buildEqualsPredicate(criteriaBuilder, from, fieldName, value));
     }
 
     @SuppressWarnings("unchecked")

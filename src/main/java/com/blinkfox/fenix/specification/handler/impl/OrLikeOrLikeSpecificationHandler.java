@@ -47,6 +47,11 @@ public class OrLikeOrLikeSpecificationHandler extends AbstractSpecificationHandl
         return criteriaBuilder.or(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<OrLikeOrLike> getAnnotation() {

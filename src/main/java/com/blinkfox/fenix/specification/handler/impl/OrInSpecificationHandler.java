@@ -50,6 +50,11 @@ public class OrInSpecificationHandler extends AbstractSpecificationHandler {
                 this.getAllowNull(annotation) ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in);
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     private boolean getAllowNull(Object annotation) {
         try {
             return (boolean) getAnnotation().getMethod("allowNull").invoke(annotation);

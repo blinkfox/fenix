@@ -35,6 +35,11 @@ public class JoinSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<com.blinkfox.fenix.specification.annotation.Join> getAnnotation() {

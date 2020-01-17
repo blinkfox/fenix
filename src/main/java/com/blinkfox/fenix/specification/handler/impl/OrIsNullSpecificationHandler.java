@@ -22,6 +22,11 @@ public class OrIsNullSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.or(criteriaBuilder.isNull(from.get(String.valueOf(value))));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<OrIsNull> getAnnotation() {

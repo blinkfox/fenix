@@ -43,6 +43,11 @@ public class NotInSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.not(in);
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<NotIn> getAnnotation() {

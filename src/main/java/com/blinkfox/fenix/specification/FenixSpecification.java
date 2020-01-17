@@ -4,6 +4,7 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.impl.EqualsSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.annotation.Annotation;
@@ -32,6 +33,36 @@ public final class FenixSpecification {
 
     private static final Map<Class<?>, AbstractSpecificationHandler> pecificationHandlerMap =
             FenixConfig.getSpecificationHandlerMap();
+
+    /**
+     * 开始创建 {@link FenixSpecification} 实例的方法.
+     *
+     * @return {@link FenixSpecification} 实例
+     */
+    public static FenixSpecification start() {
+        return new FenixSpecification();
+    }
+
+    /**
+     * 结束 {@link Predicate} 的拼接，返回 {@link Specification} 实例.
+     *
+     * @return {@link Specification} 实例
+     */
+    public <T> Specification<T> end() {
+        return null;
+    }
+
+    /**
+     * 生成等值查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @return {@link FenixSpecification} 实例
+     */
+    public FenixSpecification equal(String field, Object value) {
+        new EqualsSpecificationHandler();
+        return null;
+    }
 
     /**
      * 根据查询的实体 Bean 参数中的 Fenix 相关的注解来构造 {@link Specification} 实例.
@@ -92,7 +123,6 @@ public final class FenixSpecification {
             if (annotations == null) {
                 continue;
             }
-
 
             for (Annotation annotation : annotations) {
                 AbstractSpecificationHandler handler = pecificationHandlerMap.get(annotation.annotationType());

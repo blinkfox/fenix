@@ -23,6 +23,11 @@ public class LessThanSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.and(criteriaBuilder.lessThan(from.get(name), (Comparable) value));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<LessThan> getAnnotation() {

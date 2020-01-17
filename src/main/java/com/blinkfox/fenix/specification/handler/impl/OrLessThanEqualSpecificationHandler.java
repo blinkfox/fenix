@@ -23,6 +23,11 @@ public class OrLessThanEqualSpecificationHandler extends AbstractSpecificationHa
         return criteriaBuilder.or(criteriaBuilder.lessThanOrEqualTo(from.get(name), (Comparable) value));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<OrLessThanEqual> getAnnotation() {

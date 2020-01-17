@@ -22,6 +22,11 @@ public class OrEqualsSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.or(criteriaBuilder.equal(from.get(name), value));
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<OrEquals> getAnnotation() {

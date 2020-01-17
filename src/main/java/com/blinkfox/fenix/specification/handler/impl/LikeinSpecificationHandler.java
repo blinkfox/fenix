@@ -39,6 +39,11 @@ public class LikeinSpecificationHandler extends AbstractSpecificationHandler {
         return criteriaBuilder.and(p);
     }
 
+    @Override
+    protected <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Class<LikeIn> getAnnotation() {
