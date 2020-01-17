@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
 import lombok.AccessLevel;
@@ -29,17 +30,23 @@ import org.springframework.data.jpa.domain.Specification;
  * @author blinkfox on 2020-01-15.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FenixSpecification {
+public final class FenixSpecification<T> {
 
     private static final Map<Class<?>, AbstractSpecificationHandler> pecificationHandlerMap =
             FenixConfig.getSpecificationHandlerMap();
+
+    private Specification<T> specification;
+
+    private CriteriaBuilder criteriaBuilder;
+
+    private From<?, ?> from;
 
     /**
      * 开始创建 {@link FenixSpecification} 实例的方法.
      *
      * @return {@link FenixSpecification} 实例
      */
-    public static FenixSpecification start() {
+    public static <T> FenixSpecification start() {
         return new FenixSpecification();
     }
 
@@ -55,13 +62,13 @@ public final class FenixSpecification {
     /**
      * 生成等值查询的 SQL 片段.
      *
-     * @param field 数据库字段
+     * @param fieldName 实体属性或数据库字段
      * @param value 值
      * @return {@link FenixSpecification} 实例
      */
-    public FenixSpecification equal(String field, Object value) {
-        new EqualsSpecificationHandler();
-        return null;
+    public FenixSpecification equal(String fieldName, Object value) {
+        new EqualsSpecificationHandler().buildPredicate(criteriaBuilder, from, fieldName, value);
+        return this;
     }
 
     /**

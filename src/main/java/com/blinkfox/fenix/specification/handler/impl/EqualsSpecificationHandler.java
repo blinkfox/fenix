@@ -23,7 +23,7 @@ public class EqualsSpecificationHandler extends AbstractSpecificationHandler {
     }
 
     @Override
-    protected <Z, X> Predicate buildPredicate(
+    public <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         return criteriaBuilder.and(super.buildEqualsPredicate(criteriaBuilder, from, fieldName, value));
     }
