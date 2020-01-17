@@ -158,7 +158,7 @@ public class BookRepositoryUnitTest {
     @Test
     public void testLikeIn() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(
-                new BookParam().setAuthors(Arrays.asList("袁国忠", "陈"))));
+                new BookParam().setAuthors(Arrays.asList("yuanguozhong", "chen"))));
         Assert.assertEquals(4, books.size());
     }
 
@@ -168,7 +168,7 @@ public class BookRepositoryUnitTest {
     @Test
     public void testLikeOrLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(
-                new BookParam3().setNameOrAuthor(Arrays.asList("Java", "袁国忠"))));
+                new BookParam3().setNameOrAuthor(Arrays.asList("Java", "yuanguozhong"))));
         Assert.assertEquals(6, books.size());
     }
 
@@ -178,8 +178,8 @@ public class BookRepositoryUnitTest {
     @Test
     public void testOrLikeOrLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(
-                new BookParam3().setOrNameOrAuthor(new String[]{"Java", "袁国忠"})));
-        Assert.assertEquals(6, books.size());
+                new BookParam3().setOrNameOrAuthor(new String[]{"Java", "yuanguozhong"})));
+         Assert.assertEquals(6, books.size());
     }
 
     /**
