@@ -1,8 +1,8 @@
-package com.blinkfox.fenix.specification.listener.impl;
+package com.blinkfox.fenix.specification.handler.impl;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.annotation.LikeOrLike;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;

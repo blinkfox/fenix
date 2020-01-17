@@ -1,7 +1,7 @@
-package com.blinkfox.fenix.specification.listener.impl;
+package com.blinkfox.fenix.specification.handler.impl;
 
-import com.blinkfox.fenix.specification.annotation.NotIn;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.annotation.OrNotIn;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.util.Arrays;
@@ -15,13 +15,13 @@ import javax.persistence.criteria.Predicate.BooleanOperator;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 
 /**
- * 构建“范围不匹配条件”({@code field NOT IN ('xxx', 'yyy')})场景的 Specification 监听器.
+ * 构建“或者不匹配范围条件”({@code OR field NOT IN ('xxx', 'yyy')})场景的 Specification 监听器.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-public class NotInSpecificationHandler extends AbstractSpecificationHandler {
+public class OrNotInSpecificationHandler extends AbstractSpecificationHandler {
 
     @Override
     protected <Z, X> Predicate buildPredicate(
@@ -33,20 +33,20 @@ public class NotInSpecificationHandler extends AbstractSpecificationHandler {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {
                 return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.AND);
+                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.OR);
             } else {
                 list.forEach(in::value);
             }
         } else {
             in.value(value);
         }
-        return criteriaBuilder.not(in);
+        return criteriaBuilder.or(criteriaBuilder.not(in));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Class<NotIn> getAnnotation() {
-        return NotIn.class;
+    public Class<OrNotIn> getAnnotation() {
+        return OrNotIn.class;
     }
 
 }

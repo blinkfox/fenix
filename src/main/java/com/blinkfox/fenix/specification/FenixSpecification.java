@@ -3,7 +3,7 @@ package com.blinkfox.fenix.specification;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.annotation.Annotation;

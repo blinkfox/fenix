@@ -1,7 +1,7 @@
-package com.blinkfox.fenix.specification.listener.impl;
+package com.blinkfox.fenix.specification.handler.impl;
 
 import com.blinkfox.fenix.specification.annotation.GreaterThanEqual;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;

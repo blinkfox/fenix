@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.specification.listener;
+package com.blinkfox.fenix.specification.handler;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.helper.StringHelper;

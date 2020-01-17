@@ -1,8 +1,8 @@
-package com.blinkfox.fenix.specification.listener.impl;
+package com.blinkfox.fenix.specification.handler.impl;
 
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 
 import java.util.List;
 

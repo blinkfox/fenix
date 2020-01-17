@@ -17,8 +17,8 @@ import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
-import com.blinkfox.fenix.specification.listener.AbstractSpecificationHandler;
-import com.blinkfox.fenix.specification.listener.impl.*;
+import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
