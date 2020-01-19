@@ -68,4 +68,15 @@ public class FenixPredicate {
         return this;
     }
 
+    /**
+     * 生成等值查询的 SQL 片段.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicate} 实例
+     */
+    public FenixPredicate equal(String fieldName, Object value, boolean match) {
+        return match ? this.equal(fieldName, value) : this;
+    }
+
 }
