@@ -47,9 +47,9 @@ public final class FenixSpecification {
     }
 
     /**
-     * 根据查询的实体 Bean 参数中的 Fenix 相关的注解来构造 {@link Specification} 实例.
+     * 根据查询的条件列表中构造 {@link Specification} 实例.
      *
-     * @param predicates 条件列表
+     * @param predicates 动态条件列表
      * @param <T> 范型 T
      * @return {@link Specification} 实例
      */

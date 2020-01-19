@@ -5,6 +5,8 @@ import com.blinkfox.fenix.specification.handler.impl.EqualsSpecificationHandler;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fenix 中用来动态链式构造 {@link Predicate} 的实例.
@@ -12,6 +14,11 @@ import javax.persistence.criteria.Predicate;
  * @author blinkfox on 2020-01-17.
  */
 public class FenixPredicate {
+
+    /**
+     * 动态条件列表集合.
+     */
+    List<Predicate> predicates;
 
     /**
      * 动态构建 {@link Predicate} 所需的 {@link CriteriaBuilder} 实例.
@@ -30,6 +37,7 @@ public class FenixPredicate {
      * @param from {@link From} 实例
      */
     private FenixPredicate(CriteriaBuilder criteriaBuilder, From<?, ?> from) {
+        this.predicates = new ArrayList<>();
         this.criteriaBuilder = criteriaBuilder;
         this.from = from;
     }
@@ -50,8 +58,8 @@ public class FenixPredicate {
      *
      * @return {@link Predicate} 实例
      */
-    public Predicate end() {
-        return null;
+    public List<Predicate> end() {
+        return this.predicates;
     }
 
     /**
