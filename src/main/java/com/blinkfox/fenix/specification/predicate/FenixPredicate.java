@@ -6,8 +6,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import org.springframework.data.jpa.domain.Specification;
-
 /**
  * Fenix 中用来动态链式构造 {@link Predicate} 的实例.
  *

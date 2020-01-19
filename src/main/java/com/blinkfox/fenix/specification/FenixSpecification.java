@@ -4,7 +4,6 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
-import com.blinkfox.fenix.specification.handler.impl.EqualsSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.lang.annotation.Annotation;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
 import lombok.AccessLevel;
@@ -30,46 +28,10 @@ import org.springframework.data.jpa.domain.Specification;
  * @author blinkfox on 2020-01-15.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FenixSpecification<T> {
+public final class FenixSpecification {
 
     private static final Map<Class<?>, AbstractSpecificationHandler> pecificationHandlerMap =
             FenixConfig.getSpecificationHandlerMap();
-
-    private Specification<T> specification;
-
-    private CriteriaBuilder criteriaBuilder;
-
-    private From<?, ?> from;
-
-    /**
-     * 开始创建 {@link FenixSpecification} 实例的方法.
-     *
-     * @return {@link FenixSpecification} 实例
-     */
-    public static <T> FenixSpecification start() {
-        return new FenixSpecification();
-    }
-
-    /**
-     * 结束 {@link Predicate} 的拼接，返回 {@link Specification} 实例.
-     *
-     * @return {@link Specification} 实例
-     */
-    public <T> Specification<T> end() {
-        return null;
-    }
-
-    /**
-     * 生成等值查询的 SQL 片段.
-     *
-     * @param fieldName 实体属性或数据库字段
-     * @param value 值
-     * @return {@link FenixSpecification} 实例
-     */
-    public FenixSpecification equal(String fieldName, Object value) {
-        new EqualsSpecificationHandler().buildPredicate(criteriaBuilder, from, fieldName, value);
-        return this;
-    }
 
     /**
      * 根据查询的实体 Bean 参数中的 Fenix 相关的注解来构造 {@link Specification} 实例.
@@ -79,37 +41,46 @@ public final class FenixSpecification<T> {
      * @return {@link Specification} 实例
      */
     public static <T> Specification<T> of(Object beanParam) {
-        return buildSpecification(beanParam);
+        return (root, query, builder) ->
+                mergePredicates(builder, paramToPredicate(root, builder, beanParam).stream()
+                        .collect(Collectors.groupingBy(Predicate::getOperator)));
     }
 
     /**
-     * 根据参数对象构建 {@link Specification} 实例.
+     * 根据查询的实体 Bean 参数中的 Fenix 相关的注解来构造 {@link Specification} 实例.
      *
-     * @param beanParam 参数对象
-     * @param <T>   范型 T
+     * @param predicates 条件列表
+     * @param <T> 范型 T
      * @return {@link Specification} 实例
      */
-    public static <T> Specification<T> buildSpecification(Object beanParam) {
-        return (root, query, builder) -> {
-            Map<Predicate.BooleanOperator, List<Predicate>> predicatesMap = paramToPredicate(root, builder, beanParam)
-                    .stream()
-                    .collect(Collectors.groupingBy(Predicate::getOperator));
-
-            // 将 AND 条件和 OR 条件进行合并.
-            List<Predicate> andPredicates = predicatesMap.get(Predicate.BooleanOperator.AND);
-            List<Predicate> orPredicates = predicatesMap.get(Predicate.BooleanOperator.OR);
-            if (CollectionHelper.isNotEmpty(andPredicates) && CollectionHelper.isNotEmpty(orPredicates)) {
-                return builder.or(builder.and(andPredicates.toArray(new Predicate[0])),
-                        builder.or(orPredicates.toArray(new Predicate[0])));
-            } else if (CollectionHelper.isNotEmpty(orPredicates)) {
-                return builder.or(orPredicates.toArray(new Predicate[0]));
-            } else if (CollectionHelper.isNotEmpty(andPredicates)) {
-                return builder.and(andPredicates.toArray(new Predicate[0]));
-            } else {
-                return null;
-            }
-        };
+    public static <T> Specification<T> of(List<Predicate> predicates) {
+        return (root, query, builder) ->
+                mergePredicates(builder, predicates.stream().collect(Collectors.groupingBy(Predicate::getOperator)));
     }
+
+    /**
+     * 合并 AND 或者 OR 中的动态条件.
+     *
+     * @param builder {@link CriteriaBuilder} 实例
+     * @param predicatesMap 动态条件的 Map
+     * @return 条件.
+     */
+    private static Predicate mergePredicates(CriteriaBuilder builder,
+            Map<Predicate.BooleanOperator, List<Predicate>> predicatesMap) {
+        List<Predicate> andPredicates = predicatesMap.get(Predicate.BooleanOperator.AND);
+        List<Predicate> orPredicates = predicatesMap.get(Predicate.BooleanOperator.OR);
+        if (CollectionHelper.isNotEmpty(andPredicates) && CollectionHelper.isNotEmpty(orPredicates)) {
+            return builder.or(builder.and(andPredicates.toArray(new Predicate[0])),
+                    builder.or(orPredicates.toArray(new Predicate[0])));
+        } else if (CollectionHelper.isNotEmpty(orPredicates)) {
+            return builder.or(orPredicates.toArray(new Predicate[0]));
+        } else if (CollectionHelper.isNotEmpty(andPredicates)) {
+            return builder.and(andPredicates.toArray(new Predicate[0]));
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * 将参数对象转换成 {@link Predicate} 对象集合.
