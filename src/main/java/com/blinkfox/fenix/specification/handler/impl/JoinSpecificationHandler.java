@@ -31,7 +31,7 @@ public class JoinSpecificationHandler extends AbstractSpecificationHandler {
 
         Join<X, ?> subJoin = from.join(name,
                 ((com.blinkfox.fenix.specification.annotation.Join) annotation).joinType());
-        List<Predicate> predicates = FenixSpecification.paramToPredicate(subJoin, criteriaBuilder, value);
+        List<Predicate> predicates = FenixSpecification.beanParamToPredicate(subJoin, criteriaBuilder, value);
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 

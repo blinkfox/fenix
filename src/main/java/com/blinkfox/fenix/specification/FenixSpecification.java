@@ -32,7 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixSpecification {
 
-    private static final Map<Class<?>, AbstractSpecificationHandler> pecificationHandlerMap =
+    private static final Map<Class<?>, AbstractSpecificationHandler> specificationHandlerMap =
             FenixConfig.getSpecificationHandlerMap();
 
     /**
@@ -44,7 +44,7 @@ public final class FenixSpecification {
      */
     public static <T> Specification<T> ofBean(Object beanParam) {
         return (root, query, builder) ->
-                mergePredicates(builder, paramToPredicate(root, builder, beanParam)
+                mergePredicates(builder, beanParamToPredicate(root, builder, beanParam)
                         .stream()
                         .collect(Collectors.groupingBy(Predicate::getOperator)));
     }
@@ -108,7 +108,7 @@ public final class FenixSpecification {
      * @param <X>             范型 X
      * @return {@link Predicate} 对象集合
      */
-    public static <Z, X> List<Predicate> paramToPredicate(
+    public static <Z, X> List<Predicate> beanParamToPredicate(
             From<Z, X> from, CriteriaBuilder criteriaBuilder, Object beanParam) {
         Field[] fields = FieldHelper.getAllFields(beanParam.getClass());
         List<Predicate> predicates = new ArrayList<>(fields.length);
@@ -119,7 +119,7 @@ public final class FenixSpecification {
             }
 
             for (Annotation annotation : annotations) {
-                AbstractSpecificationHandler handler = pecificationHandlerMap.get(annotation.annotationType());
+                AbstractSpecificationHandler handler = specificationHandlerMap.get(annotation.annotationType());
                 if (handler != null) {
                     Predicate predicate = handler.execute(beanParam, field, criteriaBuilder, from);
                     if (predicate != null && isValid(predicate)) {
