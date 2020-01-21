@@ -3,10 +3,10 @@ package com.blinkfox.fenix.specification;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
-import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
-import com.blinkfox.fenix.specification.predicate.PredicateBuilder;
+import com.blinkfox.fenix.specification.predicate.FenixPredicateBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -32,7 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixSpecification {
 
-    private static final Map<Class<?>, AbstractSpecificationHandler> specificationHandlerMap =
+    private static final Map<Class<?>, AbstractPredicateHandler> specificationHandlerMap =
             FenixConfig.getSpecificationHandlerMap();
 
     /**
@@ -70,7 +70,7 @@ public final class FenixSpecification {
      */
     public static <T> Specification<T> of(FenixPredicate fenixPredicate) {
         return (root, query, builder) -> mergePredicates(builder,
-                fenixPredicate.toPredicate(new PredicateBuilder(root, query, builder))
+                fenixPredicate.toPredicate(new FenixPredicateBuilder(root, query, builder))
                         .stream()
                         .collect(Collectors.groupingBy(Predicate::getOperator)));
     }
@@ -119,9 +119,11 @@ public final class FenixSpecification {
             }
 
             for (Annotation annotation : annotations) {
-                AbstractSpecificationHandler handler = specificationHandlerMap.get(annotation.annotationType());
+                AbstractPredicateHandler handler = specificationHandlerMap.get(annotation.annotationType());
                 if (handler != null) {
-                    Predicate predicate = handler.execute(beanParam, field, criteriaBuilder, from);
+                    // TODO 待完成.
+                    //Predicate predicate = handler.execute(beanParam, field, criteriaBuilder, from);
+                    Predicate predicate = null;
                     if (predicate != null && isValid(predicate)) {
                         predicates.add(predicate);
                     }
@@ -129,6 +131,54 @@ public final class FenixSpecification {
             }
         }
         return predicates;
+    }
+
+    /**
+     * 执行构建 {@link Predicate} 的方法.
+     *
+     * @param param 对象参数
+     * @param field 对应的字段
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param root {@link From} 实例
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return 一个 {@link Predicate} 实例
+     */
+    // TODO 待完成.
+    public <Z, X> Predicate execute(Object param, Field field, CriteriaBuilder criteriaBuilder, From<Z, X> root) {
+//        Annotation annotation = field.getAnnotation(this.getAnnotation());
+//        if (annotation == null) {
+//            return null;
+//        }
+//
+//        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(param.getClass(), field.getName());
+//        if (descriptor == null) {
+//            return null;
+//        }
+//
+//        String name;
+//        Object value;
+//        try {
+//            name = (String) this.getAnnotation().getMethod("value").invoke(annotation);
+//            name = StringHelper.isBlank(name) ? field.getName() : name;
+//            value = descriptor.getReadMethod().invoke(param);
+//        } catch (ReflectiveOperationException e) {
+//            throw new BuildSpecificationException("【Fenix 异常】构建【" + this.getAnnotation().getName()
+//                    + "】注解的条件时，反射调用对应的属性值异常", e);
+//        }
+//
+//        if (value == null) {
+//            return null;
+//        }
+//
+//        if (field.getType() == String.class) {
+//            return StringHelper.isNotBlank(value.toString())
+//                    ? this.buildPredicate(criteriaBuilder, root, name, value, annotation)
+//                    : null;
+//        } else {
+//            return this.buildPredicate(criteriaBuilder, root, name, value, annotation);
+//        }
+        return null;
     }
 
     /**

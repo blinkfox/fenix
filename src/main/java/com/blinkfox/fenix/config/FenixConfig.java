@@ -17,7 +17,7 @@ import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
-import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.*;
 
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class FenixConfig {
      * 初始化默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中，key 是注解 {@code Class}，value 是注解对应的处理器实例.
      */
     @Getter
-    private static final Map<Class<?>, AbstractSpecificationHandler> specificationHandlerMap = new HashMap<>(64);
+    private static final Map<Class<?>, AbstractPredicateHandler> specificationHandlerMap = new HashMap<>(64);
 
     static {
         initDefaultTagHandler();
@@ -349,22 +349,24 @@ public class FenixConfig {
     }
 
     /**
-     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractSpecificationHandler} 处理器实例作为 value 存入到 Map 中.
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractPredicateHandler} 处理器实例作为 value 存入到 Map 中.
      *
-     * @param handlerSupplier {@link AbstractSpecificationHandler} 处理器提供者
+     * @param handlerSupplier {@link AbstractPredicateHandler} 处理器提供者
      */
-    public static void add(Supplier<AbstractSpecificationHandler> handlerSupplier) {
-        AbstractSpecificationHandler handler = handlerSupplier.get();
-        specificationHandlerMap.put(handler.getAnnotation(), handler);
+    public static void add(Supplier<AbstractPredicateHandler> handlerSupplier) {
+        AbstractPredicateHandler handler = handlerSupplier.get();
+        // TODO 待完成.
+        //specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
     /**
-     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractSpecificationHandler} 处理器实例作为 value 存入到 Map 中.
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractPredicateHandler} 处理器实例作为 value 存入到 Map 中.
      *
-     * @param handler {@link AbstractSpecificationHandler} 处理器实例
+     * @param handler {@link AbstractPredicateHandler} 处理器实例
      */
-    public static void add(AbstractSpecificationHandler handler) {
-        specificationHandlerMap.put(handler.getAnnotation(), handler);
+    public static void add(AbstractPredicateHandler handler) {
+        // TODO 待完成.
+        //specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
 }

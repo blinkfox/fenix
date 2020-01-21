@@ -17,7 +17,7 @@ import lombok.Getter;
  * @author blinkfox on 2020-01-21.
  * @since v2.2.0
  */
-public class PredicateBuilder {
+public class FenixPredicateBuilder {
 
     /**
      * 动态构建 {@link Predicate} 所需的 {@link CriteriaBuilder} 实例.
@@ -49,7 +49,7 @@ public class PredicateBuilder {
      * @param criteriaQuery {@code Criteria} 查询器
      * @param criteriaBuilder {@link CriteriaBuilder} 实例
      */
-    public PredicateBuilder(From<?, ?> from, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+    public FenixPredicateBuilder(From<?, ?> from, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         this.from = from;
         this.criteriaBuilder = criteriaBuilder;
         this.criteriaQuery = criteriaQuery;
@@ -70,10 +70,10 @@ public class PredicateBuilder {
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 值
-     * @return {@link PredicateBuilder} 实例
+     * @return {@link FenixPredicateBuilder} 实例
      */
-    public PredicateBuilder equal(String fieldName, Object value) {
-        this.predicates.add(new EqualsSpecificationHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+    public FenixPredicateBuilder equal(String fieldName, Object value) {
+        this.predicates.add(new EqualsSpecificationHandler().buildAndPredicate(criteriaBuilder, from, fieldName, value));
         return this;
     }
 
@@ -82,9 +82,9 @@ public class PredicateBuilder {
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 值
-     * @return {@link PredicateBuilder} 实例
+     * @return {@link FenixPredicateBuilder} 实例
      */
-    public PredicateBuilder equal(String fieldName, Object value, boolean match) {
+    public FenixPredicateBuilder equal(String fieldName, Object value, boolean match) {
         return match ? this.equal(fieldName, value) : this;
     }
 

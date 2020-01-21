@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.specification.handler.impl;
 
-import com.blinkfox.fenix.specification.annotation.GreaterThan;
-import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -14,24 +13,83 @@ import javax.persistence.criteria.Predicate;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-public class GreaterThanSpecificationHandler extends AbstractSpecificationHandler {
+public class GreaterThanSpecificationHandler extends AbstractPredicateHandler {
+
+//    @Override
+//    protected <Z, X> Predicate buildPredicate(
+//            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+//        return criteriaBuilder.and(super.buildGreaterThanPredicate(criteriaBuilder, from, fieldName, value));
+//    }
+//
+//    @Override
+//    public <Z, X> Predicate buildPredicate(
+//            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+//        return criteriaBuilder.and(super.buildGreaterThanPredicate(criteriaBuilder, from, fieldName, value));
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    public Class<GreaterThan> getAnnotation() {
+//        return GreaterThan.class;
+//    }
 
     @Override
-    protected <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
-        return criteriaBuilder.and(super.buildGreaterThanPredicate(criteriaBuilder, from, fieldName, value));
+    protected <T> Class<T> getAndAnnotation() {
+        return null;
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
-        return criteriaBuilder.and(super.buildGreaterThanPredicate(criteriaBuilder, from, fieldName, value));
+    protected <T> Class<T> getAndNotAnnotation() {
+        return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Class<GreaterThan> getAnnotation() {
-        return GreaterThan.class;
+    protected <T> Class<T> getOrAnnotation() {
+        return null;
     }
 
+    @Override
+    protected <T> Class<T> getOrNotAnnotation() {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildAndPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildAndPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildAndNotPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildAndNotPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildOrPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildOrPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildOrNotPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return null;
+    }
+
+    @Override
+    protected <Z, X> Predicate buildOrNotPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return null;
+    }
 }
