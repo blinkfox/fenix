@@ -73,7 +73,7 @@ public class PredicateBuilder {
      * @return {@link PredicateBuilder} 实例
      */
     public PredicateBuilder equal(String fieldName, Object value) {
-        new EqualsSpecificationHandler().buildPredicate(criteriaBuilder, from, fieldName, value);
+        this.predicates.add(new EqualsSpecificationHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
         return this;
     }
 
