@@ -62,8 +62,8 @@ public class BookRepositoryPredicateTest {
      */
     @Test
     public void testEquals() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(fp ->
-                fp.equal("isbn", paramMap.get("isbn"))
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.equal("isbn", paramMap.get("isbn"))
                 .build()));
         Assert.assertEquals(1, books.size());
     }
