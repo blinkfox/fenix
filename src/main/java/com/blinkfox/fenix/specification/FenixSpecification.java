@@ -5,6 +5,8 @@ import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.specification.handler.AbstractSpecificationHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
+import com.blinkfox.fenix.specification.predicate.FenixPredicate;
+import com.blinkfox.fenix.specification.predicate.PredicateBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -40,14 +42,15 @@ public final class FenixSpecification {
      * @param <T> 范型 T
      * @return {@link Specification} 实例
      */
-    public static <T> Specification<T> of(Object beanParam) {
+    public static <T> Specification<T> ofBean(Object beanParam) {
         return (root, query, builder) ->
-                mergePredicates(builder, paramToPredicate(root, builder, beanParam).stream()
+                mergePredicates(builder, paramToPredicate(root, builder, beanParam)
+                        .stream()
                         .collect(Collectors.groupingBy(Predicate::getOperator)));
     }
 
     /**
-     * 根据查询的条件列表中构造 {@link Specification} 实例.
+     * 根据动态条件列表中构造 {@link Specification} 实例.
      *
      * @param predicates 动态条件列表
      * @param <T> 范型 T
@@ -56,6 +59,20 @@ public final class FenixSpecification {
     public static <T> Specification<T> of(List<Predicate> predicates) {
         return (root, query, builder) ->
                 mergePredicates(builder, predicates.stream().collect(Collectors.groupingBy(Predicate::getOperator)));
+    }
+
+    /**
+     * 根据查询的条件列表中构造 {@link Specification} 实例.
+     *
+     * @param fenixPredicate 动态 {@link Predicate} 的构造器接口
+     * @param <T> 范型 T
+     * @return {@link Specification} 实例
+     */
+    public static <T> Specification<T> of(FenixPredicate fenixPredicate) {
+        return (root, query, builder) -> mergePredicates(builder,
+                fenixPredicate.toPredicate(new PredicateBuilder(root, query, builder))
+                        .stream()
+                        .collect(Collectors.groupingBy(Predicate::getOperator)));
     }
 
     /**
@@ -80,7 +97,6 @@ public final class FenixSpecification {
             return null;
         }
     }
-
 
     /**
      * 将参数对象转换成 {@link Predicate} 对象集合.

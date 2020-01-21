@@ -67,7 +67,7 @@ public class BookRepositoryTest {
     @Test
     public void findBooksByName() {
         BookParam bookParam = new BookParam().setName("Java");
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(bookParam));
         Assert.assertFalse(books.isEmpty());
         Assert.assertEquals(3, books.size());
         Assert.assertTrue(StringHelper.isNotBlank(books.get(0).getName()));
@@ -79,7 +79,7 @@ public class BookRepositoryTest {
     @Test
     public void findBookPagingByName() {
         BookParam bookParam = new BookParam().setName("Java");
-        Page<Book> bookPage = bookRepository.findAll(FenixSpecification.of(bookParam),
+        Page<Book> bookPage = bookRepository.findAll(FenixSpecification.ofBean(bookParam),
                 PageRequest.of(0, 2, Sort.by(Sort.Order.desc("updateTime"))));
         List<Book> books = bookPage.getContent();
         Assert.assertFalse(books.isEmpty());

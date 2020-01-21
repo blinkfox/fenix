@@ -73,10 +73,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testEquals() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setIsbn(ISBN)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setIsbn(ISBN)));
         Assert.assertEquals(1, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrIsbn(ISBN)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrIsbn(ISBN)));
         Assert.assertEquals(1, books2.size());
     }
 
@@ -85,10 +85,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testNotEquals() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setIsbn(ISBN)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setIsbn(ISBN)));
         Assert.assertEquals(9, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrIsbn(ISBN)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOrIsbn(ISBN)));
         Assert.assertEquals(9, books2.size());
     }
 
@@ -97,10 +97,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testGreaterThan() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setTotalPage(500)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setTotalPage(500)));
         Assert.assertEquals(5, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrTotalPage(500)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrTotalPage(500)));
         Assert.assertEquals(5, books2.size());
     }
 
@@ -109,10 +109,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testGreaterThanEqual() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setTotalPage(880)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setTotalPage(880)));
         Assert.assertEquals(2, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrTotalPage(880)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOrTotalPage(880)));
         Assert.assertEquals(2, books2.size());
     }
 
@@ -121,10 +121,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLessThan() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setPublishAt(DATE)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setPublishAt(DATE)));
         Assert.assertEquals(4, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrPublishAt(DATE)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrPublishAt(DATE)));
         Assert.assertEquals(4, books2.size());
     }
 
@@ -133,10 +133,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLessThanEqual() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setPublishAt(DATE)));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setPublishAt(DATE)));
         Assert.assertEquals(5, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrPublishAt(DATE)));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOrPublishAt(DATE)));
         Assert.assertEquals(5, books2.size());
     }
 
@@ -145,10 +145,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLike() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setName("Java")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setName("Java")));
         Assert.assertEquals(3, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrName("Java")));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrName("Java")));
         Assert.assertEquals(3, books2.size());
     }
 
@@ -157,7 +157,7 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLikeIn() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam().setAuthors(Arrays.asList("yuanguozhong", "chen"))));
         Assert.assertEquals(4, books.size());
     }
@@ -167,7 +167,7 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testLikeOrLike() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam3().setNameOrAuthor(Arrays.asList("Java", "yuanguozhong"))));
         Assert.assertEquals(6, books.size());
     }
@@ -177,7 +177,7 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testOrLikeOrLike() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam3().setOrNameOrAuthor(new String[]{"Java", "yuanguozhong"})));
          Assert.assertEquals(6, books.size());
     }
@@ -189,7 +189,7 @@ public class BookRepositoryUnitTest {
     public void testLikeOrLikeWithException() {
         Set<String> set = new HashSet<>(2);
         set.add("Java");
-        bookRepository.findAll(FenixSpecification.of(new BookParam3().setNameOrAuthorSet(set)));
+        bookRepository.findAll(FenixSpecification.ofBean(new BookParam3().setNameOrAuthorSet(set)));
     }
 
     /**
@@ -197,7 +197,7 @@ public class BookRepositoryUnitTest {
      */
     @Test(expected = BuildSpecificationException.class)
     public void testLikeOrLikeWithException2() {
-        bookRepository.findAll(FenixSpecification.of(
+        bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam3().setNameOrAuthor(Collections.singletonList("Java"))));
     }
 
@@ -208,7 +208,7 @@ public class BookRepositoryUnitTest {
     public void testLikeOrLikeWithException3() {
         Set<String> set = new HashSet<>(2);
         set.add("Java");
-        bookRepository.findAll(FenixSpecification.of(new BookParam3().setOrNameOrAuthorSet(set)));
+        bookRepository.findAll(FenixSpecification.ofBean(new BookParam3().setOrNameOrAuthorSet(set)));
     }
 
     /**
@@ -216,7 +216,7 @@ public class BookRepositoryUnitTest {
      */
     @Test(expected = BuildSpecificationException.class)
     public void testLikeOrLikeWithException4() {
-        bookRepository.findAll(FenixSpecification.of(
+        bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam3().setOrNameOrAuthor(new String[]{"Java"})));
     }
 
@@ -227,12 +227,12 @@ public class BookRepositoryUnitTest {
     public void testIn() {
         BookParam bookParam = new BookParam()
                 .setId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(bookParam));
         Assert.assertEquals(7, books.size());
 
         BookParam orbookParam = new BookParam()
                 .setOrId(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(orbookParam));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(orbookParam));
         Assert.assertEquals(7, books2.size());
     }
 
@@ -243,12 +243,12 @@ public class BookRepositoryUnitTest {
     public void testNotIn() {
         BookParam2 bookParam = new BookParam2()
                 .setId(new String[]{"1", "2", "3", "4", "5", "6", "7"});
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(bookParam));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(bookParam));
         Assert.assertEquals(3, books.size());
 
         BookParam2 orbookParam = new BookParam2()
                 .setOrIds(new String[]{"1", "2", "3", "4", "5", "6", "7"});
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(orbookParam));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(orbookParam));
         Assert.assertEquals(3, books2.size());
     }
 
@@ -257,13 +257,13 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testInWithEmpty() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setId(new ArrayList<>())));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setId(new ArrayList<>())));
         Assert.assertEquals(10, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setId(new String[]{})));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setId(new String[]{})));
         Assert.assertEquals(10, books2.size());
 
-        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrId(new ArrayList<>())));
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrId(new ArrayList<>())));
         Assert.assertEquals(10, books3.size());
     }
 
@@ -272,16 +272,16 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testInWithOne() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setSingleId("3")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setSingleId("3")));
         Assert.assertEquals(1, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setSingleId("2")));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setSingleId("2")));
         Assert.assertEquals(9, books2.size());
 
-        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrSingleId("3")));
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrSingleId("3")));
         Assert.assertEquals(1, books3.size());
 
-        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrSingleId("1")));
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOrSingleId("1")));
         Assert.assertEquals(9, books4.size());
     }
 
@@ -290,10 +290,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testIsNull() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam().setOthers("others")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOthers("others")));
         Assert.assertEquals(7, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam().setOrOthers("others")));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrOthers("others")));
         Assert.assertEquals(7, books2.size());
     }
 
@@ -302,10 +302,10 @@ public class BookRepositoryUnitTest {
      */
     @Test
     public void testIsNotNull() {
-        List<Book> books = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOthers("others")));
+        List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOthers("others")));
         Assert.assertEquals(3, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(new BookParam2().setOrOthers("others")));
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setOrOthers("others")));
         Assert.assertEquals(3, books2.size());
     }
 
