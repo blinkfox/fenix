@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.specification.predicate;
 
-import com.blinkfox.fenix.specification.handler.impl.EqualsSpecificationHandler;
+import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class FenixPredicateBuilder {
      * @return {@link FenixPredicateBuilder} 实例
      */
     public FenixPredicateBuilder equal(String fieldName, Object value) {
-        this.predicates.add(new EqualsSpecificationHandler().buildAndPredicate(criteriaBuilder, from, fieldName, value));
+        this.predicates.add(new EqualsPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
         return this;
     }
 

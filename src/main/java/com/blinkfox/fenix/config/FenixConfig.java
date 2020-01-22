@@ -187,9 +187,9 @@ public class FenixConfig {
      * 初始化添加默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中等.
      */
     private static void initDefaultspecificationHandler() {
-        add(new EqualsSpecificationHandler());
-        add(new GreaterThanEqualSpecificationHandler());
-        add(new GreaterThanSpecificationHandler());
+        add(new EqualsPredicateHandler());
+        add(new GreaterThanEqualPredicateHandler());
+        add(new GreaterThanPredicateHandler());
         add(new InSpecificationHandler());
         add(new IsNotNullSpecificationHandler());
         add(new IsNullSpecificationHandler());
@@ -199,9 +199,9 @@ public class FenixConfig {
         add(new LikeinSpecificationHandler());
         add(new LikeOrLikeSpecificationHandler());
         add(new LikeSpecificationHandler());
-        add(new NotEqualsSpecificationHandler());
+        add(new NotEqualsPredicateHandler());
         add(new NotInSpecificationHandler());
-        add(new OrEqualsSpecificationHandler());
+        add(new OrEqualsPredicateHandler());
         add(new OrGreaterThanEqualSpecificationHandler());
         add(new OrGreaterThanSpecificationHandler());
         add(new OrInSpecificationHandler());
@@ -211,7 +211,7 @@ public class FenixConfig {
         add(new OrLessThanSpecificationHandler());
         add(new OrLikeOrLikeSpecificationHandler());
         add(new OrLikeSpecificationHandler());
-        add(new OrNotEqualsSpecificationHandler());
+        add(new OrNotEqualsPredicateHandler());
         add(new OrNotInSpecificationHandler());
     }
 
@@ -355,8 +355,7 @@ public class FenixConfig {
      */
     public static void add(Supplier<AbstractPredicateHandler> handlerSupplier) {
         AbstractPredicateHandler handler = handlerSupplier.get();
-        // TODO 待完成.
-        //specificationHandlerMap.put(handler.getAnnotation(), handler);
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
     /**
@@ -365,8 +364,7 @@ public class FenixConfig {
      * @param handler {@link AbstractPredicateHandler} 处理器实例
      */
     public static void add(AbstractPredicateHandler handler) {
-        // TODO 待完成.
-        //specificationHandlerMap.put(handler.getAnnotation(), handler);
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
 }
