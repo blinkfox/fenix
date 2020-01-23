@@ -3,6 +3,7 @@ package com.blinkfox.fenix.repository;
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
+import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
 
 import java.io.IOException;
@@ -33,6 +34,8 @@ public class BookRepositoryPredicateTest {
 
     private static final String ISBN = "9787111641247";
 
+    private static final String ID_2 = "2";
+
     private static final String DATE = "2014-11-01";
 
     private static Map<String, Object> paramMap;
@@ -55,6 +58,7 @@ public class BookRepositoryPredicateTest {
         // 初始化一些上下文参数信息.
         paramMap = new HashMap<>();
         paramMap.put("isbn", ISBN);
+        paramMap.put("id", ID_2);
     }
 
     /**
@@ -63,9 +67,94 @@ public class BookRepositoryPredicateTest {
     @Test
     public void testEquals() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
-                builder.equal("isbn", paramMap.get("isbn"))
+                builder.andEquals("isbn", paramMap.get("isbn"))
                 .build()));
         Assert.assertEquals(1, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn, StringHelper.isNotBlank(isbn))
+                        .build()));
+        Assert.assertEquals(1, books2.size());
+
+        String isbn2 = (String) paramMap.get("isbn2");
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn2, StringHelper.isNotBlank(isbn2))
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
+     */
+    @Test
+    public void testOrEquals() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", paramMap.get("isbn"))
+                        .orEquals("id", paramMap.get("id"))
+                        .build()));
+        Assert.assertEquals(2, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn)
+                        .orEquals("id", paramMap.get("id"), false)
+                        .build()));
+        Assert.assertEquals(1, books2.size());
+        Assert.assertEquals(ISBN, books2.get(0).getIsbn());
+
+        String id = (String) paramMap.get("id");
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn, false)
+                        .orEquals("id", id, StringHelper.isNotBlank(id))
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
+     */
+    @Test
+    public void testNotEquals() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEquals("isbn", paramMap.get("isbn"))
+                        .build()));
+        Assert.assertEquals(9, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEquals("isbn", isbn, StringHelper.isNotBlank(isbn))
+                        .build()));
+        Assert.assertEquals(9, books2.size());
+
+        String isbn2 = (String) paramMap.get("isbn2");
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEquals("isbn", isbn2, StringHelper.isNotBlank(isbn2))
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
+     */
+    @Test
+    public void testOrNotEquals() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotEquals("isbn", paramMap.get("isbn"))
+                        .build()));
+        Assert.assertEquals(9, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotEquals("isbn", isbn, false)
+                        .build()));
+        Assert.assertEquals(10, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotEquals("isbn", isbn, StringHelper.isNotBlank(isbn))
+                        .build()));
+        Assert.assertEquals(9, books3.size());
     }
 
 }
