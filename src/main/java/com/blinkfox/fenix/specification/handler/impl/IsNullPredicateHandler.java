@@ -28,7 +28,8 @@ public class IsNullPredicateHandler extends AbstractPredicateHandler {
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         return criteriaBuilder.and(super.buildIsNullPredicate(criteriaBuilder, from, value));
     }
 

@@ -32,11 +32,4 @@ public @interface In {
      */
     boolean allowNull() default false;
 
-    /**
-     * 范围中值的 {@code Class} 类型，默认是字符串类型 {@code String.class}.
-     *
-     * @return {@code Class} 类型
-     */
-    Class<?> type() default String.class;
-
 }

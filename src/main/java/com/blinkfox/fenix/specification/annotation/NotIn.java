@@ -27,4 +27,11 @@ public @interface NotIn {
      */
     String value() default "";
 
+    /**
+     * 是否允许为 {@code null} 值，默认为 {@code false}.
+     *
+     * @return 值
+     */
+    boolean allowNull() default false;
+
 }

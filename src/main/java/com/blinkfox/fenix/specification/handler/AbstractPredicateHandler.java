@@ -8,14 +8,18 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Predicate.BooleanOperator;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.beans.BeanUtils;
 
@@ -277,7 +281,7 @@ public abstract class AbstractPredicateHandler {
             Collection<?> list = (Collection<?>) value;
             if (list.isEmpty()) {
                 return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, true, Predicate.BooleanOperator.AND);
+                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.AND);
             } else {
                 list.forEach(in::value);
             }
@@ -293,7 +297,7 @@ public abstract class AbstractPredicateHandler {
             return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
         } catch (IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            log.error("【Fenix 错误提示】获取【@In】相关注解中的【allowNull】的值失败，将默认返回 false 的值.", e);
+            log.error("【Fenix 错误提示】获取【@In】、【@OrIn】、【@NotIn】、【@OrNotIn】相关注解中的【allowNull】的值失败，将默认返回 false 的值.", e);
             return false;
         }
     }
@@ -330,6 +334,28 @@ public abstract class AbstractPredicateHandler {
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         return criteriaBuilder.notLike(from.get(fieldName),
                 "%" + value.toString().replace("%", "\\%") + "%");
+    }
+
+    /**
+     * 构造多模糊条件 {@code LIKE OR LIKE} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fields 实体类的属性名
+     * @param values 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected  <Z, X> List<Predicate> buildLikeOrLikePredicates(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String[] fields, List<?> values) {
+        int len = fields.length;
+        List<Predicate> predicates = new ArrayList<>(len);
+        for (int i = 0; i < len; i++) {
+            predicates.add(criteriaBuilder.like(from.get(fields[i]),
+                    "%" + String.valueOf(values.get(i)).replace("%", "\\%") + "%"));
+        }
+        return predicates;
     }
 
 }

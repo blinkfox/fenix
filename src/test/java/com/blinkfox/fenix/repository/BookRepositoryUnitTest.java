@@ -179,7 +179,7 @@ public class BookRepositoryUnitTest {
     public void testOrLikeOrLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(
                 new BookParam3().setOrNameOrAuthor(new String[]{"Java", "yuanguozhong"})));
-         Assert.assertEquals(6, books.size());
+        Assert.assertEquals(6, books.size());
     }
 
     /**
@@ -260,10 +260,12 @@ public class BookRepositoryUnitTest {
         List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setId(new ArrayList<>())));
         Assert.assertEquals(10, books.size());
 
-        List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam2().setId(new String[]{})));
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setId(new String[]{})));
         Assert.assertEquals(10, books2.size());
 
-        List<Book> books3 = bookRepository.findAll(FenixSpecification.ofBean(new BookParam().setOrId(new ArrayList<>())));
+        List<Book> books3 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrId(new ArrayList<>())));
         Assert.assertEquals(10, books3.size());
     }
 
