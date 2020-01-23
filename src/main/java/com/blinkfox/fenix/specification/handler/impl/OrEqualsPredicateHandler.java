@@ -3,6 +3,7 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.specification.annotation.OrEquals;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
+import java.lang.annotation.Annotation;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
@@ -23,13 +24,7 @@ public class OrEqualsPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
-        return criteriaBuilder.or(super.buildEqualsPredicate(criteriaBuilder, from, fieldName, value));
-    }
-
-    @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Annotation annotation) {
         return criteriaBuilder.or(super.buildEqualsPredicate(criteriaBuilder, from, fieldName, value));
     }
 

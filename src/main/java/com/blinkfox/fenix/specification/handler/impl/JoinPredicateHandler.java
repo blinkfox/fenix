@@ -4,6 +4,7 @@ import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
+import java.lang.annotation.Annotation;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
@@ -25,7 +26,7 @@ public class JoinPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Annotation annotation) {
         if (!(annotation instanceof com.blinkfox.fenix.specification.annotation.Join)) {
             throw new BuildSpecificationException("【Fenix 异常】使用【@Join】构建表连接时,【" + getClass().getName()
                     + ".getAnnotation()】获取到的值【" + this.getAnnotation().getName() + "】与字段使用的注解值【"
@@ -41,8 +42,7 @@ public class JoinPredicateHandler extends AbstractPredicateHandler {
     @Override
     public <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
-        // TODO 待完成.
-        return null;
+        throw new BuildSpecificationException("本方法暂不支持.");
     }
 
 }

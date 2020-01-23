@@ -53,7 +53,7 @@ public abstract class AbstractPredicateHandler {
      * @return {@link Predicate} 实例
      */
     public abstract <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation);
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Annotation annotation);
 
     /**
      * 构造 {@code AND} 关系的 {@link Predicate} 实例的方法.
@@ -66,8 +66,10 @@ public abstract class AbstractPredicateHandler {
      * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    public abstract <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value);
+    public <Z, X> Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return this.buildPredicate(criteriaBuilder, from, fieldName, value, null);
+    }
 
     /**
      * 执行构建 {@link Predicate} 的方法.

@@ -4,6 +4,7 @@ import com.blinkfox.fenix.specification.annotation.NotIn;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +29,7 @@ public class NotInPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Annotation annotation) {
         return this.buildPredicate(criteriaBuilder, from, fieldName, value);
     }
 

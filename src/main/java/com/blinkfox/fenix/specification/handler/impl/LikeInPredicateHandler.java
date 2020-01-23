@@ -4,6 +4,7 @@ import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
@@ -26,7 +27,7 @@ public class LikeInPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Annotation annotation) {
         return this.buildPredicate(criteriaBuilder, from, fieldName, value);
     }
 

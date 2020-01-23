@@ -4,6 +4,7 @@ import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.annotation.LikeOrLike;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,7 +27,7 @@ public class LikeOrLikePredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Annotation annotation) {
         value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
         if (!(value instanceof List)) {
             throw new BuildSpecificationException(

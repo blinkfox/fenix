@@ -3,6 +3,7 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.specification.annotation.LessThan;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 
+import java.lang.annotation.Annotation;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
@@ -23,13 +24,7 @@ public class LessThanPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
-        return criteriaBuilder.and(super.buildLessThanPredicate(criteriaBuilder, from, fieldName, value));
-    }
-
-    @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Annotation annotation) {
         return criteriaBuilder.and(super.buildLessThanPredicate(criteriaBuilder, from, fieldName, value));
     }
 
