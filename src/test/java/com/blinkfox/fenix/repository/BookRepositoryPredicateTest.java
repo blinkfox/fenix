@@ -65,6 +65,20 @@ public class BookRepositoryPredicateTest {
      * 测试使用 {@code Specification} 的方式来等值查询图书信息.
      */
     @Test
+    public void testInit() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder -> {
+            Assert.assertNotNull(builder.getCriteriaBuilder());
+            Assert.assertNotNull(builder.getCriteriaQuery());
+            Assert.assertNotNull(builder.getFrom());
+            return builder.build();
+        }));
+        Assert.assertEquals(10, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来等值查询图书信息.
+     */
+    @Test
     public void testEquals() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
