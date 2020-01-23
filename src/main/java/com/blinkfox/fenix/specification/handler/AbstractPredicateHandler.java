@@ -298,4 +298,38 @@ public abstract class AbstractPredicateHandler {
         }
     }
 
+    /**
+     * 构造模糊匹配条件 {@code LIKE} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 实体类的属性名
+     * @param value 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildLikePredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return criteriaBuilder.like(from.get(fieldName),
+                "%" + value.toString().replace("%", "\\%") + "%");
+    }
+
+    /**
+     * 构造模糊不匹配条件 {@code LIKE} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 实体类的属性名
+     * @param value 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildNotLikePredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        return criteriaBuilder.notLike(from.get(fieldName),
+                "%" + value.toString().replace("%", "\\%") + "%");
+    }
+
 }

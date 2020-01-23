@@ -198,7 +198,8 @@ public class FenixConfig {
         add(new LessThanPredicateHandler());
         add(new LikeinSpecificationHandler());
         add(new LikeOrLikeSpecificationHandler());
-        add(new LikeSpecificationHandler());
+        add(new LikePredicateHandler());
+        add(new NotLikePredicateHandler());
         add(new NotEqualsPredicateHandler());
         add(new NotInPredicateHandler());
         add(new OrEqualsPredicateHandler());
@@ -210,7 +211,8 @@ public class FenixConfig {
         add(new OrLessThanEqualPredicateHandler());
         add(new OrLessThanPredicateHandler());
         add(new OrLikeOrLikeSpecificationHandler());
-        add(new OrLikeSpecificationHandler());
+        add(new OrLikePredicateHandler());
+        add(new OrNotLikePredicateHandler());
         add(new OrNotEqualsPredicateHandler());
         add(new OrNotInPredicateHandler());
     }
