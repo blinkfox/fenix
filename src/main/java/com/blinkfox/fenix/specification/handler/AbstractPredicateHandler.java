@@ -136,7 +136,7 @@ public abstract class AbstractPredicateHandler {
     }
 
     /**
-     * 构造大于等于查询的 {@link Predicate} 实例的方法.
+     * 构造大于查询的 {@link Predicate} 实例的方法.
      *
      * @param criteriaBuilder {@link CriteriaBuilder} 实例
      * @param from {@link From} 实例
@@ -172,6 +172,42 @@ public abstract class AbstractPredicateHandler {
     }
 
     /**
+     * 构造小于查询的 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected <Z, X> Predicate buildLessThanPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        this.isValueComparable(value);
+        return criteriaBuilder.lessThan(from.get(fieldName), (Comparable) value);
+    }
+
+    /**
+     * 构造小于等于查询的 {@link Predicate} 实例的方法.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 属性条件对应的值
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected <Z, X> Predicate buildLessThanEqualPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        this.isValueComparable(value);
+        return criteriaBuilder.lessThanOrEqualTo(from.get(fieldName), (Comparable) value);
+    }
+
+    /**
      * 检查值是否实现了 {@link Comparable} 接口.
      *
      * @param value 值
@@ -181,6 +217,35 @@ public abstract class AbstractPredicateHandler {
             throw new BuildSpecificationException("【Fenix 异常】要比较的 value 值【" + value + "】不是可比较类型的，"
                     + "该值的类型必须实现了 java.lang.Comparable 接口才能正常参与比较，才能用于大于、大于等于、小于、小于等于之类的比较场景.");
         }
+    }
+
+    /**
+     * 构造空条件 {@code IS NULL} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param value 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildIsNullPredicate(CriteriaBuilder criteriaBuilder, From<Z, X> from, Object value) {
+        return criteriaBuilder.isNull(from.get(String.valueOf(value)));
+    }
+
+    /**
+     * 构造不是空条件 {@code IS NOT NULL} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param value 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildIsNotNullPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, Object value) {
+        return criteriaBuilder.isNotNull(from.get(String.valueOf(value)));
     }
 
 }

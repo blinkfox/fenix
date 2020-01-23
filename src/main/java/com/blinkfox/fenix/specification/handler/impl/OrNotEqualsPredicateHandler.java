@@ -23,14 +23,14 @@ public class OrNotEqualsPredicateHandler extends AbstractPredicateHandler {
 
     @Override
     public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String name, Object value, Object annotation) {
-        return criteriaBuilder.or(criteriaBuilder.notEqual(from.get(name), value));
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, Object annotation) {
+        return criteriaBuilder.or(super.buildNotEqualsPredicate(criteriaBuilder, from, fieldName, value));
     }
 
     @Override
     public <Z, X> Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
-        return null;
+        return criteriaBuilder.or(super.buildNotEqualsPredicate(criteriaBuilder, from, fieldName, value));
     }
 
 }
