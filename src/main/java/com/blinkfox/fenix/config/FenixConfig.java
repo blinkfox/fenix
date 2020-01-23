@@ -190,7 +190,7 @@ public class FenixConfig {
         add(new EqualsPredicateHandler());
         add(new GreaterThanEqualPredicateHandler());
         add(new GreaterThanPredicateHandler());
-        add(new InSpecificationHandler());
+        add(new InPredicateHandler());
         add(new IsNotNullPredicateHandler());
         add(new IsNullPredicateHandler());
         add(new JoinPredicateHandler());
@@ -200,11 +200,11 @@ public class FenixConfig {
         add(new LikeOrLikeSpecificationHandler());
         add(new LikeSpecificationHandler());
         add(new NotEqualsPredicateHandler());
-        add(new NotInSpecificationHandler());
+        add(new NotInPredicateHandler());
         add(new OrEqualsPredicateHandler());
         add(new OrGreaterThanEqualPredicateHandler());
         add(new OrGreaterThanPredicateHandler());
-        add(new OrInSpecificationHandler());
+        add(new OrInPredicateHandler());
         add(new OrIsNotNullPredicateHandler());
         add(new OrIsNullPredicateHandler());
         add(new OrLessThanEqualPredicateHandler());
@@ -212,7 +212,7 @@ public class FenixConfig {
         add(new OrLikeOrLikeSpecificationHandler());
         add(new OrLikeSpecificationHandler());
         add(new OrNotEqualsPredicateHandler());
-        add(new OrNotInSpecificationHandler());
+        add(new OrNotInPredicateHandler());
     }
 
     /**

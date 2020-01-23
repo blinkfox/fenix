@@ -2,14 +2,21 @@ package com.blinkfox.fenix.specification.handler;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -19,6 +26,7 @@ import org.springframework.beans.BeanUtils;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
+@Slf4j
 public abstract class AbstractPredicateHandler {
 
     /**
@@ -246,6 +254,48 @@ public abstract class AbstractPredicateHandler {
     protected <Z, X> Predicate buildIsNotNullPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, Object value) {
         return criteriaBuilder.isNotNull(from.get(String.valueOf(value)));
+    }
+
+    /**
+     * 构造相等条件 {@code Equals} 的 {@link Predicate} 条件.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 实体类的属性名
+     * @param value 对应属性的值
+     * @param <Z> 泛型 Z
+     * @param <X> 泛型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildInPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value, boolean allowNull) {
+        value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
+        Path<Object> path = from.get(fieldName);
+        CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+
+        if (value instanceof Collection) {
+            Collection<?> list = (Collection<?>) value;
+            if (list.isEmpty()) {
+                return new FenixBooleanStaticPredicate(
+                        (CriteriaBuilderImpl) criteriaBuilder, true, Predicate.BooleanOperator.AND);
+            } else {
+                list.forEach(in::value);
+            }
+        } else {
+            in.value(value);
+        }
+
+        return allowNull ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in;
+    }
+
+    protected boolean isAllowNull(Object annotation) {
+        try {
+            return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
+        } catch (IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            log.error("【Fenix 错误提示】获取【@In】相关注解中的【allowNull】的值失败，将默认返回 false 的值.", e);
+            return false;
+        }
     }
 
 }
