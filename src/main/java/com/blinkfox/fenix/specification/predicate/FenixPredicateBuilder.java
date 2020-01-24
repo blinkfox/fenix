@@ -3,10 +3,12 @@ package com.blinkfox.fenix.specification.predicate;
 import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
 
 import java.util.ArrayList;
@@ -176,7 +178,8 @@ public class FenixPredicateBuilder {
      * @return {@link FenixPredicateBuilder} 实例
      */
     public FenixPredicateBuilder andGreaterThan(String fieldName, Object value) {
-        this.predicates.add(new GreaterThanPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        this.predicates.add(new GreaterThanPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
         return this;
     }
 
@@ -200,8 +203,8 @@ public class FenixPredicateBuilder {
      * @return {@link FenixPredicateBuilder} 实例
      */
     public FenixPredicateBuilder orGreaterThan(String fieldName, Object value) {
-        this.predicates.add(
-                new OrGreaterThanPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        this.predicates.add(new OrGreaterThanPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
         return this;
     }
 
@@ -265,6 +268,55 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orGreaterThanEqual(String fieldName, Object value, boolean match) {
         return match ? this.orGreaterThanEqual(fieldName, value) : this;
+    }
+
+    /**
+     * 生成小于查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andLessThan(String fieldName, Object value) {
+        this.predicates.add(new LessThanPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成小于查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andLessThan(String fieldName, Object value, boolean match) {
+        return match ? this.andLessThan(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句小于查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orLessThan(String fieldName, Object value) {
+        this.predicates.add(new OrLessThanPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句小于查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orLessThan(String fieldName, Object value, boolean match) {
+        return match ? this.orLessThan(fieldName, value) : this;
     }
 
 }
