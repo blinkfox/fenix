@@ -702,4 +702,50 @@ public class BookRepositoryPredicateTest {
         Assert.assertEquals(10, books3.size());
     }
 
+    /**
+     * 测试使用 {@code Specification} 的方式来判断字段数据是否不为空的图书信息.
+     */
+    @Test
+    public void testIsNotNull() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIsNotNull("others")
+                        .build()));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertNotNull(book.getOthers()));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIsNotNull("others", true)
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertNotNull(book.getOthers()));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIsNotNull("others", false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来判断字段数据是否不为空的图书信息.
+     */
+    @Test
+    public void testOrIsNotNull() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orIsNotNull("others")
+                        .build()));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertNotNull(book.getOthers()));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orIsNotNull("others", true)
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertNotNull(book.getOthers()));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orIsNotNull("others", false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
 }

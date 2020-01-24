@@ -4,6 +4,7 @@ import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.IsNotNullPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.IsNullPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
@@ -15,6 +16,7 @@ import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrIsNotNullPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrIsNullPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
@@ -713,6 +715,52 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orIsNull(String fieldName, boolean match) {
         return match ? this.orIsNull(fieldName) : this;
+    }
+
+    /**
+     * 生成 {@code AND field IS NOT NULL} 不是空的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIsNotNull(String fieldName) {
+        this.predicates.add(new IsNotNullPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, fieldName));
+        return this;
+    }
+
+    /**
+     * 生成 {@code AND field IS NOT NULL} 不是空的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIsNotNull(String fieldName, boolean match) {
+        return match ? this.andIsNotNull(fieldName) : this;
+    }
+
+    /**
+     * 生成或语句 {@code OR field IS NOT NULL} 不是空的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIsNotNull(String fieldName) {
+        this.predicates.add(new OrIsNotNullPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, fieldName));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code OR field IS NOT NULL} 不是空的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIsNotNull(String fieldName, boolean match) {
+        return match ? this.orIsNotNull(fieldName) : this;
     }
 
 }
