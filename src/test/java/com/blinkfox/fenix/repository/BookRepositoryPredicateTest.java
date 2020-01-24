@@ -3,10 +3,12 @@ package com.blinkfox.fenix.repository;
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
+import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,8 @@ public class BookRepositoryPredicateTest {
         paramMap.put("id", ID_2);
         paramMap.put("totalPage", PAGE);
         paramMap.put("name", NAME);
+        paramMap.put("idList", Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
+        paramMap.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7"});
     }
 
     /**
@@ -478,6 +482,31 @@ public class BookRepositoryPredicateTest {
                         .build()));
         Assert.assertEquals(1, books3.size());
         Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     */
+    @Test
+    public void testIn() {
+        List<String> idList = (List<String>) paramMap.get("idList");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIn("id", idList)
+                        .build()));
+        Assert.assertEquals(7, books.size());
+        books.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) <= 8));
+
+        String[] ids = (String[]) paramMap.get("ids");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIn("id", ids, CollectionHelper.isNotEmpty(ids))
+                        .build()));
+        Assert.assertEquals(7, books2.size());
+        books.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) <= 8));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andIn("id", idList, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
     }
 
 }

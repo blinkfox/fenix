@@ -3,6 +3,7 @@ package com.blinkfox.fenix.specification.predicate;
 import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
@@ -15,15 +16,16 @@ import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHan
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
 import lombok.Getter;
 
 /**
@@ -469,6 +471,54 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orNotLike(String fieldName, Object value, boolean match) {
         return match ? this.orNotLike(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIn(String fieldName, Collection<?> value) {
+        this.predicates.add(new InPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIn(String fieldName, Collection<?> value, boolean match) {
+        return match ? this.andIn(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIn(String fieldName, Object[] value) {
+        this.predicates.add(new InPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andIn(String fieldName, Object[] value, boolean match) {
+        return match ? this.andIn(fieldName, value) : this;
     }
 
 }
