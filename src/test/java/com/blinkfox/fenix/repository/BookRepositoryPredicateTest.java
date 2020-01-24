@@ -429,4 +429,55 @@ public class BookRepositoryPredicateTest {
         Assert.assertEquals(ID_2, books3.get(0).getId());
     }
 
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊不匹配查询图书信息.
+     */
+    @Test
+    public void testNotLike() {
+        String name = (String) paramMap.get("name");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLike("name", name)
+                        .build()));
+        Assert.assertEquals(7, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().contains(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLike("name", name, StringHelper.isNotBlank(name))
+                        .build()));
+        Assert.assertEquals(7, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().contains(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLike("name", name, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊不匹配查询图书信息.
+     */
+    @Test
+    public void testOrNotLike() {
+        String name = (String) paramMap.get("name");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_2)
+                        .orNotLike("name", name)
+                        .build()));
+        Assert.assertEquals(7, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().contains(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotLike("name", name, StringHelper.isNotBlank(name))
+                        .build()));
+        Assert.assertEquals(7, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().contains(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_2)
+                        .orNotLike("name", name, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
 }
