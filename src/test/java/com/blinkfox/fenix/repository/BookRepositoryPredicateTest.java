@@ -225,4 +225,55 @@ public class BookRepositoryPredicateTest {
         books3.forEach(book -> Assert.assertTrue(book.getTotalPage() > PAGE));
     }
 
+    /**
+     * 测试使用 {@code Specification} 的方式来大于等于查询图书信息.
+     */
+    @Test
+    public void testGreaterThanEqual() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThanEqual("totalPage", paramMap.get("totalPage"))
+                        .build()));
+        Assert.assertEquals(5, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
+
+        int totalPage = (Integer) paramMap.get("totalPage");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThanEqual("totalPage", totalPage, totalPage > 0)
+                        .build()));
+        Assert.assertEquals(5, books2.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThanEqual("totalPage", totalPage, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来大于等于查询图书信息.
+     */
+    @Test
+    public void testOrGreaterThanEqual() {
+        int totalPage = (Integer) paramMap.get("totalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orGreaterThanEqual("totalPage", totalPage)
+                        .build()));
+        Assert.assertEquals(6, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn)
+                        .orGreaterThanEqual("totalPage", totalPage, false)
+                        .build()));
+        Assert.assertEquals(1, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn, false)
+                        .orGreaterThanEqual("totalPage", totalPage, totalPage > 0)
+                        .build()));
+        Assert.assertEquals(5, books3.size());
+        books3.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
+    }
+
 }
