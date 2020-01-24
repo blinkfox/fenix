@@ -36,6 +36,8 @@ public class BookRepositoryPredicateTest {
 
     private static final String ID_2 = "2";
 
+    private static final int PAGE = 540;
+
     private static final String DATE = "2014-11-01";
 
     private static Map<String, Object> paramMap;
@@ -59,13 +61,14 @@ public class BookRepositoryPredicateTest {
         paramMap = new HashMap<>();
         paramMap.put("isbn", ISBN);
         paramMap.put("id", ID_2);
+        paramMap.put("totalPage", PAGE);
     }
 
     /**
      * 测试使用 {@code Specification} 的方式来等值查询图书信息.
      */
     @Test
-    public void testInit() {
+    public void testEmpty() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(builder -> {
             Assert.assertNotNull(builder.getCriteriaBuilder());
             Assert.assertNotNull(builder.getCriteriaQuery());
@@ -169,6 +172,30 @@ public class BookRepositoryPredicateTest {
                 builder.orNotEquals("isbn", isbn, StringHelper.isNotBlank(isbn))
                         .build()));
         Assert.assertEquals(9, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来大于查询图书信息.
+     */
+    @Test
+    public void testGreaterThan() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThan("totalPage", paramMap.get("totalPage"))
+                        .build()));
+        Assert.assertEquals(4, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() > PAGE));
+
+        int totalPage = (Integer) paramMap.get("totalPage");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThan("totalPage", totalPage, totalPage > 0)
+                        .build()));
+        Assert.assertEquals(4, books2.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() > PAGE));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andGreaterThan("totalPage", totalPage, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
     }
 
 }
