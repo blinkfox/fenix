@@ -38,8 +38,6 @@ public class BookRepositoryPredicateTest {
 
     private static final int PAGE = 540;
 
-    // private static final String DATE = "2014-11-01";
-
     private static Map<String, Object> paramMap;
 
     @Value("/data/book.json")
@@ -325,6 +323,57 @@ public class BookRepositoryPredicateTest {
                         .build()));
         Assert.assertEquals(5, books3.size());
         books3.forEach(book -> Assert.assertTrue(book.getTotalPage() < PAGE));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来小于等于查询图书信息.
+     */
+    @Test
+    public void testLessThanEqual() {
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLessThanEqual("totalPage", paramMap.get("totalPage"))
+                        .build()));
+        Assert.assertEquals(6, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
+
+        int totalPage = (Integer) paramMap.get("totalPage");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLessThanEqual("totalPage", totalPage, totalPage > 0)
+                        .build()));
+        Assert.assertEquals(6, books2.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLessThanEqual("totalPage", totalPage, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来小于等于查询图书信息.
+     */
+    @Test
+    public void testOrLessThanEqual() {
+        int totalPage = (Integer) paramMap.get("totalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orLessThanEqual("totalPage", totalPage)
+                        .build()));
+        Assert.assertEquals(6, books.size());
+
+        String isbn = (String) paramMap.get("isbn");
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn)
+                        .orLessThanEqual("totalPage", totalPage, false)
+                        .build()));
+        Assert.assertEquals(1, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("isbn", isbn, false)
+                        .orLessThanEqual("totalPage", totalPage, totalPage > 0)
+                        .build()));
+        Assert.assertEquals(6, books3.size());
+        books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
     }
 
 }
