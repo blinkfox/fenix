@@ -12,6 +12,7 @@ import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
@@ -519,6 +520,54 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder andIn(String fieldName, Object[] value, boolean match) {
         return match ? this.andIn(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIn(String fieldName, Collection<?> value) {
+        this.predicates.add(new OrInPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIn(String fieldName, Collection<?> value, boolean match) {
+        return match ? this.orIn(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIn(String fieldName, Object[] value) {
+        this.predicates.add(new OrInPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orIn(String fieldName, Object[] value, boolean match) {
+        return match ? this.orIn(fieldName, value) : this;
     }
 
 }
