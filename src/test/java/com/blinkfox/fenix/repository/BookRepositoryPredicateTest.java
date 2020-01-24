@@ -38,6 +38,8 @@ public class BookRepositoryPredicateTest {
 
     private static final int PAGE = 540;
 
+    private static final String NAME = "Java";
+
     private static Map<String, Object> paramMap;
 
     @Value("/data/book.json")
@@ -60,6 +62,7 @@ public class BookRepositoryPredicateTest {
         paramMap.put("isbn", ISBN);
         paramMap.put("id", ID_2);
         paramMap.put("totalPage", PAGE);
+        paramMap.put("name", NAME);
     }
 
     /**
@@ -188,7 +191,7 @@ public class BookRepositoryPredicateTest {
                 builder.andGreaterThan("totalPage", totalPage, totalPage > 0)
                         .build()));
         Assert.assertEquals(4, books2.size());
-        books.forEach(book -> Assert.assertTrue(book.getTotalPage() > PAGE));
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() > PAGE));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andGreaterThan("totalPage", totalPage, false)
@@ -239,7 +242,7 @@ public class BookRepositoryPredicateTest {
                 builder.andGreaterThanEqual("totalPage", totalPage, totalPage > 0)
                         .build()));
         Assert.assertEquals(5, books2.size());
-        books.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andGreaterThanEqual("totalPage", totalPage, false)
@@ -290,7 +293,7 @@ public class BookRepositoryPredicateTest {
                 builder.andLessThan("totalPage", totalPage, totalPage > 0)
                         .build()));
         Assert.assertEquals(5, books2.size());
-        books.forEach(book -> Assert.assertTrue(book.getTotalPage() < PAGE));
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() < PAGE));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andLessThan("totalPage", totalPage, false)
@@ -341,7 +344,7 @@ public class BookRepositoryPredicateTest {
                 builder.andLessThanEqual("totalPage", totalPage, totalPage > 0)
                         .build()));
         Assert.assertEquals(6, books2.size());
-        books.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andLessThanEqual("totalPage", totalPage, false)
@@ -374,6 +377,56 @@ public class BookRepositoryPredicateTest {
                         .build()));
         Assert.assertEquals(6, books3.size());
         books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testLike() {
+        String name = (String) paramMap.get("name");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLike("name", name)
+                        .build()));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLike("name", name, StringHelper.isNotBlank(name))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLike("name", name, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testOrLike() {
+        String name = (String) paramMap.get("name");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_2)
+                        .orLike("name", name)
+                        .build()));
+        Assert.assertEquals(4, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orLike("name", name, StringHelper.isNotBlank(name))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_2)
+                        .orLike("name", name, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
     }
 
 }
