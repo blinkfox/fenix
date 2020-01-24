@@ -18,6 +18,7 @@ import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHan
 import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
 
 import java.util.ArrayList;
@@ -572,7 +573,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     * 生成 {@code AND NOT IN} 范围不匹配的 {@link Predicate} 条件.
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 集合
@@ -584,7 +585,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 生成 {@code AND NOT IN} 范围不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 集合
@@ -596,7 +597,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件.
+     * 生成 {@code AND NOT IN} 范围不匹配的 {@link Predicate} 条件.
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 数组
@@ -608,7 +609,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成 {@code IN} 范围匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 生成 {@code AND NOT IN} 范围不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
      *
      * @param fieldName 实体属性或数据库字段
      * @param value 数组
@@ -617,6 +618,54 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder andNotIn(String fieldName, Object[] value, boolean match) {
         return match ? this.andNotIn(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code OR NOT IN} 范围不匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotIn(String fieldName, Collection<?> value) {
+        this.predicates.add(new OrNotInPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code OR NOT IN} 范围不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 集合
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotIn(String fieldName, Collection<?> value, boolean match) {
+        return match ? this.orNotIn(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code OR NOT IN} 范围不匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotIn(String fieldName, Object[] value) {
+        this.predicates.add(new OrNotInPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code OR NOT IN} 范围不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 数组
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotIn(String fieldName, Object[] value, boolean match) {
+        return match ? this.orNotIn(fieldName, value) : this;
     }
 
 }

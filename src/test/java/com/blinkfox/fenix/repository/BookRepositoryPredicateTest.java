@@ -571,7 +571,7 @@ public class BookRepositoryPredicateTest {
     }
 
     /**
-     * 测试使用 {@code Specification} 的方式来范围查询图书信息.
+     * 测试使用 {@code Specification} 的方式来范围不匹配查询图书信息.
      */
     @Test
     public void testNotIn() {
@@ -609,6 +609,49 @@ public class BookRepositoryPredicateTest {
 
         List<Book> books6 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andNotIn("id", ids, false)
+                        .build()));
+        Assert.assertEquals(10, books6.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来范围不匹配查询图书信息.
+     */
+    @Test
+    public void testOrNotIn() {
+        @SuppressWarnings("unchecked")
+        List<String> idList = (List<String>) paramMap.get("idList");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", idList)
+                        .build()));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) > 7));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", idList, CollectionHelper.isNotEmpty(idList))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) > 7));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", idList, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+
+        String[] ids = (String[]) paramMap.get("ids");
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", ids)
+                        .build()));
+        Assert.assertEquals(3, books4.size());
+        books4.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) > 7));
+
+        List<Book> books5 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", ids, CollectionHelper.isNotEmpty(ids))
+                        .build()));
+        Assert.assertEquals(3, books5.size());
+        books5.forEach(book -> Assert.assertTrue(Integer.valueOf(book.getId()) > 7));
+
+        List<Book> books6 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.orNotIn("id", ids, false)
                         .build()));
         Assert.assertEquals(10, books6.size());
     }
