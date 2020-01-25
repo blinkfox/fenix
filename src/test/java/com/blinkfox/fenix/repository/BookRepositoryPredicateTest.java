@@ -539,6 +539,56 @@ public class BookRepositoryPredicateTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testEndsWith() {
+        String endsName = (String) paramMap.get("endsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEndsWith("name", endsName)
+                        .build()));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().contains(ENDS_NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEndsWith("name", endsName, StringHelper.isNotBlank(endsName))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains(ENDS_NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEndsWith("name", endsName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testOrEndsWith() {
+        String endsName = (String) paramMap.get("endsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orEndsWith("name", endsName)
+                        .build()));
+        Assert.assertEquals(4, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orEndsWith("name", endsName, StringHelper.isNotBlank(endsName))
+                        .build()));
+        Assert.assertEquals(4, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orEndsWith("name", endsName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来范围查询图书信息.
      */
     @Test

@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.specification.predicate;
 
+import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
@@ -12,6 +13,7 @@ import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.NotInPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrEndsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
@@ -529,6 +531,55 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orStartsWith(String fieldName, Object value, boolean match) {
         return match ? this.orStartsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按后缀模糊匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andEndsWith(String fieldName, Object value) {
+        this.predicates.add(new EndsWithPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按后缀模糊匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andEndsWith(String fieldName, Object value, boolean match) {
+        return match ? this.andEndsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按后缀模糊匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orEndsWith(String fieldName, Object value) {
+        this.predicates.add(new OrEndsWithPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按后缀模糊匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orEndsWith(String fieldName, Object value, boolean match) {
+        return match ? this.orEndsWith(fieldName, value) : this;
     }
 
     /**
