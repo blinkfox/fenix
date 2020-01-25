@@ -513,6 +513,32 @@ public class BookRepositoryPredicateTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testOrStartsWith() {
+        String startsName = (String) paramMap.get("startsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orStartsWith("name", startsName)
+                        .build()));
+        Assert.assertEquals(3, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orStartsWith("name", startsName, StringHelper.isNotBlank(startsName))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orStartsWith("name", startsName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来范围查询图书信息.
      */
     @Test
