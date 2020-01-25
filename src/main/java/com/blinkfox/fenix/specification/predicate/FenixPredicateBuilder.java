@@ -24,6 +24,7 @@ import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -478,6 +479,30 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orNotLike(String fieldName, Object value, boolean match) {
         return match ? this.orNotLike(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按前缀模糊匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andStartsWith(String fieldName, Object value) {
+        this.predicates.add(new StartsWithPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按前缀模糊匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andStartsWith(String fieldName, Object value, boolean match) {
+        return match ? this.andStartsWith(fieldName, value) : this;
     }
 
     /**
