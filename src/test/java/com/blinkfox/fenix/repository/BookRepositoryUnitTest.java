@@ -153,6 +153,38 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊查询图书信息.
+     */
+    @Test
+    public void testStartsWith() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setStartsWithName("Java")));
+        Assert.assertEquals(2, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().contains("Java")));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrStartsWithName("Java")));
+        Assert.assertEquals(2, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains("Java")));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊查询图书信息.
+     */
+    @Test
+    public void testEndsWith() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setEndsWithName("(algorithm)")));
+        Assert.assertEquals(3, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().contains("(algorithm)")));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrEndsWithName("(algorithm)")));
+        Assert.assertEquals(3, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains("(algorithm)")));
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
      */
     @Test

@@ -365,7 +365,7 @@ public abstract class AbstractPredicateHandler {
      */
     protected <Z, X> Predicate buildEndsWithPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
-        return criteriaBuilder.notLike(from.get(fieldName), "%" + this.convertValue(value));
+        return criteriaBuilder.like(from.get(fieldName), "%" + this.convertValue(value));
     }
 
     /**

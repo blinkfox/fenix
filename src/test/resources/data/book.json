@@ -64,7 +64,7 @@
     {
         "id": "6",
         "isbn": "9787115293800",
-        "name": "算法(第4版) ",
+        "name": "算法(第4版)(algorithm)",
         "author": "Robert Sedgewick, Kevin Wayne, 谢路云",
         "summary": "《算法（第4版）》全面讲述算法和数据结构的必备知识，具有以下几大特色。算法领域的经典参考书：Sedgewick畅销著作的新版，反映了经过几十年演化而成的算法核心知识体系。",
         "totalPage": 636,
@@ -89,7 +89,7 @@
     {
         "id": "8",
         "isbn": "9787111407010",
-        "name": "算法导论（原书第3版）",
+        "name": "算法导论（原书第3版）(algorithm)",
         "author": "Thomas H.Cormen, Charles E.Leiserson, Ronald L.Rivest, Clifford Stein, 殷建平, 徐云, 王刚",
         "summary": "证明 每个结点的秩从0开始，并且只有执行了LINK操作，它才会增加。因为最多有n—1个UNION操作，所以同样最多有n—1个LINK操作。因为每个LINK操作或者不改变任何的秩，或者将某结点的秩加1，所以所有的秩最大为n—1",
         "totalPage": 796,
@@ -101,7 +101,7 @@
     {
         "id": "9",
         "isbn": "9787115447630",
-        "name": "算法图解",
+        "name": "算法图解(algorithm)",
         "author": "Bruce 巴尔加瓦（Aditya Bhargava）, 袁国忠(yuanguozhong)",
         "summary": "《计算机科学丛书：Java编程思想（第4版）》赢得了全球程序员的广泛赞誉，即使是晦涩的概念，在BruceEckel的文字亲和力和小而直接的编程示例面前也会化解于无形。",
         "totalPage": 207,

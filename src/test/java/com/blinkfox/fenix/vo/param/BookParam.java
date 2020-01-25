@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.vo.param;
 
+import com.blinkfox.fenix.specification.annotation.EndsWith;
 import com.blinkfox.fenix.specification.annotation.Equals;
 import com.blinkfox.fenix.specification.annotation.GreaterThan;
 import com.blinkfox.fenix.specification.annotation.In;
@@ -7,6 +8,7 @@ import com.blinkfox.fenix.specification.annotation.IsNull;
 import com.blinkfox.fenix.specification.annotation.LessThan;
 import com.blinkfox.fenix.specification.annotation.Like;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
+import com.blinkfox.fenix.specification.annotation.OrEndsWith;
 import com.blinkfox.fenix.specification.annotation.OrEquals;
 import com.blinkfox.fenix.specification.annotation.OrGreaterThan;
 import com.blinkfox.fenix.specification.annotation.OrIn;
@@ -16,6 +18,8 @@ import com.blinkfox.fenix.specification.annotation.OrLike;
 
 import java.util.List;
 
+import com.blinkfox.fenix.specification.annotation.OrStartsWith;
+import com.blinkfox.fenix.specification.annotation.StartsWith;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -77,6 +81,30 @@ public class BookParam {
      */
     @OrLike("name")
     private String orName;
+
+    /**
+     * 按前缀匹配图书标题的字段.
+     */
+    @StartsWith("name")
+    private String startsWithName;
+
+    /**
+     * 使用或语句按前缀匹配图书标题的字段.
+     */
+    @OrStartsWith("name")
+    private String orStartsWithName;
+
+    /**
+     * 按前缀匹配图书标题的字段.
+     */
+    @EndsWith("name")
+    private String endsWithName;
+
+    /**
+     * 使用或语句按前缀匹配图书标题的字段.
+     */
+    @OrEndsWith("name")
+    private String orEndsWithName;
 
     /**
      * 图书作者.

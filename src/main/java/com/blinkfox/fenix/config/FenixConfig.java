@@ -199,6 +199,8 @@ public class FenixConfig {
         add(new LikeInPredicateHandler());
         add(new LikeOrLikePredicateHandler());
         add(new LikePredicateHandler());
+        add(new StartsWithPredicateHandler());
+        add(new EndsWithPredicateHandler());
         add(new NotLikePredicateHandler());
         add(new NotEqualsPredicateHandler());
         add(new NotInPredicateHandler());
@@ -215,6 +217,8 @@ public class FenixConfig {
         add(new OrNotLikePredicateHandler());
         add(new OrNotEqualsPredicateHandler());
         add(new OrNotInPredicateHandler());
+        add(new OrStartsWithPredicateHandler());
+        add(new OrEndsWithPredicateHandler());
     }
 
     /**
