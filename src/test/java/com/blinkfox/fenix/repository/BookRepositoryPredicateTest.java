@@ -42,6 +42,8 @@ public class BookRepositoryPredicateTest {
 
     private static final String NAME = "Java";
 
+    private static final String ENDS_NAME = "(algorithm)";
+
     private static Map<String, Object> paramMap;
 
     @Value("/data/book.json")
@@ -65,6 +67,8 @@ public class BookRepositoryPredicateTest {
         paramMap.put("id", ID_2);
         paramMap.put("totalPage", PAGE);
         paramMap.put("name", NAME);
+        paramMap.put("startsName", NAME);
+        paramMap.put("endsName", ENDS_NAME);
         paramMap.put("idList", Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
         paramMap.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7"});
     }
@@ -482,6 +486,30 @@ public class BookRepositoryPredicateTest {
                         .build()));
         Assert.assertEquals(1, books3.size());
         Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testStartsWith() {
+        String startsName = (String) paramMap.get("startsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andStartsWith("name", startsName)
+                        .build()));
+        Assert.assertEquals(2, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andStartsWith("name", startsName, StringHelper.isNotBlank(startsName))
+                        .build()));
+        Assert.assertEquals(2, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andStartsWith("name", startsName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
     }
 
     /**
