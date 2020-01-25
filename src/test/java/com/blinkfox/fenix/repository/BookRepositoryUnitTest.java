@@ -185,6 +185,20 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按指定模式匹配查询图书信息.
+     */
+    @Test
+    public void testLikePattern() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setPatternName("_ava%")));
+        Assert.assertEquals(2, books.size());
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrPatternName("_ava%")));
+        Assert.assertEquals(2, books2.size());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
      */
     @Test
