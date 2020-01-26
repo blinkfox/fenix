@@ -9,7 +9,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
 /**
- * 构建“或语句按前缀模糊匹配”({@code OR field LIKE '%xx%'})场景的 {@link Predicate} 处理器.
+ * 构建“或语句按前缀模糊匹配”({@code OR field LIKE 'xx%'})场景的 {@link Predicate} 处理器.
  *
  * @author blinkfox on 2020-01-25
  * @since v2.2.0

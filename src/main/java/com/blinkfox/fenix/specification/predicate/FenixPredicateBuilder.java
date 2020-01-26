@@ -507,6 +507,56 @@ public class FenixPredicateBuilder {
     }
 
     /**
+     * 生成 {@code LIKE} 按前缀模糊不匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotStartsWith(String fieldName, Object value) {
+        this.predicates.add(new NotStartsWithPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按前缀模糊不匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotStartsWith(String fieldName, Object value, boolean match) {
+        return match ? this.andNotStartsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按前缀模糊不匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotStartsWith(String fieldName, Object value) {
+        this.predicates.add(new OrNotStartsWithPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按前缀模糊不匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotStartsWith(String fieldName, Object value, boolean match) {
+        return match ? this.orNotStartsWith(fieldName, value) : this;
+    }
+
+    /**
      * 生成 {@code LIKE} 按后缀模糊匹配查询的 {@link Predicate} 条件.
      *
      * @param fieldName 实体属性或数据库字段
@@ -553,6 +603,55 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orEndsWith(String fieldName, Object value, boolean match) {
         return match ? this.orEndsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按后缀模糊不匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotEndsWith(String fieldName, Object value) {
+        this.predicates.add(new NotEndsWithPredicateHandler().buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按后缀模糊不匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotEndsWith(String fieldName, Object value, boolean match) {
+        return match ? this.andNotEndsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按后缀模糊不匹配查询的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotEndsWith(String fieldName, Object value) {
+        this.predicates.add(new OrNotEndsWithPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按后缀模糊不匹配查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotEndsWith(String fieldName, Object value, boolean match) {
+        return match ? this.orNotEndsWith(fieldName, value) : this;
     }
 
     /**

@@ -499,13 +499,13 @@ public class BookRepositoryPredicateTest {
                 builder.andStartsWith("name", startsName)
                         .build()));
         Assert.assertEquals(2, books.size());
-        books.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+        books.forEach(book -> Assert.assertTrue(book.getName().startsWith(NAME)));
 
         List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andStartsWith("name", startsName, StringHelper.isNotBlank(startsName))
                         .build()));
         Assert.assertEquals(2, books2.size());
-        books2.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+        books2.forEach(book -> Assert.assertTrue(book.getName().startsWith(NAME)));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andStartsWith("name", startsName, false)
@@ -540,6 +540,56 @@ public class BookRepositoryPredicateTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testNotStartsWith() {
+        String startsName = (String) paramMap.get("startsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotStartsWith("name", startsName)
+                        .build()));
+        Assert.assertEquals(8, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().startsWith(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotStartsWith("name", startsName, StringHelper.isNotBlank(startsName))
+                        .build()));
+        Assert.assertEquals(8, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().startsWith(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotStartsWith("name", startsName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testOrNotStartsWith() {
+        String startsName = (String) paramMap.get("startsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotStartsWith("name", startsName)
+                        .build()));
+        Assert.assertEquals(8, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotStartsWith("name", startsName, StringHelper.isNotBlank(startsName))
+                        .build()));
+        Assert.assertEquals(8, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotStartsWith("name", startsName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来按后缀模糊匹配查询图书信息.
      */
     @Test
@@ -549,13 +599,13 @@ public class BookRepositoryPredicateTest {
                 builder.andEndsWith("name", endsName)
                         .build()));
         Assert.assertEquals(3, books.size());
-        books.forEach(book -> Assert.assertTrue(book.getName().contains(ENDS_NAME)));
+        books.forEach(book -> Assert.assertTrue(book.getName().endsWith(ENDS_NAME)));
 
         List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEndsWith("name", endsName, StringHelper.isNotBlank(endsName))
                         .build()));
         Assert.assertEquals(3, books2.size());
-        books2.forEach(book -> Assert.assertTrue(book.getName().contains(ENDS_NAME)));
+        books2.forEach(book -> Assert.assertTrue(book.getName().endsWith(ENDS_NAME)));
 
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEndsWith("name", endsName, false)
@@ -584,6 +634,56 @@ public class BookRepositoryPredicateTest {
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEquals("id", paramMap.get("id"))
                         .orEndsWith("name", endsName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testNotEndsWith() {
+        String endsName = (String) paramMap.get("endsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEndsWith("name", endsName)
+                        .build()));
+        Assert.assertEquals(7, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().endsWith(ENDS_NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEndsWith("name", endsName, StringHelper.isNotBlank(endsName))
+                        .build()));
+        Assert.assertEquals(7, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().endsWith(ENDS_NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotEndsWith("name", endsName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊匹配查询图书信息.
+     */
+    @Test
+    public void testOrNotEndsWith() {
+        String endsName = (String) paramMap.get("endsName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotEndsWith("name", endsName)
+                        .build()));
+        Assert.assertEquals(7, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotEndsWith("name", endsName, StringHelper.isNotBlank(endsName))
+                        .build()));
+        Assert.assertEquals(7, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotEndsWith("name", endsName, false)
                         .build()));
         Assert.assertEquals(1, books3.size());
         Assert.assertEquals(ID_2, books3.get(0).getId());

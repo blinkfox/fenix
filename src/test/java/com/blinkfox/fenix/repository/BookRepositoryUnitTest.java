@@ -160,12 +160,28 @@ public class BookRepositoryUnitTest {
         List<Book> books = bookRepository.findAll(
                 FenixSpecification.ofBean(new BookParam().setStartsWithName("Java")));
         Assert.assertEquals(2, books.size());
-        books.forEach(book -> Assert.assertTrue(book.getName().contains("Java")));
+        books.forEach(book -> Assert.assertTrue(book.getName().startsWith("Java")));
 
         List<Book> books2 = bookRepository.findAll(
                 FenixSpecification.ofBean(new BookParam().setOrStartsWithName("Java")));
         Assert.assertEquals(2, books2.size());
-        books2.forEach(book -> Assert.assertTrue(book.getName().contains("Java")));
+        books2.forEach(book -> Assert.assertTrue(book.getName().startsWith("Java")));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按前缀模糊查询图书信息.
+     */
+    @Test
+    public void testNotStartsWith() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setNotStartsWithName("Java")));
+        Assert.assertEquals(8, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().startsWith("Java")));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrNotStartsWithName("Java")));
+        Assert.assertEquals(8, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().startsWith("Java")));
     }
 
     /**
@@ -176,12 +192,28 @@ public class BookRepositoryUnitTest {
         List<Book> books = bookRepository.findAll(
                 FenixSpecification.ofBean(new BookParam().setEndsWithName("(algorithm)")));
         Assert.assertEquals(3, books.size());
-        books.forEach(book -> Assert.assertTrue(book.getName().contains("(algorithm)")));
+        books.forEach(book -> Assert.assertTrue(book.getName().endsWith("(algorithm)")));
 
         List<Book> books2 = bookRepository.findAll(
                 FenixSpecification.ofBean(new BookParam().setOrEndsWithName("(algorithm)")));
         Assert.assertEquals(3, books2.size());
-        books2.forEach(book -> Assert.assertTrue(book.getName().contains("(algorithm)")));
+        books2.forEach(book -> Assert.assertTrue(book.getName().endsWith("(algorithm)")));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来按后缀模糊查询图书信息.
+     */
+    @Test
+    public void testNotEndsWith() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setNotEndsWithName("(algorithm)")));
+        Assert.assertEquals(7, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().endsWith("(algorithm)")));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrNotEndsWithName("(algorithm)")));
+        Assert.assertEquals(7, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().endsWith("(algorithm)")));
     }
 
     /**
