@@ -457,4 +457,49 @@ public abstract class AbstractPredicateHandler {
         return value.toString().replace("%", "\\%");
     }
 
+    /**
+     * 构造区间查询的 {@link Predicate} 实例的方法.
+     * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param from {@link From} 实例
+     * @param fieldName 属性字段名称
+     * @param value 值，只能是数组或者 {@link List} 集合类型.
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return {@link Predicate} 实例
+     */
+    protected <Z, X> Predicate buildBetweenPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+        if (value.getClass().isArray()) {
+            Object[] arr = (Object[]) value;
+            return this.buildBetweenPredicate(criteriaBuilder, from, fieldName, arr[0], arr[1]);
+        } else if (value instanceof List) {
+            List<?> list = (List<?>) value;
+            return this.buildBetweenPredicate(criteriaBuilder, from, fieldName, list.get(0), list.get(1));
+        } else {
+            throw new BuildSpecificationException("【Fenix 异常】构建【@Between】注解区间查询时，参数值类型不是数组或 "
+                    + "List 类型的集合，无法获取到前后的区间值。");
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private <Z, X> Predicate buildBetweenPredicate(
+            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object startValue, Object endValue) {
+        if (startValue != null && endValue != null) {
+            this.isValueComparable(startValue);
+            this.isValueComparable(endValue);
+            return criteriaBuilder.between(from.get(fieldName), (Comparable) startValue, (Comparable) endValue);
+        } else if (startValue != null) {
+            this.isValueComparable(startValue);
+            return criteriaBuilder.greaterThanOrEqualTo(from.get(fieldName), (Comparable) startValue);
+        } else if (endValue != null) {
+            this.isValueComparable(endValue);
+            return criteriaBuilder.lessThanOrEqualTo(from.get(fieldName), (Comparable) endValue);
+        } else {
+            throw new BuildSpecificationException("【Fenix 异常】构建【@Between】注解区间查询时，开始和结束的区间值均为【null】"
+                    + "，无法构造区间或大于等于、小于等于的 Predicate条件。");
+        }
+    }
+
 }
