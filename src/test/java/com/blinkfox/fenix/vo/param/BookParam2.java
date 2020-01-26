@@ -1,20 +1,26 @@
 package com.blinkfox.fenix.vo.param;
 
+import com.blinkfox.fenix.specification.annotation.Between;
 import com.blinkfox.fenix.specification.annotation.GreaterThanEqual;
 import com.blinkfox.fenix.specification.annotation.IsNotNull;
 import com.blinkfox.fenix.specification.annotation.LessThanEqual;
 import com.blinkfox.fenix.specification.annotation.Like;
+import com.blinkfox.fenix.specification.annotation.NotBetween;
 import com.blinkfox.fenix.specification.annotation.NotEquals;
 import com.blinkfox.fenix.specification.annotation.NotIn;
+import com.blinkfox.fenix.specification.annotation.OrBetween;
 import com.blinkfox.fenix.specification.annotation.OrGreaterThanEqual;
 import com.blinkfox.fenix.specification.annotation.OrIsNotNull;
 import com.blinkfox.fenix.specification.annotation.OrLessThanEqual;
+import com.blinkfox.fenix.specification.annotation.OrNotBetween;
 import com.blinkfox.fenix.specification.annotation.OrNotEquals;
 import com.blinkfox.fenix.specification.annotation.OrNotIn;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * 查询图书的相关参数实体类.
@@ -85,6 +91,30 @@ public class BookParam2 {
      */
     @OrGreaterThanEqual("totalPage")
     private Integer orTotalPage;
+
+    /**
+     * 用于总页数区间查询的数组.
+     */
+    @Between("totalPage")
+    private Integer[] totalPageArr;
+
+    /**
+     * 用于总页数区间查询的数组.
+     */
+    @OrBetween("totalPage")
+    private List<Integer> totalPages;
+
+    /**
+     * 用于总页数区间查询的数组.
+     */
+    @NotBetween("totalPage")
+    private Integer[] notTotalPageArr;
+
+    /**
+     * 用于总页数区间查询的数组.
+     */
+    @OrNotBetween("totalPage")
+    private List<Integer> notTotalPages;
 
     /**
      * 出版日期.

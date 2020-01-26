@@ -141,6 +141,78 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来大于等于查询图书信息.
+     */
+    @Test
+    public void testBetween() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{300, 600})));
+        Assert.assertEquals(4, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{300, null})));
+        Assert.assertEquals(8, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300));
+
+        List<Book> books3 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{null, 600})));
+        Assert.assertEquals(6, books3.size());
+        books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= 600));
+
+        List<Book> books4 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPages(Arrays.asList(300, 600))));
+        Assert.assertEquals(4, books4.size());
+        books4.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
+
+        List<Book> books5 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPages(Arrays.asList(300, null))));
+        Assert.assertEquals(8, books5.size());
+        books5.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300));
+
+        List<Book> books6 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setTotalPages(Arrays.asList(null, 600))));
+        Assert.assertEquals(6, books6.size());
+        books6.forEach(book -> Assert.assertTrue(book.getTotalPage() <= 600));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来大于等于查询图书信息.
+     */
+    @Test
+    public void testNotBetween() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{300, 600})));
+        Assert.assertEquals(6, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{300, null})));
+        Assert.assertEquals(2, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300));
+
+        List<Book> books3 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{null, 600})));
+        Assert.assertEquals(4, books3.size());
+        books3.forEach(book -> Assert.assertFalse(book.getTotalPage() <= 600));
+
+        List<Book> books4 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPages(Arrays.asList(300, 600))));
+        Assert.assertEquals(6, books4.size());
+        books4.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
+
+        List<Book> books5 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPages(Arrays.asList(300, null))));
+        Assert.assertEquals(2, books5.size());
+        books5.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300));
+
+        List<Book> books6 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPages(Arrays.asList(null, 600))));
+        Assert.assertEquals(4, books6.size());
+        books6.forEach(book -> Assert.assertFalse(book.getTotalPage() <= 600));
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
      */
     @Test
