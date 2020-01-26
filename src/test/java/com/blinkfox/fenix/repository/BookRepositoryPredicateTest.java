@@ -69,6 +69,7 @@ public class BookRepositoryPredicateTest {
         paramMap.put("name", NAME);
         paramMap.put("startsName", NAME);
         paramMap.put("endsName", ENDS_NAME);
+        paramMap.put("patternName", "_ava%");
         paramMap.put("idList", Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
         paramMap.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7"});
     }
@@ -583,6 +584,106 @@ public class BookRepositoryPredicateTest {
         List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEquals("id", paramMap.get("id"))
                         .orEndsWith("name", endsName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testLikePattern() {
+        String patternName = (String) paramMap.get("patternName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLikePattern("name", patternName)
+                        .build()));
+        Assert.assertEquals(2, books.size());
+        books.forEach(book -> Assert.assertTrue(book.getName().startsWith(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLikePattern("name", patternName, StringHelper.isNotBlank(patternName))
+                        .build()));
+        Assert.assertEquals(2, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getName().startsWith(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andLikePattern("name", patternName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testOrLikePattern() {
+        String patternName = (String) paramMap.get("patternName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orLikePattern("name", patternName)
+                        .build()));
+        Assert.assertEquals(3, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orLikePattern("name", patternName, StringHelper.isNotBlank(patternName))
+                        .build()));
+        Assert.assertEquals(3, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orLikePattern("name", patternName, false)
+                        .build()));
+        Assert.assertEquals(1, books3.size());
+        Assert.assertEquals(ID_2, books3.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testNotLikePattern() {
+        String patternName = (String) paramMap.get("patternName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLikePattern("name", patternName)
+                        .build()));
+        Assert.assertEquals(8, books.size());
+        books.forEach(book -> Assert.assertFalse(book.getName().startsWith(NAME)));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLikePattern("name", patternName, StringHelper.isNotBlank(patternName))
+                        .build()));
+        Assert.assertEquals(8, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getName().startsWith(NAME)));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotLikePattern("name", patternName, false)
+                        .build()));
+        Assert.assertEquals(10, books3.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
+     */
+    @Test
+    public void testOrNotLikePattern() {
+        String patternName = (String) paramMap.get("patternName");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotLikePattern("name", patternName)
+                        .build()));
+        Assert.assertEquals(8, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotLikePattern("name", patternName, StringHelper.isNotBlank(patternName))
+                        .build()));
+        Assert.assertEquals(8, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", paramMap.get("id"))
+                        .orNotLikePattern("name", patternName, false)
                         .build()));
         Assert.assertEquals(1, books3.size());
         Assert.assertEquals(ID_2, books3.get(0).getId());

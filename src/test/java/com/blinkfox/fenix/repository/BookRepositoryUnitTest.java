@@ -199,6 +199,20 @@ public class BookRepositoryUnitTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来按指定模式不匹配查询图书信息.
+     */
+    @Test
+    public void testNotLikePattern() {
+        List<Book> books = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setNotPatternName("_ava%")));
+        Assert.assertEquals(8, books.size());
+
+        List<Book> books2 = bookRepository.findAll(
+                FenixSpecification.ofBean(new BookParam().setOrNotPatternName("_ava%")));
+        Assert.assertEquals(8, books2.size());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来模糊查询图书信息.
      */
     @Test

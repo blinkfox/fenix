@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
 /**
  * 用于“按给定的模式来模糊匹配”({@code LIKE})场景的注解.
  *
- * @author YangWenpeng 2019-12-17
- * @author blinkfox on 2020-01-13
+ * @author blinkfox on 2020-01-26
  * @since v2.2.0
  */
 @Documented

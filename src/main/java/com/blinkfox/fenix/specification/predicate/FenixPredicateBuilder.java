@@ -1,33 +1,6 @@
 package com.blinkfox.fenix.specification.predicate;
 
-import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.IsNotNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.IsNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrEndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrIsNotNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrIsNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -580,6 +553,106 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orEndsWith(String fieldName, Object value, boolean match) {
         return match ? this.orEndsWith(fieldName, value) : this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按指定模式模糊匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andLikePattern(String fieldName, String pattern) {
+        this.predicates.add(new LikePatternPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, pattern));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按指定模式模糊匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andLikePattern(String fieldName, String pattern, boolean match) {
+        return match ? this.andLikePattern(fieldName, pattern) : this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按指定模式模糊匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orLikePattern(String fieldName, String pattern) {
+        this.predicates.add(new OrLikePatternPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, pattern));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按指定模式模糊匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orLikePattern(String fieldName, String pattern, boolean match) {
+        return match ? this.orLikePattern(fieldName, pattern) : this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按指定模式模糊不匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotLikePattern(String fieldName, String pattern) {
+        this.predicates.add(new NotLikePatternPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, pattern));
+        return this;
+    }
+
+    /**
+     * 生成 {@code LIKE} 按指定模式模糊不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotLikePattern(String fieldName, String pattern, boolean match) {
+        return match ? this.andNotLikePattern(fieldName, pattern) : this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按指定模式模糊不匹配的 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotLikePattern(String fieldName, String pattern) {
+        this.predicates.add(new OrNotLikePatternPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, pattern));
+        return this;
+    }
+
+    /**
+     * 生成或语句 {@code LIKE} 按指定模式模糊不匹配的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param pattern 匹配的模式字符串
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotLikePattern(String fieldName, String pattern, boolean match) {
+        return match ? this.orNotLikePattern(fieldName, pattern) : this;
     }
 
     /**

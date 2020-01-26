@@ -9,6 +9,7 @@ import com.blinkfox.fenix.specification.annotation.LessThan;
 import com.blinkfox.fenix.specification.annotation.Like;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
 import com.blinkfox.fenix.specification.annotation.LikePattern;
+import com.blinkfox.fenix.specification.annotation.NotLikePattern;
 import com.blinkfox.fenix.specification.annotation.OrEndsWith;
 import com.blinkfox.fenix.specification.annotation.OrEquals;
 import com.blinkfox.fenix.specification.annotation.OrGreaterThan;
@@ -17,6 +18,7 @@ import com.blinkfox.fenix.specification.annotation.OrIsNull;
 import com.blinkfox.fenix.specification.annotation.OrLessThan;
 import com.blinkfox.fenix.specification.annotation.OrLike;
 import com.blinkfox.fenix.specification.annotation.OrLikePattern;
+import com.blinkfox.fenix.specification.annotation.OrNotLikePattern;
 import com.blinkfox.fenix.specification.annotation.OrStartsWith;
 import com.blinkfox.fenix.specification.annotation.StartsWith;
 
@@ -111,14 +113,26 @@ public class BookParam {
     /**
      * 按前缀匹配图书标题的字段.
      */
-    @LikePattern(value = "name")
+    @LikePattern("name")
     private String patternName;
 
     /**
      * 按前缀匹配图书标题的字段.
      */
-    @OrLikePattern(value = "name")
+    @OrLikePattern("name")
     private String orPatternName;
+
+    /**
+     * 按前缀匹配图书标题的字段.
+     */
+    @NotLikePattern("name")
+    private String notPatternName;
+
+    /**
+     * 按前缀匹配图书标题的字段.
+     */
+    @OrNotLikePattern("name")
+    private String orNotPatternName;
 
     /**
      * 图书作者.
