@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- * 定义一个开启（激活） Fenix 的注解.
+ * 用于开启（激活）Fenix 的注解.
  *
  * @author YangWenpeng on 2019-12-17
  * @author blinkfox on 2020-01-13
