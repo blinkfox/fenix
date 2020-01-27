@@ -16,11 +16,11 @@ import com.blinkfox.fenix.specification.annotation.OrNotBetween;
 import com.blinkfox.fenix.specification.annotation.OrNotEquals;
 import com.blinkfox.fenix.specification.annotation.OrNotIn;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 /**
  * 查询图书的相关参数实体类.

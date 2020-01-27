@@ -362,7 +362,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成区间查询的 {@link Predicate} 条件.
+     * 生成区间匹配时的 {@link Predicate} 条件.
      * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
      *
      * @param fieldName 实体属性或数据库字段
@@ -377,7 +377,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成区间查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 生成区间匹配时的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
      * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
      *
      * @param fieldName 实体属性或数据库字段
@@ -391,7 +391,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成或语句区间查询的 {@link Predicate} 条件.
+     * 生成或语句区间匹配时的 {@link Predicate} 条件.
      * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
      *
      * @param fieldName 实体属性或数据库字段
@@ -406,7 +406,7 @@ public class FenixPredicateBuilder {
     }
 
     /**
-     * 生成或语句区间查询的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 生成或语句区间匹配时的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
      * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
      *
      * @param fieldName 实体属性或数据库字段
@@ -417,6 +417,64 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orBetween(String fieldName, Object startValue, Object endValue, boolean match) {
         return match ? this.orBetween(fieldName, startValue, endValue) : this;
+    }
+
+    /**
+     * 生成区间不匹配时的 {@link Predicate} 条件.
+     * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param startValue 区间开始值
+     * @param endValue 区间结束值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotBetween(String fieldName, Object startValue, Object endValue) {
+        this.predicates.add(new NotBetweenPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+        return this;
+    }
+
+    /**
+     * 生成区间不匹配时的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param startValue 区间开始值
+     * @param endValue 区间结束值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder andNotBetween(String fieldName, Object startValue, Object endValue, boolean match) {
+        return match ? this.andNotBetween(fieldName, startValue, endValue) : this;
+    }
+
+    /**
+     * 生成或语句区间不匹配时的 {@link Predicate} 条件.
+     * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param startValue 区间开始值
+     * @param endValue 区间结束值
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotBetween(String fieldName, Object startValue, Object endValue) {
+        this.predicates.add(new OrNotBetweenPredicateHandler()
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+        return this;
+    }
+
+    /**
+     * 生成或语句区间不匹配时的 {@link Predicate} 条件，如果 {@code match} 值为 {@code true} 时则生成该条件，否则不生成.
+     * 若结束值为空，则退化生成为大于等于的条件，若开始值为空.则退化生成为小于等于的条件，若开始值或结束值都为空，则直接抛出异常.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param startValue 区间开始值
+     * @param endValue 区间结束值
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder orNotBetween(String fieldName, Object startValue, Object endValue, boolean match) {
+        return match ? this.orNotBetween(fieldName, startValue, endValue) : this;
     }
 
     /**

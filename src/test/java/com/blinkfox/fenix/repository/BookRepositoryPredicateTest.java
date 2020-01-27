@@ -429,6 +429,38 @@ public class BookRepositoryPredicateTest {
     }
 
     /**
+     * 测试使用 {@code Specification} 的方式来区间不匹配时的图书信息.
+     */
+    @Test
+    public void testNotBetween() {
+        Integer minTotalPage = (Integer) paramMap.get("minTotalPage");
+        Integer maxTotalPage = (Integer) paramMap.get("maxTotalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotBetween("totalPage", minTotalPage, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(6, books.size());
+        books.forEach(book ->
+                Assert.assertFalse(book.getTotalPage() >= MIN_PAGE && book.getTotalPage() <= MAX_PAGE));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotBetween("totalPage", minTotalPage, null, minTotalPage != null)
+                        .build()));
+        Assert.assertEquals(2, books2.size());
+        books2.forEach(book -> Assert.assertFalse(book.getTotalPage() >= MIN_PAGE));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotBetween("totalPage", null, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(4, books3.size());
+        books3.forEach(book -> Assert.assertFalse(book.getTotalPage() <= MAX_PAGE));
+
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andNotBetween("totalPage", minTotalPage, maxTotalPage, false)
+                        .build()));
+        Assert.assertEquals(10, books4.size());
+    }
+
+    /**
      * 测试使用 {@code Specification} 的方式来区间查询图书信息.
      */
     @Test
@@ -457,6 +489,39 @@ public class BookRepositoryPredicateTest {
         List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEquals("id", ID_9)
                         .orBetween("totalPage", minTotalPage, maxTotalPage, false)
+                        .build()));
+        Assert.assertEquals(1, books4.size());
+        Assert.assertEquals(ID_9, books4.get(0).getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来区间查询图书信息.
+     */
+    @Test
+    public void testOrNotBetween() {
+        Integer minTotalPage = (Integer) paramMap.get("minTotalPage");
+        Integer maxTotalPage = (Integer) paramMap.get("maxTotalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orNotBetween("totalPage", minTotalPage, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(6, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orNotBetween("totalPage", minTotalPage, null, minTotalPage != null)
+                        .build()));
+        Assert.assertEquals(2, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orNotBetween("totalPage", null, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(5, books3.size());
+
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orNotBetween("totalPage", minTotalPage, maxTotalPage, false)
                         .build()));
         Assert.assertEquals(1, books4.size());
         Assert.assertEquals(ID_9, books4.get(0).getId());
