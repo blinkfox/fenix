@@ -38,7 +38,13 @@ public class BookRepositoryPredicateTest {
 
     private static final String ID_2 = "2";
 
+    private static final String ID_9 = "9";
+
     private static final int PAGE = 540;
+
+    private static final int MIN_PAGE = 300;
+
+    private static final int MAX_PAGE = 600;
 
     private static final String NAME = "Java";
 
@@ -66,6 +72,8 @@ public class BookRepositoryPredicateTest {
         paramMap.put("isbn", ISBN);
         paramMap.put("id", ID_2);
         paramMap.put("totalPage", PAGE);
+        paramMap.put("minTotalPage", MIN_PAGE);
+        paramMap.put("maxTotalPage", MAX_PAGE);
         paramMap.put("name", NAME);
         paramMap.put("startsName", NAME);
         paramMap.put("endsName", ENDS_NAME);
@@ -386,6 +394,72 @@ public class BookRepositoryPredicateTest {
                         .build()));
         Assert.assertEquals(6, books3.size());
         books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= PAGE));
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来区间查询图书信息.
+     */
+    @Test
+    public void testBetween() {
+        Integer minTotalPage = (Integer) paramMap.get("minTotalPage");
+        Integer maxTotalPage = (Integer) paramMap.get("maxTotalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andBetween("totalPage", minTotalPage, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(4, books.size());
+        books.forEach(book ->
+                Assert.assertTrue(book.getTotalPage() >= MIN_PAGE && book.getTotalPage() <= MAX_PAGE));
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andBetween("totalPage", minTotalPage, null, minTotalPage != null)
+                        .build()));
+        Assert.assertEquals(8, books2.size());
+        books2.forEach(book -> Assert.assertTrue(book.getTotalPage() >= MIN_PAGE));
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andBetween("totalPage", null, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(6, books3.size());
+        books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= MAX_PAGE));
+
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andBetween("totalPage", minTotalPage, maxTotalPage, false)
+                        .build()));
+        Assert.assertEquals(10, books4.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来区间查询图书信息.
+     */
+    @Test
+    public void testOrBetween() {
+        Integer minTotalPage = (Integer) paramMap.get("minTotalPage");
+        Integer maxTotalPage = (Integer) paramMap.get("maxTotalPage");
+        List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orBetween("totalPage", minTotalPage, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(5, books.size());
+
+        List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orBetween("totalPage", minTotalPage, null, minTotalPage != null)
+                        .build()));
+        Assert.assertEquals(9, books2.size());
+
+        List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orBetween("totalPage", null, maxTotalPage)
+                        .build()));
+        Assert.assertEquals(6, books3.size());
+        books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= MAX_PAGE));
+
+        List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
+                builder.andEquals("id", ID_9)
+                        .orBetween("totalPage", minTotalPage, maxTotalPage, false)
+                        .build()));
+        Assert.assertEquals(1, books4.size());
+        Assert.assertEquals(ID_9, books4.get(0).getId());
     }
 
     /**
