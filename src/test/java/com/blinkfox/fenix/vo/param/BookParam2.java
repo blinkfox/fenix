@@ -15,10 +15,10 @@ import com.blinkfox.fenix.specification.annotation.OrLessThanEqual;
 import com.blinkfox.fenix.specification.annotation.OrNotBetween;
 import com.blinkfox.fenix.specification.annotation.OrNotEquals;
 import com.blinkfox.fenix.specification.annotation.OrNotIn;
+import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 
 import java.util.List;
 
-import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
