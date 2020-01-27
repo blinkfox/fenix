@@ -2,6 +2,7 @@ package com.blinkfox.fenix.specification.handler;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
 import java.beans.PropertyDescriptor;
@@ -477,6 +478,9 @@ public abstract class AbstractPredicateHandler {
         } else if (value instanceof List) {
             List<?> list = (List<?>) value;
             return this.buildBetweenPredicate(criteriaBuilder, from, fieldName, list.get(0), list.get(1));
+        } else if (value instanceof BetweenValue) {
+            BetweenValue bv = (BetweenValue) value;
+            return this.buildBetweenPredicate(criteriaBuilder, from, fieldName, bv.getStart(), bv.getEnd());
         } else {
             throw new BuildSpecificationException("【Fenix 异常】构建【@Between】注解区间查询时，参数值类型不是数组或 "
                     + "List 类型的集合，无法获取到前后的区间值。");

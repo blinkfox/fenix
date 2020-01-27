@@ -18,6 +18,7 @@ import com.blinkfox.fenix.specification.annotation.OrNotIn;
 
 import java.util.List;
 
+import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -115,6 +116,12 @@ public class BookParam2 {
      */
     @OrNotBetween("totalPage")
     private List<Integer> notTotalPages;
+
+    /**
+     * 用于总页数区间查询的数组.
+     */
+    @Between("totalPage")
+    private BetweenValue<Integer> totalPageValue;
 
     /**
      * 出版日期.
