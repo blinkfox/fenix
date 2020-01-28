@@ -2,8 +2,12 @@ package com.blinkfox.fenix.specification;
 
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -17,14 +21,56 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecutor<T> {
 
     /**
-     * Returns a single entity matching the given {@link Specification} or {@link Optional#empty()} if none found.
+     * 基于 {@link FenixPredicate} 返回与之匹配的单个对象的 {@link Optional} 实例.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@code Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
      * @return never {@literal null}.
-     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one entity found.
+     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
      */
     default Optional<T> findOne(FenixPredicate fenixPredicate) {
         return this.findOne(FenixSpecification.of(fenixPredicate));
+    }
+
+    /**
+     * 基于 {@link FenixPredicate} 返回与之匹配的所有多个对象实例.
+     *
+     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @return never {@literal null}.
+     */
+    default List<T> findAll(FenixPredicate fenixPredicate) {
+        return this.findAll(FenixSpecification.of(fenixPredicate));
+    }
+
+    /**
+     * 基于 {@link FenixPredicate} 和 {@link Pageable} 分页信息返回与之匹配的分页对象实例.
+     *
+     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param pageable 分页信息，不能为 {@literal null}.
+     * @return 分页结果，不可能是 {@literal null}.
+     */
+    default Page<T> findAll(FenixPredicate fenixPredicate, Pageable pageable) {
+        return this.findAll(FenixSpecification.of(fenixPredicate), pageable);
+    }
+
+    /**
+     * 基于 {@link FenixPredicate} 和 {@link Sort} 排序信息返回所有与之匹配的对象实例.
+     *
+     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param sort 排序信息，不能为 {@literal null}.
+     * @return 排序结果，不可能是 {@literal null}.
+     */
+    default List<T> findAll(FenixPredicate fenixPredicate, Sort sort) {
+        return this.findAll(FenixSpecification.of(fenixPredicate), sort);
+    }
+
+    /**
+     * 基于 {@link FenixPredicate} 返回与之匹配的所有对象实例的总数量.
+     *
+     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @return 实例数量.
+     */
+    default long count(FenixPredicate fenixPredicate) {
+        return this.count(FenixSpecification.of(fenixPredicate));
     }
 
 }
