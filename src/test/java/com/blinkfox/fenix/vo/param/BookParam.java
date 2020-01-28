@@ -36,6 +36,7 @@ import lombok.experimental.Accessors;
  * 查询图书的相关参数实体类.
  *
  * @author blinkfox on 2020-01-14.
+ * @since v2.2.0
  */
 @Getter
 @Setter

@@ -3,6 +3,8 @@ package com.blinkfox.fenix.repository;
 import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
+import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
+import com.blinkfox.fenix.vo.param.BookSearch;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,6 +98,20 @@ public class FenixBookRepositoryTest {
      * 测试使用 {@code Specification} 的方式来查询图书信息.
      */
     @Test
+    public void testFindOneOfBean() {
+        // 模拟构造的图书查询的参数实体对象.
+        BookSearch bookSearch = new BookSearch().setId(ID_2);
+
+        // 查询并断言.
+        Optional<Book> bookOptional = bookRepository.findOneOfBean(bookSearch);
+        Assert.assertTrue(bookOptional.isPresent());
+        Assert.assertEquals(ID_2, bookOptional.get().getId());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
     public void testFindAll() {
         List<Book> books = bookRepository.findAll(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
@@ -108,11 +124,44 @@ public class FenixBookRepositoryTest {
      * 测试使用 {@code Specification} 的方式来查询图书信息.
      */
     @Test
+    public void testFindAllOfBean() {
+        // 模拟构造的图书查询的参数实体对象.
+        BookSearch bookSearch = new BookSearch()
+                .setIsbn(ISBN)
+                .setTotalPageValue(BetweenValue.of(MIN_PAGE, MAX_PAGE));
+
+        List<Book> books = bookRepository.findAllOfBean(bookSearch);
+        Assert.assertEquals(4, books.size());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
     public void testFindAllWithPage() {
         Page<Book> bookPage = bookRepository.findAll(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
                         .orBetween("totalPage", paramMap.get("minTotalPage"), paramMap.get("maxTotalPage"))
                         .build(), PageRequest.of(1, 2, Sort.by(Sort.Order.desc("totalPage"))));
+
+        Assert.assertEquals(4, bookPage.getTotalElements());
+        List<Book> books = bookPage.getContent();
+        Assert.assertEquals(2, books.size());
+        Assert.assertTrue(books.get(0).getTotalPage() > books.get(1).getTotalPage());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
+    public void testFindAllOfBeanWithPage() {
+        // 模拟构造的图书查询的参数实体对象.
+        BookSearch bookSearch = new BookSearch()
+                .setIsbn(ISBN)
+                .setTotalPageValue(BetweenValue.of(MIN_PAGE, MAX_PAGE));
+
+        Page<Book> bookPage = bookRepository.findAllOfBean(bookSearch,
+                PageRequest.of(1, 2, Sort.by(Sort.Order.desc("totalPage"))));
 
         Assert.assertEquals(4, bookPage.getTotalElements());
         List<Book> books = bookPage.getContent();
@@ -138,11 +187,40 @@ public class FenixBookRepositoryTest {
      * 测试使用 {@code Specification} 的方式来查询图书信息.
      */
     @Test
+    public void testFindAllOfBeanWithSort() {
+        // 模拟构造的图书查询的参数实体对象.
+        BookSearch bookSearch = new BookSearch()
+                .setIsbn(ISBN)
+                .setTotalPageValue(BetweenValue.of(MIN_PAGE, MAX_PAGE));
+
+        List<Book> books = bookRepository.findAllOfBean(bookSearch, Sort.by(Sort.Order.desc("totalPage")));
+        Assert.assertEquals(4, books.size());
+        Assert.assertTrue(books.get(0).getTotalPage() > books.get(1).getTotalPage());
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
     public void testCount() {
         long count = bookRepository.count(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
                         .orBetween("totalPage", paramMap.get("minTotalPage"), paramMap.get("maxTotalPage"))
                         .build());
+        Assert.assertEquals(4, count);
+    }
+
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
+    public void testCountOfBean() {
+        // 模拟构造的图书查询的参数实体对象.
+        BookSearch bookSearch = new BookSearch()
+                .setIsbn(ISBN)
+                .setTotalPageValue(BetweenValue.of(MIN_PAGE, MAX_PAGE));
+
+        long count = bookRepository.countOfBean(bookSearch);
         Assert.assertEquals(4, count);
     }
 

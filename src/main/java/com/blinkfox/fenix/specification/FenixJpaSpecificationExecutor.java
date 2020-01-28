@@ -24,7 +24,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
      * 基于 {@link FenixPredicate} 返回与之匹配的单个对象的 {@link Optional} 实例.
      *
      * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
-     * @return never {@literal null}.
+     * @return 不可能是 {@literal null}.
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
      */
     default Optional<T> findOne(FenixPredicate fenixPredicate) {
@@ -32,10 +32,21 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     }
 
     /**
-     * 基于 {@link FenixPredicate} 返回与之匹配的所有多个对象实例.
+     * 基于有注解的实体 Bean 返回与之匹配的单个对象的 {@link Optional} 实例.
+     *
+     * @param beanParam 有 Fenix 注解的实体 Bean
+     * @return 不可能是 {@literal null}.
+     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
+     */
+    default Optional<T> findOneOfBean(Object beanParam) {
+        return this.findOne(FenixSpecification.ofBean(beanParam));
+    }
+
+    /**
+     * 基于 {@link FenixPredicate} 返回与之匹配的所有对象实例的集合.
      *
      * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
-     * @return never {@literal null}.
+     * @return 不可能是 {@literal null}.
      */
     default List<T> findAll(FenixPredicate fenixPredicate) {
         return this.findAll(FenixSpecification.of(fenixPredicate));
@@ -64,6 +75,38 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     }
 
     /**
+     * 基于有注解的实体 Bean 返回与之匹配的所有对象实例的集合.
+     *
+     * @param beanParam 有 Fenix 注解的实体 Bean
+     * @return 不可能是 {@literal null}.
+     */
+    default List<T> findAllOfBean(Object beanParam) {
+        return this.findAll(FenixSpecification.ofBean(beanParam));
+    }
+
+    /**
+     * 基于有注解的实体 Bean 和 {@link Pageable} 分页信息返回与之匹配的分页对象实例.
+     *
+     * @param beanParam 有 Fenix 注解的实体 Bean
+     * @param pageable 分页信息，不能为 {@literal null}.
+     * @return 分页结果，不可能是 {@literal null}.
+     */
+    default Page<T> findAllOfBean(Object beanParam, Pageable pageable) {
+        return this.findAll(FenixSpecification.ofBean(beanParam), pageable);
+    }
+
+    /**
+     * 基于有注解的实体 Bean 和 {@link Sort} 排序信息返回所有与之匹配的对象实例.
+     *
+     * @param beanParam 有 Fenix 注解的实体 Bean
+     * @param sort 排序信息，不能为 {@literal null}.
+     * @return 排序结果，不可能是 {@literal null}.
+     */
+    default List<T> findAllOfBean(Object beanParam, Sort sort) {
+        return this.findAll(FenixSpecification.ofBean(beanParam), sort);
+    }
+
+    /**
      * 基于 {@link FenixPredicate} 返回与之匹配的所有对象实例的总数量.
      *
      * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
@@ -71,6 +114,16 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
      */
     default long count(FenixPredicate fenixPredicate) {
         return this.count(FenixSpecification.of(fenixPredicate));
+    }
+
+    /**
+     * 基于有注解的实体 Bean 返回与之匹配的所有对象实例的总数量.
+     *
+     * @param beanParam 有 Fenix 注解的实体 Bean
+     * @return 实例数量.
+     */
+    default long countOfBean(Object beanParam) {
+        return this.count(FenixSpecification.ofBean(beanParam));
     }
 
 }

@@ -81,7 +81,10 @@ public class FenixConfig {
     @Getter
     private static final Map<Class<?>, AbstractPredicateHandler> specificationHandlerMap = new HashMap<>(64);
 
-    static {
+    /**
+     * 构造方法.
+     */
+    public FenixConfig() {
         initDefaultTagHandler();
         initDefaultspecificationHandler();
     }
