@@ -34,8 +34,8 @@ public class NotInPredicateHandler extends AbstractPredicateHandler {
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         CriteriaBuilder.In<Object> in = criteriaBuilder.in(from.get(fieldName));
         value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
 

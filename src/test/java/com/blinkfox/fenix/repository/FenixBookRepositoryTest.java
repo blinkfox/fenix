@@ -224,4 +224,18 @@ public class FenixBookRepositoryTest {
         Assert.assertEquals(4, count);
     }
 
+    /**
+     * 测试使用 {@code Specification} 的方式来查询图书信息.
+     */
+    @Test
+    public void testFindAllWithDoAny() {
+        List<Book> books = bookRepository.findAll(builder ->
+                builder.andEquals("isbn", paramMap.get("isbn"))
+                        .orBetween("totalPage", paramMap.get("minTotalPage"), paramMap.get("maxTotalPage"))
+                        .doAny("name", null,
+                                (cb, from, fieldName, value) -> cb.or(cb.like(from.get(fieldName), "_ava%")), true)
+                        .build());
+        Assert.assertEquals(6, books.size());
+    }
+
 }

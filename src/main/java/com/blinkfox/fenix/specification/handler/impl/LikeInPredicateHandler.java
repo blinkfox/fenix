@@ -33,8 +33,8 @@ public class LikeInPredicateHandler extends AbstractPredicateHandler {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         Predicate p = null;
         List<Object> list = (List<Object>) value;
         if (CollectionHelper.isNotEmpty(list)) {

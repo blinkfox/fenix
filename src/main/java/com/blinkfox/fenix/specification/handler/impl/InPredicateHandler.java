@@ -33,8 +33,8 @@ public class InPredicateHandler extends AbstractPredicateHandler {
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         return criteriaBuilder.and(super.buildInPredicate(criteriaBuilder, from, fieldName, value, false));
     }
 

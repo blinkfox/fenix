@@ -32,7 +32,7 @@ import org.springframework.beans.BeanUtils;
  * @since v2.2.0
  */
 @Slf4j
-public abstract class AbstractPredicateHandler {
+public abstract class AbstractPredicateHandler implements PredicateHandler {
 
     /**
      * 获取对应注解类的 {@code Class} 类型的值.
@@ -63,12 +63,11 @@ public abstract class AbstractPredicateHandler {
      * @param from {@link From} 实例
      * @param fieldName 属性字段名称
      * @param value 属性条件对应的值
-     * @param <Z> 范型 Z
-     * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    @Override
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         return this.buildPredicate(criteriaBuilder, from, fieldName, value, null);
     }
 

@@ -30,8 +30,8 @@ public class OrNotInPredicateHandler extends AbstractPredicateHandler {
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         return criteriaBuilder.or(criteriaBuilder.not(
                 super.buildInPredicate(criteriaBuilder, from, fieldName, value, false)));
     }

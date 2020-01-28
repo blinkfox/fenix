@@ -1,5 +1,7 @@
 package com.blinkfox.fenix.specification.predicate;
 
+import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
+import com.blinkfox.fenix.specification.handler.PredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.*;
 
 import java.util.ArrayList;
@@ -1151,6 +1153,59 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orIsNotNull(String fieldName, boolean match) {
         return match ? this.orIsNotNull(fieldName) : this;
+    }
+
+    /**
+     * 根据字段、值和 {@link AbstractPredicateHandler} 的子类实例来自定义构造 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 字段条件对应的值
+     * @param handler {@link AbstractPredicateHandler} 的子类实例
+     * @return 当前的 {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder doAny(String fieldName, Object value, AbstractPredicateHandler handler) {
+        this.predicates.add(handler.buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 根据字段、值和 {@link AbstractPredicateHandler} 的子类实例来自定义构造 {@link Predicate} 条件.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 字段条件对应的值
+     * @param handler {@link AbstractPredicateHandler} 的子类实例
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return 当前的 {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder doAny(
+            String fieldName, Object value, AbstractPredicateHandler handler, boolean match) {
+        return match ? this.doAny(fieldName, value, handler) : this;
+    }
+
+    /**
+     * 根据字段、值和 {@link PredicateHandler} 的实现类实例来自定义构造 {@link Predicate} 条件，可使用 {@code Lambda} 表达式.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 字段条件对应的值
+     * @param handler {@link PredicateHandler} 的实现类实例，可使用 {@code Lambda} 表达式
+     * @return 当前的 {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder doAny(String fieldName, Object value, PredicateHandler handler) {
+        this.predicates.add(handler.buildPredicate(criteriaBuilder, from, fieldName, value));
+        return this;
+    }
+
+    /**
+     * 根据字段、值和 {@link PredicateHandler} 的实现类实例来自定义构造 {@link Predicate} 条件，可使用 {@code Lambda} 表达式.
+     *
+     * @param fieldName 实体属性或数据库字段
+     * @param value 字段条件对应的值
+     * @param handler {@link PredicateHandler} 的实现类实例，可使用 {@code Lambda} 表达式
+     * @param match 是否匹配生成此 {@link Predicate} 条件
+     * @return 当前的 {@link FenixPredicateBuilder} 实例
+     */
+    public FenixPredicateBuilder doAny(String fieldName, Object value, PredicateHandler handler, boolean match) {
+        return match ? this.doAny(fieldName, value, handler) : this;
     }
 
 }

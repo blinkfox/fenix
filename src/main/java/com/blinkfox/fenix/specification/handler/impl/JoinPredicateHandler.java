@@ -40,8 +40,8 @@ public class JoinPredicateHandler extends AbstractPredicateHandler {
     }
 
     @Override
-    public <Z, X> Predicate buildPredicate(
-            CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
+    public Predicate buildPredicate(
+            CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         throw new BuildSpecificationException("本方法暂不支持.");
     }
 
