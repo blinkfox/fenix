@@ -1,13 +1,10 @@
 package com.blinkfox.fenix.specification.handler;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
-import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 
-import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +19,6 @@ import javax.persistence.criteria.Predicate.BooleanOperator;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.springframework.beans.BeanUtils;
 
 /**
  * 用来动态构造 JPA 中 {@link Predicate} 的抽象类.
@@ -69,52 +65,6 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
     public Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
         return this.buildPredicate(criteriaBuilder, from, fieldName, value, null);
-    }
-
-    /**
-     * 执行构建 {@link Predicate} 的方法.
-     *
-     * @param param 对象参数
-     * @param field 对应的字段
-     * @param criteriaBuilder {@link CriteriaBuilder} 实例
-     * @param root {@link From} 实例
-     * @param <Z> 范型 Z
-     * @param <X> 范型 X
-     * @return 一个 {@link Predicate} 实例
-     */
-    public <Z, X> Predicate execute(Object param, Field field, CriteriaBuilder criteriaBuilder, From<Z, X> root) {
-        Annotation annotation = field.getAnnotation(this.getAnnotation());
-        if (annotation == null) {
-            return null;
-        }
-
-        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(param.getClass(), field.getName());
-        if (descriptor == null) {
-            return null;
-        }
-
-        String name;
-        Object value;
-        try {
-            name = (String) this.getAnnotation().getMethod("value").invoke(annotation);
-            name = StringHelper.isBlank(name) ? field.getName() : name;
-            value = descriptor.getReadMethod().invoke(param);
-        } catch (ReflectiveOperationException e) {
-            throw new BuildSpecificationException("【Fenix 异常】构建【" + this.getAnnotation().getName()
-                    + "】注解的条件时，反射调用对应的属性值异常", e);
-        }
-
-        if (value == null) {
-            return null;
-        }
-
-        if (field.getType() == String.class) {
-            return StringHelper.isNotBlank(value.toString())
-                    ? this.buildPredicate(criteriaBuilder, root, name, value, annotation)
-                    : null;
-        } else {
-            return this.buildPredicate(criteriaBuilder, root, name, value, annotation);
-        }
     }
 
     /**

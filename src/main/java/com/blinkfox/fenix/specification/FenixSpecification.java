@@ -1,15 +1,20 @@
 package com.blinkfox.fenix.specification;
 
 import com.blinkfox.fenix.config.FenixConfig;
+import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.FieldHelper;
+import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicateBuilder;
 
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +27,8 @@ import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -29,6 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
  *
  * @author blinkfox on 2020-01-15.
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixSpecification {
 
@@ -38,7 +46,7 @@ public final class FenixSpecification {
     /**
      * 根据查询的实体 Bean 参数中的 Fenix 相关的注解来构造 {@link Specification} 实例.
      *
-     * @param beanParam 待查询的实体 Bean
+     * @param beanParam 含有 Fenix 相关注解的 Java Bean 对象参数
      * @param <T> 范型 T
      * @return {@link Specification} 实例
      */
@@ -121,7 +129,7 @@ public final class FenixSpecification {
             for (Annotation annotation : annotations) {
                 AbstractPredicateHandler handler = specificationHandlerMap.get(annotation.annotationType());
                 if (handler != null) {
-                    Predicate predicate = handler.execute(beanParam, field, criteriaBuilder, from);
+                    Predicate predicate = buildPredicate(beanParam, field, criteriaBuilder, from, handler);
                     if (predicate != null && isValid(predicate)) {
                         predicates.add(predicate);
                     }
@@ -129,6 +137,75 @@ public final class FenixSpecification {
             }
         }
         return predicates;
+    }
+
+    /**
+     * 执行构建 {@link Predicate} 条件的方法.
+     *
+     * @param beanParam 含有 Fenix 相关注解的 Java Bean 对象参数
+     * @param field 对应的字段
+     * @param criteriaBuilder {@link CriteriaBuilder} 实例
+     * @param root {@link From} 实例
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
+     * @return 一个 {@link Predicate} 实例
+     */
+    public static  <Z, X> Predicate buildPredicate(Object beanParam, Field field, CriteriaBuilder criteriaBuilder,
+            From<Z, X> root, AbstractPredicateHandler handler) {
+        Class<? extends Annotation> annotationClass = handler.getAnnotation();
+        Annotation annotation = field.getAnnotation(annotationClass);
+        if (annotation == null) {
+            return null;
+        }
+
+        // 获取到 Java Bean 中的属性名称，并得到与其属性名的相同的方法，
+        // 如果存在此方法就认为是用户定义了的用于判断属性条件是否匹配的方法，
+        //     然后调用此方法，获取到布尔结果的值，为true, 则生成此属性的 Predicate 条件，否则不生成.
+        // 如果不存在此方法，就使用属性值是否为空为判断依据，如果属性值不为空，就生成此属性的 Predicate 条件，否则不生成.
+        String propertyName = field.getName();
+        try {
+            Method propertyMethod = beanParam.getClass().getMethod(propertyName);
+            propertyMethod.setAccessible(true);
+            boolean match = (boolean) propertyMethod.invoke(beanParam);
+        } catch (NoSuchMethodException e) {
+            // TODO 待完成.
+            log.info("不存在这样的方法，将跳过...");
+        } catch (IllegalAccessException e) {
+            throw new BuildSpecificationException("【Fenix 异常】与属性名相同名称的 match 匹配方法，不能访问，"
+                    + "请设置方法的访问级别为【public】，方法返回值类型为【boolean】类型.");
+        } catch (InvocationTargetException e) {
+            throw new BuildSpecificationException("【Fenix 异常】与属性名相同名称的 match 匹配方法，调用出错，"
+                    + "请设置方法的访问级别为【public】，方法返回值类型为【boolean】类型，并检查其他引起调用失败的原因.");
+        }
+
+        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(beanParam.getClass(), propertyName);
+        if (descriptor == null) {
+            return null;
+        }
+
+        // 获取到真正的数据库持久类 POJO 实体的属性值 fieldName 和该属性的值 value.
+        String fieldName;
+        Object value;
+        try {
+            fieldName = (String) annotationClass.getMethod("value").invoke(annotation);
+            fieldName = StringHelper.isBlank(fieldName) ? propertyName : fieldName;
+            value = descriptor.getReadMethod().invoke(beanParam);
+        } catch (ReflectiveOperationException e) {
+            throw new BuildSpecificationException("【Fenix 异常】构建【" + annotationClass.getName()
+                    + "】注解的条件时，反射调用对应的属性值异常", e);
+        }
+
+        if (value == null) {
+            return null;
+        }
+
+        if (field.getType() == String.class) {
+            return StringHelper.isNotBlank(value.toString())
+                    ? handler.buildPredicate(criteriaBuilder, root, fieldName, value, annotation)
+                    : null;
+        } else {
+            return handler.buildPredicate(criteriaBuilder, root, fieldName, value, annotation);
+        }
     }
 
     /**
