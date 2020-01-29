@@ -158,12 +158,13 @@ spring:
     hibernate:
       ddl-auto: update
 
-# Fenix 的几个配置，都有默认值. 所以通常不需要配置，你视具体情况配置即可.
+# Fenix 的几个配置，都有默认值. 所以通常不需要配置，下面的配置代码也都可以删掉，你视具体情况配置即可.
 fenix:
   print-banner: true
   print-sql:
   xml-locations:
   handler-locations:
+  predicate-handlers:
 ```
 
 ## 创建 BlogRepository.java

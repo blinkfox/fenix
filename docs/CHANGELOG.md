@@ -1,3 +1,9 @@
+## v2.2.0 新增了基于 Specification 的动态注解诶和 Java 链式 API (2020-02-02)
+
+- 新增了基于 `Specification` 的动态条件注解来动态查询数据；
+- 新增了基于 `Specification` 的 Java 链式 API 来动态查询数据；
+- 新增了 `@EnableFenix` 注解来配置 JPA 可以使用 Fenix 的相关 API；
+
 ## v2.1.0 新增 <where> 标签和对应的 Java API (2019-11-21)
 
 - 新增了 `<where>` 标签和动态 `where` 的 Java API，用来消除在全动态 SQL 中场景中，`WHERE` 关键字后的 `AND` 或者 `OR` 关键字；
