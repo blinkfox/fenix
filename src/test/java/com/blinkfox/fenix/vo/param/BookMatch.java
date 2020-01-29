@@ -9,15 +9,15 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * 图书搜索的参数实体类.
+ * 图书方法匹配的参数实体类.
  *
- * @author blinkfox on 2020-01-28.
+ * @author blinkfox on 2020-01-29.
  * @since v2.2.0
  */
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BookSearch {
+public class BookMatch {
 
     /**
      * ID.
@@ -38,5 +38,15 @@ public class BookSearch {
      */
     @OrBetween("totalPage")
     private BetweenValue<Integer> totalPageValue;
+
+    /**
+     * 判断 id 属性是否匹配，结果为真就生成这个匹配条件，否则不生成.
+     * 这里假定 ID 不为空，且 ID 不等于 1 时才能生成查询条件.
+     *
+     * @return 布尔值
+     */
+    public boolean id() {
+        return id != null && !id.equals("1");
+    }
 
 }

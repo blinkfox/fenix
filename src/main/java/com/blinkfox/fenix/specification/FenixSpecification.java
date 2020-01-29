@@ -28,7 +28,6 @@ import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -37,7 +36,6 @@ import org.springframework.data.jpa.domain.Specification;
  *
  * @author blinkfox on 2020-01-15.
  */
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixSpecification {
 
