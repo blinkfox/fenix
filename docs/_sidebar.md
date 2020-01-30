@@ -3,6 +3,7 @@
   - [与 MyBatis 的 XML 的 SQL 写法比较](compare-mybatis)
   - [快速集成](quick-install)
   - [快速开始](quick-start)
+  - [四种使用方式示例](usage-example)
   - [@QueryFenix 注解](queryfenix-introduction)
 - XML方式
   - [逻辑控制语法](xml/logic-control)
