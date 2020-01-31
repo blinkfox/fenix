@@ -146,6 +146,7 @@ public void queryBlogsWithJava() {
 基于 `Specification` 的方式，只须要 `BlogRepository` 接口继承 `FenixJpaSpecificationExecutor` 接口即可，当然也可以继承原生的 `JpaSpecificationExecutor` 接口亦可，但更建议直接继承 `FenixJpaSpecificationExecutor` 接口，该接口也继承自 `JpaSpecificationExecutor` 接口，但提供了更多的默认接口方法，且在 API 使用上，可以不用写 `FenixSpecification.of()` 的中间层，更为简单直接。
 
 ```java
+// JpaRepository<Blog, String> 和 FenixJpaSpecificationExecutor<Blog> 可以混用，也可以只使用某一个.
 public interface BlogRepository extends JpaRepository<Blog, String>, FenixJpaSpecificationExecutor<Blog> {
 
 }
@@ -188,6 +189,7 @@ public void queryBlogsWithSpecifition() {
 本方式是指通过将 Java Bean 作为参数传递，在 Java Bean 对象的属性中通过查询的条件注解来表明是何种查询匹配方式。当然，同第三种方式一样，`BlogRepository` 接口也须要继承 `FenixJpaSpecificationExecutor` 接口。
 
 ```java
+// JpaRepository<Blog, String> 和 FenixJpaSpecificationExecutor<Blog> 可以混用，也可以只使用某一个.
 public interface BlogRepository extends JpaRepository<Blog, String>, FenixJpaSpecificationExecutor<Blog> {
 
 }
