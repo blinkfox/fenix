@@ -8,31 +8,31 @@ Fenix 中内置了大量的(约 `44` 个)条件注解（[点击这里查看](htt
 
 **以下的若干个注解，都仅有一个 `value()` 方法，表示数据库对应的实体类的属性字段名称（`fieldName`），如果不填写，则默认使用被标注的 Java Bean 的属性名作为 `fieldName`**。
 
-**而被标注的属性值的，可以是任何可比较的类型，如：`String`、`Date`、`Integer` 等等。这些类型本质上都实现了 Java 中的 `Comparable` 接口**。
+**而被标注的属性值，可以是任何可比较的类型，如：`String`、`Date`、`Integer` 等等。这些类型本质上都实现了 Java 中的 `Comparable` 接口**。
 
-### (1) 等于 (Equal)
+### (1) 等于 (@Equals)
 
 - `@Equals`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值匹配”的 `Predicate` 条件；
 - `@OrEquals`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值匹配”的 `Predicate` 条件；
 - `@NotEquals`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值不匹配”的 `Predicate` 条件；
 - `@OrNotEquals`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值不匹配”的 `Predicate` 条件；
 
-### (2) 大于 (GreaterThan)
+### (2) 大于 (@GreaterThan)
 
 - `@GreaterThan`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“大于匹配”的 `Predicate` 条件；
 - `@OrGreaterThan`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“大于匹配”的 `Predicate` 条件；
 
-### (3) 大于等于 (GreaterThanEqual)
+### (3) 大于等于 (@GreaterThanEqual)
 
 - `@GreaterThanEqual`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“大于等于匹配”的 `Predicate` 条件；
 - `@OrGreaterThanEqual`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“大于等于匹配”的 `Predicate` 条件；
 
-### (4) 小于 (LessThan)
+### (4) 小于 (@LessThan)
 
 - `@LessThan`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“小于匹配”的 `Predicate` 条件；
 - `@OrLessThan`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“小于匹配”的 `Predicate` 条件；
 
-### (5) 小于等于 (LessThanEqual)
+### (5) 小于等于 (@LessThanEqual)
 
 - `@LessThanEqual`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“小于等于匹配”的 `Predicate` 条件；
 - `@OrLessThanEqual`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“小于等于匹配”的 `Predicate` 条件；
@@ -41,23 +41,25 @@ Fenix 中内置了大量的(约 `44` 个)条件注解（[点击这里查看](htt
 
 ```java
 /**
- * 图书的 ISBN 编号. 注解中没有填写 `value()` 值，将默认使用 `isbn` 作为数据库关联的实体字段名称.
+ * 图书的 ISBN 编号.
+ * 注解中没有填写 `value()` 值，将默认使用字符串 `isbn` 作为数据库关联的实体字段名称.
  */
 @Equals
 private String isbn;
 
 /**
- * 图书总页数. 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
+ * 图书总页数.
+ * 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
  */
 @OrGreaterThan("totalPage")
 private Integer bookTotalPage;
 ```
 
-## 2. 区间匹配的方法 (between)
+## 2. 区间匹配的注解 (@Between)
 
 区间匹配本质上也是比较匹配类型的特殊形式，不同点在于标注注解的属性类型至少需要两个边界值（开始值和结束值）来表达，且在某一个边界值为 null 时，会退化成大于等于或者小于等于的匹配条件。所以，这里单独拿出来作介绍说明。
 
-### (1) 区间注解
+### (1) 注解介绍
 
 - `@Between`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值匹配”的 `Predicate` 条件；
 - `@OrBetween`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值匹配”的 `Predicate` 条件；
@@ -80,18 +82,21 @@ private Integer bookTotalPage;
 ```java
 /**
  * 用于总页数区间查询的数组.
+ * 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
  */
 @Between("totalPage")
 private BetweenValue<Integer> totalPageValue;
 
 /**
  * 用于总页数区间查询的数组.
+ * 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
  */
 @Between("totalPage")
 private Integer[] totalPageArr;
 
 /**
  * 用于总页数区间查询的数组.
+ * 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
  */
 @OrNotBetween("totalPage")
 private List<Integer> notTotalPages;
@@ -110,7 +115,7 @@ BetweenValue.ofStart(300)
 BetweenValue.ofEnd(600)
 ```
 
-## 3. 模糊匹配的方法 (LIKE)
+## 3. 模糊匹配的注解
 
 Fenix 中的模糊匹配包含四种，分别是：
 
@@ -119,242 +124,105 @@ Fenix 中的模糊匹配包含四种，分别是：
 - 后缀模糊匹配 `EndsWith`
 - 以及 SQL 语法通用的任意自定义模式匹配的 `LikePattern`
 
-### (1) 前后模糊匹配的 (Like)
+**以下的若干个注解，都仅有一个 `value()` 方法，表示数据库对应的实体类的属性字段名称（`fieldName`），如果不填写，则默认使用被标注的 Java Bean 的属性名作为 `fieldName`。而被标注的属性值的，通常是字符串的类型**。
 
-```java
-// 生成“与逻辑”的“前后模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andLike(String fieldName, Object value)
-andLike(String fieldName, Object value, boolean match)
+### (1) 前后模糊匹配的注解 (@Like)
 
-// 生成“或逻辑”的“前后模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orLike(String fieldName, Object value)
-orLike(String fieldName, Object value, boolean match)
+- `@Like`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“前后模糊匹配”的 `Predicate` 条件；
+- `@OrLike`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“前后模糊匹配”的 `Predicate` 条件；
+- `@NotLike`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“前后模糊不匹配”的 `Predicate` 条件；
+- `@OrNotLike`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“前后模糊不匹配”的 `Predicate` 条件；
 
-// 生成“与逻辑”的“前后模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotLike(String fieldName, Object value)
-andNotLike(String fieldName, Object value, boolean match)
+### (2) 前缀模糊匹配的注解 (@StartsWith)
 
-// 生成“或逻辑”的“前后模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotLike(String fieldName, Object value)
-orNotLike(String fieldName, Object value, boolean match)
-```
+- `@StartsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“前缀模糊匹配”的 `Predicate` 条件；
+- `@OrStartsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“前缀模糊匹配”的 `Predicate` 条件；
+- `@NotStartsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“前缀模糊不匹配”的 `Predicate` 条件；
+- `@OrNotStartsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“前缀模糊不匹配”的 `Predicate` 条件；
 
-### (2) 前缀模糊匹配 (StartsWith)
+### (3) 后缀模糊匹配的注解 (@EndsWith)
 
-```java
-// 生成“与逻辑”的“前缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andStartsWith(String fieldName, Object value)
-andStartsWith(String fieldName, Object value, boolean match)
+- `@EndsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“后缀模糊匹配”的 `Predicate` 条件；
+- `@OrEndsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“后缀模糊匹配”的 `Predicate` 条件；
+- `@NotEndsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“后缀模糊不匹配”的 `Predicate` 条件；
+- `@OrNotEndsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“后缀模糊不匹配”的 `Predicate` 条件；
 
-// 生成“或逻辑”的“前缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orStartsWith(String fieldName, Object value)
-orStartsWith(String fieldName, Object value, boolean match)
+### (4) 自定义模式匹配的注解 (@LikePattern)
 
-// 生成“与逻辑”的“前缀模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotStartsWith(String fieldName, Object value)
-andNotStartsWith(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“前缀模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotStartsWith(String fieldName, Object value)
-orNotStartsWith(String fieldName, Object value, boolean match)
-```
-
-### (3) 后缀模糊匹配 (EndsWith)
-
-```java
-// 生成“与逻辑”的“后缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andEndsWith(String fieldName, Object value)
-andEndsWith(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“后缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orEndsWith(String fieldName, Object value)
-orEndsWith(String fieldName, Object value, boolean match)
-
-// 生成“与逻辑”的“后缀模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotEndsWith(String fieldName, Object value)
-andNotEndsWith(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“后缀模糊不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotEndsWith(String fieldName, Object value)
-orNotEndsWith(String fieldName, Object value, boolean match)
-```
-
-### (4) 自定义模式匹配 (LikePattern)
-
-```java
-// 生成“与逻辑”的“自定义模式匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andLikePattern(String fieldName, String pattern)
-andLikePattern(String fieldName, String pattern, boolean match)
-
-// 生成“或逻辑”的“自定义模式匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orLikePattern(String fieldName, String pattern)
-orLikePattern(String fieldName, String pattern, boolean match)
-
-// 生成“与逻辑”的“自定义模式不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotLikePattern(String fieldName, String pattern)
-andNotLikePattern(String fieldName, String pattern, boolean match)
-
-// 生成“或逻辑”的“自定义模式不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotLikePattern(String fieldName, String pattern)
-orNotLikePattern(String fieldName, String pattern, boolean match)
-```
+- `@EndsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“自定义模式匹配”的 `Predicate` 条件；
+- `@OrEndsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“自定义模式匹配”的 `Predicate` 条件；
+- `@NotEndsWith`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“自定义模式不匹配”的 `Predicate` 条件；
+- `@OrNotEndsWith`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“自定义模式不匹配”的 `Predicate` 条件；
 
 ### (5) 使用示例
 
 ```java
-@Test
-public void testOrLike() {
-    // 测试生成 LIKE 查询条件的测试用例
-    String name = (String) paramMap.get("name");
-    List<Book> books = bookRepository.findAll(builder ->
-            builder.orLike("name", name, StringHelper.isNotBlank(name)).build());
-    Assert.assertEquals(3, books.size());
-    books.forEach(book -> Assert.assertTrue(book.getName().contains(NAME)));
+/**
+ * 根据图书标题前后模糊查询.
+ * 注解中没有填写 `value()` 值，将默认使用字符串 `name` 作为数据库关联的实体字段名称.
+ */
+@Like
+private String name;
 
-    // 测试不生成 LIKE 查询条件的测试用例
-    List<Book> books2 = bookRepository.findAll(builder ->
-            builder.andEquals("id", ID_2)
-                    .orLike("name", name, false)
-                    .build());
-    Assert.assertEquals(1, books2.size());
-    Assert.assertEquals(ID_2, books2.get(0).getId());
-}
+/**
+ * 使用或语句按前缀不匹配图书标题，即查询标题中不以“什么”开头的图书.
+ * 注解中填写了 `value()` 的值为 `name`，将使用 `name` 作为数据库关联的实体字段名称.
+ */
+@OrNotStartsWith("name")
+private String orNotStartsWithName;
 ```
 
-## 4. 范围匹配的方法 (IN)
+## 4. 范围匹配的注解 (@IN)
 
 范围匹配是指生成 `IN` 范围查条件。
 
-### (1) API 方法
+### (1) 注解介绍
 
-```java
-// 生成“与逻辑”的“范围匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andIn(String fieldName, Collection<?> value)
-andIn(String fieldName, Collection<?> value, boolean match)
-andIn(String fieldName, Object[] value)
-andIn(String fieldName, Object[] value, boolean match)
+- `@In`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@OrIn`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@NotIn`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值不匹配”的 `Predicate` 条件；
+- `@OrNotIn`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值不匹配”的 `Predicate` 条件；
 
-// 生成“或逻辑”的“范围匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orIn(String fieldName, Collection<?> value)
-orIn(String fieldName, Collection<?> value, boolean match)
-orIn(String fieldName, Object[] value)
-orIn(String fieldName, Object[] value, boolean match)
+**上面的四个个注解与其他注解不同，有两个方法，一个是 `value()` 方法，表示数据库对应的实体类的属性字段名称（`fieldName`），如果不填写，则默认使用被标注的 Java Bean 的属性名作为 `fieldName`，另一个是 `allowNull()` 方法，表示的是后允许匹配属性值集合或数组中的 `null` 值，默认为 `false`。**。
 
-// 生成“与逻辑”的“范围不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotIn(String fieldName, Collection<?> value)
-andNotIn(String fieldName, Collection<?> value, boolean match)
-andNotIn(String fieldName, Object[] value)
-andNotIn(String fieldName, Object[] value, boolean match)
-
-// 生成“或逻辑”的“范围不匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotIn(String fieldName, Collection<?> value)
-orNotIn(String fieldName, Collection<?> value, boolean match)
-orNotIn(String fieldName, Object[] value)
-orNotIn(String fieldName, Object[] value, boolean match)
-```
+**被标注的属性值的类型可以是数组，也可以是 `Collection` 集合**。
 
 ### (2) 使用示例
-
-```java
-@Test
-public void testIn() {
-    List<String> idList = (List<String>) paramMap.get("idList");
-    List<Book> books2 = bookRepository.findAll(builder ->
-            builder.andIn("id", idList, CollectionHelper.isNotEmpty(idList)).build());
-
-    // 断言查询结果的条数是否正确.
-    Assert.assertEquals(7, books2.size());
-}
-```
-
-## 5. NULL 匹配 (IS NULL)
-
-### (1) API 方法
-
-NULL 匹配是指 SQL 中的字段 `IS NULL` 或者 `IS NOT NULL`。主要 API 方法如下：
-
-```java
-// 生成“与逻辑”的“IS NULL”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andIsNull(String fieldName)
-andIsNull(String fieldName, boolean match)
-
-// 生成“或逻辑”的“IS NULL”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orIsNull(String fieldName)
-orIsNull(String fieldName, boolean match)
-
-// 生成“与逻辑”的“IS NOT NULL”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andIsNotNull(String fieldName)
-andIsNotNull(String fieldName, boolean match)
-
-// 生成“或逻辑”的“IS NOT NULL”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orIsNotNull(String fieldName)
-orIsNotNull(String fieldName, boolean match)
-```
-
-### (2) 使用示例
-
-```java
-@Test
-public void testIsNull() {
-    List<Book> books = bookRepository.findAll(builder -> builder.andIsNull("others").build());
-
-    // 断言查询结果的条数是否正确.
-    Assert.assertEquals(7, books.size());
-    books.forEach(book -> Assert.assertNull(book.getOthers()));
-}
-```
-
-## 6. 自定义任意操作
-
-Fenix 中仍然提供了让你自定义动态操作的 `doAny` 方法，该方法中需要传递 `AbstractPredicateHandler` 的子类对象，也可以传递 `PredicateHandler` 接口的实现类实例。
-
-- 通常情况下，推荐直接使用 `PredicateHandler` 的匿名实现类的方式来完成，这样就可以简单的通过 `Lambda` 表达式来完成操作。
-- 如果你的自定义操作，也想用于 Java Bean 条件注解的情况，那么建议你继承 `AbstractPredicateHandler` 抽象类即可。
-
-### (1) API 方法
-
-```java
-// 通过传递 AbstractPredicateHandler 的子类对象来完成任意自定义操作，在具体实现类中写相关的动态条件拼接逻辑.
-doAny(String fieldName, Object value, AbstractPredicateHandler handler)
-doAny(String fieldName, Object value, AbstractPredicateHandler handler, boolean match)
-
-// 通过传递 PredicateHandler 的实现类类对象来完成任意自定义操作，可以通过 Lambda 表达式来完成自定义的动态条件拼接逻辑.
-doAny(String fieldName, Object value, PredicateHandler handler)
-doAny(String fieldName, Object value, PredicateHandler handler, boolean match)
-```
-
-### (2) 示例
-
-以下通过一个简单的 `PredicateHandler` 的 Lambda 表达式来完成字符串第二、三、四个字符分别是 `ava` 的匹配代码。当然，其实你可以直接通过 `andLikePattern` 方法达到目的，但这里我只是做一个演示的示例供你参考。
 
 ```java
 /**
- * 测试使用 {@code Specification} 的方式来查询图书信息.
+ * 用于 IN 范围查询的 ID 集合.
+ * 注解中没有填写 `value()` 值，将默认使用属性名的字符串 `id` 作为数据库关联的实体字段名称.
  */
-@Test
-public void testFindAllWithDoAny() {
-    // 模拟动态查询，使用 doAny 来完成图书名称的第二、三、四个字符分别是 `ava` 的匹配代码.
-    List<Book> books = bookRepository.findAll(builder ->
-            builder.andEquals("isbn", paramMap.get("isbn"))
-                    .orBetween("totalPage", paramMap.get("minTotalPage"), paramMap.get("maxTotalPage"))
-                    .doAny("name", null,
-                           (cb, from, fieldName, value) -> cb.or(cb.like(from.get(fieldName), "_ava%")), true)
-                    .build());
+@In
+private List<String> id;
 
-    // 断言查询结果的正确性.
-    Assert.assertEquals(6, books.size());
-}
+/**
+ * 用于或逻辑的 IN 范围查询的 ID 集合.
+ * 注解中填写了 `value()` 的值为 `id`，将使用 `id` 作为数据库关联的实体字段名称.
+ */
+@OrIn("id")
+private String[] orIds;
 ```
 
-## 7. 获取 JPA 的 CriteriaBuilder 等对象
+## 5. NULL 匹配的注解 (@IsNull)
 
-基于 `Specification` 的方式在构造动态查询条件的过程中，如果以上的诸多 API 方法仍然不满足你的需求，想通过原生的写法实现，Fenix 中也提供给你使用原生的方式。你可以在构建过程中获取到 Spring Data JPA 中的 `CriteriaBuilder`、`CriteriaQuery`、`From` 等对象实例，从而方便你来按你自己的需求写动态查询的代码。
+NULL 匹配是指 SQL 中的字段 `IS NULL` 或者 `IS NOT NULL`。
+
+### (1) 注解介绍
+
+- `@IsNull`: 表示使用标注的字段名称，生成“与逻辑”的“IS NULL 匹配”的 `Predicate` 条件；
+- `@OrIsNull`: 表示使用标注的字段名称，生成“或逻辑”的“IS NULL 匹配”的 `Predicate` 条件；
+- `@IsNotNull`: 表示使用标注的字段名称，生成“与逻辑”的“IS NOT NULL 匹配”的 `Predicate` 条件；
+- `@OrIsNotNull`: 表示使用标注的字段名称，生成“或逻辑”的“IS NOT NULL 匹配”的 `Predicate` 条件；
+
+### (2) 使用示例
 
 ```java
-List<Book> books = bookRepository.findAll(builder -> {
-        CriteriaBuilder criteriaBuilder = builder.getCriteriaBuilder();
-        CriteriaQuery criteriaQuery = builder.getCriteriaQuery();
-        From<?, ?> root = builder.getFrom();
-        return builder.build();
-});
+/**
+ * 判断 others 字段是否是 NULL.
+ * 在使用时请设置属性值为数据库对应该实体属性值，即 .setOthers("others")。
+ */
+@IsNull
+private String others;
 ```

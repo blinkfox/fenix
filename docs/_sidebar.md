@@ -18,6 +18,6 @@
 - 基于 Specification 的 Java Bean 注解方式
   - [使用介绍](sp-bean/introduction)
   - [内置条件注解](sp-bean/annotations)
-  - [自定义注解](xml/custom-annotation)
+  - [自定义注解](sp-bean/custom-annotation)
 - [更多功能](more-features)
 - [版本更新记录](CHANGELOG)
