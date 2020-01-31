@@ -35,6 +35,7 @@ import org.springframework.data.jpa.domain.Specification;
  * Fenix 中构造 {@link Specification} 的核心 API 类.
  *
  * @author blinkfox on 2020-01-15.
+ * @since v2.2.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixSpecification {
