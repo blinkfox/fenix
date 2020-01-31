@@ -1,135 +1,72 @@
-# API 方法
+# 内置的条件注解
 
-以下将介绍基于 `Specification` 的主要 API 方法。这些 API 都在 `FenixPredicateBuilder` 类中，用来链式生成 `Predicate` 的条件集合。
+Fenix 中内置了大量的(约 `44` 个)条件注解（[点击这里查看](https://github.com/blinkfox/fenix/tree/develop/src/main/java/com/blinkfox/fenix/specification/annotation)），这些注解均作用在 Java Bean 的属性上。且这些注解的内部处理机制绝大多数都与**基于 Specification 的 Java 链式 API 方式**中的方法相对应，你可以相互对比使用和参考。
 
-## 1. 比较匹配类型的方法
+## 1. 比较匹配类型的注解
 
-比较类型的方法是指等于、不等于、大于、大于等于、小于、小于等于等方法，使用方式也几乎相同。主要 API 如下：
+比较类型的注解是指等于、不等于、大于、大于等于、小于、小于等于等注解，使用方式也几乎相同，且大多都囊括了 `and`、`or`、`andNot`、`orNot` 等情况。
+
+**以下的若干个注解，都仅有一个 `value()` 方法，表示数据库对应的实体类的属性字段名称（`fieldName`），如果不填写，则默认使用被标注的 Java Bean 的属性名作为 `fieldName`**。
+
+**而被标注的属性值的，可以是任何可比较的类型，如：`String`、`Date`、`Integer` 等等。这些类型本质上都实现了 Java 中的 `Comparable` 接口**。
 
 ### (1) 等于 (Equal)
 
-> **注**：由于 `equals()` 方法是 Java Object 类自带的方法，为了将其与本方法区分开来，Fenix 中的等值匹配系列的方法取名为 `equal`。
-
-```java
-// 生成“与逻辑”的“等值匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andEquals(String fieldName, Object value)
-andEquals(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“等值匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orEquals(String fieldName, Object value)
-orEquals(String fieldName, Object value, boolean match)
-
-// 生成“与逻辑”的“不等值匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotEquals(String fieldName, Object value)
-andNotEquals(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“不等值匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotEquals(String fieldName, Object value)
-orNotEquals(String fieldName, Object value, boolean match)
-```
+- `@Equals`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@OrEquals`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@NotEquals`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值不匹配”的 `Predicate` 条件；
+- `@OrNotEquals`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值不匹配”的 `Predicate` 条件；
 
 ### (2) 大于 (GreaterThan)
 
-```java
-// 生成“与逻辑”的“大于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andGreaterThan(String fieldName, Object value)
-andGreaterThan(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“大于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orGreaterThan(String fieldName, Object value)
-orGreaterThan(String fieldName, Object value, boolean match)
-```
+- `@GreaterThan`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“大于匹配”的 `Predicate` 条件；
+- `@OrGreaterThan`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“大于匹配”的 `Predicate` 条件；
 
 ### (3) 大于等于 (GreaterThanEqual)
 
-```java
-// 生成“与逻辑”的“大于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andGreaterThanEqual(String fieldName, Object value)
-andGreaterThanEqual(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“大于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orGreaterThanEqual(String fieldName, Object value)
-orGreaterThanEqual(String fieldName, Object value, boolean match)
-```
+- `@GreaterThanEqual`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“大于等于匹配”的 `Predicate` 条件；
+- `@OrGreaterThanEqual`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“大于等于匹配”的 `Predicate` 条件；
 
 ### (4) 小于 (LessThan)
 
-```java
-// 生成“与逻辑”的“小于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andLessThan(String fieldName, Object value)
-andLessThan(String fieldName, Object value, boolean match)
+- `@LessThan`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“小于匹配”的 `Predicate` 条件；
+- `@OrLessThan`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“小于匹配”的 `Predicate` 条件；
 
-// 生成“或逻辑”的“小于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orLessThan(String fieldName, Object value)
-orLessThan(String fieldName, Object value, boolean match)
-```
+### (5) 小于等于 (LessThanEqual)
 
-### (5) 小于等于 (andLessThanEqual)
-
-```java
-// 生成“与逻辑”的“小于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andLessThanEqual(String fieldName, Object value)
-andLessThanEqual(String fieldName, Object value, boolean match)
-
-// 生成“或逻辑”的“小于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orLessThanEqual(String fieldName, Object value)
-orLessThanEqual(String fieldName, Object value, boolean match)
-```
+- `@LessThanEqual`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“小于等于匹配”的 `Predicate` 条件；
+- `@OrLessThanEqual`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“小于等于匹配”的 `Predicate` 条件；
 
 ### (6) 使用示例
 
 ```java
-@Test
-public void testOrGreaterThanEqual() {
-    // 测试等于、大于等于混用的场景.
-    int totalPage = (Integer) paramMap.get("totalPage");
-    List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andEquals("id", paramMap.get("id"))
-                    .orGreaterThanEqual("totalPage", totalPage)
-                    .build()));
-    Assert.assertEquals(6, books.size());
+/**
+ * 图书的 ISBN 编号. 注解中没有填写 `value()` 值，将默认使用 `isbn` 作为数据库关联的实体字段名称.
+ */
+@Equals
+private String isbn;
 
-    // 测试等于、大于等于混用的场景，但大于等于条件不生成.
-    String isbn = (String) paramMap.get("isbn");
-    List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andEquals("isbn", isbn)
-                    .orGreaterThanEqual("totalPage", totalPage, false)
-                    .build()));
-    Assert.assertEquals(1, books2.size());
-
-    // 测试等于、大于等于混用的场景，但等于条件不生成.
-    List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andEquals("isbn", isbn, false)
-                    .orGreaterThanEqual("totalPage", totalPage, totalPage > 0)
-                    .build()));
-    Assert.assertEquals(5, books3.size());
-    books3.forEach(book -> Assert.assertTrue(book.getTotalPage() >= PAGE));
-}
+/**
+ * 图书总页数. 注解中填写了 `value()` 的值为 `totalPage`，将使用 `totalPage` 作为数据库关联的实体字段名称.
+ */
+@OrGreaterThan("totalPage")
+private Integer bookTotalPage;
 ```
 
 ## 2. 区间匹配的方法 (between)
 
-区间匹配本质上也是比较匹配类型的特殊形式，API 参数上表现为匹配的边界值有两个（开始值和结束值），参数会多一个，且在某一个边界值为 null 时，会退化成大于等于或者小于等于的匹配条件。所以，这里单独拿出来作介绍说明。
+区间匹配本质上也是比较匹配类型的特殊形式，不同点在于标注注解的属性类型至少需要两个边界值（开始值和结束值）来表达，且在某一个边界值为 null 时，会退化成大于等于或者小于等于的匹配条件。所以，这里单独拿出来作介绍说明。
 
-### (1) API 方法
+### (1) 区间注解
 
-```java
-// 生成“与逻辑”的“匹配区间”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andBetween(String fieldName, Object startValue, Object endValue)
-andBetween(String fieldName, Object startValue, Object endValue, boolean match)
+- `@Between`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@OrBetween`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值匹配”的 `Predicate` 条件；
+- `@NotBetween`: 表示使用标注的字段名称和属性值，生成“与逻辑”的“等值不匹配”的 `Predicate` 条件；
+- `@OrNotBetween`: 表示使用标注的字段名称和属性值，生成“或逻辑”的“等值不匹配”的 `Predicate` 条件；
 
-// 生成“或逻辑”的“匹配区间”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orBetween(String fieldName, Object startValue, Object endValue)
-orBetween(String fieldName, Object startValue, Object endValue, boolean match)
+**上面的四个个注解，也都仅有一个 `value()` 方法，表示数据库对应的实体类的属性字段名称（`fieldName`），如果不填写，则默认使用被标注的 Java Bean 的属性名作为 `fieldName`**。
 
-// 生成“与逻辑”的“不匹配区间”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-andNotBetween(String fieldName, Object startValue, Object endValue)
-andNotBetween(String fieldName, Object startValue, Object endValue, boolean match)
-
-// 生成“或逻辑”的“不匹配区间”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
-orNotBetween(String fieldName, Object startValue, Object endValue)
-orNotBetween(String fieldName, Object startValue, Object endValue, boolean match)
-```
+**而被标注的属性值的类型，必须是任何可比较的类型，如：`String`、`Date`、`Integer` 等等。这些类型本质上都实现了 Java 中的 `Comparable` 接口**。为了表达开始值和结束值，值的类型只能是 `BetweenValue<T extends Comparable<T>>`、数组和 List 有序集合三种类型中的某一种才行。如果是数组或者集合，则必须保证第一个值表示的是开始值，第二个值表示的是结束值，其中某一个值可以为 `null`。而 `BetweenValue` 是 Fenxi 中提供的一个二元组类型，用来封装开始值和结束值的类型，**建议使用 `BetweenValue` 作为区间查询的属性值类型**。
 
 ### (2) 退化情况说明
 
@@ -141,38 +78,36 @@ orNotBetween(String fieldName, Object startValue, Object endValue, boolean match
 ### (3) 使用示例
 
 ```java
-@Test
-public void testBetween() {
-    // 测试区间匹配，开始值和结束值均不为 null 的情况.
-    Integer minTotalPage = (Integer) paramMap.get("minTotalPage");
-    Integer maxTotalPage = (Integer) paramMap.get("maxTotalPage");
-    List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andBetween("totalPage", minTotalPage, maxTotalPage)
-                    .build()));
-    Assert.assertEquals(4, books.size());
-    books.forEach(book ->
-            Assert.assertTrue(book.getTotalPage() >= MIN_PAGE && book.getTotalPage() <= MAX_PAGE));
+/**
+ * 用于总页数区间查询的数组.
+ */
+@Between("totalPage")
+private BetweenValue<Integer> totalPageValue;
 
-    // 测试区间匹配退化为大于等于匹配的情况，开始值不为 null，但结束值为 null 的情况.
-    List<Book> books2 = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andBetween("totalPage", minTotalPage, null, minTotalPage != null)
-                    .build()));
-    Assert.assertEquals(8, books2.size());
-    books2.forEach(book -> Assert.assertTrue(book.getTotalPage() >= MIN_PAGE));
+/**
+ * 用于总页数区间查询的数组.
+ */
+@Between("totalPage")
+private Integer[] totalPageArr;
 
-    // 测试区间匹配退化为小于等于匹配的情况，开始值为 null，但结束值不为 null 的情况.
-    List<Book> books3 = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andBetween("totalPage", null, maxTotalPage)
-                    .build()));
-    Assert.assertEquals(6, books3.size());
-    books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= MAX_PAGE));
+/**
+ * 用于总页数区间查询的数组.
+ */
+@OrNotBetween("totalPage")
+private List<Integer> notTotalPages;
+```
 
-    // 测试 match 为 false 时，不生成区间查询的示例.
-    List<Book> books4 = bookRepository.findAll(FenixSpecification.of(builder ->
-            builder.andBetween("totalPage", minTotalPage, maxTotalPage, false)
-                    .build()));
-    Assert.assertEquals(10, books4.size());
-}
+`BetweenValue` 的对象实例构造方式如下：
+
+```java
+// 定义了开始值和结束值的实例.
+BetweenValue.of(300,600)
+
+// 只定义了开始值的实例.
+BetweenValue.ofStart(300)
+
+// 只定义了结束值的实例.
+BetweenValue.ofEnd(600)
 ```
 
 ## 3. 模糊匹配的方法 (LIKE)
