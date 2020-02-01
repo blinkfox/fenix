@@ -24,21 +24,20 @@
 compile 'com.blinkfox:fenix-spring-boot-starter:2.2.0'
 ```
 
-### 激活 Fenix FactoryBean
+### 激活 Fenix (@EnableFenix)
 
 然后需要在你的 Spring Boot 应用中使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
 ```java
-import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
+import com.blinkfox.fenix.EnableFenix;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- * 请在 Spring Boot 应用中配置 {@code @EnableFenix}.
+ * 请在 Spring Boot 应用中标注 {code @EnableFenix} 注解.
  *
- * @author blinkfox on 2019-08-15.
+ * @author blinkfox on 2020-02-01.
  */
 @EnableFenix
 @SpringBootApplication
@@ -61,7 +60,7 @@ public class DemoApplication {
 以下通过 `application.yml` 文件来说明 Fenix 中的几个配置项、默认值和说明信息，供你参考。
 
 ```yaml
-# Fenix 的几个配置项、默认值及详细说明，通常情况下你不需要填写这些配置信息.
+# Fenix 的几个配置项、默认值及详细说明，通常情况下你不需要填写这些配置信息（下面的配置代码也都可以删掉）.
 fenix:
   # 成功加载 Fenix 配置信息后，是否打印启动 banner，默认 true.
   print-banner: true
