@@ -219,6 +219,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param from {@link From} 实例
      * @param fieldName 实体类的属性名
      * @param value 对应属性的值
+     * @param allowNull 是否允许 null 值
      * @param <Z> 泛型 Z
      * @param <X> 泛型 X
      * @return {@link Predicate} 实例
