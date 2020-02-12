@@ -8,8 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * 构建“或者范围匹配条件”({@code OR field IN ('xxx', 'yyy')})场景的 {@link Predicate} 处理器.
  *
@@ -17,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author blinkfox on 2020-01-14
  * @since v2.2.0
  */
-@Slf4j
 public class OrInPredicateHandler extends AbstractPredicateHandler {
 
     @Override
