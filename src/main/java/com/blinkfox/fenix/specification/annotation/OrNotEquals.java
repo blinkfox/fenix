@@ -1,27 +1,28 @@
 package com.blinkfox.fenix.specification.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * OrNotEquals
- * @description OrNotEquls条件
- * @author YangWenpeng
- * @date 2019年6月6日 下午5:29:07
- * @version v1.0.0
+ * 用于“或者不等于”({@code OR field <> 'xxx'})场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-14
+ * @since v2.2.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface OrNotEquals{
+@Retention(RetentionPolicy.RUNTIME)
+public @interface OrNotEquals {
 
     /**
-     * 
-     * Equels
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年6月6日 下午5:29:07
-     * @version v1.0.0
+     * 注解的实体字段属性名称，默认为空或空字符串时将使用属性名称.
+     *
+     * @return 值
      */
     String value() default "";
+
 }

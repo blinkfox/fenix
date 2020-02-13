@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import org.springframework.aop.framework.AdvisedSupport;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -31,7 +32,7 @@ public final class ProxyHelper {
     public static <T> T getTarget(Object proxy) {
         if (Proxy.isProxyClass(proxy.getClass())) {
             return getJdkProxyTargetObject(proxy);
-        } else if (ClassUtils.isCglibProxy(proxy)) {
+        } else if (ClassUtils.isCglibProxy(proxy) || AopUtils.isCglibProxy(proxy)) {
             return getCglibProxyTargetObject(proxy);
         } else {
             return (T) proxy;

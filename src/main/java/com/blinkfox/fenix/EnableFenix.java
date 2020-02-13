@@ -3,27 +3,24 @@ package com.blinkfox.fenix;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean;
-
 /**
- * 
- * EnableFenix
- * @description 开启Fenix配置
- * @author YangWenpeng
- * @date 2019年12月17日 下午6:35:12
- * @version v1.0.0
+ * 用于开启（激活）Fenix 的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
 @Documented
-@Retention(RUNTIME)
 @Target(TYPE)
-@Import(FenixConfiguration.class)
+@Retention(RUNTIME)
 @EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
 public @interface EnableFenix {
 

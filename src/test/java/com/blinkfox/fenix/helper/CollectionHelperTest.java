@@ -23,7 +23,6 @@ public class CollectionHelperTest {
      */
     @Test
     public void testIsNotEmpty() {
-        assertFalse(CollectionHelper.isNotEmpty(null));
         assertFalse(CollectionHelper.isNotEmpty(new Object[]{}));
         assertTrue(CollectionHelper.isNotEmpty(new Object[]{1}));
     }

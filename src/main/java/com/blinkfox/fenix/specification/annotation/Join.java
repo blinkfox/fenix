@@ -9,47 +9,37 @@ import java.lang.annotation.Target;
 
 import javax.persistence.criteria.JoinType;
 
-@Documented
-@Retention(RUNTIME)
-@Target(FIELD)
 /**
- * Join
- * @description 连接查询
- * @author YangWenpeng
- * @date 2019年6月4日 下午3:07:18
- * @version v1.0.0
+ * 用于“连接”({@code JOIN})查询场景的注解.
+ *
+ * @author YangWenpeng on 2019-12-17
+ * @author blinkfox on 2020-01-13
+ * @since v2.2.0
  */
+@Documented
+@Target(FIELD)
+@Retention(RUNTIME)
 public @interface Join {
+
     /**
-     * 
-     * Join
-     * @description 字段名
-     * @return
-     * @author YangWenpeng
-     * @date 2019年3月27日 下午4:27:02
-     * @version v1.0.0
+     * 注解的实体名称，默认为空或空字符串时将使用实体名称.
+     *
+     * @return 字符串值
      */
     String value() default "";
-    
+
     /**
-     * 
-     * Join
-     * @description 联接类型
-     * @return
-     * @author YangWenpeng
-     * @date 2019年6月4日 下午3:12:30
-     * @version v1.0.0
+     * 连接类型 {@link JoinType}，默认内连接 {@link JoinType#INNER}.
+     *
+     * @return {@link JoinType} 连接类型
      */
     JoinType joinType() default JoinType.INNER;
-    
+
     /**
-     * 
-     * Join
-     * @description 关联的实体类
-     * @return
-     * @author YangWenpeng
-     * @date 2019年6月4日 下午3:12:30
-     * @version v1.0.0
+     * 连接的实体类的 {@code class}.
+     *
+     * @return {@code Class} 类型
      */
     Class<?> targetClass();
+
 }

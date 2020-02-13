@@ -17,9 +17,12 @@ import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
+import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import lombok.Getter;
 
@@ -71,10 +74,22 @@ public class FenixConfig {
      */
     @Getter
     private static final Map<String, TagHandler> tagHandlerMap = new HashMap<>(128);
-    
-    static {
-        /* ------- 添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等. ------- */
 
+    /**
+     * 初始化默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中，key 是注解 {@code Class}，value 是注解对应的处理器实例.
+     */
+    @Getter
+    private static final Map<Class<?>, AbstractPredicateHandler> specificationHandlerMap = new HashMap<>(64);
+
+    static {
+        initDefaultTagHandler();
+        initDefaultspecificationHandler();
+    }
+
+    /**
+     * 初始化添加默认的标签和对应的 TagHandler 处理器，如：普通条件, 'like', 'between', 'in' 等.
+     */
+    private static void initDefaultTagHandler() {
         // “等于”的相关标签：equal、andEqual、orEqual.
         add("equal", NormalHandler::new, SymbolConst.EQUAL);
         add("andEqual", SymbolConst.AND, NormalHandler::new, SymbolConst.EQUAL);
@@ -166,6 +181,56 @@ public class FenixConfig {
         add("choose", ChooseHandler::new);
         add("set", SetHandler::new);
         add("where", WhereHandler::new);
+    }
+
+    /**
+     * 初始化添加默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中等.
+     */
+    private static void initDefaultspecificationHandler() {
+        add(new EqualsPredicateHandler());
+        add(new GreaterThanEqualPredicateHandler());
+        add(new GreaterThanPredicateHandler());
+        add(new InPredicateHandler());
+        add(new IsNotNullPredicateHandler());
+        add(new IsNullPredicateHandler());
+        add(new JoinPredicateHandler());
+        add(new LessThanEqualPredicateHandler());
+        add(new LessThanPredicateHandler());
+        add(new BetweenPredicateHandler());
+        add(new NotBetweenPredicateHandler());
+        add(new LikeInPredicateHandler());
+        add(new LikeOrLikePredicateHandler());
+        add(new LikePredicateHandler());
+        add(new NotLikePredicateHandler());
+        add(new StartsWithPredicateHandler());
+        add(new NotStartsWithPredicateHandler());
+        add(new EndsWithPredicateHandler());
+        add(new NotEndsWithPredicateHandler());
+        add(new LikePatternPredicateHandler());
+        add(new NotLikePatternPredicateHandler());
+        add(new NotEqualsPredicateHandler());
+        add(new NotInPredicateHandler());
+        add(new OrEqualsPredicateHandler());
+        add(new OrGreaterThanEqualPredicateHandler());
+        add(new OrGreaterThanPredicateHandler());
+        add(new OrInPredicateHandler());
+        add(new OrIsNotNullPredicateHandler());
+        add(new OrIsNullPredicateHandler());
+        add(new OrLessThanEqualPredicateHandler());
+        add(new OrLessThanPredicateHandler());
+        add(new OrBetweenPredicateHandler());
+        add(new OrNotBetweenPredicateHandler());
+        add(new OrLikeOrLikePredicateHandler());
+        add(new OrLikePredicateHandler());
+        add(new OrNotLikePredicateHandler());
+        add(new OrNotEqualsPredicateHandler());
+        add(new OrNotInPredicateHandler());
+        add(new OrStartsWithPredicateHandler());
+        add(new OrNotStartsWithPredicateHandler());
+        add(new OrEndsWithPredicateHandler());
+        add(new OrNotEndsWithPredicateHandler());
+        add(new OrLikePatternPredicateHandler());
+        add(new OrNotLikePatternPredicateHandler());
     }
 
     /**
@@ -299,6 +364,25 @@ public class FenixConfig {
      */
     public static void add(String tagName, String prefix, FenixHandlerFactory handlerFactory, String symbol) {
         tagHandlerMap.put(tagName, new TagHandler(prefix, handlerFactory, symbol));
+    }
+
+    /**
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractPredicateHandler} 处理器实例作为 value 存入到 Map 中.
+     *
+     * @param handlerSupplier {@link AbstractPredicateHandler} 处理器提供者
+     */
+    public static void add(Supplier<AbstractPredicateHandler> handlerSupplier) {
+        AbstractPredicateHandler handler = handlerSupplier.get();
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
+    }
+
+    /**
+     * 将注解的 {@code class} 作为 key，其对应的 {@link AbstractPredicateHandler} 处理器实例作为 value 存入到 Map 中.
+     *
+     * @param handler {@link AbstractPredicateHandler} 处理器实例
+     */
+    public static void add(AbstractPredicateHandler handler) {
+        specificationHandlerMap.put(handler.getAnnotation(), handler);
     }
 
 }

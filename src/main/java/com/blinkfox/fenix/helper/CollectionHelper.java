@@ -26,6 +26,16 @@ public final class CollectionHelper {
     }
 
     /**
+     * 判断集合是否不为空.
+     *
+     * @param collections 集合
+     * @return 布尔值
+     */
+    public static boolean isNotEmpty(Collection<?> collections) {
+        return !isEmpty(collections);
+    }
+
+    /**
      * 判断集合是否为空.
      *
      * @param collections 集合

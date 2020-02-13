@@ -1,4 +1,4 @@
-# 与 MyBatis 的 SQL 写法比较
+# 与 MyBatis XML 的 SQL 写法比较
 
 ## 假设业务查询场景
 
@@ -13,7 +13,7 @@
 - **操作结果**：数据库字段类型为 `int` 型，只能下拉选择一个选项值来进行**等值查询**（`=`）；
 - **操作时间**：数据库字段类型为 `datetime` 型，可以选择开始时间或者结束时间来进行**区间查询**（`BETWEEN ? AND ?`、`>=`、`<=`）；
 
-## 使用 MyBatis 的 SQL 写法
+## 使用 MyBatis XML 的 SQL 写法
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -71,7 +71,7 @@
 </mapper>
 ```
 
-## 使用 Fenix 的 SQL 写法
+## 使用 Fenix XML 的 SQL 写法
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
