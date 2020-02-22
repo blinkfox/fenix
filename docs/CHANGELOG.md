@@ -1,4 +1,4 @@
-## v2.2.0 新增了基于 Specification 的动态注解诶和 Java 链式 API (2020-02-02)
+## v2.2.0 新增了基于 Specification 的动态注解和 Java 链式 API (2020-02-02)
 
 - 新增了基于 `Specification` 的动态条件注解来动态查询数据；
 - 新增了基于 `Specification` 的 Java 链式 API 来动态查询数据；
