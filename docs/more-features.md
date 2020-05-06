@@ -105,6 +105,7 @@ Page<UserBlogInfo> queryUserBlogPageWithFenixResultType(@Param("userId") String 
 !> **注**：
 > 1. 上面的代码关键之处，就在 fenix 节点中配置了 `resultType` 属性的值为我们定义的**实体类的全路径名** `com.blinkfox.fenix.vo.UserBlogInfo`。这样查询结果返回的时候就能自动识别并返回了。
 > 2. 另一个要点是所有查询列**都必须使用 as**来返回一个“别名”，且**这个“别名”必须跟实体类的属性名一致，不区分大小写**。
+> 3. 此种方式再运行时可能会与 `spring-boot-devtools.jar` 冲突，报 `No converter found capable of converting from type [xxx] to type [xxx]` 错误。建议不使用 `spring-boot-devtools.jar`。
 
 ### (3) Java 中的使用示例
 
