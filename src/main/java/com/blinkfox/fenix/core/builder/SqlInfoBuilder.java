@@ -6,12 +6,10 @@ import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +48,7 @@ public class SqlInfoBuilder {
      * 其它数据.
      *
      * <p>注：通常情况下这个值是 NULL，如果某些情况下，你需要传递额外的参数值，可以通过这个属性来传递，
-     *      是为了方便传递或处理数据而设计的.</p>
+     * 是为了方便传递或处理数据而设计的.</p>
      */
     private Map<String, Object> others;
 

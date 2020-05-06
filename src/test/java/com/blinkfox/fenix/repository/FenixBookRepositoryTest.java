@@ -5,7 +5,6 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.vo.param.BookSearch;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,7 +78,7 @@ public class FenixBookRepositoryTest {
         paramMap.put("endsName", ENDS_NAME);
         paramMap.put("patternName", "_ava%");
         paramMap.put("idList", Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
-        paramMap.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7"});
+        paramMap.put("ids", new String[] {"1", "2", "3", "4", "5", "6", "7"});
     }
 
     /**
@@ -116,7 +114,7 @@ public class FenixBookRepositoryTest {
         List<Book> books = bookRepository.findAll(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
                         .orBetween("totalPage", paramMap.get("minTotalPage"), paramMap.get("maxTotalPage"))
-                .build());
+                        .build());
         Assert.assertEquals(4, books.size());
     }
 

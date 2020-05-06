@@ -2,7 +2,6 @@ package com.blinkfox.fenix.helper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

@@ -2,9 +2,7 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ProxyHelper;
-
 import javax.persistence.Query;
-
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
 

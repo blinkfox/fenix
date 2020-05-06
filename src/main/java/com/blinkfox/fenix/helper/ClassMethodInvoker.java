@@ -2,17 +2,14 @@ package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.exception.FenixException;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.springframework.data.repository.query.Param;
 
 /**

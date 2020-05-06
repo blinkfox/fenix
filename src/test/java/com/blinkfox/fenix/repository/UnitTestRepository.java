@@ -2,10 +2,8 @@ package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
-
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +23,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
      *
      * @param user 用户实体信息
+     * @param userId 用户ID
      * @return 用户信息集合
      */
     @QueryFenix("UnitTestRepository.testEqual")
@@ -33,7 +32,8 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     /**
      * 使用 {@link QueryFenix} 注解使用原生 SQL 来查询用户信息.
      *
-     * @param userId 用户ID
+     * @param user 用户信息
+     * @param userId 用户 ID
      * @return 用户信息集合
      */
     @QueryFenix(value = "UnitTestRepository.testNativeEqual", nativeQuery = true)
@@ -205,6 +205,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
      *
      * @param userMap 用 Map 存放的用户信息
+     * @param user 用户信息
      * @return 用户信息集合
      */
     @QueryFenix("UnitTestRepository.testText")
@@ -214,6 +215,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
      * 使用 {@link QueryFenix} 注解根据用户的实体 VO 类来查询用户信息.
      *
      * @param userMap 用 Map 存放的用户信息
+     * @param user 用户
      * @return 用户信息集合
      */
     @QueryFenix("UnitTestRepository.testImport")
@@ -254,7 +256,7 @@ public interface UnitTestRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("UPDATE User SET name = :name, email = :email, age = :age, sex = :sex WHERE id = '10'")
     int testUpdate(@Param("name") String name, @Param("email") String email,
-                   @Param("age") int age, @Param("sex") String sex);
+            @Param("age") int age, @Param("sex") String sex);
 
     /**
      * 使用原生 SQL {@link org.springframework.data.jpa.repository.Query} 来执行更新.

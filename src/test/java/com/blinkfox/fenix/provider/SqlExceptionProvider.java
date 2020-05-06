@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.provider;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

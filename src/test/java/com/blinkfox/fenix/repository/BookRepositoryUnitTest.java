@@ -9,7 +9,6 @@ import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.vo.param.BookParam;
 import com.blinkfox.fenix.vo.param.BookParam2;
 import com.blinkfox.fenix.vo.param.BookParam3;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,11 +16,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
-
 import lombok.Setter;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -147,17 +143,17 @@ public class BookRepositoryUnitTest {
     @Test
     public void testBetween() {
         List<Book> books = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{300, 600})));
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[] {300, 600})));
         Assert.assertEquals(4, books.size());
         books.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
 
         List<Book> books2 = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{300, null})));
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[] {300, null})));
         Assert.assertEquals(8, books2.size());
         books2.forEach(book -> Assert.assertTrue(book.getTotalPage() >= 300));
 
         List<Book> books3 = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[]{null, 600})));
+                FenixSpecification.ofBean(new BookParam2().setTotalPageArr(new Integer[] {null, 600})));
         Assert.assertEquals(6, books3.size());
         books3.forEach(book -> Assert.assertTrue(book.getTotalPage() <= 600));
 
@@ -204,17 +200,17 @@ public class BookRepositoryUnitTest {
     @Test
     public void testNotBetween() {
         List<Book> books = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{300, 600})));
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[] {300, 600})));
         Assert.assertEquals(6, books.size());
         books.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300 && book.getTotalPage() <= 600));
 
         List<Book> books2 = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{300, null})));
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[] {300, null})));
         Assert.assertEquals(2, books2.size());
         books2.forEach(book -> Assert.assertFalse(book.getTotalPage() >= 300));
 
         List<Book> books3 = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[]{null, 600})));
+                FenixSpecification.ofBean(new BookParam2().setNotTotalPageArr(new Integer[] {null, 600})));
         Assert.assertEquals(4, books3.size());
         books3.forEach(book -> Assert.assertFalse(book.getTotalPage() <= 600));
 
@@ -364,7 +360,7 @@ public class BookRepositoryUnitTest {
     @Test
     public void testOrLikeOrLike() {
         List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(
-                new BookParam3().setOrNameOrAuthor(new String[]{"Java", "yuanguozhong"})));
+                new BookParam3().setOrNameOrAuthor(new String[] {"Java", "yuanguozhong"})));
         Assert.assertEquals(6, books.size());
     }
 
@@ -403,7 +399,7 @@ public class BookRepositoryUnitTest {
     @Test(expected = BuildSpecificationException.class)
     public void testLikeOrLikeWithException4() {
         bookRepository.findAll(FenixSpecification.ofBean(
-                new BookParam3().setOrNameOrAuthor(new String[]{"Java"})));
+                new BookParam3().setOrNameOrAuthor(new String[] {"Java"})));
     }
 
     /**
@@ -428,12 +424,12 @@ public class BookRepositoryUnitTest {
     @Test
     public void testNotIn() {
         BookParam2 bookParam = new BookParam2()
-                .setId(new String[]{"1", "2", "3", "4", "5", "6", "7"});
+                .setId(new String[] {"1", "2", "3", "4", "5", "6", "7"});
         List<Book> books = bookRepository.findAll(FenixSpecification.ofBean(bookParam));
         Assert.assertEquals(3, books.size());
 
         BookParam2 orbookParam = new BookParam2()
-                .setOrIds(new String[]{"1", "2", "3", "4", "5", "6", "7"});
+                .setOrIds(new String[] {"1", "2", "3", "4", "5", "6", "7"});
         List<Book> books2 = bookRepository.findAll(FenixSpecification.ofBean(orbookParam));
         Assert.assertEquals(3, books2.size());
     }
@@ -447,7 +443,7 @@ public class BookRepositoryUnitTest {
         Assert.assertEquals(10, books.size());
 
         List<Book> books2 = bookRepository.findAll(
-                FenixSpecification.ofBean(new BookParam2().setId(new String[]{})));
+                FenixSpecification.ofBean(new BookParam2().setId(new String[] {})));
         Assert.assertEquals(10, books2.size());
 
         List<Book> books3 = bookRepository.findAll(

@@ -3,7 +3,6 @@ package com.blinkfox.fenix.vo.param;
 import com.blinkfox.fenix.specification.annotation.Equals;
 import com.blinkfox.fenix.specification.annotation.OrBetween;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

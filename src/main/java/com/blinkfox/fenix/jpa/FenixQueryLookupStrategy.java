@@ -2,7 +2,6 @@ package com.blinkfox.fenix.jpa;
 
 import java.lang.reflect.Method;
 import javax.persistence.EntityManager;
-
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy;
@@ -72,9 +71,9 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     /**
      * 判断执行的方法上是否有 {@link QueryFenix} 注解，如果有的话，就构造 {@link FenixJpaQuery} 实例，否则就是用 JPA 默认的处理方式.
      *
-     * @param method       will never be {@literal null}.
-     * @param metadata     will never be {@literal null}.
-     * @param factory      will never be {@literal null}.
+     * @param method will never be {@literal null}.
+     * @param metadata will never be {@literal null}.
+     * @param factory will never be {@literal null}.
      * @param namedQueries will never be {@literal null}.
      * @return RepositoryQuery
      */

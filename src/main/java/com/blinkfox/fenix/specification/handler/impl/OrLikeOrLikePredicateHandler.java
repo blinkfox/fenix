@@ -3,7 +3,6 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.annotation.OrLikeOrLike;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;

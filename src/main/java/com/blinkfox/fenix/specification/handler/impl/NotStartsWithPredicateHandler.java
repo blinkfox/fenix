@@ -2,7 +2,6 @@ package com.blinkfox.fenix.specification.handler.impl;
 
 import com.blinkfox.fenix.specification.annotation.NotStartsWith;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
-
 import java.lang.annotation.Annotation;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;

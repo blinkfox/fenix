@@ -1,9 +1,7 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.consts.Const;
-
 import java.util.Collection;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -62,7 +60,7 @@ public final class CollectionHelper {
                 values = ((Collection<?>) obj).toArray();
                 break;
             default:
-                values = new Object[]{obj};
+                values = new Object[] {obj};
         }
         return values;
     }

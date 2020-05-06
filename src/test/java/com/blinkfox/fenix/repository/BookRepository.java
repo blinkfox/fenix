@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.entity.Book;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

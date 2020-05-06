@@ -1,11 +1,9 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.exception.ParseExpressionException;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.mvel2.MVEL;
 import org.mvel2.templates.TemplateRuntime;
 

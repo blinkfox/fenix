@@ -1,13 +1,10 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.consts.Const;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.slf4j.helpers.MessageFormatter;
 
 /**
@@ -17,7 +14,7 @@ import org.slf4j.helpers.MessageFormatter;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringHelper {
-    
+
     /**
      * 替换空格、换行符、制表符等为一个空格的预编译正则表达式模式对象.
      */
@@ -99,7 +96,7 @@ public final class StringHelper {
      */
     public static String concat(Object... objs) {
         StringBuilder sb = new StringBuilder();
-        for (Object o: objs) {
+        for (Object o : objs) {
             sb.append(o == null ? "" : o.toString());
         }
         return sb.toString();

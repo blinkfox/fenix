@@ -7,7 +7,6 @@ import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -65,7 +63,7 @@ public final class TaggerScanner {
         // 否则就代表是 XML 资源目录，并解析目录下所有的 XML 文件，将这些 XML 文件存放到 xmlPaths 的 Set 集合中.
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String[] locationArr = handlerLocations.split(Const.COMMA);
-        for (String location: locationArr) {
+        for (String location : locationArr) {
             if (StringHelper.isBlank(location)) {
                 continue;
             }
@@ -132,7 +130,7 @@ public final class TaggerScanner {
     /**
      * 根据包名和 Classloader 实例，得到该包的 URL Enumeration.
      *
-     * @param classLoader  ClassLoader实例
+     * @param classLoader ClassLoader实例
      * @param packageName 包全路径名
      * @return URL 枚举
      */
@@ -231,7 +229,7 @@ public final class TaggerScanner {
      */
     @SuppressWarnings("unchecked")
     private void addTagHanderInMap() {
-        for (Class<?> cls: classSet) {
+        for (Class<?> cls : classSet) {
             // 如果是 Tagger 注解，则将其 Tagger 信息存放到 Map 中.
             if (cls.isAnnotationPresent(Tagger.class) && isImplFenixHandlerClass(cls)) {
                 Class<? extends FenixHandler> taggerCls = (Class<? extends FenixHandler>) cls;
@@ -243,7 +241,7 @@ public final class TaggerScanner {
             if (cls.isAnnotationPresent(Taggers.class) && isImplFenixHandlerClass(cls)) {
                 log.debug("【Fenix 提示】扫描到实现了 FenixHandler 接口，且含多个 @Tagger 注解的类：【{}】", cls.getName());
                 Tagger[] taggerArr = cls.getAnnotation(Taggers.class).value();
-                for (Tagger tagger: taggerArr) {
+                for (Tagger tagger : taggerArr) {
                     this.addTagHandlerInMapByTagger((Class<? extends FenixHandler>) cls, tagger);
                 }
             }
@@ -265,7 +263,7 @@ public final class TaggerScanner {
         }
 
         // 循环判断其接口是否含有 'FenixHandler' 接口.
-        for (Class<?> cls: classes) {
+        for (Class<?> cls : classes) {
             if (FenixHandler.class.isAssignableFrom(cls)) {
                 return true;
             }

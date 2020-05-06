@@ -6,13 +6,10 @@ import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.vo.param.BookParam;
-
 import java.io.IOException;
 import java.util.List;
 import javax.annotation.PostConstruct;
-
 import lombok.Setter;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -4,10 +4,8 @@ import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.LikeTypeEnum;
 import com.blinkfox.fenix.core.FenixHandler;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.Getter;
 
 /**

@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-
 import com.blinkfox.fenix.consts.Const;
 import lombok.extern.slf4j.Slf4j;
 

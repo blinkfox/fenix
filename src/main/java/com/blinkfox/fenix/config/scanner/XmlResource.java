@@ -3,7 +3,6 @@ package com.blinkfox.fenix.config.scanner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
 import org.dom4j.Document;
 
 /**

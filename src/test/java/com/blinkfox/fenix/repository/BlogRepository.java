@@ -6,10 +6,8 @@ import com.blinkfox.fenix.provider.BlogSqlInfoProvider;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
-
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,6 +37,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * 使用原生的 {@link Query} 注解来查询指定 ID 的博客信息.
      *
      * @param idList ID 集合
+     * @param pageable 分页信息
      * @return 博客信息集合
      */
     @Query(value = "select b from Blog as b where b.id IN :ids")
@@ -58,6 +57,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      *
      * @param idList ID 集合
      * @param blog 博客实体信息
+     * @param pageable 分页参数
      * @return 博客信息集合
      */
     @QueryFenix(value = "BlogRepository.queryBlogs2", countQuery = "BlogRepository.queryBlogs2Count")
@@ -99,6 +99,8 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      * 使用 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体分页信息.
      *
      * @param userId 用户 ID
+     * @param title 标题
+     * @param pageable 分页参数信息
      * @return 用户博客信息集合
      */
     @QueryFenix(value = "BlogRepository.queryUserBlogsWithFenixNative", nativeQuery = true)
@@ -140,6 +142,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      *
      * @param userId 用户ID
      * @param blog 博客实体信息
+     * @param pageable 分页参数
      * @return 用户博客信息集合
      */
     @QueryFenix("BlogRepository.queryUserBlogsWithFenixResultType")
@@ -174,6 +177,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      *
      * @param userId 用户 ID
      * @param blog 博客信息
+     * @param pageable 分页参数
      * @return 用户博客信息投影的集合
      */
     @QueryFenix(value = "BlogRepository.queryFenixNativeByProjection", nativeQuery = true)

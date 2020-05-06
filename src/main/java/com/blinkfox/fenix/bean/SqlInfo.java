@@ -2,7 +2,6 @@ package com.blinkfox.fenix.bean;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 

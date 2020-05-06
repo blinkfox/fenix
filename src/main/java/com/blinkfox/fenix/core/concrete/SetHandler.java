@@ -9,9 +9,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.util.Map;
-
 import org.dom4j.Node;
 
 /**

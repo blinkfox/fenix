@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,9 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-
 import lombok.Setter;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -248,7 +245,7 @@ public class UnitTestRepositoryTest {
     private Map<String, Object> buildInContext() {
         // 设置开始和结束的年龄.
         Map<String, Object> context = new HashMap<>(8);
-        context.put("ids", new String[]{"1", "3", "5", "7", "9"});
+        context.put("ids", new String[] {"1", "3", "5", "7", "9"});
 
         Set<String> names = new HashSet<>(4);
         names.add("name-1");

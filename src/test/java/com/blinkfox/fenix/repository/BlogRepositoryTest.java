@@ -12,17 +12,13 @@ import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
 import lombok.Setter;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

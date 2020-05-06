@@ -3,7 +3,6 @@ package com.blinkfox.fenix.specification.handler;
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -15,9 +14,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Predicate.BooleanOperator;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 
 /**
@@ -110,7 +107,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <Z, X> Predicate buildGreaterThanPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         this.isValueComparable(value);
@@ -128,7 +125,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <Z, X> Predicate buildGreaterThanEqualPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         this.isValueComparable(value);
@@ -146,7 +143,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <Z, X> Predicate buildLessThanPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         this.isValueComparable(value);
@@ -164,7 +161,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param <X> 范型 X
      * @return {@link Predicate} 实例
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <Z, X> Predicate buildLessThanEqualPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object value) {
         this.isValueComparable(value);
@@ -245,6 +242,12 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
         return allowNull ? criteriaBuilder.or(in, criteriaBuilder.isNull(path)) : in;
     }
 
+    /**
+     * 是否允许为 {@code null}.
+     *
+     * @param annotation 注解实例
+     * @return 布尔值
+     */
     protected boolean isAllowNull(Object annotation) {
         try {
             return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
@@ -394,7 +397,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
      * @param <X> 泛型 X
      * @return {@link Predicate} 实例
      */
-    protected  <Z, X> List<Predicate> buildLikeOrLikePredicates(
+    protected <Z, X> List<Predicate> buildLikeOrLikePredicates(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String[] fields, List<?> values) {
         int len = fields.length;
         List<Predicate> predicates = new ArrayList<>(len);
@@ -437,7 +440,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private <Z, X> Predicate buildBetweenPredicate(
             CriteriaBuilder criteriaBuilder, From<Z, X> from, String fieldName, Object startValue, Object endValue) {
         if (startValue != null && endValue != null) {

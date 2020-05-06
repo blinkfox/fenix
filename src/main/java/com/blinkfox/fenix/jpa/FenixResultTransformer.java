@@ -2,7 +2,6 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Blob;
@@ -11,7 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.BlobType;
 import org.hibernate.type.descriptor.java.DataHelper;
@@ -81,7 +79,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     /**
      * 将每行的“元组”数据转换为对应的 {@link #resultClass} 的结果类型.
      *
-     * @param tuple   元组数据
+     * @param tuple 元组数据
      * @param aliases 元组数据的别名数组
      * @return 转换后的 {@link #resultClass} 的结果类型
      */

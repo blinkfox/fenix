@@ -6,15 +6,12 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-
 import lombok.Setter;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +42,6 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Value("/data/user.json")
     private Resource userResource;
@@ -121,7 +117,7 @@ public class UserRepositoryTest {
     @Test
     public void queryUsersByName() {
         List<User> users = userRepository.queryUsersByName(new User()
-                        .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
+                .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
         Assert.assertFalse(users.isEmpty());
     }
 

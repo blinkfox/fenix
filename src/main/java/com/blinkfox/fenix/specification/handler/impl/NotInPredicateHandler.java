@@ -3,14 +3,12 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.specification.annotation.NotIn;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 
 /**

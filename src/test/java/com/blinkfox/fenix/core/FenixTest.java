@@ -6,14 +6,11 @@ import static org.junit.Assert.assertTrue;
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -117,7 +114,7 @@ public class FenixTest {
                 .leftJoin("Dept").as("d").on("u.deptId = d.id")
                 .rightJoin("Office").as("o").on("u.officeId = o.id")
                 .fullJoin("UserDetail").as("ud").on("u.detailId = ud.id")
-                .where("u.id = :u_id", "u_id","3")
+                .where("u.id = :u_id", "u_id", "3")
                 .and("u.nickName like '%zhang%'")
                 .text(true, "AND u.email = :u_email", "u_email", "san@163.com")
                 .doAny(true, (join, params) -> {
@@ -152,7 +149,7 @@ public class FenixTest {
                 .text("select u.id, u.nickName from User as u where ")
                 .text("u.id = :id ", "id", 5)
                 .text("and u.nickName like :nickName ", "nickName", "lisi")
-                .text("and u.sex in :sex ").param("sex", new Integer[]{2, 3, 4})
+                .text("and u.sex in :sex ").param("sex", new Integer[] {2, 3, 4})
                 .text("and u.city in :city ", "city", context.get("citys"))
                 .end();
 
@@ -303,7 +300,8 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
-                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE "
+                        + ":u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
     }
@@ -353,7 +351,8 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
-                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE "
+                        + ":u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
     }
@@ -403,7 +402,8 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName NOT LIKE :u_nickName u.email NOT LIKE :u_email AND u.age NOT LIKE :u_age "
-                + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE :u_birthday",
+                        + "AND u.trueAge NOT LIKE :u_trueAge OR u.email NOT LIKE :u_email OR u.birthday NOT LIKE "
+                        + ":u_birthday",
                 sqlInfo.getSql());
         assertEquals(5, sqlInfo.getParams().size());
     }
@@ -425,7 +425,7 @@ public class FenixTest {
                 .end();
 
         assertEquals("u.nickName LIKE 'zhagnsan%' u.email LIKE '%zhagnsan@163.com' AND u.age LIKE '25%' AND "
-                + "u.trueAge LIKE '25%' OR u.email LIKE 'zhagnsan@163.com%' OR u.birthday LIKE '%1990-03-31%'",
+                        + "u.trueAge LIKE '25%' OR u.email LIKE 'zhagnsan@163.com%' OR u.birthday LIKE '%1990-03-31%'",
                 sqlInfo.getSql());
         assertTrue(sqlInfo.getParams().isEmpty());
     }
@@ -603,7 +603,7 @@ public class FenixTest {
         String userName = "zhang";
         String startBirthday = "1990-03-25";
         String endBirthday = "2010-08-28";
-        Integer[] sexs = new Integer[]{0, 1};
+        Integer[] sexs = new Integer[] {0, 1};
 
         SqlInfo sqlInfo = Fenix.start()
                 .select("u.id, u.name, u.email, d.birthday, d.address")
@@ -645,8 +645,8 @@ public class FenixTest {
                 .from("User")
                 .where(fenix ->
                         fenix.andEqual("u.id", context.get("id"), context.get("id") != null)
-                        .andLike("u.nickName", context.get("name"), context.get("name") != null)
-                        .andLike("u.email", context.get("email"), context.get("email") != null))
+                                .andLike("u.nickName", context.get("name"), context.get("name") != null)
+                                .andLike("u.email", context.get("email"), context.get("email") != null))
                 .andIn("u.sex", (Object[]) context.get("sexs"), context.get("sexs") != null)
                 .orderBy("u.updateTime").desc()
                 .end();

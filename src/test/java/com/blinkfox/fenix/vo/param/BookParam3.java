@@ -2,10 +2,8 @@ package com.blinkfox.fenix.vo.param;
 
 import com.blinkfox.fenix.specification.annotation.LikeOrLike;
 import com.blinkfox.fenix.specification.annotation.OrLikeOrLike;
-
 import java.util.List;
 import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

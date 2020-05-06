@@ -18,14 +18,54 @@ import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.*;
-
+import com.blinkfox.fenix.specification.handler.impl.BetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.IsNotNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.IsNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.JoinPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikeInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikeOrLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrIsNotNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrIsNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLikeOrLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
 import lombok.Getter;
-
 import org.dom4j.Node;
 
 /**
@@ -268,7 +308,7 @@ public class FenixConfig {
 
     /**
      * 设置自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
-     *     多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
+     * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
      *
      * @param handlerLocations handler 的包路径位置，如：'com.blinkfox.handler'.
      * @return {@link FenixConfig} 实例自身

@@ -10,7 +10,6 @@ import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**
@@ -48,7 +47,7 @@ public class TextHandler implements FenixHandler {
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             // 获取所有子节点，如果子节点 node 是文本节点，则直接获取其文本，并将其拼接起来.
             SqlInfo sqlInfo = source.getSqlInfo();
-            for (Node n: node.selectNodes(XpathConst.ATTR_CHILD)) {
+            for (Node n : node.selectNodes(XpathConst.ATTR_CHILD)) {
                 if (Const.NODETYPE_TEXT.equals(n.getNodeTypeName())) {
                     FenixContext.buildPlainTextSqlInfo(sqlInfo, n.getText());
                 } else {

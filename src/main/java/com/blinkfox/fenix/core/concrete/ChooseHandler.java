@@ -7,9 +7,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.dom4j.Node;
 
 /**

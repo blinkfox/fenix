@@ -11,15 +11,12 @@ import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.util.Collection;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.dom4j.Node;
 
 /**
@@ -49,7 +46,7 @@ public final class FenixConfigManager {
      */
     @Getter
     private FenixConfig fenixConfig;
-    
+
     /**
      * 初始化的 {@link FenixConfigManager} 单实例.
      */
@@ -129,7 +126,7 @@ public final class FenixConfigManager {
         Collection<XmlResource> xmlResources = xmlResourceMap.values();
         for (XmlResource xmlResource : xmlResources) {
             String namespace = xmlResource.getNamespace();
-            for (Node fenixNode: xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
+            for (Node fenixNode : xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
                 String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
                     throw new NodeNotFoundException("【Fenix 异常提示】命名空间为【" + namespace + "】的 Fenix XML 文件中有"

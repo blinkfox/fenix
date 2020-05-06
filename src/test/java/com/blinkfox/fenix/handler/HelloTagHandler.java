@@ -6,7 +6,6 @@ import com.blinkfox.fenix.config.annotation.Tagger;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**

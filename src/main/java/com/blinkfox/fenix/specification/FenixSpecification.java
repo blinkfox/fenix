@@ -10,7 +10,6 @@ import com.blinkfox.fenix.specification.handler.bean.Pair;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicateBuilder;
-
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -20,14 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -109,11 +105,11 @@ public final class FenixSpecification {
     /**
      * 将参数对象转换成 {@link Predicate} 对象集合.
      *
-     * @param from            {@link From} 实例
+     * @param from {@link From} 实例
      * @param criteriaBuilder {@link CriteriaBuilder} 实例
-     * @param beanParam           对象参数
-     * @param <Z>             范型 Z
-     * @param <X>             范型 X
+     * @param beanParam 对象参数
+     * @param <Z> 范型 Z
+     * @param <X> 范型 X
      * @return {@link Predicate} 对象集合
      */
     public static <Z, X> List<Predicate> beanParamToPredicate(
@@ -150,7 +146,7 @@ public final class FenixSpecification {
      * @param <X> 范型 X
      * @return 一个 {@link Predicate} 实例
      */
-    private static  <Z, X> Predicate buildPredicate(Object beanParam, Field field, CriteriaBuilder criteriaBuilder,
+    private static <Z, X> Predicate buildPredicate(Object beanParam, Field field, CriteriaBuilder criteriaBuilder,
             From<Z, X> root, AbstractPredicateHandler handler) {
         Class<? extends Annotation> annotationClass = handler.getAnnotation();
         Annotation annotation = field.getAnnotation(annotationClass);
@@ -174,7 +170,7 @@ public final class FenixSpecification {
             return pair == null
                     ? null
                     : buildDefaultPredicate(criteriaBuilder, field, root, handler,
-                            pair.getLeft(), pair.getRight(), annotation);
+                    pair.getLeft(), pair.getRight(), annotation);
         } catch (IllegalAccessException e) {
             throw new BuildSpecificationException("【Fenix 异常】与属性名相同名称的 match 匹配方法，不能访问，"
                     + "请设置方法的访问级别为【public】，方法返回值类型为【boolean】类型.");

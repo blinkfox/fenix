@@ -4,10 +4,8 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.FieldEmptyException;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.dom4j.Node;
 
 /**

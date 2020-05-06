@@ -2,7 +2,6 @@ package com.blinkfox.fenix.specification.predicate;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.hibernate.query.criteria.internal.ParameterRegistry;
 import org.hibernate.query.criteria.internal.compile.RenderingContext;

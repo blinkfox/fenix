@@ -12,7 +12,6 @@ import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.SqlInfoPrinter;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -113,7 +112,7 @@ public final class Fenix {
     private Fenix concat(String sqlKey, String... params) {
         this.source.getSqlInfo().getJoin().append(SqlKeyConst.SPACE).append(sqlKey).append(SqlKeyConst.SPACE);
         if (params != null && params.length > 0) {
-            for (String param: params) {
+            for (String param : params) {
                 this.source.getSqlInfo().getJoin().append(param).append(SqlKeyConst.SPACE);
             }
         }
@@ -717,7 +716,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix equal(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.EQUAL,true);
+        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.EQUAL, true);
     }
 
     /**
@@ -786,7 +785,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notEqual(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.NOT_EQUAL,true);
+        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.NOT_EQUAL, true);
     }
 
     /**
@@ -975,6 +974,7 @@ public final class Fenix {
 
     /**
      * 生成带 " OR " 前缀小于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
      * @param field 数据库字段
      * @param value 值
      * @param match 是否匹配
@@ -1195,7 +1195,7 @@ public final class Fenix {
      * 生成 " NOT LIKE " 模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1209,7 +1209,7 @@ public final class Fenix {
      * 生成 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      *
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1224,7 +1224,7 @@ public final class Fenix {
      * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1238,7 +1238,7 @@ public final class Fenix {
      * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      *
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1253,7 +1253,7 @@ public final class Fenix {
      * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1266,7 +1266,7 @@ public final class Fenix {
     /**
      * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -2083,7 +2083,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNull(String field) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, true,true);
+        return this.doIsNull(SqlKeyConst.SPACE, field, true, true);
     }
 
     /**
@@ -2096,7 +2096,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNull(String field, boolean match) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, match,true);
+        return this.doIsNull(SqlKeyConst.SPACE, field, match, true);
     }
 
     /**
@@ -2108,7 +2108,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNull(String field) {
-        return this.doIsNull(SymbolConst.AND, field, true,true);
+        return this.doIsNull(SymbolConst.AND, field, true, true);
     }
 
     /**
@@ -2121,7 +2121,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.AND, field, match,true);
+        return this.doIsNull(SymbolConst.AND, field, match, true);
     }
 
     /**
@@ -2133,7 +2133,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNull(String field) {
-        return this.doIsNull(SymbolConst.OR, field, true,true);
+        return this.doIsNull(SymbolConst.OR, field, true, true);
     }
 
     /**
@@ -2146,7 +2146,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.OR, field, match,true);
+        return this.doIsNull(SymbolConst.OR, field, match, true);
     }
 
     /**
@@ -2158,7 +2158,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNotNull(String field) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, true,false);
+        return this.doIsNull(SqlKeyConst.SPACE, field, true, false);
     }
 
     /**
@@ -2171,7 +2171,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNotNull(String field, boolean match) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, match,false);
+        return this.doIsNull(SqlKeyConst.SPACE, field, match, false);
     }
 
     /**
@@ -2183,7 +2183,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNotNull(String field) {
-        return this.doIsNull(SymbolConst.AND, field, true,false);
+        return this.doIsNull(SymbolConst.AND, field, true, false);
     }
 
     /**
@@ -2196,7 +2196,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNotNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.AND, field, match,false);
+        return this.doIsNull(SymbolConst.AND, field, match, false);
     }
 
     /**
@@ -2208,7 +2208,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNotNull(String field) {
-        return this.doIsNull(SymbolConst.OR, field, true,false);
+        return this.doIsNull(SymbolConst.OR, field, true, false);
     }
 
     /**
@@ -2221,7 +2221,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNotNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.OR, field, match,false);
+        return this.doIsNull(SymbolConst.OR, field, match, false);
     }
 
 }

@@ -3,7 +3,6 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.specification.annotation.LikeIn;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,7 +22,6 @@ public class LikeInPredicateHandler extends AbstractPredicateHandler {
     public Class<LikeIn> getAnnotation() {
         return LikeIn.class;
     }
-
 
     @Override
     public <Z, X> Predicate buildPredicate(

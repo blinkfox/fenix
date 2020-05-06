@@ -6,16 +6,13 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-
 import lombok.Setter;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.data.jpa.repository.query.JpaParameters;
@@ -232,7 +229,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             }
 
             // 获取参数
-            Optional<String> nameOptional =  parameter.getName();
+            Optional<String> nameOptional = parameter.getName();
             if (nameOptional.isPresent()) {
                 context.put(nameOptional.get(), values[i]);
             }
@@ -277,7 +274,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * 根据 fenixId 来构建 SqlInfo 信息.
      *
      * <p>区分该 fenixId 是否有 '.' 号，如果有就分割 namespace 和 fenixId，
-     *      否则就用查询方法所在的 class 全路径名来作为 namespace.</p>
+     * 否则就用查询方法所在的 class 全路径名来作为 namespace.</p>
      *
      * @param fenixId fenix XML 中的 id，可能包含 namespace.
      */

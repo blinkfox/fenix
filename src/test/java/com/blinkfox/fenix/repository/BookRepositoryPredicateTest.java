@@ -6,14 +6,12 @@ import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,7 +77,7 @@ public class BookRepositoryPredicateTest {
         paramMap.put("endsName", ENDS_NAME);
         paramMap.put("patternName", "_ava%");
         paramMap.put("idList", Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
-        paramMap.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7"});
+        paramMap.put("ids", new String[] {"1", "2", "3", "4", "5", "6", "7"});
     }
 
     /**
@@ -103,7 +101,7 @@ public class BookRepositoryPredicateTest {
     public void testEquals() {
         List<Book> books = bookRepository.findAll(FenixSpecification.of(builder ->
                 builder.andEquals("isbn", paramMap.get("isbn"))
-                .build()));
+                        .build()));
         Assert.assertEquals(1, books.size());
 
         String isbn = (String) paramMap.get("isbn");

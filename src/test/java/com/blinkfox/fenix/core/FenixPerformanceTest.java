@@ -6,12 +6,10 @@ import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.stalker.Stalker;
 import com.blinkfox.stalker.config.Options;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

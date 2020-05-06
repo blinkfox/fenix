@@ -1,10 +1,8 @@
 package com.blinkfox.fenix.specification;
 
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
-
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

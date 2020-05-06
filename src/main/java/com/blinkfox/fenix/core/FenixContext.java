@@ -9,12 +9,9 @@ import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.lang.reflect.InvocationTargetException;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.springframework.util.StringUtils;
 
 /**
@@ -62,7 +59,7 @@ public final class FenixContext {
     /**
      * 根据标签名称和对应的构建参数构造出对应标签的 JPQL (或者 SQL)与参数.
      * <p>获取所有配置的标签和标签处理器的全局 map 对象，并得到对应标签的标签处理器.
-     *      如果有对应的 handler 处理器，就执行该标签中对应 handler 对象的方法.</p>
+     * 如果有对应的 handler 处理器，就执行该标签中对应 handler 对象的方法.</p>
      *
      * @param source 构建所需的资源对象
      * @param tag 标签名称

@@ -25,9 +25,7 @@ import com.blinkfox.fenix.specification.annotation.OrNotLikePattern;
 import com.blinkfox.fenix.specification.annotation.OrNotStartsWith;
 import com.blinkfox.fenix.specification.annotation.OrStartsWith;
 import com.blinkfox.fenix.specification.annotation.StartsWith;
-
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -2,8 +2,46 @@ package com.blinkfox.fenix.specification.predicate;
 
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.handler.PredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.*;
-
+import com.blinkfox.fenix.specification.handler.impl.BetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.IsNotNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.IsNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.NotStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrIsNotNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrIsNullPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotBetweenPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotEndsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotLikePatternPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrNotStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +49,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-
 import lombok.Getter;
 
 /**
@@ -374,7 +411,7 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder andBetween(String fieldName, Object startValue, Object endValue) {
         this.predicates.add(new BetweenPredicateHandler()
-                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[] {startValue, endValue}));
         return this;
     }
 
@@ -403,7 +440,7 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orBetween(String fieldName, Object startValue, Object endValue) {
         this.predicates.add(new OrBetweenPredicateHandler()
-                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[] {startValue, endValue}));
         return this;
     }
 
@@ -432,7 +469,7 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder andNotBetween(String fieldName, Object startValue, Object endValue) {
         this.predicates.add(new NotBetweenPredicateHandler()
-                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[] {startValue, endValue}));
         return this;
     }
 
@@ -461,7 +498,7 @@ public class FenixPredicateBuilder {
      */
     public FenixPredicateBuilder orNotBetween(String fieldName, Object startValue, Object endValue) {
         this.predicates.add(new OrNotBetweenPredicateHandler()
-                .buildPredicate(criteriaBuilder, from, fieldName, new Object[]{startValue, endValue}));
+                .buildPredicate(criteriaBuilder, from, fieldName, new Object[] {startValue, endValue}));
         return this;
     }
 

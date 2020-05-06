@@ -5,7 +5,6 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Arrays;
 import java.util.Map;
 
@@ -38,8 +37,8 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
     /**
      * 追加构建 'LIKE' 模糊查询的 {@link SqlInfo} 信息.
      *
-     * @param fieldText   字段文本值
-     * @param valueText   参数值
+     * @param fieldText 字段文本值
+     * @param valueText 参数值
      * @param patternText 模式字符串文本
      */
     public void buildLikeSql(String fieldText, String valueText, String patternText) {
@@ -57,7 +56,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      *
      * @param fieldText 字段文本值
      * @param startText 开始文本
-     * @param endText   结束文本
+     * @param endText 结束文本
      */
     public void buildBetweenSql(String fieldText, String startText, String endText) {
         super.buildBetweenSql(fieldText, startText, ParseHelper.parseExpress(startText, context),
@@ -83,7 +82,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      * 追加构建 'TEXT' 的文本标签中参数的 {@link SqlInfo} 信息.
      *
      * <p>注：value 的类型必须是 Map 类型的，否则将抛出 {@link FenixException} 异常；
-     *      且 Map 中的 key 必须是“死”字符串，value 的值才可以被动态解析.</p>
+     * 且 Map 中的 key 必须是“死”字符串，value 的值才可以被动态解析.</p>
      *
      * @param valueText value 文本值
      */
