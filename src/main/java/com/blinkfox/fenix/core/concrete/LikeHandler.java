@@ -14,9 +14,9 @@ import org.dom4j.Node;
  * <p>LIKE 包括：前后模糊，前缀匹配，后缀匹配等.</p>
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;like match="" field="" value="" pattern="" /&gt;'</li>
- *     <li>'&lt;andLike match="" field="" value="" pattern="" /&gt;'</li>
- *     <li>'&lt;orLike match="" field="" value="" pattern="" /&gt;'</li>
+ *     <li>{@code <like match="" field="" value="" pattern="" />}</li>
+ *     <li>{@code <andLike match="" field="" value="" pattern="" />}</li>
+ *     <li>{@code <orLike match="" field="" value="" pattern="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>

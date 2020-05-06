@@ -17,12 +17,12 @@ public class BetweenValue<T extends Comparable<T>> {
     /**
      * 开始值.
      */
-    private T start;
+    private final T start;
 
     /**
      * 结束值.
      */
-    private T end;
+    private final T end;
 
     /**
      * 构造含有开始值和结束值的用于区间查询 {@link BetweenValue} 实例.

@@ -23,12 +23,12 @@ final class QueryResultBuilder {
     /**
      * 查询的 {@code Query} 实例.
      */
-    private Query query;
+    private final Query query;
 
     /**
      * 返回结果类型的字符串.
      */
-    private String resultType;
+    private final String resultType;
 
     /**
      * 基于返回结果类型字符串的构造方法.

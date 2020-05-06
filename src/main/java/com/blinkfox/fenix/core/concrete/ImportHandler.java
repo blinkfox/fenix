@@ -15,7 +15,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;import match="" namespace="" fenixId="" value="" /&gt;'</li>
+ *     <li>{@code <import match="" namespace="" fenixId="" value="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>

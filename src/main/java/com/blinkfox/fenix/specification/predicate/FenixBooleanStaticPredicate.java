@@ -23,7 +23,7 @@ public class FenixBooleanStaticPredicate extends AbstractSimplePredicate {
     private static final long serialVersionUID = 3479513712737513954L;
 
     @Getter
-    private BooleanStaticAssertionPredicate predicate;
+    private final BooleanStaticAssertionPredicate predicate;
 
     @Getter
     @Setter

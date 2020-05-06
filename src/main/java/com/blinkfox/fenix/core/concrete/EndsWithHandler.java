@@ -14,9 +14,9 @@ import lombok.Getter;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;endsWith match="" field="" value="" /&gt;'</li>
- *     <li>'&lt;andEndsWith match="" field="" value="" /&gt;'</li>
- *     <li>'&lt;orEndsWith match="" field="" value="" /&gt;'</li>
+ *     <li>{@code <endsWith match="" field="" value="" />}</li>
+ *     <li>{@code <andEndsWith match="" field="" value="" />}</li>
+ *     <li>{@code <orEndsWith match="" field="" value="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -34,7 +34,7 @@ public class EndsWithHandler extends LikeHandler {
      * 用于后续生成 LIKE 后缀匹配 SQL 片段的额外参数 Map.
      */
     @Getter
-    private static Map<String, Object> endsMap = new HashMap<>(2);
+    private static final Map<String, Object> endsMap = new HashMap<>(2);
 
     static {
         endsMap.put(Const.TYPE, LikeTypeEnum.ENDS_WITH);

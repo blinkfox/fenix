@@ -14,17 +14,17 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;between match="" field="" start="" end="" /&gt;'</li>
- *     <li>'&lt;andBetween match="" field="" start="" end="" /&gt;'</li>
- *     <li>'&lt;orBetween match="" field="" start="" end="" /&gt;'</li>
+ *     <li>{@code <between match="" field="" start="" end="" />}</li>
+ *     <li>{@code <andBetween match="" field="" start="" end="" />}</li>
+ *     <li>{@code <orBetween match="" field="" start="" end="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
  *     <li>获取到 match 字段的值，如果为空或者为 true，就生成此 SQL 片段；</li>
  *     <li>start 和 end 的值"不能"全为 null；</li>
- *     <li>start 和 end 的值"均不为 null"时，会生成 'BETWEEN :start AND :end' 的 JPQL 语句；</li>
- *     <li>start 不为 null 和 end 为 null 时，会退化生成 '&gt;= :start' 的 JPQL 语句；</li>
- *     <li>start 为 null 和 end 不为 null 时，会退化生成 '&lt;= :end' 的 JPQL 语句；</li>
+ *     <li>start 和 end 的值"均不为 null"时，会生成 {@code 'BETWEEN :start AND :end'} 的 JPQL 语句；</li>
+ *     <li>start 不为 null 和 end 为 null 时，会退化生成 {@code '>= :start'} 的 JPQL 语句；</li>
+ *     <li>start 为 null 和 end 不为 null 时，会退化生成 {@code '<= :end'} 的 JPQL 语句；</li>
  * </ul>
  *
  * @author blinkfox on 2019-08-07.

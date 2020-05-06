@@ -6,6 +6,7 @@ import com.blinkfox.fenix.config.annotation.Taggers;
 import com.blinkfox.fenix.config.entity.TagHandler;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.FenixHandler;
+import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public final class TaggerScanner {
     /**
      * 存放所有扫描位置下的 class 对象的 Set 集合.
      */
-    private Set<Class<?>> classSet;
+    private final Set<Class<?>> classSet;
 
     /**
      * 构造方法，初始化 classSet 的 HashSet 实例.
@@ -258,14 +259,12 @@ public final class TaggerScanner {
      */
     private boolean isImplFenixHandlerClass(Class<?> implCls) {
         Class<?>[] classes = implCls.getInterfaces();
-        if (classes == null) {
-            return false;
-        }
-
         // 循环判断其接口是否含有 'FenixHandler' 接口.
-        for (Class<?> cls : classes) {
-            if (FenixHandler.class.isAssignableFrom(cls)) {
-                return true;
+        if (CollectionHelper.isNotEmpty(classes)) {
+            for (Class<?> cls : classes) {
+                if (FenixHandler.class.isAssignableFrom(cls)) {
+                    return true;
+                }
             }
         }
         return false;

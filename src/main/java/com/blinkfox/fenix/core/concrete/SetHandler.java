@@ -17,7 +17,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;set match1="" field="" value="" match2="" field2="" value2="" match3="" field3="" value3=""/&gt;'</li>
+ *     <li>{@code <set match1="" field="" value="" match2="" field2="" value2="" match3="" field3="" value3="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>

@@ -38,7 +38,7 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     /**
      * JPA 默认的 Query 查找策略实例.
      */
-    private QueryLookupStrategy jpaQueryLookupStrategy;
+    private final QueryLookupStrategy jpaQueryLookupStrategy;
 
     /**
      * 构造方法.

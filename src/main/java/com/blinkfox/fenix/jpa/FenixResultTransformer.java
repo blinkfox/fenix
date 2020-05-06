@@ -42,7 +42,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     /**
      * 要转换类型的 class 实例.
      */
-    private Class<T> resultClass;
+    private final Class<T> resultClass;
 
     /**
      * 返回结果各属性字段名称及对应的对象间的映射关系 Map.

@@ -63,24 +63,24 @@ public class FenixPredicateBuilder {
      * 动态构建 {@link Predicate} 所需的 {@link CriteriaBuilder} 实例.
      */
     @Getter
-    private CriteriaBuilder criteriaBuilder;
+    private final CriteriaBuilder criteriaBuilder;
 
     /**
      * 动态构建 {@link Predicate} 所需的 {@link From} 实例.
      */
     @Getter
-    private From<?, ?> from;
+    private final From<?, ?> from;
 
     /**
      * {@link CriteriaQuery} 的查询器实例.
      */
     @Getter
-    private CriteriaQuery<?> criteriaQuery;
+    private final CriteriaQuery<?> criteriaQuery;
 
     /**
      * 动态条件列表集合，作为构造的最终结果返回.
      */
-    private List<Predicate> predicates;
+    private final List<Predicate> predicates;
 
     /**
      * 构造方法.

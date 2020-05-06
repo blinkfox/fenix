@@ -170,7 +170,7 @@ public class SqlInfoBuilder {
             sqlInfo.getJoin().append(this.prefix).append(fieldText).append(SymbolConst.GTE)
                     .append(Const.COLON).append(startNamed);
             sqlInfo.getParams().put(startNamed, startValue);
-        } else if (startValue == null && endValue != null) {
+        } else if (startValue == null) {
             // 开始值为空，结束值不为空时，转为"小于"的情况.
             String endNamed = StringHelper.fixDot(endText);
             sqlInfo.getJoin().append(this.prefix).append(fieldText).append(SymbolConst.LTE)
