@@ -19,6 +19,7 @@ import org.dom4j.Node;
  * <ul>
  *     <li>{@code <set match1="" field="" value="" match2="" field2="" value2="" match3="" field3="" value3="" />}</li>
  * </ul>
+ *
  * <p>注：</p>
  * <ul>
  *     <li>获取到的每个 match 字段的值，如果为空或者为 true，就生成对应字段的 Set 语句片段；</li>

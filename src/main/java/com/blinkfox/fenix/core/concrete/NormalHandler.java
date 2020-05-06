@@ -14,11 +14,16 @@ import org.dom4j.Node;
  * <p>常规 SQL 处理包括：等值、大于、小于、大于等于、小于等于、...</p>
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>{@code <equal match="" field="" value="" />}</li>
- *     <li>{@code <andEqual match="" field="" value="" />}</li>
- *     <li>{@code <orEqual match="" field="" value="" />}</li>
+ *     <li>{@code <equal match="" field="" name="" value="" />}</li>
+ *     <li>{@code <andEqual match="" field="" name="" value="" />}</li>
+ *     <li>{@code <orEqual match="" field="" name="" value="" />}</li>
  * </ul>
- * <p>注：获取到 match 字段的值，如果没有或者为 true，就通过 field, value 来生成此 SQL 片段.</p>
+ *
+ * <p>注：</p>
+ * <ul>
+ *     <li>获取到 match 字段的值，如果没有或者为 true，就生成此 SQL 片段；</li>
+ *     <li>field 和 value 的值必填，match 和 name 的值非必填。</li>
+ * </ul>
  *
  * @author blinkfox on 2019-08-06.
  * @see LikeHandler
@@ -38,6 +43,7 @@ public class NormalHandler implements FenixHandler {
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             new XmlSqlInfoBuilder(source).buildNormalSql(
                     XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+                    XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_NAME),
                     XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_VALUE));
         }
         source.resetPrefix();

@@ -13,13 +13,15 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>{@code <in match="" field="" value="" />}</li>
- *     <li>{@code <andIn match="" field="" value="" />}</li>
- *     <li>{@code <orIn match="" field="" value="" />}</li>
+ *     <li>{@code <in match="" field="" name="" value="" />}</li>
+ *     <li>{@code <andIn match="" field="" name="" value="" />}</li>
+ *     <li>{@code <orIn match="" field="" name="" value="" />}</li>
  * </ul>
+ *
  * <p>注：</p>
  * <ul>
  *     <li>获取到 match 字段的值，如果为空或者为 true，就生成此 SQL 片段；</li>
+ *     <li>field 和 value 的值必填，match 和 name 的值非必填；</li>
  *     <li>value 的值可以是数组，也可以是 Collection 集合，还可以是单个的值；</li>
  *     <li>如果 value 的值是单个的值，本处理器会将该单个的值封装成数组；</li>
  * </ul>
@@ -42,7 +44,9 @@ public class InHandler implements FenixHandler {
     public void buildSqlInfo(BuildSource source) {
         Node node = source.getNode();
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
-            new XmlSqlInfoBuilder(source).buildInSql(XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+            new XmlSqlInfoBuilder(source).buildInSql(
+                    XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+                    XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_NAME),
                     XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_VALUE));
         }
     }

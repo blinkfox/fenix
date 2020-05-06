@@ -14,13 +14,14 @@ import lombok.Getter;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>{@code <endsWith match="" field="" value="" />}</li>
- *     <li>{@code <andEndsWith match="" field="" value="" />}</li>
- *     <li>{@code <orEndsWith match="" field="" value="" />}</li>
+ *     <li>{@code <endsWith match="" field="" name="" value="" />}</li>
+ *     <li>{@code <andEndsWith match="" field="" name="" value="" />}</li>
+ *     <li>{@code <orEndsWith match="" field="" name="" value="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
  *     <li>获取到 match 字段的值，如果为空或者为 true，就生成此 SQL 片段；</li>
+ *     <li>field 和 value 的值必填，match 和 name 的值非必填；</li>
  *     <li>生成的 SQL 片段默认是按后缀来匹配的，即：'%abc'.</li>
  * </ul>
  *
