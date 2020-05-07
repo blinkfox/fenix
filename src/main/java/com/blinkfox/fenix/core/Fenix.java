@@ -654,15 +654,17 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param value 数组的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doInByType(String prefix, String field, Object value, boolean match, boolean positive) {
+    private Fenix doInByType(String prefix, String field, String name, Object value, boolean match, boolean positive) {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.IN : SymbolConst.NOT_IN);
-            new JavaSqlInfoBuilder(this.source).buildInSql(field, field, value);
+            new JavaSqlInfoBuilder(this.source)
+                    .buildInSql(field, StringHelper.isBlank(name) ? StringHelper.fixDot(field) : name, value);
             this.source.reset();
         }
         return this;
@@ -673,13 +675,14 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param values 数组的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doIn(String prefix, String field, Object[] values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, positive);
+    private Fenix doIn(String prefix, String field, String name, Object[] values, boolean match, boolean positive) {
+        return this.doInByType(prefix, field, name, values, match, positive);
     }
 
     /**
@@ -687,13 +690,15 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param values 集合的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doIn(String prefix, String field, Collection<?> values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, positive);
+    private Fenix doIn(String prefix, String field, String name, Collection<?> values,
+            boolean match, boolean positive) {
+        return this.doInByType(prefix, field, name, values, match, positive);
     }
 
     /**
@@ -2901,7 +2906,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Object[] values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Object[] values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, true);
     }
 
     /**
@@ -2913,7 +2931,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Object[] values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, true);
     }
 
     /**
@@ -2924,7 +2956,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Collection<?> values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Collection<?> values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, true);
     }
 
     /**
@@ -2936,7 +2981,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Collection<?> values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, true);
     }
 
     /**
@@ -2947,7 +3006,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.AND, field, values, true, true);
+        return this.doIn(SymbolConst.AND, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, true);
     }
 
     /**
@@ -2959,7 +3031,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, true);
+        return this.doIn(SymbolConst.AND, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, true);
     }
 
     /**
@@ -2970,7 +3056,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.AND, field, values, true, true);
+        return this.doIn(SymbolConst.AND, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, true);
     }
 
     /**
@@ -2982,7 +3081,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, true);
+        return this.doIn(SymbolConst.AND, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, true);
     }
 
     /**
@@ -2993,7 +3106,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.OR, field, values, true, true);
+        return this.doIn(SymbolConst.OR, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, true);
     }
 
     /**
@@ -3005,7 +3131,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, true);
+        return this.doIn(SymbolConst.OR, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, true);
     }
 
     /**
@@ -3016,7 +3156,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.OR, field, values, true, true);
+        return this.doIn(SymbolConst.OR, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, true);
     }
 
     /**
@@ -3028,7 +3181,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, true);
+        return this.doIn(SymbolConst.OR, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, true);
     }
 
     /**
@@ -3039,7 +3206,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Object[] values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Object[] values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, false);
     }
 
     /**
@@ -3051,7 +3231,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Object[] values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, false);
     }
 
     /**
@@ -3062,7 +3256,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Collection<?> values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Collection<?> values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, false);
     }
 
     /**
@@ -3074,7 +3281,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, false);
     }
 
     /**
@@ -3085,7 +3306,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.AND, field, values, true, false);
+        return this.doIn(SymbolConst.AND, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, false);
     }
 
     /**
@@ -3097,7 +3331,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, false);
+        return this.doIn(SymbolConst.AND, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, false);
     }
 
     /**
@@ -3108,7 +3356,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.AND, field, values, true, false);
+        return this.doIn(SymbolConst.AND, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, false);
     }
 
     /**
@@ -3120,7 +3381,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, false);
+        return this.doIn(SymbolConst.AND, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, false);
     }
 
     /**
@@ -3131,7 +3406,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.OR, field, values, true, false);
+        return this.doIn(SymbolConst.OR, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, false);
     }
 
     /**
@@ -3143,7 +3431,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, false);
+        return this.doIn(SymbolConst.OR, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, false);
     }
 
     /**
@@ -3154,7 +3456,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.OR, field, values, true, false);
+        return this.doIn(SymbolConst.OR, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, false);
     }
 
     /**
@@ -3166,7 +3481,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, false);
+        return this.doIn(SymbolConst.OR, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, false);
     }
 
     /**
