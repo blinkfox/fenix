@@ -630,16 +630,20 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
      * @param startValue 值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
      * @param endValue 值
      * @param match 是否匹配
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doBetween(String prefix, String field, Object startValue, Object endValue, boolean match) {
+    private Fenix doBetween(String prefix, String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
         if (match) {
             this.source.setPrefix(prefix);
-            new JavaSqlInfoBuilder(this.source)
-                    .buildBetweenSql(field, field + START, startValue, field + END, endValue);
+            new JavaSqlInfoBuilder(this.source).buildBetweenSql(field,
+                    StringHelper.isBlank(startName) ? field + START : startName, startValue,
+                    StringHelper.isBlank(endName) ? field + END : endName, endValue);
             this.source.reset();
         }
         return this;
@@ -2723,7 +2727,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix between(String field, Object startValue, Object endValue) {
-        return this.doBetween(SqlKeyConst.SPACE, field, startValue, endValue, true);
+        return this.doBetween(SqlKeyConst.SPACE, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix between(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SqlKeyConst.SPACE, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -2736,7 +2755,24 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix between(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SqlKeyConst.SPACE, field, startValue, endValue, match);
+        return this.doBetween(SqlKeyConst.SPACE, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix between(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SqlKeyConst.SPACE, field, startName, startValue, endName, endValue, match);
     }
 
     /**
@@ -2748,7 +2784,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andBetween(String field, Object startValue, Object endValue) {
-        return this.doBetween(SymbolConst.AND, field, startValue, endValue, true);
+        return this.doBetween(SymbolConst.AND, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andBetween(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SymbolConst.AND, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -2762,7 +2813,25 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andBetween(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SymbolConst.AND, field, startValue, endValue, match);
+        return this.doBetween(SymbolConst.AND, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条SQL片段，
+     * 否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andBetween(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SymbolConst.AND, field, startName, startValue, endName, endValue, match);
     }
 
     /**
@@ -2774,7 +2843,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orBetween(String field, Object startValue, Object endValue) {
-        return this.doBetween(SymbolConst.OR, field, startValue, endValue, true);
+        return this.doBetween(SymbolConst.OR, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orBetween(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SymbolConst.OR, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -2788,7 +2872,25 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orBetween(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SymbolConst.OR, field, startValue, endValue, match);
+        return this.doBetween(SymbolConst.OR, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条SQL片段，
+     * 否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orBetween(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SymbolConst.OR, field, startName, startValue, endName, endValue, match);
     }
 
     /**
