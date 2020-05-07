@@ -166,6 +166,7 @@ public class FenixTest {
         SqlInfo sqlInfo = Fenix.start()
                 .equal("u.id", context.get("id"), "4".equals(context.get("id")))
                 .equal("u.nickName", context.get("name"))
+                .equal("u.nickName", context.get("name"), "nickName")
                 .equal("u.email", context.get("myEmail"), context.get("myEmail") != null)
                 .andEqual("u.age", context.get("myAge"))
                 .andEqual("u.trueAge", context.get("myAge"))
@@ -179,10 +180,10 @@ public class FenixTest {
                 .equal("u.id", context.get("id"))
                 .end();
 
-        assertEquals("u.nickName = :u_nickName u.email = :u_email AND u.age = :u_age AND u.trueAge = "
-                + ":u_trueAge AND u.trueAge = :u_trueAge u.nickName = :u_nickName OR u.email = :u_email "
-                + "OR u.birthday = :u_birthday OR u.birthday = :u_birthday u.id = :u_id", sqlInfo.getSql());
-        assertEquals(6, sqlInfo.getParams().size());
+        assertEquals("u.nickName = :u_nickName u.nickName = :nickName u.email = :u_email AND u.age = :u_age "
+                + "AND u.trueAge = :u_trueAge AND u.trueAge = :u_trueAge u.nickName = :u_nickName OR u.email ="
+                + " :u_email OR u.birthday = :u_birthday OR u.birthday = :u_birthday u.id = :u_id", sqlInfo.getSql());
+        assertEquals(7, sqlInfo.getParams().size());
     }
 
     /**
