@@ -153,21 +153,28 @@ params(Map<String, Object> paramMap)
 ```java
 // 生成等值查询的 SQL 片段
 equal(String field, Object value)
+equal(String field, Object value, String name) // v2.3.0 版本新增，可以自定义命名参数名称.
 equal(String field, Object value, boolean match)
+equal(String field, Object value, String name, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " AND " 前缀等值查询的 SQL 片段.
 andEqual(String field, Object value)
+andEqual(String field, Object value, String name) // v2.3.0 版本新增，可以自定义命名参数名称.
 andEqual(String field, Object value, boolean match)
+andEqual(String field, Object value, String name, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " OR " 前缀等值查询的 SQL 片段.
 orEqual(String field, Object value)
+orEqual(String field, Object value, String name) // v2.3.0 版本新增，可以自定义命名参数名称.
 orEqual(String field, Object value, boolean match)
+orEqual(String field, Object value, String name, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 ```
 
 **方法解释**：
 
 - `equal`、`andEqual`、`orEqual`，分别表示拼接等值查询 SQL 的前缀为 `空字符串`、`AND`、`OR`；
 - `field`，表示数据库字段或实体属性；
+- `name`，表示 JPA 查询条件的命名参数名称，`v2.3.0` 版本新增的参数。如果没有该参数或者参数值为空，将默认使用 `field` 字段来作为命名参数名称；
 - `value`，表示 Java 中的变量或常量值；
 - `match`，表示是否生成该 SQL 片段，值为 `true` 时生成，否则不生成；
 
@@ -199,22 +206,30 @@ orEqual(String field, Object value, boolean match)
 ```java
 // 生成 BETWEEN 区间查询的 SQL 片段，当某一个值为 null 时，会是大于等于或小于等于的情形.
 - between(String field, Object startValue, Object endValue)
+- between(String field, String startName, Object startValue, String endName, Object endValue) // v2.3.0 版本新增，可以自定义命名参数名称.
 - between(String field, Object startValue, Object endValue, boolean match)
+- between(String field, String startName, Object startValue, String endName, Object endValue, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " AND " 前缀的 BETWEEN 区间查询的 SQL 片段，当某一个值为 null 时，会是大于等于或小于等于的情形.
 - andBetween(String field, Object startValue, Object endValue)
+- andBetween(String field, String startName, Object startValue, String endName, Object endValue) // v2.3.0 版本新增，可以自定义命名参数名称.
 - andBetween(String field, Object startValue, Object endValue, boolean match)
+- andBetween(String field, String startName, Object startValue, String endName, Object endValue, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " OR " 前缀的 BETWEEN 区间查询的 SQL 片段，当某一个值为 null 时，会是大于等于或小于等于的情形.
 - orBetween(String field, Object startValue, Object endValue)
+- orBetween(String field, String startName, Object startValue, String endName, Object endValue) // v2.3.0 版本新增，可以自定义命名参数名称.
 - orBetween(String field, Object startValue, Object endValue, boolean match)
+- orBetween(String field, String startName, Object startValue, String endName, Object endValue, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 ```
 
 **方法解释**：
 
 - `between`、`andBetween`、`orBetween`，分别表示拼接区间查询SQL的前缀为 `空字符串`、`AND`、`OR`；
 - `field`，表示数据库字段或实体属性；
+- `startName`，表示 JPA 查询条件开始值的命名参数名称，`v2.3.0` 版本新增的参数。如果没有该参数或者参数值为空，将默认使用 `field` + `_start` 来作为命名参数名称；
 - `startValue`，表示区间查询的开始值；
+- `endName`，表示 JPA 查询条件结束值的命名参数名称，`v2.3.0` 版本新增的参数。如果没有该参数或者参数值为空，将默认使用 `field` + `_end` 来作为命名参数名称；
 - `endValue`，表示区间查询的结束值；
 - `match`，表示是否生成该SQL片段，值为`true`时生成，否则不生成；
 
@@ -261,45 +276,70 @@ assertEquals(3, sqlInfo.getParams().size());
 ```java
 // 生成 IN 范围查询的 SQL 片段.
 in(String field, Object[] values)
+in(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 in(String field, Collection<?> values)
+in(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 in(String field, Object[] values, boolean match)
+in(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 in(String field, Collection<?> values, boolean match)
+in(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
 andIn(String field, Object[] values)
+andIn(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 andIn(String field, Collection<?> values)
+andIn(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 andIn(String field, Object[] values, boolean match)
+andIn(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 andIn(String field, Collection<?> values, boolean match)
+andIn(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段.
 orIn(String field, Object[] values)
+orIn(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 orIn(String field, Collection<?> values)
+orIn(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 orIn(String field, Object[] values, boolean match)
+orIn(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 orIn(String field, Collection<?> values, boolean match)
+orIn(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成 " NOT IN " 范围查询的 SQL 片段.
 notIn(String field, Object[] values)
+notIn(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 notIn(String field, Collection<?> values)
+notIn(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 notIn(String field, Object[] values, boolean match)
+notIn(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 notIn(String field, Collection<?> values, boolean match)
+notIn(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段.
 andNotIn(String field, Object[] values)
+andNotIn(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 andNotIn(String field, Collection<?> values)
+andNotIn(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 andNotIn(String field, Object[] values, boolean match)
+andNotIn(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 andNotIn(String field, Collection<?> values, boolean match)
+andNotIn(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 
 // 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段.
 orNotIn(String field, Object[] values)
+orNotIn(String field, String name, Object[] values) // v2.3.0 版本新增，可以自定义命名参数名称.
 orNotIn(String field, Collection<?> values)
+orNotIn(String field, String name, Collection<?> values) // v2.3.0 版本新增，可以自定义命名参数名称.
 orNotIn(String field, Object[] values, boolean match)
+orNotIn(String field, String name, Object[] values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 orNotIn(String field, Collection<?> values, boolean match)
+orNotIn(String field, String name, Collection<?> values, boolean match) // v2.3.0 版本新增，可以自定义命名参数名称.
 ```
 
 **方法解释**：
 
 - `in`、`andIn`、`orIn`，分别表示拼接范围查询SQL的前缀为 `空字符串`、`AND`、`OR`；
 - `field`，表示数据库字段或实体属性；
+- `name`，表示 JPA 查询条件的命名参数名称，`v2.3.0` 版本新增的参数。如果没有该参数或者参数值为空，将默认使用 `field` 字段来作为命名参数名称；
 - `values`，表示范围查询需要的参数的数组或集合；
 - `match`，表示是否生成该SQL片段，值为`true`时生成，否则不生成；
 

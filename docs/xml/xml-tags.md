@@ -24,28 +24,33 @@ Fenix 中提供了大量常见场景下的 XML 标签供开发者使用，且这
 ### 标签
 
 ```xml
-<equal field="" value="" match=""/>
-<andEqual field="" value="" match=""/>
-<orEqual field="" value="" match=""/>
+<equal field="" value="" name="" match="" />
+<andEqual field="" value="" name="" match="" />
+<orEqual field="" value="" name="" match="" />
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL（`JPQL`） 片段；否则解析出的匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
 ### 使用示例
 
 ```xml
-<equal field="nickname" value="name"/>
+<equal field="nickname" value="name" />
 <!-- 要没有 match 属性将必然生成下面这条 SQL 片段和参数. -->
 nickname = :name
 
-
-<andEqual field="email" value="user.email" match="?email != empty"/>
+<andEqual field="email" value="user.email" match="?email != empty" />
 <!-- 如果 email 不等于空（不为 null 或空字符串）时，才生成下面这条 SQL 片段和参数 -->
 AND email = :user_email
+
+<andEqual field="email" name="myEmail" value="user.email" match="?email != empty" />
+<!-- 如果 email 不等于空（不为 null 或空字符串）时，才生成下面这条 SQL 片段和参数，其中我们通过 name 属性，自定义了 SQL 中的命名参数为 myEmail. -->
+<!-- 其中我们通过 name 属性，自定义了 SQL 中的命名参数为 myEmail. -->
+AND email = :myEmail
 ```
 
 ## 与 equal 类似的标签 :id=equal-similar-tags
@@ -73,19 +78,20 @@ AND email = :user_email
 ### 标签
 
 ```xml
-<like field="" value="" pattern="" match=""/>
-<andLike field="" value="" pattern="" match=""/>
-<orLike field="" value="" pattern="" match=""/>
+<like field="" name="" value="" pattern="" match="" />
+<andLike field="" name="" value="" pattern="" match="" />
+<orLike field="" name="" value="" pattern="" match="" />
 
 <!-- not like的 相关标签. -->
-<notLike field="" value="" pattern="" match=""/>
-<andNotLike field="" value="" pattern="" match=""/>
-<orNotLike field="" value="" pattern="" match=""/>
+<notLike field="" name="" value="" pattern="" match="" />
+<andNotLike field="" name="" value="" pattern="" match="" />
+<orNotLike field="" name="" value="" pattern="" match="" />
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**条件必填**属性。`pattern` 和 `value` 只能存在一个，`value` 生成的 SQL 片段默认是两边模糊，即：`%%`。
 - **pattern**，表示 `like` 匹配的模式，如：`abc%`、`_bc`等，只能是静态文本内容。**条件必填**属性。`pattern` 和 `value` 只能存在一个，`pattern` 用来指定自定义的匹配模式。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
@@ -93,13 +99,17 @@ AND email = :user_email
 ### 使用示例
 
 ```xml
-<andLike field="u.email" value="email" match="?email != empty"/>
+<andLike field="u.email" value="email" match="?email != empty" />
 <!-- 如果 email 不等于空时，才生成下面的这条 SQL 片段，参数为: {email: '%ZhangSan%'}. -->
 AND u.email LIKE :email
 
-<notLike field="u.email" pattern="%@gmail.com"/ >
+<notLike field="u.email" pattern="%@gmail.com" />
 <!-- 匹配所有不是 gmail 的邮箱，将生成下面这这样的 SQL 片段. -->
 u.email NOT LIKE '%@gmail.com'
+
+<andNotLike field="u.email" name="myEmail" value="email" />
+<!-- 生成下面这这样的 SQL 片段，其中我们通过 name 属性，自定义了 SQL 中的命名参数为 myEmail. -->
+AND u.email NOT LIKE :myEmail
 ```
 
 ## startsWith
@@ -109,18 +119,19 @@ u.email NOT LIKE '%@gmail.com'
 ### 标签
 
 ```xml
-<startsWith field="" value="" match=""/>
-<andStartsWith field="" value="" match=""/>
-<orStartsWith field="" value="" match=""/>
+<startsWith field="" name="" value="" match=""/>
+<andStartsWith field="" name="" value="" match=""/>
+<orStartsWith field="" name="" value="" match=""/>
 
-<notStartsWith field="" value="" match=""/>
-<andNotStartsWith field="" value="" match=""/>
-<orNotStartsWith field="" value="" match=""/>
+<notStartsWith field="" name="" value="" match=""/>
+<andNotStartsWith field="" name="" value="" match=""/>
+<orNotStartsWith field="" name="" value="" match=""/>
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按前缀来匹配的，即：`xxx%`。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
@@ -134,6 +145,10 @@ u.name LIKE :user_name
 <andNotStartsWith field="u.name" value="user.name"/>
 <!-- 将生成下面的这条 SQL 片段，参数为: {user_name: 'ZhangSan%'}. -->
 AND u.name NOT LIKE :user_name
+
+<andStartsWith field="u.name" name="myName" value="user.name"/>
+<!-- 将生成下面的这条 SQL 片段，参数为: {myName: 'ZhangSan%'}，我们通过 name 属性，自定义了 SQL 中的命名参数为 myName. -->
+AND u.name LIKE :myName
 ```
 
 ## endsWith
@@ -143,18 +158,19 @@ AND u.name NOT LIKE :user_name
 ### 标签
 
 ```xml
-<endsWith field="" value="" match=""/>
-<andEndsWith field="" value="" match=""/>
-<orEndsWith field="" value="" match=""/>
+<endsWith field="" name="" value="" match=""/>
+<andEndsWith field="" name="" value="" match=""/>
+<orEndsWith field="" name="" value="" match=""/>
 
-<notEndsWith field="" value="" match=""/>
-<andNotEndsWith field="" value="" match=""/>
-<orNotEndsWith field="" value="" match=""/>
+<notEndsWith field="" name="" value="" match=""/>
+<andNotEndsWith field="" name="" value="" match=""/>
+<orNotEndsWith field="" name="" value="" match=""/>
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
+- **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按后缀来匹配的，即：`%xxx`。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
@@ -168,6 +184,10 @@ u.name LIKE :user_name
 <andNotEndsWith field="u.name" value="user.name"/>
 <!-- 将生成下面的这条 SQL 片段，参数为: {user_name: '%ZhangSan'}. -->
 AND u.name NOT LIKE :user_name
+
+<andEndsWith field="u.name" name="myName" value="user.name"/>
+<!-- 将生成下面的这条 SQL 片段，参数为: {user_name: '%ZhangSan'}，我们通过 name 属性，自定义了 SQL 中的命名参数为 myName. -->
+AND u.name LIKE :myName
 ```
 
 ## between
@@ -175,15 +195,17 @@ AND u.name NOT LIKE :user_name
 ### 标签
 
 ```xml
-<between field="" start="" end="" match=""/>
-<andBetween field="" start="" end="" match=""/>
-<orBetween field="" start="" end="" match="" />
+<between field="" startName="" start="" endName="" end="" match=""/>
+<andBetween field="" startName="" start="" endName="" end="" match=""/>
+<orBetween field="" startName="" start="" endName="" end="" match="" />
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
+- **startName**，表示JPA 中生成的开始值的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `start` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `start` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **start**，表示区间匹配条件的开始参数值，对应 `MVEL` 表达式，**条件必填**。
+- **endName**，表示JPA 中生成的结束值的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `end` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `end` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **end**，表示区间匹配条件的结束参数值，对应 `MVEL` 表达式，**条件必填**。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
@@ -192,7 +214,10 @@ AND u.name NOT LIKE :user_name
 ### 使用示例
 
 ```xml
-<andBetween field="u.age" start="startAge" end="endAge" match="(?startAge != null) || (?endAge != null)"/>
+<andBetween field="u.age" start="startAge" end="endAge" match="(?startAge != null) || (?endAge != null)" />
+
+<!-- 通过写 startName 和 endName 属性，自定义了 SQL 中的命名参数为. -->
+<andBetween field="u.age" startName="startAge" start="Integer.parseInt(startAge)" endName="endAge" end="Integer.parseInt(endAge)" />
 ```
 
 **解释**：
@@ -207,19 +232,20 @@ AND u.name NOT LIKE :user_name
 ### 标签
 
 ```xml
-<in field="" value="" match=""/>
-<andIn field="" value="" match=""/>
-<orIn field="" value="" match=""/>
+<in field="" name="" value="" match="" />
+<andIn field="" name="" value="" match="" />
+<orIn field="" name="" value="" match="" />
 
 <!-- not in 相关的标签. -->
-<notIn field="" value="" match=""/>
-<andNotIn field="" value="" match=""/>
-<orNotIn field="" value="" match=""/>
+<notIn field="" name="" value="" match="" />
+<andNotIn field="" name="" value="" match="" />
+<orNotIn field="" name="" value="" match="" />
 ```
 
 ### 属性介绍
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
+- **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数的集合，值可以是数组，也可以是 `Collection` 集合，还可以是单个的值。**必填**属性。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
@@ -229,6 +255,10 @@ AND u.name NOT LIKE :user_name
 <andIn field="u.sex" value="userMap.sexs" match="?userMap.sexs != empty"/>
 <!-- 如果 userMap 中的 sexs 不等于空时，才生成下面这条 SQL 片段和参数. -->
 AND u.sex in :userMap_sexs
+
+<andIn field="u.sex" name="mySex" value="userMap.sexs"/>
+<!-- 生成下面这条 SQL 片段和参数，通过 name 属性，自定义了 SQL 中的命名参数为 mySex. -->
+AND u.sex in :mySex
 ```
 
 ## is null :id=is-null

@@ -100,7 +100,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
         // 遍历设置各个属性对应的值.
         for (int i = 0, len = aliases.length; i < len; i++) {
             String column = aliases[i];
-            if (column == null || StringHelper.isBlank(column)) {
+            if (StringHelper.isBlank(column)) {
                 throw new FenixException("【Fenix 异常】要映射为【" + this.resultClass + "】实体的查询结果列为空，"
                         + "请检查并保证每一个查询结果列都必须用【as】后加“别名”的方式！");
             }
