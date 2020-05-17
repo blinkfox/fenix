@@ -33,12 +33,6 @@ import org.springframework.data.repository.query.RepositoryQuery;
 public class FenixQueryLookupStrategy implements QueryLookupStrategy {
 
     /**
-     * {@link DefaultJpaQueryMethodFactory} 类的 class 全路径名常量.
-     */
-    private static final String JPA_METHOD_FACTORY_NAME =
-            "org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory";
-
-    /**
      * EntityManager 实体管理器.
      */
     private final EntityManager entityManager;
@@ -78,18 +72,33 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
         this.extractor = extractor;
 
         // 如果当前 JVM 中有 JpaQueryMethodFactory 接口的 class，说明是 v2.3.0 及之后的版本，API 有所变化，需要特殊处理.
-        if (this.hasDefaultJpaQueryMethodFactoryClass()) {
-            this.queryMethodFactory = this.newDefaultJpaQueryMethodFactoryInstance();
+        if (FenixJpaClassWriter.hasDefaultJpaQueryMethodFactoryClass()) {
+            this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
             this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager,
                     (JpaQueryMethodFactory) this.queryMethodFactory, key, provider, EscapeCharacter.DEFAULT);
         } else {
-            // TODO 为了兼容之前的版本，此处考虑字节码注入的方式来解决编译错误.
-            //            this.jpaQueryLookupStrategy = JpaQueryLookupStrategy
-            //                    .create(entityManager, key, extractor, provider, EscapeCharacter.DEFAULT);
-            this.queryMethodFactory = this.newDefaultJpaQueryMethodFactoryInstance();
-            this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager,
-                    (JpaQueryMethodFactory) this.queryMethodFactory, key, provider, EscapeCharacter.DEFAULT);
+            // 为了兼容 Spring Data JPA v2.3.0 之前的版本，此处使用 Javassist 来重写下面方法的中的字节码，来解决老版本的编译错误.
+            this.jpaQueryLookupStrategy = this.createOldJpaQueryLookupStrategy(entityManager, key, extractor, provider,
+                    EscapeCharacter.DEFAULT);
         }
+    }
+
+    /**
+     * 创建 Spring Data JPA v2.3.0 之前的版本的 {@link QueryLookupStrategy} 对象。
+     *
+     * @param entityManager EntityManager 对象
+     * @param key QueryLookupStrategy.Key
+     * @param extractor QueryExtractor
+     * @param provider QueryMethodEvaluationContextProvider
+     * @param character EscapeCharacter
+     * @return QueryLookupStrategy
+     * @author blinkfox on 2020-05-17.
+     * @since v2.3.1
+     */
+    public QueryLookupStrategy createOldJpaQueryLookupStrategy(EntityManager entityManager, QueryLookupStrategy.Key key,
+            QueryExtractor extractor, QueryMethodEvaluationContextProvider provider, EscapeCharacter character) {
+        // 本方法会使用 Javassist 重写本方法中的内容，切勿随意修改方法名和参数.
+        return null;
     }
 
     /**
@@ -119,72 +128,42 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,
             NamedQueries namedQueries) {
         // 如果没有 QueryFenix 注解，就是用默认的 jpaQueryLookupStrategy.resolveQuery 来构造 RepositoryQuery 实例.
-        QueryFenix queryFenixAnno = method.getAnnotation(QueryFenix.class);
-        if (queryFenixAnno == null) {
+        QueryFenix queryFenixAnnotation = method.getAnnotation(QueryFenix.class);
+        if (queryFenixAnnotation == null) {
             return this.jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
         }
 
         // 如果有 QueryFenix 注解，就构造 FenixJpaQuery 实例，并注入 QueryFenix 和调用方法的 class 到该实例中，便于后续使用.
         FenixJpaQuery fenixJpaQuery;
         if (this.queryMethodFactory == null) {
-            // TODO 为了兼容之前的版本，此处考虑字节码注入的方式来解决编译错误.
-            //            fenixJpaQuery = new FenixJpaQuery(new JpaQueryMethod(method, metadata, factory, extractor),
-            //                    this.entityManager);
-            fenixJpaQuery = new FenixJpaQuery(((JpaQueryMethodFactory) this.queryMethodFactory)
-                    .build(method, metadata, factory), this.entityManager);
+            // 为了兼容 SpringData JPA v2.3.0 之前的版本，此处使用字节码注入的方式来解决编译错误.
+            fenixJpaQuery = this.createOldFenixJpaQuery(method, metadata, factory, this.extractor, this.entityManager);
         } else {
             fenixJpaQuery = new FenixJpaQuery(((JpaQueryMethodFactory) this.queryMethodFactory)
                     .build(method, metadata, factory), this.entityManager);
         }
 
-        fenixJpaQuery.setQueryFenix(queryFenixAnno);
+        fenixJpaQuery.setQueryFenix(queryFenixAnnotation);
         fenixJpaQuery.setQueryClass(method.getDeclaringClass());
         return fenixJpaQuery;
     }
 
     /**
-     * 判断当前的 JPA 版本是否有 {@link DefaultJpaQueryMethodFactory} 类.
+     * 创建了 Spring Data JPA v2.3.0 版本之前的 {@code JpaQueryMethod} 方法.
      *
-     * <p>注意：{@link JpaQueryMethodFactory} 接口和 {@link DefaultJpaQueryMethodFactory} 类是在 JPA v2.3.0 版本才引入的，
-     * 为了兼容之前的 Fenix 版本，我们需要判断是否有这个接口的 {@code class}.</p>
-     *
-     * @return 布尔值
+     * @param method 方法
+     * @param metadata 元数据
+     * @param factory 工厂类
+     * @param extractor extractor
+     * @param entityManager 实体管理器实例
+     * @return {@link FenixJpaQuery} 对象
      * @author blinkfox on 2020-05-17.
      * @since v2.3.1
      */
-    private boolean hasDefaultJpaQueryMethodFactoryClass() {
-        try {
-            Thread.currentThread().getContextClassLoader().loadClass(JPA_METHOD_FACTORY_NAME);
-            return true;
-        } catch (ClassNotFoundException e) {
-            log.debug("【Fenix -> 'JPA 版本检测' 提示】检查到你的项目中没有【{}】类，说明你的 Spring Data JPA 版本"
-                    + "是 v2.3.0 之前的版本.", JPA_METHOD_FACTORY_NAME);
-            return false;
-        } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("【Fenix -> 'JPA 版本检测' 提示】检查你的项目中是否有【{}】类时出错，将默认你的 Spring Data JPA 版本"
-                        + "是 v2.3.0 之前的版本.", JPA_METHOD_FACTORY_NAME, e);
-            } else {
-                log.error("【Fenix -> 'JPA 版本检测' 错误】检查你的项目中是否有【{}】类时出错，将默认你的 Spring Data JPA 版本"
-                                + "是 v2.3.0 之前的版本，检测时的出错原因是：【{}】，若想看更全的错误堆栈日志信息，请开启 debug 日志级别.",
-                        JPA_METHOD_FACTORY_NAME, e.getMessage());
-            }
-            return false;
-        }
-    }
-
-    /**
-     * 创建 {@link DefaultJpaQueryMethodFactory} 类的实例对象.
-     *
-     * <p>注意：{@link DefaultJpaQueryMethodFactory} 类是在 JPA v2.3.0 版本才引入的，
-     * 为了兼容之前的 Fenix 版本，运行时不报错，不使用属性引用的方式创建对象，而是使用方法的形式来创建，并返回 Object 对象.</p>
-     *
-     * @return {@link DefaultJpaQueryMethodFactory} 类的实例对象
-     * @author blinkfox on 2020-05-17.
-     * @since v2.3.1
-     */
-    private Object newDefaultJpaQueryMethodFactoryInstance() {
-        return new DefaultJpaQueryMethodFactory(extractor);
+    public FenixJpaQuery createOldFenixJpaQuery(Method method, RepositoryMetadata metadata,
+            ProjectionFactory factory, QueryExtractor extractor, EntityManager entityManager) {
+        // 本方法会使用 Javassist 重写本方法中的内容，切勿随意修改方法名和参数.
+        return null;
     }
 
 }
