@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Fenix {@link TagHandler} 实现类上标注的 XML 标签注解 {@link Tagger} 扫描类.
  *
- * <p>本类会将扫描到的类添加到 {@link FenixConfig} 的 {@link FenixConfig#getTagHandlerMap} 中，供后续配置使用.</p>
+ * <p>本类会将扫描到的类添加到 {@link FenixConfig} 的 {@code FenixConfig.getTagHandlerMap()} 中，供后续配置使用.</p>
  *
  * @author blinkfox on 2019-08-04.
  * @since v1.0.0
