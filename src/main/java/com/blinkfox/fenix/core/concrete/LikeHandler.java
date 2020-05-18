@@ -28,6 +28,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-06.
  * @see NormalHandler
+ * @since v1.0.0
  */
 public class LikeHandler implements FenixHandler {
 

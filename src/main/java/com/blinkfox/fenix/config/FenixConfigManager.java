@@ -25,6 +25,7 @@ import org.dom4j.Node;
  * @author blinkfox on 2019-08-04.
  * @see FenixConfig
  * @see XmlResource
+ * @since v1.0.0
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

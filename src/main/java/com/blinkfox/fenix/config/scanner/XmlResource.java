@@ -9,6 +9,7 @@ import org.dom4j.Document;
  * XML 资源实体类.
  *
  * @author blinkfox on 2019-08-31.
+ * @since v1.0.0
  */
 @Getter
 @Setter

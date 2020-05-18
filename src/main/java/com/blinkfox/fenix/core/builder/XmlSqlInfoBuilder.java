@@ -12,6 +12,7 @@ import java.util.Map;
  * 构建使用 XML 拼接 JPQL 或者 SQL 片段的构建器.
  *
  * @author blinkfox on 2019-08-06.
+ * @since v1.0.0
  */
 public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
 

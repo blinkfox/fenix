@@ -4,6 +4,7 @@ package com.blinkfox.fenix.core;
  * 标签处理器接口 {@link FenixHandler} 实现类的实例化工厂类.
  *
  * @author blinkfox on 2019-08-10.
+ * @since v1.0.0
  */
 @FunctionalInterface
 public interface FenixHandlerFactory {

@@ -33,6 +33,7 @@ import org.springframework.data.repository.query.ReturnedType;
  * 所以，本 Fenix 库在 v2.0.0 也必须跟着重写这两个方法，才能正常使用. </p>
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 public class FenixJpaQuery extends AbstractJpaQuery {
 

@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
  * @author blinkfox on 2019-08-05.
  * @see FenixHandlerFactory
  * @see FenixHandler
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixContext {

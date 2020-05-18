@@ -9,7 +9,7 @@ import java.util.Map;
 import lombok.Getter;
 
 /**
- * 用于生成 'LIKE' 后缀匹配查询的动态 JPQL 或者 SQL 片段的 {@link FenixHandler} 接口的实现类，
+ * 用于生成 {@code LIKE} 后缀匹配查询的动态 JPQL 或者 SQL 片段的 {@link FenixHandler} 接口的实现类，
  * 该类是 {@link LikeHandler} 的子类.
  *
  * <p>XML 标签示例如：</p>
@@ -28,6 +28,7 @@ import lombok.Getter;
  * @author blinkfox on 2019-08-06.
  * @see LikeHandler
  * @see StartsWithHandler
+ * @since v1.0.0
  */
 public class EndsWithHandler extends LikeHandler {
 

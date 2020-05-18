@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
  * XPATH 语法相关的常量类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XpathConst {

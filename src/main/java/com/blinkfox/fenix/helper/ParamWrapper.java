@@ -7,6 +7,7 @@ import java.util.Map;
  * 用于将上下文参数包装为 Map 的包装器工具类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 public final class ParamWrapper {
 

@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
@@ -15,6 +17,7 @@ import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
  * @since v2.3.1
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FenixJpaClassWriter {
 
     /**
@@ -91,8 +94,8 @@ public class FenixJpaClassWriter {
             return;
         }
 
-        log.info("【Fenix 提示】检测到你的 Spring Data JPA 版本较低，为了兼容老版本的 JPA，将修改部分 class 字节码。"
-                + "不过我仍然建议你将 Spring Data JPA 版本升级到 v2.3.0 及之后的版本.");
+        log.info("【Fenix 提示】检测到你的 Spring Data JPA 版本较低，为了兼容老版本的 JPA，将修改部分 class 字节码来做兼容。"
+                + "不过条件允许的话，我仍然建议你将 Spring Data JPA 版本升级到 v2.3.0 及之后的版本.");
         try {
             CtClass ctClass = ClassPool.getDefault().get("com.blinkfox.fenix.jpa.FenixQueryLookupStrategy");
 

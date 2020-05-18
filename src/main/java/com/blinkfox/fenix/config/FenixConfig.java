@@ -75,6 +75,7 @@ import org.dom4j.Node;
  * @see FenixConfigManager
  * @see FenixHandlerFactory
  * @see TagHandler
+ * @since v1.0.0
  */
 @Getter
 public class FenixConfig {

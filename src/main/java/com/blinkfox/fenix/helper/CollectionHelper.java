@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * 集合操作相关的工具类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CollectionHelper {

@@ -4,6 +4,7 @@ package com.blinkfox.fenix.consts;
  * LIKE SQL 片段查询的匹配类型模式.
  *
  * @author blinkfox on 2019-08-06.
+ * @since v1.0.0
  */
 public enum LikeTypeEnum {
 

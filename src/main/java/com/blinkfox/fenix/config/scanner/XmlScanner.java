@@ -23,6 +23,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
  * 用于扫描指定路径下 Fenix XML 文件资源的扫描器类.
  *
  * @author blinkfox on 2019-08-31.
+ * @since v1.0.0
  */
 @Slf4j
 public class XmlScanner {

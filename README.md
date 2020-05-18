@@ -8,7 +8,7 @@
 
 ## 一、特性
 
-- 简单、轻量级、无副作用的集成和使用，jar 包仅 `178 KB`；
+- 简单、轻量级、无副作用的集成和使用，jar 包仅 `177 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
 - 提供了 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL；
 - `XML` 的方式功能强大，让 SQL 和 Java 代码解耦，易于维护；
@@ -382,3 +382,7 @@ public void queryBlogsWithAnnotaion() {
 ## 开源许可证
 
 本 `Fenix` 的 Spring Data JPA 扩展库遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) 许可证。
+
+## 鸣谢
+
+感谢 [JetBrains 公司](https://www.jetbrains.com/?from=fenix) 为本开源项目提供的免费正版 Intellij IDEA 的 License 支持。

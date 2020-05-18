@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
  * <p>Java8 及之后建议直接在类上重复使用 {@link Tagger} 注解，而不必再显示使用本 {@link Taggers} 注解.</p>
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @Documented
 @Target(ElementType.TYPE)

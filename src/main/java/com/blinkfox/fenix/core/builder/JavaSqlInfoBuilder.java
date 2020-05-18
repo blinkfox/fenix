@@ -8,6 +8,7 @@ import com.blinkfox.fenix.bean.BuildSource;
  * @author blinkfox on 2019-08-11.
  * @see SqlInfoBuilder
  * @see XmlSqlInfoBuilder
+ * @since v1.0.0
  */
 public class JavaSqlInfoBuilder extends SqlInfoBuilder {
 

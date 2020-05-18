@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
  * 常用的 SQL 关键字常量类.
  *
  * @author blinkfox on 20190-08-11.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SqlKeyConst {

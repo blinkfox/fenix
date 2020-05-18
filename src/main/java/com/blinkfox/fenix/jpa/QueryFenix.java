@@ -16,6 +16,7 @@ import org.springframework.data.annotation.QueryAnnotation;
  *
  * @author blinkfox on 2019-08-04.
  * @see FenixQueryLookupStrategy
+ * @since v1.0.0
  */
 @Documented
 @QueryAnnotation

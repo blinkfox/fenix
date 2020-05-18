@@ -4,6 +4,7 @@ package com.blinkfox.fenix.exception;
  * Fenix 配置未找到时抛出的异常.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 public class ConfigNotFoundException extends RuntimeException {
 

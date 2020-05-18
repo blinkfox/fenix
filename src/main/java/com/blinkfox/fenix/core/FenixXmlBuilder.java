@@ -25,6 +25,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019/8/12.
  * @see Fenix
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixXmlBuilder {

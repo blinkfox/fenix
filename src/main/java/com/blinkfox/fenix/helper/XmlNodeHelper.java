@@ -12,6 +12,7 @@ import org.dom4j.Node;
  * XML 文件和 XML 标签节点相关操作的工具类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XmlNodeHelper {

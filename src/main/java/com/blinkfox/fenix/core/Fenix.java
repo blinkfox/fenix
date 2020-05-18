@@ -21,6 +21,7 @@ import java.util.function.Consumer;
  *
  * @author blinkfox on 2019-08-11.
  * @see FenixXmlBuilder
+ * @since v1.0.0
  */
 public final class Fenix {
 

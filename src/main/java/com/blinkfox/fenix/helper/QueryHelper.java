@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  * QueryHelper.
  *
  * @author blinkfox on 2019-08-08.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QueryHelper {

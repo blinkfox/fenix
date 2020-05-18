@@ -16,6 +16,7 @@ import org.springframework.data.repository.query.Param;
  * 通过仿射调用 class 方法中的指定方法的工具类.
  *
  * @author blinkfox on 2019-08-11.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ClassMethodInvoker {

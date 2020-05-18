@@ -10,6 +10,7 @@ import lombok.Getter;
  *
  * @author blinkfox on 2019-08-04.
  * @see FenixHandler
+ * @since v1.0.0
  */
 public class TagHandler {
 

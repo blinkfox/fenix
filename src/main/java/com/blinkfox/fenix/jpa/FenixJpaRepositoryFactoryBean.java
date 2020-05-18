@@ -10,6 +10,7 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
  *
  * @author blinkfox on 2019-08-04.
  * @see RepositoryFactorySupport
+ * @since v1.0.0
  */
 public class FenixJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         extends JpaRepositoryFactoryBean<T, S, ID> {

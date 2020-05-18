@@ -30,6 +30,7 @@ import org.dom4j.Node;
  * @see NormalHandler
  * @see LikeHandler
  * @see BetweenHandler
+ * @since v1.0.0
  */
 public class InHandler implements FenixHandler {
 

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author blinkfox on 2019-08-06.
  * @see XmlSqlInfoBuilder
  * @see JavaSqlInfoBuilder
+ * @since v1.0.0
  */
 @Slf4j
 @Getter

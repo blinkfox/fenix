@@ -29,6 +29,7 @@ import org.dom4j.Node;
  * @see LikeHandler
  * @see InHandler
  * @see TextHandler
+ * @since v1.0.0
  */
 public class ImportHandler implements FenixHandler {
 

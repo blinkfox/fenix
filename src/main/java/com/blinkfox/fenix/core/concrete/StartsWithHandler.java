@@ -28,6 +28,7 @@ import lombok.Getter;
  * @author blinkfox on 2019-08-06.
  * @see LikeHandler
  * @see EndsWithHandler
+ * @since v1.0.0
  */
 public class StartsWithHandler extends LikeHandler {
 

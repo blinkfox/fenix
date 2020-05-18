@@ -9,6 +9,7 @@ import lombok.Setter;
  * 构造用于拼接 JPQL (或 SQL) 语句的拼接器和 Map 参数.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @Getter
 @Setter

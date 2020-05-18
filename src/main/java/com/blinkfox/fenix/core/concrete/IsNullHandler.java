@@ -26,6 +26,7 @@ import org.dom4j.Node;
  * @see NormalHandler
  * @see LikeHandler
  * @see InHandler
+ * @since v1.0.0
  */
 public class IsNullHandler implements FenixHandler {
 
