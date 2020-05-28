@@ -51,13 +51,13 @@ final class QueryResultBuilder {
         ResultTransformer resultTransformer = new FenixResultTransformer<>(this.getResultTypeClass());
         if (isNative) {
             // 获取该查询对应的 NativeQuery，设置转换类型.
-            NativeQuery<?> nativeQuery = ProxyHelper.getTarget(query);
+            NativeQuery<?> nativeQuery = ProxyHelper.getTarget(this.query);
             nativeQuery.setResultTransformer(resultTransformer);
-            return nativeQuery;
+            return this.query;
         } else {
-            org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(query);
+            org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(this.query);
             hibernateQuery.setResultTransformer(resultTransformer);
-            return hibernateQuery;
+            return this.query;
         }
     }
 
