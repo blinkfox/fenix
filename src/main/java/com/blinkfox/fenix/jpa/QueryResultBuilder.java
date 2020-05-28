@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
-import com.blinkfox.fenix.helper.ProxyHelper;
 import javax.persistence.Query;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
@@ -46,19 +45,17 @@ final class QueryResultBuilder {
      * @param isNative 是否原生 SQL
      * @return 额外改造后的 {@code Query} 实例.
      */
-    @SuppressWarnings({"deprecation", "rawtypes"})
+    @SuppressWarnings("deprecation")
     Query build(boolean isNative) {
-        ResultTransformer resultTransformer = new FenixResultTransformer<>(this.getResultTypeClass());
         if (isNative) {
             // 获取该查询对应的 NativeQuery，设置转换类型.
-            NativeQuery<?> nativeQuery = ProxyHelper.getTarget(this.query);
-            nativeQuery.setResultTransformer(resultTransformer);
-            return this.query;
+            this.query.unwrap(NativeQuery.class)
+                    .setResultTransformer(new FenixResultTransformer<>(this.getResultTypeClass()));
         } else {
-            org.hibernate.query.Query hibernateQuery = ProxyHelper.getTarget(this.query);
-            hibernateQuery.setResultTransformer(resultTransformer);
-            return this.query;
+            this.query.unwrap(org.hibernate.query.Query.class)
+                    .setResultTransformer(new FenixResultTransformer<>(this.getResultTypeClass()));
         }
+        return this.query;
     }
 
     /**
