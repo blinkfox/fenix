@@ -16,9 +16,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +40,7 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author blinkfox on 2019-08-04.
  */
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class BlogRepositoryTest {
@@ -69,7 +72,7 @@ public class BlogRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             // 初始化定义 FenixConfig 的实例和一些配置.
-            final FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(true);
+            final FenixConfig myFenixConfig = new FenixConfig().setPrintSqlInfo(false);
             FenixConfig.add("hi", HelloTagHandler.class);
             FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");
 
@@ -277,6 +280,40 @@ public class BlogRepositoryTest {
                 new Blog().setTitle(SPRING).setContent("-"));
         Assert.assertFalse(userBlogMaps.isEmpty());
         Assert.assertTrue(userBlogMaps.get(0).containsKey(("content")));
+    }
+
+    /**
+     * 并发测试使用原生的 {@link Query} 注解来模糊查询博客信息.
+     */
+    @Test
+    public void queryWithConcurrent() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        new Thread(() -> {
+            log.info("线程1 开始执行 ...");
+            for (int i = 0; i < 100; ++i) {
+                List<Blog> blogs = blogRepository.querySimplyDemo(new Blog().setId("1"));
+                if (blogs.isEmpty()) {
+                    log.info("线程1，数据是空的了，执行出错了!");
+                }
+            }
+            log.info("线程1 执行结束了.");
+            countDownLatch.countDown();
+        }).start();
+
+        new Thread(() -> {
+            log.info("线程2 开始执行 ...");
+            for (int i = 0; i < 100; ++i) {
+                List<Blog> blogs2 = blogRepository.querySimplyDemo(new Blog().setId("0"));
+                if (!blogs2.isEmpty()) {
+                    System.err.println("线程2，数据不是空的，执行断言出错了，数据为：" + blogs2);
+                }
+            }
+            log.info("线程2 执行结束了.");
+            countDownLatch.countDown();
+        }).start();
+
+        countDownLatch.await();
+        log.info("所有线程执行完了.");
     }
 
     /**
