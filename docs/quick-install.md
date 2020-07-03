@@ -14,14 +14,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.3.2'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.3.3'
 ```
 
 ### 激活 Fenix (@EnableFenix)
@@ -49,7 +49,9 @@ public class DemoApplication {
 }
 ```
 
-> **注**： `@EnableFenix` 注解中实质上是使用的是 `FenixJpaRepositoryFactoryBean`。而 `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解和其他更多动态的能力。
+> **注**： 
+> 1. `@EnableFenix` 注解中实质上是使用的是 `FenixJpaRepositoryFactoryBean`。而 `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解和其他更多动态的能力。
+> 2. 如果你是多数据源，则你可以根据自身情况，在需要的数据源中的 `@EnableJpaRepositories` 注解中单独设置 `repositoryFactoryBeanClass` 的值为：`FenixJpaRepositoryFactoryBean.class`。示例如：`@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)`。
 
 ### application.yml 配置（可选的）
 
@@ -90,17 +92,17 @@ fenix:
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-compile 'com.blinkfox:fenix:2.3.2'
+compile 'com.blinkfox:fenix:2.3.3'
 ```
 
-### 激活 Fenix FactoryBean
+### 激活 Fenix
 
 跟前面 Spring Boot 激活 Fenix FactoryBean 一样，需要在启动类中使用 `@EnableFenix` 激活 Fenix，也可以直接在 `@EnableJpaRepositories` 注解中，配置
 `repositoryFactoryBeanClass` 的属性值为 `FenixJpaRepositoryFactoryBean.class`。
