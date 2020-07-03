@@ -13,7 +13,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-// TODO 是否需要手动 remove 待进一步验证.
 public final class FenixQueryInfo {
 
     /**
@@ -48,6 +47,22 @@ public final class FenixQueryInfo {
             fenixThreadLocal.set(fenixQueryInfo);
         }
         return fenixQueryInfo;
+    }
+
+    /**
+     * 获取当前线程中的 {@link FenixQueryInfo} 的实例，获取的结果可能为 {@code null}.
+     *
+     * @return {@link FenixQueryInfo} 实例
+     */
+    public static FenixQueryInfo getLocalThreadInstance() {
+        return fenixThreadLocal.get();
+    }
+
+    /**
+     * 移除当前 {@link FenixQueryInfo} 中的实例.
+     */
+    public void remove() {
+        fenixThreadLocal.remove();
     }
 
 }

@@ -134,6 +134,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
         }
 
+        // 如果分页参数为空，说明不需要再做分页查询，须要从 ThreadLocal 中移除当前线程中的 fenixQueryInfo 信息.
+        if (pageable == null) {
+            fenixQueryInfo.remove();
+        }
         return query;
     }
 
@@ -181,6 +185,12 @@ public class FenixJpaQuery extends AbstractJpaQuery {
                 ? em.createNativeQuery(countSql)
                 : em.createQuery(countSql, Long.class);
         FenixQueryInfo.getInstance().getSqlInfo().getParams().forEach(query::setParameter);
+
+        // 从 ThreadLocal 中移除当前线程中的 FenixQueryInfo 对象.
+        FenixQueryInfo fenixQueryInfo = FenixQueryInfo.getLocalThreadInstance();
+        if (fenixQueryInfo != null) {
+            fenixQueryInfo.remove();
+        }
         return query;
     }
 

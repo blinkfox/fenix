@@ -289,31 +289,33 @@ public class BlogRepositoryTest {
     public void queryWithConcurrent() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         new Thread(() -> {
-            log.info("线程1 开始执行 ...");
+            log.info("Fenix 并发测试【线程1】开始执行 ...");
             for (int i = 0; i < 100; ++i) {
                 List<Blog> blogs = blogRepository.querySimplyDemo(new Blog().setId("1"));
                 if (blogs.isEmpty()) {
-                    log.info("线程1，数据是空的了，执行出错了!");
+                    log.error("Fenix 并发测试【线程1】得到的结果数据是空的，执行出错了!");
                 }
+                Assert.assertFalse(blogs.isEmpty());
             }
-            log.info("线程1 执行结束了.");
+            log.info("Fenix 并发测试【线程1】执行结束了.");
             countDownLatch.countDown();
-        }).start();
+        }, "fenix-thread-1").start();
 
         new Thread(() -> {
-            log.info("线程2 开始执行 ...");
+            log.info("Fenix 并发测试【线程2】开始执行 ...");
             for (int i = 0; i < 100; ++i) {
                 List<Blog> blogs2 = blogRepository.querySimplyDemo(new Blog().setId("0"));
                 if (!blogs2.isEmpty()) {
-                    System.err.println("线程2，数据不是空的，执行断言出错了，数据为：" + blogs2);
+                    log.error("Fenix 并发测试【线程2】数据不是空的，执行断言出错了，数据为：" + blogs2);
                 }
+                Assert.assertTrue(blogs2.isEmpty());
             }
-            log.info("线程2 执行结束了.");
+            log.info("Fenix 并发测试【线程2】执行结束了.");
             countDownLatch.countDown();
-        }).start();
+        }, "fenix-thread-2").start();
 
         countDownLatch.await();
-        log.info("所有线程执行完了.");
+        log.info("Fenix 并发测试执行时，所有线程执行正常执行完毕.");
     }
 
     /**
