@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.LoaderClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +98,9 @@ public class FenixJpaClassWriter {
         log.info("【Fenix 提示】检测到你的 Spring Data JPA 版本较低，为了兼容老版本的 JPA，将修改部分 class 字节码来做兼容。"
                 + "不过条件允许的话，我仍然建议你将 Spring Data JPA 版本升级到 v2.3.0 及之后的版本.");
         try {
-            CtClass ctClass = ClassPool.getDefault().get("com.blinkfox.fenix.jpa.FenixQueryLookupStrategy");
+            ClassPool classPool = ClassPool.getDefault();
+            classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+            CtClass ctClass = classPool.get("com.blinkfox.fenix.jpa.FenixQueryLookupStrategy");
 
             // 修改 createOldJpaQueryLookupStrategy 方法，创建 JpaQueryLookupStrategy 对象.
             CtMethod lookupStrategyMethod = ctClass.getDeclaredMethod("createOldJpaQueryLookupStrategy");
