@@ -57,7 +57,7 @@ SELECT u FROM User AS u WHERE u.id = '@{user.id}'
 ```sql
 -- 如果 user id 为 '5'，将生成为: 
 -- SELECT u FROM User AS u WHERE u.id = :user_id. 其中 user_id 为 '5'
-SELECT u FROM User AS u WHERE u.id = @{user.id}
+SELECT u FROM User AS u WHERE u.id = #{user.id}
 ```
 
 ### @code{} 静默代码标签
