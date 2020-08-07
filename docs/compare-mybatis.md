@@ -108,4 +108,4 @@
 - MyBatis 通过 `trim` 标签或者使用 `<where>` 标签来消除 `WHERE` 语句后的 `AND` 关键字，而 `Fenix` 也是直接使用 `<where />` 标签即可动态处理 `WHERE` 与 `AND` 的关系，也可以将各个动态条件包裹在 `<where></where>` 标签内。
 - MyBatis 的动态 SQL 解析引擎是 [OGNL](http://commons.apache.org/proper/commons-ognl/)，而 Fenix 的解析引擎是 [MVEL](http://mvel.documentnode.com/)，功能和性能上都更优一些。
 
-> 通过以上 MyBatis 和 Fenix 的各自 SQL 写法比较来看，`Fenix` 的 SQL 在**动态性**、**简介性**和**SQL 语义化**等方面，都更加强大。
+> 通过以上 MyBatis 和 Fenix 的各自 SQL 写法比较来看，`Fenix` 的 SQL 在**动态性**、**简洁性**和**SQL 语义化**等方面，都更加强大。
