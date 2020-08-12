@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.bean.SqlInfo;
-
 import com.blinkfox.fenix.consts.Const;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * 打印 {@link com.blinkfox.fenix.bean.SqlInfo} 实体信息的打印工具类.
  *
  * @author blinkfox on 2019-08-05.
+ * @since v1.0.0
  */
 @Slf4j
 public final class SqlInfoPrinter {

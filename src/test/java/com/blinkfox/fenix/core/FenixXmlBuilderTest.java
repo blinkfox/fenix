@@ -7,12 +7,10 @@ import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.handler.HelloTagHandler;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -227,7 +225,7 @@ public class FenixXmlBuilderTest {
 
         SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.between", context);
         assertEquals(BASE_QUERY + " u.id >= :startId AND u.age BETWEEN :startAge AND :endAge "
-                        + "OR u.birthday <= :endBirthday", sqlInfo.getSql());
+                + "OR u.birthday <= :endBirthday", sqlInfo.getSql());
         assertEquals(4, sqlInfo.getParams().size());
     }
 

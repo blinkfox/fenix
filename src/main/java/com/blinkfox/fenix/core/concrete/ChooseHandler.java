@@ -7,9 +7,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.dom4j.Node;
 
 /**
@@ -17,7 +15,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;choose when="" then="" when2="" then2="" else="" /&gt;'</li>
+ *     <li>{@code <choose when="" then="" when2="" then2="" else="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -31,6 +29,7 @@ import org.dom4j.Node;
  * @see NormalHandler
  * @see LikeHandler
  * @see InHandler
+ * @since v1.0.0
  */
 @Slf4j
 public class ChooseHandler implements FenixHandler {

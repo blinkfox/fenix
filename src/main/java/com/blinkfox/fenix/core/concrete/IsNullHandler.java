@@ -6,7 +6,6 @@ import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**
@@ -14,9 +13,9 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;isNull match="" field="" /&gt;'</li>
- *     <li>'&lt;andIsNull match="" field="" /&gt;'</li>
- *     <li>'&lt;orIsNull match="" field="" /&gt;'</li>
+ *     <li>{@code <isNull match="" field="" />}</li>
+ *     <li>{@code <andIsNull match="" field="" />}</li>
+ *     <li>{@code <orIsNull match="" field="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -27,6 +26,7 @@ import org.dom4j.Node;
  * @see NormalHandler
  * @see LikeHandler
  * @see InHandler
+ * @since v1.0.0
  */
 public class IsNullHandler implements FenixHandler {
 

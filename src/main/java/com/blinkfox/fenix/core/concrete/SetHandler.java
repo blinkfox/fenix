@@ -9,9 +9,7 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.util.Map;
-
 import org.dom4j.Node;
 
 /**
@@ -19,8 +17,9 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;set match1="" field="" value="" match2="" field2="" value2="" match3="" field3="" value3=""/&gt;'</li>
+ *     <li>{@code <set match1="" field="" value="" match2="" field2="" value2="" match3="" field3="" value3="" />}</li>
  * </ul>
+ *
  * <p>注：</p>
  * <ul>
  *     <li>获取到的每个 match 字段的值，如果为空或者为 true，就生成对应字段的 Set 语句片段；</li>
@@ -31,6 +30,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-07.
  * @see ChooseHandler
+ * @since v1.0.0
  */
 public class SetHandler implements FenixHandler {
 

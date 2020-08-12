@@ -1,7 +1,6 @@
 package com.blinkfox.fenix.config;
 
 import com.blinkfox.fenix.exception.FenixException;
-
 import org.junit.Test;
 
 /**

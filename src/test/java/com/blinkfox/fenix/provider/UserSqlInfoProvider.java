@@ -5,11 +5,8 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.repository.query.Param;
 
 /**
@@ -25,6 +22,9 @@ public final class UserSqlInfoProvider {
      *
      * @param userId 用户 ID
      * @param userEmail 用户邮箱
+     * @param user 用户信息
+     * @param blog 博客信息
+     * @param myAge 年龄
      * @return sqlInfo 对象
      */
     public SqlInfo queryUsersWithJava(@Param("userId") String userId, @Param("userEmail") String userEmail,

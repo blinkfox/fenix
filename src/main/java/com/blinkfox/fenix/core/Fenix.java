@@ -12,7 +12,6 @@ import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.SqlInfoPrinter;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -22,6 +21,7 @@ import java.util.function.Consumer;
  *
  * @author blinkfox on 2019-08-11.
  * @see FenixXmlBuilder
+ * @since v1.0.0
  */
 public final class Fenix {
 
@@ -32,12 +32,12 @@ public final class Fenix {
     /**
      * LIKE 按前缀匹配时传递的 map 参数.
      */
-    private static Map<String, Object> startMap = StartsWithHandler.getStartMap();
+    private static final Map<String, Object> startMap = StartsWithHandler.getStartMap();
 
     /**
      * LIKE 按后缀匹配时传递的 map 参数.
      */
-    private static Map<String, Object> endMap = EndsWithHandler.getEndsMap();
+    private static final Map<String, Object> endMap = EndsWithHandler.getEndsMap();
 
     /**
      * 封装了 {@link SqlInfo}、应用中提供的上下文参数、前缀等信息.
@@ -113,7 +113,7 @@ public final class Fenix {
     private Fenix concat(String sqlKey, String... params) {
         this.source.getSqlInfo().getJoin().append(SqlKeyConst.SPACE).append(sqlKey).append(SqlKeyConst.SPACE);
         if (params != null && params.length > 0) {
-            for (String param: params) {
+            for (String param : params) {
                 this.source.getSqlInfo().getJoin().append(param).append(SqlKeyConst.SPACE);
             }
         }
@@ -567,15 +567,17 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param value 值
      * @param symbol 关键操作符
      * @param match 是否匹配
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doNormal(String prefix, String field, Object value, String symbol, boolean match) {
+    private Fenix doNormal(String prefix, String field, String name, Object value, String symbol, boolean match) {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(symbol);
-            new JavaSqlInfoBuilder(this.source).buildNormalSql(field, field, value);
+            new JavaSqlInfoBuilder(this.source)
+                    .buildNormalSql(field, StringHelper.isBlank(name) ? StringHelper.fixDot(field) : name, value);
             this.source.reset();
         }
         return this;
@@ -586,18 +588,20 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param value 值
      * @param match 是否匹配
      * @param positive true则表示是like，否则是not like
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doLike(String prefix, String field, Object value, boolean match,
+    private Fenix doLike(String prefix, String field, String name, Object value, boolean match,
             boolean positive, Map<String, Object> likeTypeMap) {
         if (match) {
             this.source.setPrefix(prefix)
                     .setSymbol(positive ? SymbolConst.LIKE : SymbolConst.NOT_LIKE)
                     .setOthers(likeTypeMap);
-            new JavaSqlInfoBuilder(this.source).buildLikeSql(field, field, value);
+            new JavaSqlInfoBuilder(this.source)
+                    .buildLikeSql(field, StringHelper.isBlank(name) ? StringHelper.fixDot(field) : name, value);
             this.source.reset();
         }
         return this;
@@ -627,16 +631,20 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
      * @param startValue 值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
      * @param endValue 值
      * @param match 是否匹配
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doBetween(String prefix, String field, Object startValue, Object endValue, boolean match) {
+    private Fenix doBetween(String prefix, String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
         if (match) {
             this.source.setPrefix(prefix);
-            new JavaSqlInfoBuilder(this.source)
-                    .buildBetweenSql(field, field + START, startValue, field + END, endValue);
+            new JavaSqlInfoBuilder(this.source).buildBetweenSql(field,
+                    StringHelper.isBlank(startName) ? field + START : startName, startValue,
+                    StringHelper.isBlank(endName) ? field + END : endName, endValue);
             this.source.reset();
         }
         return this;
@@ -647,15 +655,17 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param value 数组的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doInByType(String prefix, String field, Object value, boolean match, boolean positive) {
+    private Fenix doInByType(String prefix, String field, String name, Object value, boolean match, boolean positive) {
         if (match) {
             this.source.setPrefix(prefix).setSymbol(positive ? SymbolConst.IN : SymbolConst.NOT_IN);
-            new JavaSqlInfoBuilder(this.source).buildInSql(field, field, value);
+            new JavaSqlInfoBuilder(this.source)
+                    .buildInSql(field, StringHelper.isBlank(name) ? StringHelper.fixDot(field) : name, value);
             this.source.reset();
         }
         return this;
@@ -666,13 +676,14 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param values 数组的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doIn(String prefix, String field, Object[] values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, positive);
+    private Fenix doIn(String prefix, String field, String name, Object[] values, boolean match, boolean positive) {
+        return this.doInByType(prefix, field, name, values, match, positive);
     }
 
     /**
@@ -680,13 +691,15 @@ public final class Fenix {
      *
      * @param prefix 前缀
      * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
      * @param values 集合的值
      * @param match 是否匹配
      * @param positive true 则表示是 IN，否则是 NOT IN
      * @return {@link Fenix} 实例的当前实例
      */
-    private Fenix doIn(String prefix, String field, Collection<?> values, boolean match, boolean positive) {
-        return this.doInByType(prefix, field, values, match, positive);
+    private Fenix doIn(String prefix, String field, String name, Collection<?> values,
+            boolean match, boolean positive) {
+        return this.doInByType(prefix, field, name, values, match, positive);
     }
 
     /**
@@ -717,7 +730,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix equal(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.EQUAL,true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.EQUAL, true);
+    }
+
+    /**
+     * 生成等值查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix equal(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.EQUAL, true);
     }
 
     /**
@@ -729,7 +755,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix equal(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.EQUAL, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.EQUAL, match);
+    }
+
+    /**
+     * 生成等值查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix equal(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.EQUAL, match);
     }
 
     /**
@@ -740,7 +780,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.EQUAL, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.EQUAL, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀等值查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.EQUAL, true);
     }
 
     /**
@@ -752,7 +805,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.EQUAL, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.EQUAL, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀等值查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.EQUAL, match);
     }
 
     /**
@@ -763,7 +830,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.EQUAL, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.EQUAL, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀等值查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.EQUAL, true);
     }
 
     /**
@@ -775,7 +855,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.EQUAL, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.EQUAL, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀等值查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.EQUAL, match);
     }
 
     /**
@@ -786,7 +880,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notEqual(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.NOT_EQUAL,true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.NOT_EQUAL, true);
+    }
+
+    /**
+     * 生成不等查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notEqual(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.NOT_EQUAL, true);
     }
 
     /**
@@ -798,7 +905,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notEqual(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.NOT_EQUAL, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.NOT_EQUAL, match);
+    }
+
+    /**
+     * 生成不等查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.NOT_EQUAL, match);
     }
 
     /**
@@ -809,7 +930,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.NOT_EQUAL, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.NOT_EQUAL, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀不等查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.NOT_EQUAL, true);
     }
 
     /**
@@ -821,7 +955,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.NOT_EQUAL, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.NOT_EQUAL, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀不等查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.NOT_EQUAL, match);
     }
 
     /**
@@ -832,7 +980,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.NOT_EQUAL, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.NOT_EQUAL, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀不等查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.NOT_EQUAL, true);
     }
 
     /**
@@ -844,7 +1005,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.NOT_EQUAL, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.NOT_EQUAL, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀不等查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.NOT_EQUAL, match);
     }
 
     /**
@@ -855,7 +1030,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix greaterThan(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.GT, true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.GT, true);
+    }
+
+    /**
+     * 生成大于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix greaterThan(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.GT, true);
     }
 
     /**
@@ -867,7 +1055,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix greaterThan(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.GT, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.GT, match);
+    }
+
+    /**
+     * 生成大于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix greaterThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.GT, match);
     }
 
     /**
@@ -878,7 +1080,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andGreaterThan(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.GT, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.GT, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀大于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andGreaterThan(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.GT, true);
     }
 
     /**
@@ -890,7 +1105,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andGreaterThan(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.GT, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.GT, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀大于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andGreaterThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.GT, match);
     }
 
     /**
@@ -901,7 +1130,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orGreaterThan(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.GT, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.GT, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀大于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orGreaterThan(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.GT, true);
     }
 
     /**
@@ -913,7 +1155,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orGreaterThan(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.GT, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.GT, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀大于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orGreaterThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.GT, match);
     }
 
     /**
@@ -924,7 +1180,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix lessThan(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.LT, true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.LT, true);
+    }
+
+    /**
+     * 生成小于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix lessThan(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.LT, true);
     }
 
     /**
@@ -936,7 +1205,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix lessThan(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.LT, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.LT, match);
+    }
+
+    /**
+     * 生成小于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix lessThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.LT, match);
     }
 
     /**
@@ -947,7 +1230,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLessThan(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.LT, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.LT, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀小于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLessThan(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.LT, true);
     }
 
     /**
@@ -959,7 +1255,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLessThan(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.LT, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.LT, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀小于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLessThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.LT, match);
     }
 
     /**
@@ -970,18 +1280,46 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLessThan(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.LT, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.LT, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀小于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLessThan(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.LT, true);
     }
 
     /**
      * 生成带 " OR " 前缀小于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
      * @param field 数据库字段
      * @param value 值
      * @param match 是否匹配
      * @return {@link Fenix} 实例
      */
     public Fenix orLessThan(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.LT, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.LT, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀小于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLessThan(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.LT, match);
     }
 
     /**
@@ -992,7 +1330,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix greaterThanEqual(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.GTE, true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.GTE, true);
+    }
+
+    /**
+     * 生成大于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix greaterThanEqual(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.GTE, true);
     }
 
     /**
@@ -1004,7 +1355,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix greaterThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.GTE, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.GTE, match);
+    }
+
+    /**
+     * 生成大于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix greaterThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.GTE, match);
     }
 
     /**
@@ -1015,7 +1380,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andGreaterThanEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.GTE, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.GTE, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀大于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andGreaterThanEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.GTE, true);
     }
 
     /**
@@ -1027,7 +1405,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andGreaterThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.GTE, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.GTE, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀大于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andGreaterThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.GTE, match);
     }
 
     /**
@@ -1038,7 +1430,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orGreaterThanEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.GTE, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.GTE, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀大于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orGreaterThanEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.GTE, true);
     }
 
     /**
@@ -1050,7 +1455,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orGreaterThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.GTE, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.GTE, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀大于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orGreaterThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.GTE, match);
     }
 
     /**
@@ -1061,7 +1480,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix lessThanEqual(String field, Object value) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.LTE, true);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.LTE, true);
+    }
+
+    /**
+     * 生成小于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix lessThanEqual(String field, Object value, String name) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.LTE, true);
     }
 
     /**
@@ -1073,7 +1505,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix lessThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SqlKeyConst.SPACE, field, value, SymbolConst.LTE, match);
+        return this.doNormal(SqlKeyConst.SPACE, field, null, value, SymbolConst.LTE, match);
+    }
+
+    /**
+     * 生成小于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix lessThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SqlKeyConst.SPACE, field, name, value, SymbolConst.LTE, match);
     }
 
     /**
@@ -1084,7 +1530,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLessThanEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.LTE, true);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.LTE, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀小于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLessThanEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.LTE, true);
     }
 
     /**
@@ -1096,7 +1555,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLessThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.AND, field, value, SymbolConst.LTE, match);
+        return this.doNormal(SymbolConst.AND, field, null, value, SymbolConst.LTE, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀小于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLessThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.AND, field, name, value, SymbolConst.LTE, match);
     }
 
     /**
@@ -1107,7 +1580,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLessThanEqual(String field, Object value) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.LTE, true);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.LTE, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀小于等于查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLessThanEqual(String field, Object value, String name) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.LTE, true);
     }
 
     /**
@@ -1119,7 +1605,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLessThanEqual(String field, Object value, boolean match) {
-        return this.doNormal(SymbolConst.OR, field, value, SymbolConst.LTE, match);
+        return this.doNormal(SymbolConst.OR, field, null, value, SymbolConst.LTE, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀小于等于查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLessThanEqual(String field, Object value, String name, boolean match) {
+        return this.doNormal(SymbolConst.OR, field, name, value, SymbolConst.LTE, match);
     }
 
     /**
@@ -1130,7 +1630,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix like(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, null);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, true, null);
+    }
+
+    /**
+     * 生成 LIKE 模糊查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix like(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, true, null);
     }
 
     /**
@@ -1142,7 +1655,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix like(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, null);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, true, null);
+    }
+
+    /**
+     * 生成 LIKE 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix like(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, true, null);
     }
 
     /**
@@ -1153,7 +1680,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLike(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, true, null);
+        return this.doLike(SymbolConst.AND, field, null, value, true, true, null);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 模糊查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLike(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, true, null);
     }
 
     /**
@@ -1165,7 +1705,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, true, null);
+        return this.doLike(SymbolConst.AND, field, null, value, match, true, null);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andLike(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, true, null);
     }
 
     /**
@@ -1176,7 +1730,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLike(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, true, null);
+        return this.doLike(SymbolConst.OR, field, null, value, true, true, null);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 模糊查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLike(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, true, null);
     }
 
     /**
@@ -1188,28 +1755,58 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, true, null);
+        return this.doLike(SymbolConst.OR, field, null, value, match, true, null);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orLike(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, true, null);
     }
 
     /**
      * 生成 " NOT LIKE " 模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
      * @return {@link Fenix} 实例
      */
     public Fenix notLike(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, null);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, false, null);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 模糊查询的 SQL 片段.
+     *
+     * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notLike(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, false, null);
     }
 
     /**
      * 生成 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      *
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1217,28 +1814,61 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notLike(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, null);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, false, null);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notLike(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, false, null);
     }
 
     /**
      * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
      * @return {@link Fenix} 实例
      */
     public Fenix andNotLike(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, false, null);
+        return this.doLike(SymbolConst.AND, field, null, value, true, false, null);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段.
+     *
+     * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotLike(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, false, null);
     }
 
     /**
      * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      *
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1246,27 +1876,60 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, false, null);
+        return this.doLike(SymbolConst.AND, field, null, value, match, false, null);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" AND b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotLike(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, false, null);
     }
 
     /**
      * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段.
      *
      * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
      * @return {@link Fenix} 实例
      */
     public Fenix orNotLike(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, false, null);
+        return this.doLike(SymbolConst.OR, field, null, value, true, false, null);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段.
+     *
+     * <p>示例：传入 {"b.title", "Spring"} 两个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotLike(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, false, null);
     }
 
     /**
      * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
      * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
-     *      SQL参数为:{b_title: "%Spring%"}.</p>
+     * SQL参数为:{b_title: "%Spring%"}.</p>
      *
      * @param field 数据库字段
      * @param value 值
@@ -1274,7 +1937,23 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotLike(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, false, null);
+        return this.doLike(SymbolConst.OR, field, null, value, match, false, null);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的" NOT LIKE "模糊查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     * <p>示例：传入 {"b.title", "Spring", true} 三个参数，生成的SQL片段为：" OR b.title NOT LIKE :b_title ",
+     * SQL参数为:{b_title: "%Spring%"}.</p>
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotLike(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, false, null);
     }
 
     /**
@@ -1285,7 +1964,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix startsWith(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, startMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, true, startMap);
+    }
+
+    /**
+     * 生成 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix startsWith(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, true, startMap);
     }
 
     /**
@@ -1297,7 +1989,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix startsWith(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, startMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, true, startMap);
+    }
+
+    /**
+     * 生成 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix startsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, true, startMap);
     }
 
     /**
@@ -1308,7 +2014,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andStartsWith(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, true, startMap);
+        return this.doLike(SymbolConst.AND, field, null, value, true, true, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andStartsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, true, startMap);
     }
 
     /**
@@ -1320,7 +2039,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andStartsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, true, startMap);
+        return this.doLike(SymbolConst.AND, field, null, value, match, true, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andStartsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, true, startMap);
     }
 
     /**
@@ -1331,7 +2064,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orStartsWith(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, true, startMap);
+        return this.doLike(SymbolConst.OR, field, null, value, true, true, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orStartsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, true, startMap);
     }
 
     /**
@@ -1343,7 +2089,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orStartsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, true, startMap);
+        return this.doLike(SymbolConst.OR, field, null, value, match, true, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orStartsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, true, startMap);
     }
 
     /**
@@ -1354,7 +2114,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notStartsWith(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, startMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, false, startMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notStartsWith(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, false, startMap);
     }
 
     /**
@@ -1366,7 +2139,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notStartsWith(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, startMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, false, startMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notStartsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, false, startMap);
     }
 
     /**
@@ -1377,7 +2164,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotStartsWith(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, false, startMap);
+        return this.doLike(SymbolConst.AND, field, null, value, true, false, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotStartsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, false, startMap);
     }
 
     /**
@@ -1389,7 +2189,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotStartsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, false, startMap);
+        return this.doLike(SymbolConst.AND, field, null, value, match, false, startMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotStartsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, false, startMap);
     }
 
     /**
@@ -1400,7 +2214,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotStartsWith(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, false, startMap);
+        return this.doLike(SymbolConst.OR, field, null, value, true, false, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotStartsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, false, startMap);
     }
 
     /**
@@ -1412,7 +2239,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotStartsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, false, startMap);
+        return this.doLike(SymbolConst.OR, field, null, value, match, false, startMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按前缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotStartsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, false, startMap);
     }
 
     /**
@@ -1423,7 +2264,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix endsWith(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, true, endMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, true, endMap);
+    }
+
+    /**
+     * 生成 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix endsWith(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, true, endMap);
     }
 
     /**
@@ -1435,7 +2289,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix endsWith(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, true, endMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, true, endMap);
+    }
+
+    /**
+     * 生成 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix endsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, true, endMap);
     }
 
     /**
@@ -1446,7 +2314,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andEndsWith(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, true, endMap);
+        return this.doLike(SymbolConst.AND, field, null, value, true, true, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andEndsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, true, endMap);
     }
 
     /**
@@ -1458,7 +2339,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andEndsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, true, endMap);
+        return this.doLike(SymbolConst.AND, field, null, value, match, true, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andEndsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, true, endMap);
     }
 
     /**
@@ -1469,7 +2364,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orEndsWith(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, true, endMap);
+        return this.doLike(SymbolConst.OR, field, null, value, true, true, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orEndsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, true, endMap);
     }
 
     /**
@@ -1481,7 +2389,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orEndsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, true, endMap);
+        return this.doLike(SymbolConst.OR, field, null, value, match, true, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 LIKE 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orEndsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, true, endMap);
     }
 
     /**
@@ -1492,7 +2414,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notEndsWith(String field, Object value) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, true, false, endMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, true, false, endMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notEndsWith(String field, Object value, String name) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, true, false, endMap);
     }
 
     /**
@@ -1504,7 +2439,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notEndsWith(String field, Object value, boolean match) {
-        return this.doLike(SqlKeyConst.SPACE, field, value, match, false, endMap);
+        return this.doLike(SqlKeyConst.SPACE, field, null, value, match, false, endMap);
+    }
+
+    /**
+     * 生成 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix notEndsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SqlKeyConst.SPACE, field, name, value, match, false, endMap);
     }
 
     /**
@@ -1515,7 +2464,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotEndsWith(String field, Object value) {
-        return this.doLike(SymbolConst.AND, field, value, true, false, endMap);
+        return this.doLike(SymbolConst.AND, field, null, value, true, false, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotEndsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.AND, field, name, value, true, false, endMap);
     }
 
     /**
@@ -1527,7 +2489,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotEndsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.AND, field, value, match, false, endMap);
+        return this.doLike(SymbolConst.AND, field, null, value, match, false, endMap);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andNotEndsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.AND, field, name, value, match, false, endMap);
     }
 
     /**
@@ -1538,7 +2514,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotEndsWith(String field, Object value) {
-        return this.doLike(SymbolConst.OR, field, value, true, false, endMap);
+        return this.doLike(SymbolConst.OR, field, null, value, true, false, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotEndsWith(String field, Object value, String name) {
+        return this.doLike(SymbolConst.OR, field, name, value, true, false, endMap);
     }
 
     /**
@@ -1550,7 +2539,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotEndsWith(String field, Object value, boolean match) {
-        return this.doLike(SymbolConst.OR, field, value, match, false, endMap);
+        return this.doLike(SymbolConst.OR, field, null, value, match, false, endMap);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT LIKE " 按后缀匹配查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param value 值
+     * @param name JPA 命名参数的占位名称，不填写或者为空时就使用 filed 的值作为命名参数名称，v2.3.0 版本新增的参数
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orNotEndsWith(String field, Object value, String name, boolean match) {
+        return this.doLike(SymbolConst.OR, field, name, value, match, false, endMap);
     }
 
     /**
@@ -1730,7 +2733,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix between(String field, Object startValue, Object endValue) {
-        return this.doBetween(SqlKeyConst.SPACE, field, startValue, endValue, true);
+        return this.doBetween(SqlKeyConst.SPACE, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix between(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SqlKeyConst.SPACE, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -1743,7 +2761,24 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix between(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SqlKeyConst.SPACE, field, startValue, endValue, match);
+        return this.doBetween(SqlKeyConst.SPACE, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix between(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SqlKeyConst.SPACE, field, startName, startValue, endName, endValue, match);
     }
 
     /**
@@ -1755,7 +2790,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andBetween(String field, Object startValue, Object endValue) {
-        return this.doBetween(SymbolConst.AND, field, startValue, endValue, true);
+        return this.doBetween(SymbolConst.AND, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andBetween(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SymbolConst.AND, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -1769,7 +2819,25 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andBetween(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SymbolConst.AND, field, startValue, endValue, match);
+        return this.doBetween(SymbolConst.AND, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条SQL片段，
+     * 否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix andBetween(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SymbolConst.AND, field, startName, startValue, endName, endValue, match);
     }
 
     /**
@@ -1781,7 +2849,22 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orBetween(String field, Object startValue, Object endValue) {
-        return this.doBetween(SymbolConst.OR, field, startValue, endValue, true);
+        return this.doBetween(SymbolConst.OR, field, null, startValue, null, endValue, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 BETWEEN 区间查询的 SQL 片段(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orBetween(String field, String startName, Object startValue, String endName, Object endValue) {
+        return this.doBetween(SymbolConst.OR, field, startName, startValue, endName, endValue, true);
     }
 
     /**
@@ -1795,7 +2878,25 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orBetween(String field, Object startValue, Object endValue, boolean match) {
-        return this.doBetween(SymbolConst.OR, field, startValue, endValue, match);
+        return this.doBetween(SymbolConst.OR, field, null, startValue, null, endValue, match);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 BETWEEN 区间查询的 SQL 片段,如果 match 为 true 时则生成该条SQL片段，
+     * 否则不生成(当某一个值为 null 时，会是大于等于或小于等于的情形).
+     *
+     * @param field 数据库字段
+     * @param startName 开始值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param startValue 开始值
+     * @param endName 结束值的 JPA 的命名参数名称，v2.3.0 版本新增
+     * @param endValue 结束值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-06
+     */
+    public Fenix orBetween(String field, String startName, Object startValue,
+            String endName, Object endValue, boolean match) {
+        return this.doBetween(SymbolConst.OR, field, startName, startValue, endName, endValue, match);
     }
 
     /**
@@ -1806,7 +2907,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Object[] values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Object[] values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, true);
     }
 
     /**
@@ -1818,7 +2932,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Object[] values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, true);
     }
 
     /**
@@ -1829,7 +2957,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Collection<?> values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Collection<?> values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, true);
     }
 
     /**
@@ -1841,7 +2982,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix in(String field, Collection<?> values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, true);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, true);
+    }
+
+    /**
+     * 生成 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix in(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, true);
     }
 
     /**
@@ -1852,7 +3007,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.AND, field, values, true, true);
+        return this.doIn(SymbolConst.AND, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, true);
     }
 
     /**
@@ -1864,7 +3032,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, true);
+        return this.doIn(SymbolConst.AND, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, true);
     }
 
     /**
@@ -1875,7 +3057,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.AND, field, values, true, true);
+        return this.doIn(SymbolConst.AND, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, true);
     }
 
     /**
@@ -1887,7 +3082,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, true);
+        return this.doIn(SymbolConst.AND, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, true);
     }
 
     /**
@@ -1898,7 +3107,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.OR, field, values, true, true);
+        return this.doIn(SymbolConst.OR, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, true);
     }
 
     /**
@@ -1910,7 +3132,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, true);
+        return this.doIn(SymbolConst.OR, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, true);
     }
 
     /**
@@ -1921,7 +3157,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.OR, field, values, true, true);
+        return this.doIn(SymbolConst.OR, field, null, values, true, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, true);
     }
 
     /**
@@ -1933,7 +3182,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, true);
+        return this.doIn(SymbolConst.OR, field, null, values, match, true);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 IN 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, true);
     }
 
     /**
@@ -1944,7 +3207,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Object[] values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Object[] values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, false);
     }
 
     /**
@@ -1956,7 +3232,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Object[] values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, false);
     }
 
     /**
@@ -1967,7 +3257,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Collection<?> values) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, true, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, true, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Collection<?> values) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, true, false);
     }
 
     /**
@@ -1979,7 +3282,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix notIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SqlKeyConst.SPACE, field, values, match, false);
+        return this.doIn(SqlKeyConst.SPACE, field, null, values, match, false);
+    }
+
+    /**
+     * 生成 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix notIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SqlKeyConst.SPACE, field, name, values, match, false);
     }
 
     /**
@@ -1990,7 +3307,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.AND, field, values, true, false);
+        return this.doIn(SymbolConst.AND, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, false);
     }
 
     /**
@@ -2002,7 +3332,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, false);
+        return this.doIn(SymbolConst.AND, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, false);
     }
 
     /**
@@ -2013,7 +3357,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.AND, field, values, true, false);
+        return this.doIn(SymbolConst.AND, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.AND, field, name, values, true, false);
     }
 
     /**
@@ -2025,7 +3382,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andNotIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.AND, field, values, match, false);
+        return this.doIn(SymbolConst.AND, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " AND " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix andNotIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.AND, field, name, values, match, false);
     }
 
     /**
@@ -2036,7 +3407,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Object[] values) {
-        return this.doIn(SymbolConst.OR, field, values, true, false);
+        return this.doIn(SymbolConst.OR, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Object[] values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, false);
     }
 
     /**
@@ -2048,7 +3432,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Object[] values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, false);
+        return this.doIn(SymbolConst.OR, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 数组的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Object[] values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, false);
     }
 
     /**
@@ -2059,7 +3457,20 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Collection<?> values) {
-        return this.doIn(SymbolConst.OR, field, values, true, false);
+        return this.doIn(SymbolConst.OR, field, null, values, true, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Collection<?> values) {
+        return this.doIn(SymbolConst.OR, field, name, values, true, false);
     }
 
     /**
@@ -2071,7 +3482,21 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orNotIn(String field, Collection<?> values, boolean match) {
-        return this.doIn(SymbolConst.OR, field, values, match, false);
+        return this.doIn(SymbolConst.OR, field, null, values, match, false);
+    }
+
+    /**
+     * 生成带 " OR " 前缀的 " NOT IN " 范围查询的 SQL 片段,如果 match 为 true 时则生成该条 SQL 片段，否则不生成.
+     *
+     * @param field 数据库字段
+     * @param name JPA 的命名参数名称，v2.3.0 版本新增
+     * @param values 集合的值
+     * @param match 是否匹配
+     * @return {@link Fenix} 实例
+     * @since v2.3.0 on 2020-05-07
+     */
+    public Fenix orNotIn(String field, String name, Collection<?> values, boolean match) {
+        return this.doIn(SymbolConst.OR, field, name, values, match, false);
     }
 
     /**
@@ -2083,7 +3508,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNull(String field) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, true,true);
+        return this.doIsNull(SqlKeyConst.SPACE, field, true, true);
     }
 
     /**
@@ -2096,7 +3521,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNull(String field, boolean match) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, match,true);
+        return this.doIsNull(SqlKeyConst.SPACE, field, match, true);
     }
 
     /**
@@ -2108,7 +3533,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNull(String field) {
-        return this.doIsNull(SymbolConst.AND, field, true,true);
+        return this.doIsNull(SymbolConst.AND, field, true, true);
     }
 
     /**
@@ -2121,7 +3546,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.AND, field, match,true);
+        return this.doIsNull(SymbolConst.AND, field, match, true);
     }
 
     /**
@@ -2133,7 +3558,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNull(String field) {
-        return this.doIsNull(SymbolConst.OR, field, true,true);
+        return this.doIsNull(SymbolConst.OR, field, true, true);
     }
 
     /**
@@ -2146,7 +3571,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.OR, field, match,true);
+        return this.doIsNull(SymbolConst.OR, field, match, true);
     }
 
     /**
@@ -2158,7 +3583,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNotNull(String field) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, true,false);
+        return this.doIsNull(SqlKeyConst.SPACE, field, true, false);
     }
 
     /**
@@ -2171,7 +3596,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix isNotNull(String field, boolean match) {
-        return this.doIsNull(SqlKeyConst.SPACE, field, match,false);
+        return this.doIsNull(SqlKeyConst.SPACE, field, match, false);
     }
 
     /**
@@ -2183,7 +3608,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNotNull(String field) {
-        return this.doIsNull(SymbolConst.AND, field, true,false);
+        return this.doIsNull(SymbolConst.AND, field, true, false);
     }
 
     /**
@@ -2196,7 +3621,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix andIsNotNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.AND, field, match,false);
+        return this.doIsNull(SymbolConst.AND, field, match, false);
     }
 
     /**
@@ -2208,7 +3633,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNotNull(String field) {
-        return this.doIsNull(SymbolConst.OR, field, true,false);
+        return this.doIsNull(SymbolConst.OR, field, true, false);
     }
 
     /**
@@ -2221,7 +3646,7 @@ public final class Fenix {
      * @return {@link Fenix} 实例
      */
     public Fenix orIsNotNull(String field, boolean match) {
-        return this.doIsNull(SymbolConst.OR, field, match,false);
+        return this.doIsNull(SymbolConst.OR, field, match, false);
     }
 
 }

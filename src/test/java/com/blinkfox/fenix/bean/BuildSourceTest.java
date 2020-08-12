@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.blinkfox.fenix.consts.Const;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 

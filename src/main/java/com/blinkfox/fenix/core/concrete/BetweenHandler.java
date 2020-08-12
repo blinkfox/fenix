@@ -6,7 +6,6 @@ import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**
@@ -15,23 +14,25 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;between match="" field="" start="" end="" /&gt;'</li>
- *     <li>'&lt;andBetween match="" field="" start="" end="" /&gt;'</li>
- *     <li>'&lt;orBetween match="" field="" start="" end="" /&gt;'</li>
+ *     <li>{@code <between match="" field="" startName="" start="" endName="" end="" />}</li>
+ *     <li>{@code <andBetween match="" field="" startName="" start="" endName="" end="" />}</li>
+ *     <li>{@code <orBetween match="" field="" startName="" start="" endName="" end="" />}</li>
  * </ul>
+ *
  * <p>注：</p>
  * <ul>
  *     <li>获取到 match 字段的值，如果为空或者为 true，就生成此 SQL 片段；</li>
- *     <li>start 和 end 的值"不能"全为 null；</li>
- *     <li>start 和 end 的值"均不为 null"时，会生成 'BETWEEN :start AND :end' 的 JPQL 语句；</li>
- *     <li>start 不为 null 和 end 为 null 时，会退化生成 '&gt;= :start' 的 JPQL 语句；</li>
- *     <li>start 为 null 和 end 不为 null 时，会退化生成 '&lt;= :end' 的 JPQL 语句；</li>
+ *     <li>field 必填，tart 和 end 的值"不能"全为 null，match、startName、endName 的值均为非必填；</li>
+ *     <li>start 和 end 的值"均不为 null"时，会生成 {@code 'BETWEEN :start AND :end'} 的 JPQL 语句；</li>
+ *     <li>start 不为 null 和 end 为 null 时，会退化生成 {@code '>= :start'} 的 JPQL 语句；</li>
+ *     <li>start 为 null 和 end 不为 null 时，会退化生成 {@code '<= :end'} 的 JPQL 语句；</li>
  * </ul>
  *
  * @author blinkfox on 2019-08-07.
  * @see NormalHandler
  * @see LikeHandler
  * @see InHandler
+ * @since v1.0.0
  */
 public class BetweenHandler implements FenixHandler {
 
@@ -48,7 +49,11 @@ public class BetweenHandler implements FenixHandler {
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             String[] valueTextArr = XmlNodeHelper.getRangeCheckNodeText(node);
             new XmlSqlInfoBuilder(source).buildBetweenSql(
-                    XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD), valueTextArr[0], valueTextArr[1]);
+                    XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+                    XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_START_NAME),
+                    valueTextArr[0],
+                    XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_END_NAME),
+                    valueTextArr[1]);
         }
     }
 

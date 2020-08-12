@@ -5,10 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.blinkfox.fenix.consts.Const;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
 
 /**
@@ -23,9 +21,8 @@ public class CollectionHelperTest {
      */
     @Test
     public void testIsNotEmpty() {
-        assertFalse(CollectionHelper.isNotEmpty(null));
-        assertFalse(CollectionHelper.isNotEmpty(new Object[]{}));
-        assertTrue(CollectionHelper.isNotEmpty(new Object[]{1}));
+        assertFalse(CollectionHelper.isNotEmpty(new Object[] {}));
+        assertTrue(CollectionHelper.isNotEmpty(new Object[] {1}));
     }
 
     /**
@@ -45,13 +42,13 @@ public class CollectionHelperTest {
      */
     @Test
     public void testToArray() {
-        assertArrayEquals(new Object[]{3}, CollectionHelper.toArray(3, 0));
-        assertArrayEquals(new Object[]{1, 2}, CollectionHelper.toArray(new Object[]{1, 2}, Const.OBJTYPE_ARRAY));
+        assertArrayEquals(new Object[] {3}, CollectionHelper.toArray(3, 0));
+        assertArrayEquals(new Object[] {1, 2}, CollectionHelper.toArray(new Object[] {1, 2}, Const.OBJTYPE_ARRAY));
 
         List<String> lists = new ArrayList<>();
         lists.add("hello");
         lists.add("world");
-        assertArrayEquals(new Object[]{"hello", "world"}, CollectionHelper.toArray(lists, Const.OBJTYPE_COLLECTION));
+        assertArrayEquals(new Object[] {"hello", "world"}, CollectionHelper.toArray(lists, Const.OBJTYPE_COLLECTION));
     }
 
 }

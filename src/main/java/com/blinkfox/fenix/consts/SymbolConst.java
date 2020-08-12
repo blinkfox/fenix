@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
  * 一些常见 SQL 标记或操作符的常量类.
  *
  * @author blinkfox on 2019-08-06.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SymbolConst {

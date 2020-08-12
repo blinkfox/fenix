@@ -12,14 +12,11 @@ import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.SqlInfoPrinter;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.dom4j.Node;
 
 /**
@@ -28,6 +25,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019/8/12.
  * @see Fenix
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FenixXmlBuilder {
@@ -120,7 +118,7 @@ public final class FenixXmlBuilder {
      */
     public static SqlInfo buildSqlInfo(String namespace, SqlInfo sqlInfo, Node node, Object context) {
         List<Node> nodes = node.selectNodes(XpathConst.ATTR_CHILD);
-        for (Node n: nodes) {
+        for (Node n : nodes) {
             String nodeTypeName = n.getNodeTypeName();
             if (Const.NODETYPE_TEXT.equals(nodeTypeName)) {
                 FenixContext.buildPlainTextSqlInfo(sqlInfo, n.getText());

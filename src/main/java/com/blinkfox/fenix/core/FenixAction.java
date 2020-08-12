@@ -7,6 +7,7 @@ import java.util.Map;
  *
  * @author blinkfox on 2019-08-11.
  * @see Fenix
+ * @since v1.0.0
  */
 @FunctionalInterface
 public interface FenixAction {

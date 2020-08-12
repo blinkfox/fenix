@@ -1,3 +1,34 @@
+## v2.3.5 修复了在老版本 JPA 中某些情况下的 bug (2020-07-31)
+
+- 修复了在老版本 JPA 中，某些情况下出现 Javaassist 的 `ClassNotFoundException` 的问题；
+
+## v2.3.4 升级了相关依赖包的版本 (2020-07-26)
+
+- 升级了相关依赖包的版本，如：`dom4j`、`mvel` 等；
+
+## v2.3.3 修复多线程下同一个接口方法的线程安全问题（强烈推荐升级） (2020-07-03)
+
+- 修复了在多线程情况下执行同一个 `repository` 接口方法时，可能出现参数混淆的线程安全问题；
+
+## v2.3.2 修复某些情况下 JDBC 连接未释放的问题（强烈推荐升级） (2020-05-28)
+
+- 修复了在异步多线程情况下，返回自定义实体 Bean 类型时，JDBC 连接未释放的问题，老版本可以使用 `@Transactional` 注解解决；
+
+## v2.3.1 兼容支持最新 v2.3.0 版本的 Spring Data JPA (2020-05-18)
+
+- 支持最新的 Spring Data JPA 版本(`v2.3.0`)，同时也能兼容之前的 Spring Data JPA 版本；
+
+## v2.3.0 新增了基于 JPQL 方式时自定义命名参数名称的相关 API 和属性 (2020-05-09)
+
+- 新增了基于 JPQL 的 XML 方式中的多个 XML 标签中，可以自定义命名参数名称的 `name` 属性；
+- 新增了基于 JPQL 的 Java API 方式中可以自定义命名参数名称的 `name` 参数相关的 API 方法；
+
+## v2.2.0 新增了基于 Specification 的动态注解和 Java 链式 API (2020-02-02)
+
+- 新增了基于 `Specification` 的动态条件注解来动态查询数据；
+- 新增了基于 `Specification` 的 Java 链式 API 来动态查询数据；
+- 新增了 `@EnableFenix` 注解来配置 JPA 可以使用 Fenix 的相关 API；
+
 ## v2.1.0 新增 <where> 标签和对应的 Java API (2019-11-21)
 
 - 新增了 `<where>` 标签和动态 `where` 的 Java API，用来消除在全动态 SQL 中场景中，`WHERE` 关键字后的 `AND` 或者 `OR` 关键字；

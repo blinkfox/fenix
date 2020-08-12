@@ -4,7 +4,6 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.vo.UserBlogInfo;
-
 import org.springframework.data.repository.query.Param;
 
 /**

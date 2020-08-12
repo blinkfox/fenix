@@ -6,6 +6,7 @@ import com.blinkfox.fenix.bean.BuildSource;
  * 根据构建资源来动态追加构建 JPQL 或者 SQL 片段及参数信息的处理器接口.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @FunctionalInterface
 public interface FenixHandler {

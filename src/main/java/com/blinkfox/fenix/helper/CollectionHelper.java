@@ -1,9 +1,7 @@
 package com.blinkfox.fenix.helper;
 
 import com.blinkfox.fenix.consts.Const;
-
 import java.util.Collection;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +9,7 @@ import lombok.NoArgsConstructor;
  * 集合操作相关的工具类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CollectionHelper {
@@ -23,6 +22,16 @@ public final class CollectionHelper {
      */
     public static boolean isNotEmpty(Object[] array) {
         return array != null && array.length > 0;
+    }
+
+    /**
+     * 判断集合是否不为空.
+     *
+     * @param collections 集合
+     * @return 布尔值
+     */
+    public static boolean isNotEmpty(Collection<?> collections) {
+        return !isEmpty(collections);
     }
 
     /**
@@ -52,7 +61,7 @@ public final class CollectionHelper {
                 values = ((Collection<?>) obj).toArray();
                 break;
             default:
-                values = new Object[]{obj};
+                values = new Object[] {obj};
         }
         return values;
     }

@@ -2,7 +2,6 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Blob;
@@ -11,7 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.BlobType;
 import org.hibernate.type.descriptor.java.DataHelper;
@@ -44,7 +42,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     /**
      * 要转换类型的 class 实例.
      */
-    private Class<T> resultClass;
+    private final Class<T> resultClass;
 
     /**
      * 返回结果各属性字段名称及对应的对象间的映射关系 Map.
@@ -81,7 +79,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     /**
      * 将每行的“元组”数据转换为对应的 {@link #resultClass} 的结果类型.
      *
-     * @param tuple   元组数据
+     * @param tuple 元组数据
      * @param aliases 元组数据的别名数组
      * @return 转换后的 {@link #resultClass} 的结果类型
      */
@@ -102,7 +100,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
         // 遍历设置各个属性对应的值.
         for (int i = 0, len = aliases.length; i < len; i++) {
             String column = aliases[i];
-            if (column == null || StringHelper.isBlank(column)) {
+            if (StringHelper.isBlank(column)) {
                 throw new FenixException("【Fenix 异常】要映射为【" + this.resultClass + "】实体的查询结果列为空，"
                         + "请检查并保证每一个查询结果列都必须用【as】后加“别名”的方式！");
             }

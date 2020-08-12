@@ -6,15 +6,12 @@ import com.blinkfox.fenix.exception.ConfigNotFoundException;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
@@ -26,6 +23,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
  * 用于扫描指定路径下 Fenix XML 文件资源的扫描器类.
  *
  * @author blinkfox on 2019-08-31.
+ * @since v1.0.0
  */
 @Slf4j
 public class XmlScanner {
@@ -53,7 +51,7 @@ public class XmlScanner {
             log.debug("【Fenix 提示】将扫描这些位置的 Fenix XML 文件：【{}】", Arrays.asList(xmlLocationArr));
         }
 
-        for (String xmlLocation: xmlLocationArr) {
+        for (String xmlLocation : xmlLocationArr) {
             if (StringHelper.isBlank(xmlLocation)) {
                 continue;
             }
@@ -83,7 +81,7 @@ public class XmlScanner {
         Resource[] resources = this.getResourcesByLocation(location);
 
         try {
-            for (Resource resource: resources) {
+            for (Resource resource : resources) {
                 String path = resource.getURL().getPath();
                 if (xmlResourceMap.containsKey(path)) {
                     log.debug("【Fenix 提示】已经扫描过了【" + path + "】文件，将跳过该 XML 文件的初始化加载.");

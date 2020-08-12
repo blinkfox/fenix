@@ -3,10 +3,8 @@ package com.blinkfox.fenix.repository;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.provider.UserSqlInfoProvider;
-
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,6 +33,8 @@ public interface UserRepository extends JpaRepository<User, String> {
      * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来查询用户信息，不指定 method 将默认跟方法名保持一致的查询.
      *
      * @param userId 用户 ID
+     * @param user 用户信息
+     * @param age 年龄
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */
@@ -46,6 +46,8 @@ public interface UserRepository extends JpaRepository<User, String> {
      * 使用 {@link QueryFenix} 注解和 Java 拼接 SQL 的方式来查询用户信息，指定 method 来查询.
      *
      * @param userId 用户 ID
+     * @param user 用户信息
+     * @param age 年龄
      * @param userEmail 用户邮箱
      * @return 用户信息集合
      */

@@ -6,7 +6,6 @@ import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.builder.XmlSqlInfoBuilder;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**
@@ -15,9 +14,9 @@ import org.dom4j.Node;
  * <p>LIKE 包括：前后模糊，前缀匹配，后缀匹配等.</p>
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;like match="" field="" value="" pattern="" /&gt;'</li>
- *     <li>'&lt;andLike match="" field="" value="" pattern="" /&gt;'</li>
- *     <li>'&lt;orLike match="" field="" value="" pattern="" /&gt;'</li>
+ *     <li>{@code <like match="" field="" name="" value="" pattern="" />}</li>
+ *     <li>{@code <andLike match="" field="" name="" value="" pattern="" />}</li>
+ *     <li>{@code <orLike match="" field="" name="" value="" pattern="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -29,6 +28,7 @@ import org.dom4j.Node;
  *
  * @author blinkfox on 2019-08-06.
  * @see NormalHandler
+ * @since v1.0.0
  */
 public class LikeHandler implements FenixHandler {
 
@@ -45,6 +45,7 @@ public class LikeHandler implements FenixHandler {
         if (ParseHelper.isMatch(XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_MATCH), source.getContext())) {
             new XmlSqlInfoBuilder(source).buildLikeSql(
                     XmlNodeHelper.getAndCheckNodeText(node, XpathConst.ATTR_FIELD),
+                    XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_NAME),
                     XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_VALUE),
                     XmlNodeHelper.getNodeAttrText(node, XpathConst.ATTR_PATTERN));
         }

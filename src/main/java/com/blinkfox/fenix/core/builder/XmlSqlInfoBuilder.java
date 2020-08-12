@@ -5,7 +5,6 @@ import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
-
 import java.util.Arrays;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import java.util.Map;
  * 构建使用 XML 拼接 JPQL 或者 SQL 片段的构建器.
  *
  * @author blinkfox on 2019-08-06.
+ * @since v1.0.0
  */
 public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
 
@@ -29,22 +29,28 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      * 通过计算 XML 中 value 属性的值来追加构建常规 SQL 片段需要的 {@link SqlInfo} 信息.
      *
      * @param fieldText 字段文本值
+     * @param name JPA 命名参数的占位名称, v2.3.0 版本新增的参数
      * @param valueText 参数值
      */
-    public void buildNormalSql(String fieldText, String valueText) {
-        super.buildNormalSql(fieldText, valueText, ParseHelper.parseExpressWithException(valueText, context));
+    public void buildNormalSql(String fieldText, String name, String valueText) {
+        super.buildNormalSql(fieldText,
+                StringHelper.isBlank(name) ? StringHelper.fixDot(valueText) : name,
+                ParseHelper.parseExpressWithException(valueText, context));
     }
 
     /**
      * 追加构建 'LIKE' 模糊查询的 {@link SqlInfo} 信息.
      *
-     * @param fieldText   字段文本值
-     * @param valueText   参数值
+     * @param fieldText 字段文本值
+     * @param name JPA 命名参数的占位名称, v2.3.0 版本新增的参数
+     * @param valueText 参数值
      * @param patternText 模式字符串文本
      */
-    public void buildLikeSql(String fieldText, String valueText, String patternText) {
+    public void buildLikeSql(String fieldText, String name, String valueText, String patternText) {
         if (StringHelper.isNotBlank(valueText) && StringHelper.isBlank(patternText)) {
-            super.buildLikeSql(fieldText, valueText, ParseHelper.parseExpressWithException(valueText, context));
+            super.buildLikeSql(fieldText,
+                    StringHelper.isBlank(name) ? StringHelper.fixDot(valueText) : name,
+                    ParseHelper.parseExpressWithException(valueText, context));
         } else if (StringHelper.isBlank(valueText) && StringHelper.isNotBlank(patternText)) {
             super.buildLikePatternSql(fieldText, patternText);
         } else {
@@ -56,12 +62,17 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      * 追加构建 'BETWEEN ? AND ?'、'大于等于'、'小于等于' 的区间查询的 {@link SqlInfo} 信息.
      *
      * @param fieldText 字段文本值
+     * @param startName 开始边界的 JPA 命名参数的占位名称, v2.3.0 版本新增的参数
      * @param startText 开始文本
-     * @param endText   结束文本
+     * @param endName 结束边界的 JPA 命名参数的占位名称, v2.3.0 版本新增的参数
+     * @param endText 结束文本
      */
-    public void buildBetweenSql(String fieldText, String startText, String endText) {
-        super.buildBetweenSql(fieldText, startText, ParseHelper.parseExpress(startText, context),
-                endText, ParseHelper.parseExpress(endText, context));
+    public void buildBetweenSql(String fieldText, String startName, String startText, String endName, String endText) {
+        super.buildBetweenSql(fieldText,
+                StringHelper.isBlank(startName) ? StringHelper.fixDot(startText) : startName,
+                ParseHelper.parseExpress(startText, context),
+                StringHelper.isBlank(endName) ? StringHelper.fixDot(endText) : endName,
+                ParseHelper.parseExpress(endText, context));
     }
 
     /**
@@ -70,12 +81,13 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      * <p>获取 value 的值，判断是否为空，若为空，则不做处理.</p>
      *
      * @param fieldText 字段文本值
+     * @param name JPA 命名参数的占位名称, v2.3.0 版本新增的参数
      * @param valueText IN 所要查找的范围文本值
      */
-    public void buildInSql(String fieldText, String valueText) {
+    public void buildInSql(String fieldText, String name, String valueText) {
         Object obj = ParseHelper.parseExpressWithException(valueText, context);
         if (obj != null) {
-            super.buildInSql(fieldText, valueText, obj);
+            super.buildInSql(fieldText, StringHelper.isBlank(name) ? StringHelper.fixDot(valueText) : name, obj);
         }
     }
 
@@ -83,7 +95,7 @@ public final class XmlSqlInfoBuilder extends SqlInfoBuilder {
      * 追加构建 'TEXT' 的文本标签中参数的 {@link SqlInfo} 信息.
      *
      * <p>注：value 的类型必须是 Map 类型的，否则将抛出 {@link FenixException} 异常；
-     *      且 Map 中的 key 必须是“死”字符串，value 的值才可以被动态解析.</p>
+     * 且 Map 中的 key 必须是“死”字符串，value 的值才可以被动态解析.</p>
      *
      * @param valueText value 文本值
      */

@@ -2,7 +2,7 @@ package com.blinkfox.fenix.jpa;
 
 import java.util.Optional;
 import javax.persistence.EntityManager;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -15,7 +15,9 @@ import org.springframework.data.repository.query.QueryMethodEvaluationContextPro
  * 在该方法中创建了 {@link FenixQueryLookupStrategy} 的实例.</p>
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
+@Slf4j
 public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
 
     /**
@@ -37,6 +39,9 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
         super(entityManager);
         this.entityManager = entityManager;
         this.extractor = PersistenceProvider.fromEntityManager(entityManager);
+
+        // 为了兼容 Spring Data JPA v2.3.0 之前的版本，这里修改 class 中的字节码，来支持老版本中 JPA 的相关方法，防止编译报错.
+        FenixJpaClassWriter.modify();
     }
 
     /**

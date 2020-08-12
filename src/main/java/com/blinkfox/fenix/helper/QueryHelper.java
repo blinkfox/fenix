@@ -2,7 +2,6 @@ package com.blinkfox.fenix.helper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +9,7 @@ import lombok.NoArgsConstructor;
  * QueryHelper.
  *
  * @author blinkfox on 2019-08-08.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QueryHelper {

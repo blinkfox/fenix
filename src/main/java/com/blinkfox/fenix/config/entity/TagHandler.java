@@ -3,7 +3,6 @@ package com.blinkfox.fenix.config.entity;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixHandlerFactory;
-
 import lombok.Getter;
 
 /**
@@ -11,12 +10,13 @@ import lombok.Getter;
  *
  * @author blinkfox on 2019-08-04.
  * @see FenixHandler
+ * @since v1.0.0
  */
 public class TagHandler {
 
     /**
      * 生成 SQL 片段的前缀，如: 'and', 'or' 等.
-     * */
+     */
     @Getter
     private String prefix;
 

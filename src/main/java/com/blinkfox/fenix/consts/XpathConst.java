@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
  * XPATH 语法相关的常量类.
  *
  * @author blinkfox on 2019-08-04.
+ * @since v1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XpathConst {
@@ -57,6 +58,27 @@ public final class XpathConst {
      * 用于表示 “field” 的属性 XPATH 常量.
      */
     public static final String ATTR_FIELD = "attribute::field";
+
+    /**
+     * 用于表示 “name” 的属性 XPATH 常量，用于表示 JPA 命名参数时的自定义名称的属性.
+     *
+     * @since v2.3.0 on 2020-05-06
+     */
+    public static final String ATTR_NAME = "attribute::name";
+
+    /**
+     * 用于表示开始边界的 “name” 的属性 XPATH 常量，用于表示 JPA 命名参数时的自定义名称的属性.
+     *
+     * @since v2.3.0 on 2020-05-06
+     */
+    public static final String ATTR_START_NAME = "attribute::startName";
+
+    /**
+     * 用于表示结束边界的 “name” 的属性 XPATH 常量，用于表示 JPA 命名参数时的自定义名称的属性.
+     *
+     * @since v2.3.0 on 2020-05-06
+     */
+    public static final String ATTR_END_NAME = "attribute::endName";
 
     /**
      * 用于表示 “value” 的属性 XPATH 常量.

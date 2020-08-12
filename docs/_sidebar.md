@@ -1,15 +1,23 @@
 - 快速入门
   - [简介](README)
-  - [与 MyBatis 的 SQL 写法比较](compare-mybatis)
+  - [与 MyBatis 的 XML 的 SQL 写法比较](compare-mybatis)
   - [快速集成](quick-install)
   - [快速开始](quick-start)
+  - [四种使用方式示例](usage-example)
   - [@QueryFenix 注解](queryfenix-introduction)
-- XML方式
+- 基于 JPQL(或SQL) 的 XML 方式
   - [逻辑控制语法](xml/logic-control)
   - [SQL 语义化标签](xml/xml-tags)
   - [自定义标签](xml/custom-tag)
-- Java方式
+- 基于 JPQL(或SQL) 的 Java API 方式
   - [总体示例](java/example)
   - [API 方法](java/main-method)
+- 基于 Specification 的 Java API 方式
+  - [总体示例](sp-api/example)
+  - [API 方法](sp-api/main-method)
+- 基于 Specification 的 Java Bean 注解方式
+  - [使用介绍](sp-bean/introduction)
+  - [内置条件注解](sp-bean/annotations)
+  - [自定义条件注解](sp-bean/custom-annotation)
 - [更多功能](more-features)
 - [版本更新记录](CHANGELOG)

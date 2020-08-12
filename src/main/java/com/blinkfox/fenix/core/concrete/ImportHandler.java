@@ -8,7 +8,6 @@ import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import org.dom4j.Node;
 
 /**
@@ -16,7 +15,7 @@ import org.dom4j.Node;
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>'&lt;import match="" namespace="" fenixId="" value="" /&gt;'</li>
+ *     <li>{@code <import match="" namespace="" fenixId="" value="" />}</li>
  * </ul>
  * <p>注：</p>
  * <ul>
@@ -30,6 +29,7 @@ import org.dom4j.Node;
  * @see LikeHandler
  * @see InHandler
  * @see TextHandler
+ * @since v1.0.0
  */
 public class ImportHandler implements FenixHandler {
 
@@ -68,7 +68,7 @@ public class ImportHandler implements FenixHandler {
         // 否则使用默认上下文参数对象传入到待解析的引入模板中.
         String valueText = XmlNodeHelper.getNodeAttrText(source.getNode(), XpathConst.ATTR_VALUE);
         FenixXmlBuilder.buildSqlInfo(nameSpace, source.getSqlInfo(), node, StringHelper.isNotBlank(valueText)
-                        ? ParseHelper.parseExpressWithException(valueText, source.getContext()) : source.getContext());
+                ? ParseHelper.parseExpressWithException(valueText, source.getContext()) : source.getContext());
     }
 
 }

@@ -11,15 +11,12 @@ import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
-
 import java.util.Collection;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.dom4j.Node;
 
 /**
@@ -28,6 +25,7 @@ import org.dom4j.Node;
  * @author blinkfox on 2019-08-04.
  * @see FenixConfig
  * @see XmlResource
+ * @since v1.0.0
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,14 +40,14 @@ public final class FenixConfigManager {
             + " |    __)/ __ \\ /    \\|  \\  \\/  /\n"
             + " |     \\\\  ___/|   |  \\  |>    < \n"
             + " \\___  / \\___  >___|  /__/__/\\_ \\\n"
-            + "     \\/      \\/     \\/         \\/ v2.1.0\n";
+            + "     \\/      \\/     \\/         \\/ v2.3.5\n";
 
     /**
      * Fenix 配置信息实例.
      */
     @Getter
     private FenixConfig fenixConfig;
-    
+
     /**
      * 初始化的 {@link FenixConfigManager} 单实例.
      */
@@ -129,7 +127,7 @@ public final class FenixConfigManager {
         Collection<XmlResource> xmlResources = xmlResourceMap.values();
         for (XmlResource xmlResource : xmlResources) {
             String namespace = xmlResource.getNamespace();
-            for (Node fenixNode: xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
+            for (Node fenixNode : xmlResource.getDocument().selectNodes(XpathConst.FENIX_TAG)) {
                 String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
                     throw new NodeNotFoundException("【Fenix 异常提示】命名空间为【" + namespace + "】的 Fenix XML 文件中有"

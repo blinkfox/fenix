@@ -3,9 +3,7 @@ package com.blinkfox.fenix.helper;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.provider.SqlExceptionProvider;
 import com.blinkfox.fenix.provider.UserSqlInfoProvider;
-
 import java.util.HashMap;
-
 import org.junit.Test;
 
 /**
