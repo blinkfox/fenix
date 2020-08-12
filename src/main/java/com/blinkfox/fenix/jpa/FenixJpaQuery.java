@@ -6,22 +6,21 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
-import org.springframework.data.jpa.repository.query.JpaParameters;
-import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
-import org.springframework.data.jpa.repository.query.JpaQueryMethod;
-import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.Parameter;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.ReturnedType;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.Tuple;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 继承了 {@code AbstractJpaQuery} 抽象类，
@@ -46,6 +45,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * 用来替换 'select ... from' 为 'select count(*) as count from ' 的求 count(*) 的常量.
      */
     private static final String SELECT_COUNT = "select count(*) as count from ";
+
+    private static final String REGX_SELECT_FROM_DISTINCT = "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
 
     /**
      * JPA 参数对象.
@@ -340,7 +341,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
                 fenixQueryInfo.setSqlInfo(this.getXmlSqlInfo(xmlCountQuery, contextParams));
                 return fenixQueryInfo.getSqlInfo().getSql();
             } else {
-                return fenixQueryInfo.getSqlInfo().getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
+                return getCountSqlByQueryInfo(fenixQueryInfo);
             }
         }
 
@@ -350,7 +351,26 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             fenixQueryInfo.setSqlInfo(this.getXmlSqlInfo(xmlCountQuery, contextParams));
             return fenixQueryInfo.getSqlInfo().getSql();
         }
-        return fenixQueryInfo.getSqlInfo().getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
+        return getCountSqlByQueryInfo(fenixQueryInfo);
+    }
+
+    private String getCountSqlByQueryInfo(FenixQueryInfo fenixQueryInfo) {
+        boolean enableDistinct = queryFenix.enableDistinct();
+        String infoSql = fenixQueryInfo.getSqlInfo().getSql();
+        Pattern pattern = Pattern.compile(REGX_SELECT_FROM);
+        Matcher matcher = pattern.matcher(infoSql);
+        String countSql = matcher.replaceFirst(SELECT_COUNT);
+        if(!enableDistinct) {
+            return countSql;
+        }
+        String selectPrefix = matcher.group();
+        pattern = Pattern.compile(REGX_SELECT_FROM_DISTINCT);
+        matcher = pattern.matcher(selectPrefix);
+        if(!matcher.find()){
+            return countSql;
+        }
+        String distinctColumn = matcher.group(4);
+        return countSql.replaceFirst("count\\(\\*\\)",String.format("count(distinct %s)",distinctColumn));
     }
 
 }
