@@ -46,6 +46,9 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     private static final String SELECT_COUNT = "select count(*) as count from ";
 
+    /**
+     * 用来匹配sql中的distinct条件
+     */
     private static final String REGX_SELECT_FROM_DISTINCT = "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
 
     /**
@@ -354,6 +357,11 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         return getCountSqlByQueryInfo(fenixQueryInfo);
     }
 
+    /**
+     * 通过QueryInfo获取CountSql
+     * @param fenixQueryInfo {@link FenixQueryInfo}
+     * @return countSql
+     */
     private String getCountSqlByQueryInfo(FenixQueryInfo fenixQueryInfo) {
         boolean enableDistinct = queryFenix.enableDistinct();
         String infoSql = fenixQueryInfo.getSqlInfo().getSql();
