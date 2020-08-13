@@ -6,21 +6,24 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
-import lombok.Setter;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.*;
-import org.springframework.data.repository.query.Parameter;
-import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.ReturnedType;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.Tuple;
+import lombok.Setter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
+import org.springframework.data.jpa.repository.query.JpaParameters;
+import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
+import org.springframework.data.jpa.repository.query.JpaQueryMethod;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.repository.query.Parameter;
+import org.springframework.data.repository.query.ParametersParameterAccessor;
+import org.springframework.data.repository.query.ReturnedType;
 
 /**
  * 继承了 {@code AbstractJpaQuery} 抽象类，
@@ -47,9 +50,20 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private static final String SELECT_COUNT = "select count(*) as count from ";
 
     /**
-     * 用来匹配sql中的distinct条件
+     * 用来匹配 SQL 中的 DISTINCT 条件.
      */
-    private static final String REGX_SELECT_FROM_DISTINCT = "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
+    private static final String REGX_SELECT_FROM_DISTINCT =
+            "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
+
+    /**
+     * select from 正则表达式 Pattern.
+     */
+    private static final Pattern SELECT_FROM_PATTERN = Pattern.compile(REGX_SELECT_FROM);
+
+    /**
+     * select distinct from 正则表达式 Pattern.
+     */
+    private static final Pattern SELECT_FROM_DISTINCT_PATTERN = Pattern.compile(REGX_SELECT_FROM_DISTINCT);
 
     /**
      * JPA 参数对象.
@@ -358,27 +372,25 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     }
 
     /**
-     * 通过QueryInfo获取CountSql
+     * 通过QueryInfo获取CountSql.
      * @param fenixQueryInfo {@link FenixQueryInfo}
      * @return countSql
      */
     private String getCountSqlByQueryInfo(FenixQueryInfo fenixQueryInfo) {
         boolean enableDistinct = queryFenix.enableDistinct();
         String infoSql = fenixQueryInfo.getSqlInfo().getSql();
-        Pattern pattern = Pattern.compile(REGX_SELECT_FROM);
-        Matcher matcher = pattern.matcher(infoSql);
+        Matcher matcher = SELECT_FROM_PATTERN.matcher(infoSql);
         String countSql = matcher.replaceFirst(SELECT_COUNT);
-        if(!enableDistinct) {
+        if (!enableDistinct) {
             return countSql;
         }
         String selectPrefix = matcher.group();
-        pattern = Pattern.compile(REGX_SELECT_FROM_DISTINCT);
-        matcher = pattern.matcher(selectPrefix);
-        if(!matcher.find()){
+        matcher = SELECT_FROM_DISTINCT_PATTERN.matcher(selectPrefix);
+        if (!matcher.find()) {
             return countSql;
         }
         String distinctColumn = matcher.group(4);
-        return countSql.replaceFirst("count\\(\\*\\)",String.format("count(distinct %s)",distinctColumn));
+        return countSql.replaceFirst("count\\(\\*\\)", String.format("count(distinct %s)", distinctColumn));
     }
 
 }

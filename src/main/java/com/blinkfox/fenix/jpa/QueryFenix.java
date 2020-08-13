@@ -71,9 +71,10 @@ public @interface QueryFenix {
     String countMethod() default "";
 
     /**
-     * 是否启用distinct检测
+     * 是否启用 distinct 检测.
+     *
      * @return 布尔值
      */
-    boolean enableDistinct() default true;
+    boolean enableDistinct() default false;
 
 }
