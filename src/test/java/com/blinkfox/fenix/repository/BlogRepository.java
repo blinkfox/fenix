@@ -6,14 +6,15 @@ import com.blinkfox.fenix.provider.BlogSqlInfoProvider;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
-import java.util.List;
-import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 博客数据的库持久化类.
@@ -217,5 +218,37 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      */
     @QueryFenix(value = "BlogRepository.queryUserBlogMapWithFenix")
     List<Map<String, Object>> queryUserBlogMapWithFenix(@Param("userId") String userId, @Param("blog") Blog blog);
+
+    /**
+     * 使用开启 distinct 检测的分页查询.
+     * @param pageable 分页参数{@link Pageable}
+     * @return 博客集合
+     */
+    @QueryFenix(value = "BlogRepository.queryBlogsWithDistinct", enableDistinct = true)
+    Page<Blog> queryBlogsWithDistinct(Pageable pageable);
+
+    /**
+     * 使用开启 distinct 检测但是没有 distinct 关键字的分页查询.
+     * @param pageable 分页参数{@link Pageable}
+     * @return 博客集合
+     */
+    @QueryFenix(value = "BlogRepository.queryBlogsWithoutDistinct", enableDistinct = true)
+    Page<Blog> queryBlogsWithoutDistinct(Pageable pageable);
+
+    /**
+     * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     * @param pageable 分页参数{@link Pageable}
+     * @return 博客集合
+     */
+    @QueryFenix(value = "BlogRepository.queryBlogsWithoutDistinctNative", enableDistinct = true, nativeQuery = true)
+    Page<Blog> queryBlogsWithoutDistinctNative(Pageable pageable);
+
+    /**
+     * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     * @param pageable 分页参数{@link Pageable}
+     * @return 用户ID集合
+     */
+    @QueryFenix(value = "BlogRepository.queryBlogsWithDistinctNative", enableDistinct = true, nativeQuery = true)
+    Page<Long> queryBlogsWithDistinctNative(Pageable pageable);
 
 }
