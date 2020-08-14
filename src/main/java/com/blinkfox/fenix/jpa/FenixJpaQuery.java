@@ -9,6 +9,8 @@ import com.blinkfox.fenix.helper.StringHelper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
@@ -46,6 +48,22 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * 用来替换 'select ... from' 为 'select count(*) as count from ' 的求 count(*) 的常量.
      */
     private static final String SELECT_COUNT = "select count(*) as count from ";
+
+    /**
+     * 用来匹配 SQL 中的 DISTINCT 条件.
+     */
+    private static final String REGX_SELECT_FROM_DISTINCT =
+            "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
+
+    /**
+     * select from 正则表达式 Pattern.
+     */
+    private static final Pattern SELECT_FROM_PATTERN = Pattern.compile(REGX_SELECT_FROM);
+
+    /**
+     * select distinct from 正则表达式 Pattern.
+     */
+    private static final Pattern SELECT_FROM_DISTINCT_PATTERN = Pattern.compile(REGX_SELECT_FROM_DISTINCT);
 
     /**
      * JPA 参数对象.
@@ -340,7 +358,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
                 fenixQueryInfo.setSqlInfo(this.getXmlSqlInfo(xmlCountQuery, contextParams));
                 return fenixQueryInfo.getSqlInfo().getSql();
             } else {
-                return fenixQueryInfo.getSqlInfo().getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
+                return getCountSqlByQueryInfo(fenixQueryInfo);
             }
         }
 
@@ -350,7 +368,29 @@ public class FenixJpaQuery extends AbstractJpaQuery {
             fenixQueryInfo.setSqlInfo(this.getXmlSqlInfo(xmlCountQuery, contextParams));
             return fenixQueryInfo.getSqlInfo().getSql();
         }
-        return fenixQueryInfo.getSqlInfo().getSql().replaceFirst(REGX_SELECT_FROM, SELECT_COUNT);
+        return getCountSqlByQueryInfo(fenixQueryInfo);
+    }
+
+    /**
+     * 通过QueryInfo获取CountSql.
+     * @param fenixQueryInfo {@link FenixQueryInfo}
+     * @return countSql
+     */
+    private String getCountSqlByQueryInfo(FenixQueryInfo fenixQueryInfo) {
+        boolean enableDistinct = queryFenix.enableDistinct();
+        String infoSql = fenixQueryInfo.getSqlInfo().getSql();
+        Matcher matcher = SELECT_FROM_PATTERN.matcher(infoSql);
+        String countSql = matcher.replaceFirst(SELECT_COUNT);
+        if (!enableDistinct) {
+            return countSql;
+        }
+        String selectPrefix = matcher.group();
+        matcher = SELECT_FROM_DISTINCT_PATTERN.matcher(selectPrefix);
+        if (!matcher.find()) {
+            return countSql;
+        }
+        String distinctColumn = matcher.group(4);
+        return countSql.replaceFirst("count\\(\\*\\)", String.format("count(distinct %s)", distinctColumn));
     }
 
 }
