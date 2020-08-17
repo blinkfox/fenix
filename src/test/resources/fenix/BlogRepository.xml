@@ -148,4 +148,38 @@
         <andLike field="b.content" value="blog.content" match="blog.content != empty"/>
     </fenix>
 
+    <!-- 查询根据我的博客信息，根据用户ID去重 -->
+    <fenix id="queryBlogsWithDistinct" resultType="com.blinkfox.fenix.entity.Blog">
+        SELECT
+        DISTINCT userId as userId
+        FROM Blog AS b
+    </fenix>
+
+    <!-- 查询根据我的博客信息，根据用户ID去重 -->
+    <fenix id="queryBlogsWithoutDistinct" resultType="com.blinkfox.fenix.entity.Blog">
+        SELECT
+        b as b
+        FROM Blog AS b
+    </fenix>
+
+    <!-- 查询根据我的博客信息，根据用户ID去重 -->
+    <fenix id="queryBlogsWithoutDistinctNative" resultType="com.blinkfox.fenix.entity.Blog">
+        SELECT
+        b.c_user_id as userId,
+        b.c_id as id,
+        b.c_author as author,
+        b.c_title as title,
+        b.c_content as content,
+        b.dt_create_time as createTime,
+        b.dt_update_time as updateTime
+        FROM t_blog AS b
+    </fenix>
+
+    <!-- 查询根据我的博客信息，根据用户ID去重 -->
+    <fenix id="queryBlogsWithDistinctNative">
+        SELECT
+        distinct b.c_user_id as userId
+        FROM t_blog AS b
+    </fenix>
+
 </fenixs>

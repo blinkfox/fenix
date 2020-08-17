@@ -319,6 +319,48 @@ public class BlogRepositoryTest {
     }
 
     /**
+     * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测的分页查询.
+     */
+    @Test
+    public void queryBlogsWithDistinct() {
+        Page<Blog> blogPage = blogRepository.queryBlogsWithDistinct(PageRequest.of(0,10));
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(blogPage.getTotalElements() == 8);
+    }
+
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的分页查询.
+     */
+    @Test
+    public void queryBlogsWithoutDistinct() {
+        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinct(PageRequest.of(0,10));
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(blogPage.getTotalElements() == 10);
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     */
+    @Test
+    public void queryBlogsWithoutDistinctNative() {
+        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinctNative(PageRequest.of(0,10));
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(blogPage.getTotalElements() == 10);
+    }
+
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     */
+    @Test
+    public void queryBlogsWithDistinctNative() {
+        Page<Long> blogPage = blogRepository.queryBlogsWithDistinctNative(PageRequest.of(0,10));
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertTrue(blogPage.getTotalElements() == 8);
+    }
+
+    /**
      * 单测执行完毕之后，清空资源.
      */
     @PreDestroy
