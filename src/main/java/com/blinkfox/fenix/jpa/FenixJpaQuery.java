@@ -53,7 +53,12 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      * 用来匹配 SQL 中的 DISTINCT 条件.
      */
     private static final String REGX_SELECT_FROM_DISTINCT =
-            "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([^,\\s]+)\\s*(,|\\s)([\\s\\S]*?)((?i)from)";
+            "((?i)select)([\\s\\S]*?)((?i)distinct)\\s+([\\s\\S]*?)((?i)from)";
+
+    /**
+     * 匹配 SQL 中别名的正则.
+     */
+    private static final String REGX_SQL_ALIAS = "\\s+((?i)as)\\s+[^,\\s]+";
 
     /**
      * select from 正则表达式 Pattern.
@@ -389,7 +394,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         if (!matcher.find()) {
             return countSql;
         }
-        String distinctColumn = matcher.group(4);
+        String distinctColumn = matcher.group(4).replaceAll(REGX_SQL_ALIAS,"");
         return countSql.replaceFirst("count\\(\\*\\)", String.format("count(distinct %s)", distinctColumn));
     }
 
