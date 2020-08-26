@@ -1,3 +1,8 @@
+## v2.3.6 小功能改进版本 (2020-08-27)
+
+- 新增了 `@EnableFenix` 注解中更多的配置信息，与 `@EnableJpaRepositories` 注解相对应；
+- 修改了求 `COUNT` 的 SQL 不支持 `DISTINCT` 的问题；
+
 ## v2.3.5 修复了在老版本 JPA 中某些情况下的 bug (2020-07-31)
 
 - 修复了在老版本 JPA 中，某些情况下出现 Javaassist 的 `ClassNotFoundException` 的问题；

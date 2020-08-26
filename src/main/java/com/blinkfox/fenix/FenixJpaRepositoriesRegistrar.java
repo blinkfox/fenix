@@ -7,10 +7,12 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
 
 /**
  * {@link EnableFenix} 启用的注册器.
+ *
  * @author yangwenpeng
- * @since v2.3.5
+ * @since v2.3.6
  */
 public class FenixJpaRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
+
     @Override
     protected Class<? extends Annotation> getAnnotation() {
         return EnableFenix.class;
@@ -20,4 +22,5 @@ public class FenixJpaRepositoriesRegistrar extends RepositoryBeanDefinitionRegis
     protected RepositoryConfigurationExtension getExtension() {
         return new JpaRepositoryConfigExtension();
     }
+
 }
