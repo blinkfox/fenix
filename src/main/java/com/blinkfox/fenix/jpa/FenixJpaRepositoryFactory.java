@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 
@@ -55,6 +57,17 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
             QueryMethodEvaluationContextProvider provider) {
         return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider));
+    }
+
+    /**
+     * 获取 Repository 的实现基类，这里使用 Fenix 中的 {@link FenixSimpleJpaRepository} 类.
+     *
+     * @param metadata 元数据
+     * @return {@link FenixSimpleJpaRepository} 类
+     */
+    @Override
+    protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
+        return FenixSimpleJpaRepository.class;
     }
 
 }
