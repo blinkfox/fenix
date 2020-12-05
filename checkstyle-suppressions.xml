@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+        "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- 抑制掉一些可不用修改的 checkstyle 检查项. -->
+    <suppress checks="NameCheck" files="com.blinkfox.fenix.jpa.FenixJpaRepository.java" lines="13-17"/>
+</suppressions>

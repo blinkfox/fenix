@@ -24,6 +24,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * </ul>
      *
      * @param entity 实体类
+     * @param <S> 泛型实体类
      * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
      */
     <S extends T> S saveOrUpdateNotNullProperties(S entity);
