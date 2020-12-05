@@ -37,6 +37,17 @@ public class StringHelperTest {
     }
 
     /**
+     * 判断字符串是否不为空的单元测试类.
+     */
+    @Test
+    public void isEmptyObject() {
+        assertTrue(StringHelper.isEmptyObject(null));
+        assertTrue(StringHelper.isEmptyObject(""));
+        assertTrue(StringHelper.isEmptyObject(" "));
+        assertFalse(StringHelper.isEmptyObject(0L));
+    }
+
+    /**
      * 测试字符串格式化方法.
      */
     @Test

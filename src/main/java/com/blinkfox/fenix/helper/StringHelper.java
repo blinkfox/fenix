@@ -48,6 +48,16 @@ public final class StringHelper {
     }
 
     /**
+     * 判断对象是否是空的.
+     *
+     * @param o 对象
+     * @return 布尔值
+     */
+    public static boolean isEmptyObject(Object o) {
+        return o == null || ((o instanceof String) && isBlank((String) o));
+    }
+
+    /**
      * 判断给定的字符串是否为空字符串，包括空格也算.
      *
      * @param str 待判断字符串
