@@ -94,54 +94,36 @@ public class FenixSchoolRepositoryTest {
     }
 
     /**
-     * 测试新增或更新实体的功能.
-     */
-    @Test
-    public void saveOrUpdateByNotNullPropertiesWithException() {
-        // 先插入第一条数据.
-        String id = "101";
-        String name = "测试大学101";
-        Integer age = 139;
-        Date now = new Date();
-        School school = new School()
-                .setId(id)
-                .setName(name)
-                .setCity("测试省份101")
-                .setAddress("测试的地址101")
-                .setAge(age)
-                .setCreateTime(now)
-                .setUpdateTime(now);
-        fenixSchoolRepository.saveOrUpdateByNotNullProperties(school);
-        Optional<School> schoolOptional = fenixSchoolRepository.findById(id);
-        Assert.assertTrue(schoolOptional.isPresent());
-        Assert.assertEquals(name, schoolOptional.get().getName());
-
-
-    }
-
-    /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
     public void saveOrUpdateAllByNotNullProperties() {
+        String id = "1";
         // 先插入一条数据.
         List<School> schools = new ArrayList<>();
-        School school1 = schoolMap.get("1");
+        School school1 = schoolMap.get(id);
         schools.add(school1);
         fenixSchoolRepository.saveOrUpdateAllByNotNullProperties(schools);
         List<School> results = fenixSchoolRepository.findAll();
         Assert.assertTrue(results.size() >= 1);
 
         // 再插入一条和更新一条数据.
+        Integer age = 124;
         List<School> schools2 = new ArrayList<>();
         schools2.add(schoolMap.get("2"));
         schools2.add(new School()
-                .setId("1")
-                .setAge(124)
+                .setId(id)
+                .setAge(age)
                 .setUpdateTime(new Date()));
         fenixSchoolRepository.saveOrUpdateAllByNotNullProperties(schools2);
         List<School> results2 = fenixSchoolRepository.findAll();
         Assert.assertTrue(results2.size() >= 2);
+
+        // 验证是否是增量更新的字段.
+        Optional<School> schoolResult = fenixSchoolRepository.findById(id);
+        Assert.assertTrue(schoolResult.isPresent());
+        Assert.assertEquals(school1.getName(), schoolResult.get().getName());
+        Assert.assertEquals(age, schoolResult.get().getAge());
     }
 
 }
