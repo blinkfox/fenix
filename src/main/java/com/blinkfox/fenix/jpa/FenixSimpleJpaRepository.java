@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * 继承了 {@link SimpleJpaRepository} 类，实现了 {@link FenixJpaRepository} 接口的 Fenix JPA Repository 基础实现类.
@@ -58,11 +59,14 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * </ul>
      *
      * @param entity 实体类
+     * @param <S> 泛型实体类
      * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
      */
     @Transactional
     @Override
-    public <S extends T> S saveOrUpdateNotNullProperties(S entity) {
+    public <S extends T> S saveOrUpdateByNotNullProperties(S entity) {
+        Assert.notNull(entity, "Entity must not be null.");
+
         // 获取对象实体 ID，如果为空，就直接新增即可.
         ID id = (ID) this.entityInformation.getId(entity);
         if (StringHelper.isEmptyObject(id)) {
@@ -82,6 +86,33 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
         BeanUtils.copyProperties(entity, oldEntity, this.getNullProperties(entity));
         this.em.merge(oldEntity);
         return entity;
+    }
+
+    /**
+     * 新增或更新所有实体类中非 null 属性的字段值.
+     *
+     * <p>注意：该方法仅仅是循环调用 {@link #saveOrUpdateByNotNullProperties(Object)} 方法，
+     * 保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
+     *
+     * <ul>
+     *     <li>如果实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
+     *     <li>如果实体的主键 ID 不为空，会先判断是否存在该 ID 的数据，如果不存在也会新增插入一条数据；
+     *     否则说明是更新的情况，会仅更新实体类属性中不为 null 值的属性字段到数据库中；</li>
+     * </ul>
+     *
+     * @param entities 可迭代的实体类集合
+     * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
+     */
+    @Transactional
+    @Override
+    public <S extends T> List<S> saveOrUpdateAllByNotNullProperties(Iterable<S> entities) {
+        Assert.notNull(entities, "Entities must not be null!");
+
+        List<S> result = new ArrayList<>();
+        for (S entity : entities) {
+            result.add(saveOrUpdateByNotNullProperties(entity));
+        }
+        return result;
     }
 
     /**
