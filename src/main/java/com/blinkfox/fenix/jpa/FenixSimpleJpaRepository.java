@@ -120,6 +120,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * 每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
      *
      * @param entities 实体类集合
+     * @param <S> 泛型实体类
      */
     @Transactional
     @Override
@@ -132,6 +133,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      *
      * @param entities 实体类集合
      * @param batchSize 每次批量新增的大小
+     * @param <S> 泛型实体类
      */
     @Transactional
     @Override
