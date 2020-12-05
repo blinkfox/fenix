@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.jpa;
 
+import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
@@ -107,12 +108,43 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
     @Override
     public <S extends T> List<S> saveOrUpdateAllByNotNullProperties(Iterable<S> entities) {
         Assert.notNull(entities, "Entities must not be null!");
-
         List<S> result = new ArrayList<>();
         for (S entity : entities) {
             result.add(saveOrUpdateByNotNullProperties(entity));
         }
         return result;
+    }
+
+    /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理，
+     * 每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     *
+     * @param entities 实体类集合
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveBatch(Iterable<S> entities) {
+        this.saveBatch(entities, Const.DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
+     *
+     * @param entities 实体类集合
+     * @param batchSize 每次批量新增的大小
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveBatch(Iterable<S> entities, int batchSize) {
+        Assert.notNull(entities, "Entities must not be null!");
+        int i = 0;
+        for (S entity : entities) {
+            this.em.persist(entity);
+            if (++i % batchSize == 0) {
+                this.em.flush();
+                this.em.clear();
+            }
+        }
     }
 
     /**

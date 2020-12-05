@@ -50,4 +50,22 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      */
     <S extends T> List<S> saveOrUpdateAllByNotNullProperties(Iterable<S> entities);
 
+    /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理，
+     * 每次默认的批量大小为 {@link com.blinkfox.fenix.consts.Const#DEFAULT_BATCH_SIZE}.
+     *
+     * @param entities 实体类集合
+     * @param <S> 泛型实体类
+     */
+    <S extends T> void saveBatch(Iterable<S> entities);
+
+    /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
+     *
+     * @param entities 实体类集合
+     * @param batchSize 每次批量新增的大小
+     * @param <S> <S> 泛型实体类
+     */
+    <S extends T> void saveBatch(Iterable<S> entities, int batchSize);
+
 }

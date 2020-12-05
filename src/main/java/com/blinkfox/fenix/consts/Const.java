@@ -84,4 +84,11 @@ public final class Const {
      */
     public static final String TYPE = "type";
 
+    /**
+     * 默认批量操作的大小.
+     *
+     * @since v2.4.0
+     */
+    public static final int DEFAULT_BATCH_SIZE = 100;
+
 }
