@@ -253,9 +253,32 @@ public class FenixSchoolRepositoryTest {
         }
 
         // 删除并断言.
-        this.fenixSchoolRepository.deleteByIds(ids);
+         this.fenixSchoolRepository.deleteByIds(ids);
         List<School> allSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
         Assert.assertTrue(allSchools.size() >= (COUNT - 5));
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void deleteBatchByIds() {
+        // 先保存 15 条数据.
+        List<School> schools = buildSchools(COUNT);
+        this.fenixSchoolRepository.saveOrUpdateBatch(schools);
+        List<School> currSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
+        Assert.assertTrue(currSchools.size() >= COUNT);
+
+        // 构造要删除的所有 ID 数据，比总数据少一条.
+        List<String> ids = new ArrayList<>();
+        for (int i = 0, len = schools.size() - 1; i < len; ++i) {
+            ids.add(schools.get(i).getId());
+        }
+
+        // 删除并断言.
+        this.fenixSchoolRepository.deleteBatchByIds(ids);
+        List<School> allSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
+        Assert.assertTrue(allSchools.size() >= 1);
     }
 
     /**

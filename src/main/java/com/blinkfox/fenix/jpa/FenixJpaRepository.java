@@ -152,10 +152,28 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
     <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize);
 
     /**
-     * 根据 ID 的集合数据删除这些数据，注意该方法仅是循环调用 {@link #deleteById(Object)} 方法而已，性能并不高.
+     * 根据 ID 的集合数据删除这些数据，注意该方法仅是循环调用 {@link #deleteById(Object)} 方法而已，
+     * 性能相比 {@link #deleteBatchByIds(Iterable, int)} 而言较低.
      *
      * @param ids ID 集合
      */
     void deleteByIds(Iterable<ID> ids);
+
+    /**
+     * 根据 ID 的集合批量删除数据这些数据，删除期间会批量转换为 {code in} 条件来匹配删除，
+     * 性能相比 {@link #deleteByIds(Iterable)} 也更高，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     *
+     * @param ids ID 集合
+     */
+    void deleteBatchByIds(Iterable<ID> ids);
+
+    /**
+     * 根据 ID 的集合批量删除数据这些数据，删除期间会批量转换为 {code in} 条件来匹配删除，
+     * 性能相比 {@link #deleteByIds(Iterable)} 也更高，可自定义批量大小的参数.
+     *
+     * @param ids ID 集合
+     * @param batchSize 批量大小
+     */
+    void deleteBatchByIds(Iterable<ID> ids, int batchSize);
 
 }

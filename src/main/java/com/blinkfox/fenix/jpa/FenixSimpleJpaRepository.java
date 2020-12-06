@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.metamodel.SingularAttribute;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -296,6 +297,69 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
         for (ID id : ids) {
             super.deleteById(id);
         }
+    }
+
+    /**
+     * 根据 ID 的集合批量删除数据这些数据，删除期间会批量转换为 {code in} 条件来匹配删除，
+     * 性能相比 {@link #deleteByIds(Iterable)} 也更高，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     *
+     * @param ids ID 集合
+     */
+    @Transactional
+    @Override
+    public void deleteBatchByIds(Iterable<ID> ids) {
+        this.deleteBatchByIds(ids, Const.DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 根据 ID 的集合批量删除数据这些数据，删除期间会批量转换为 {code in} 条件来匹配删除，
+     * 性能相比 {@link #deleteByIds(Iterable)} 也更高，可自定义批量大小的参数.
+     *
+     * @param ids ID 集合
+     * @param batchSize 批量大小
+     */
+    @Transactional
+    @Override
+    public void deleteBatchByIds(Iterable<ID> ids, int batchSize) {
+        Assert.notNull(ids, "The given ids must not be null!");
+        Assert.isTrue(batchSize > 0, "The given batchSize must not be <= 0.");
+
+        // 获取到实体名称和 ID 属性名称，并生成用于批量删除的 in 条件 SQL.
+        final String entityName = this.entityInformation.getEntityName();
+        SingularAttribute<? super T, ?> idAttribute = this.entityInformation.getIdAttribute();
+        final String idName = idAttribute == null ? "id" : idAttribute.getName();
+        String sql = StringHelper.format("delete from {} where {} in :batch_ids", entityName, idName);
+
+        int i = 0;
+        List<ID> batchIds = new ArrayList<>();
+        for (ID id : ids) {
+            if (id == null) {
+                continue;
+            }
+
+            batchIds.add(id);
+            if (++i % batchSize == 0 && !batchIds.isEmpty()) {
+                this.doBatchDelete(sql, batchIds);
+                batchIds.clear();
+            }
+        }
+
+        // 如果最后 batchIds 不为空，则再继续删除剩余的数据.
+        if (!batchIds.isEmpty()) {
+            this.doBatchDelete(sql, batchIds);
+        }
+    }
+
+    /**
+     * 真正执行批量删除的方法.
+     *
+     * @param sql in 条件的删除 SQL
+     * @param batchIds 要批量删除的 ID 数据
+     */
+    private void doBatchDelete(String sql, List<ID> batchIds) {
+        this.em.createQuery(sql)
+                .setParameter("batch_ids", batchIds)
+                .executeUpdate();
     }
 
     /**
