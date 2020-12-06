@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.junit.Assert;
 import org.junit.Test;
@@ -124,6 +125,52 @@ public class FenixSchoolRepositoryTest {
         Assert.assertTrue(schoolResult.isPresent());
         Assert.assertEquals(school1.getName(), schoolResult.get().getName());
         Assert.assertEquals(age, schoolResult.get().getAge());
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void saveBatch() {
+        // 构造批量的数据.
+        int count = 15;
+        fenixSchoolRepository.saveBatch(this.buildSchools(count), 10);
+        List<School> allSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools.size() >= count);
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void saveBatchWithDefault() {
+        // 构造批量的数据.
+        int count = 5;
+        fenixSchoolRepository.saveBatch(this.buildSchools(count));
+        List<School> allSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools.size() >= count);
+    }
+
+    /**
+     * 构建 School 集合.
+     *
+     * @param count 总数
+     * @return 集合
+     */
+    private List<School> buildSchools(int count) {
+        List<School> schools = new ArrayList<>();
+        Date now = new Date();
+        for (int i = 0; i < count; ++i) {
+            schools.add(new School()
+                    .setId(UUID.randomUUID().toString().replace("-",""))
+                    .setName("测试名称" + i)
+                    .setAge(50 + i)
+                    .setCity("城市" + i)
+                    .setAddress("地址" + i)
+                    .setCreateTime(now)
+                    .setUpdateTime(now));
+        }
+        return schools;
     }
 
 }
