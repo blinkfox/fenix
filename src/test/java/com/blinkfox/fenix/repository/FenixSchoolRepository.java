@@ -1,6 +1,5 @@
 package com.blinkfox.fenix.repository;
 
-import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.School;
 import com.blinkfox.fenix.jpa.FenixJpaRepository;
 import org.springframework.stereotype.Repository;

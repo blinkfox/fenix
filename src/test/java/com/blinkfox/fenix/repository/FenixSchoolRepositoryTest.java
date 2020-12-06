@@ -15,9 +15,11 @@ import javax.annotation.PostConstruct;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
@@ -31,6 +33,10 @@ import org.springframework.util.FileCopyUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class FenixSchoolRepositoryTest {
+
+    private static final int COUNT = 15;
+
+    private static final int BATCH_SIZE = 10;
 
     @Value("/data/school.json")
     private Resource schoolResource;
@@ -51,6 +57,66 @@ public class FenixSchoolRepositoryTest {
         for (School school :
                 JSON.parseArray(new String(FileCopyUtils.copyToByteArray(schoolResource.getFile())), School.class)) {
             this.schoolMap.put(school.getId(), school);
+        }
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void saveBatch() {
+        // 构造批量的数据.
+        List<School> schools = this.buildSchools(COUNT);
+        fenixSchoolRepository.saveBatch(schools, BATCH_SIZE);
+        List<School> allSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools.size() >= COUNT);
+
+        this.updateSchools(schools);
+        fenixSchoolRepository.updateBatch(schools);
+        List<School> allSchools2 = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools2.size() >= COUNT);
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void saveBatchWithDefault() {
+        // 构造批量的数据.
+        int count = 5;
+        fenixSchoolRepository.saveBatch(this.buildSchools(count));
+        List<School> allSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools.size() >= count);
+    }
+
+    /**
+     * 测试新增或更新所有实体类的功能.
+     */
+    @Test
+    public void saveOrUpdateBatch() {
+        // 构造批量的数据.
+        List<School> schools = this.buildSchools(COUNT);
+
+        // 先批量插入新的 School 对象.
+        List<School> insertSchools = new ArrayList<>();
+        insertSchools.add(this.deepCloneSchool(schools.get(0)));
+        insertSchools.add(this.deepCloneSchool(schools.get(1)));
+        insertSchools.add(this.deepCloneSchool(schools.get(12)));
+        insertSchools.add(this.deepCloneSchool(schools.get(13)));
+        this.updateSchools(insertSchools);
+        fenixSchoolRepository.saveOrUpdateBatch(insertSchools);
+        List<School> currSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(currSchools.size() >= 4);
+        for (School school : currSchools) {
+            Assert.assertTrue(school.getAge() >= 80);
+        }
+
+        // 再批量新增或更新 school 集合.
+        fenixSchoolRepository.saveOrUpdateBatch(schools, BATCH_SIZE);
+        List<School> allSchools = fenixSchoolRepository.findAll();
+        Assert.assertTrue(allSchools.size() >= COUNT);
+        for (School school : allSchools) {
+            Assert.assertTrue(school.getAge() <= 90);
         }
     }
 
@@ -131,28 +197,45 @@ public class FenixSchoolRepositoryTest {
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveBatch() {
-        // 构造批量的数据.
-        int count = 15;
-        fenixSchoolRepository.saveBatch(this.buildSchools(count), 10);
-        List<School> allSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools.size() >= count);
+    public void saveOrUpdateBatchByNotNullProperties() {
+        // 先批量插入几条新的 School 对象.
+        List<School> schools = buildSchools(COUNT);
+        fenixSchoolRepository.saveOrUpdateBatchByNotNullProperties(schools);
+        List<School> currSchools = fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
+        Assert.assertTrue(currSchools.size() >= COUNT);
+        for (School school : currSchools) {
+            Assert.assertTrue(school.getAge() <= 90);
+        }
+
+        // 再批量新增或更新 school 集合.
+        Date now = new Date();
+        List<School> saveOrUpdateSchools = new ArrayList<>(this.buildSchools(2));
+        saveOrUpdateSchools.add(new School()
+                .setId(schools.get(0).getId())
+                .setAge(91)
+                .setName("修改后的名称1")
+                .setUpdateTime(now));
+        saveOrUpdateSchools.add(new School()
+                .setId(schools.get(12).getId())
+                .setAge(92)
+                .setName("修改后的名称2")
+                .setUpdateTime(now));
+        fenixSchoolRepository.saveOrUpdateBatchByNotNullProperties(saveOrUpdateSchools, 2);
+        List<School> allSchools = fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
+        Assert.assertTrue(allSchools.size() >= (COUNT + 2));
+
+        // 断言更新数据的正确性.
+        List<School> bigAgeSchools = new ArrayList<>();
+        for (School school : allSchools) {
+            if (school.getAge() > 90) {
+                bigAgeSchools.add(school);
+            }
+        }
+        Assert.assertTrue(bigAgeSchools.size() >= 2);
     }
 
     /**
-     * 测试新增或更新所有实体类的功能.
-     */
-    @Test
-    public void saveBatchWithDefault() {
-        // 构造批量的数据.
-        int count = 5;
-        fenixSchoolRepository.saveBatch(this.buildSchools(count));
-        List<School> allSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools.size() >= count);
-    }
-
-    /**
-     * 构建 School 集合.
+     * 构建新的 School 集合.
      *
      * @param count 总数
      * @return 集合
@@ -171,6 +254,33 @@ public class FenixSchoolRepositoryTest {
                     .setUpdateTime(now));
         }
         return schools;
+    }
+
+    /**
+     * 更新 School 集合中的一些字段信息.
+     *
+     * @param schools School 集合
+     */
+    private void updateSchools(List<School> schools) {
+        Date date = new Date();
+        for (int i = 0, len = schools.size(); i < len; ++i) {
+            School school = schools.get(i);
+            school.setName("改后的名称" + i)
+                    .setAge(80 + i)
+                    .setUpdateTime(date);
+        }
+    }
+
+    /**
+     * 深度克隆出新的 school 对象.
+     *
+     * @param school 要克隆的源 school 对象
+     * @return 克隆后的目标 school 对象
+     */
+    private School deepCloneSchool(School school) {
+        School newSchool = new School();
+        BeanUtils.copyProperties(school, newSchool);
+        return newSchool;
     }
 
 }

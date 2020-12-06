@@ -51,6 +51,126 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
     }
 
     /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     *
+     * @param entities 实体类集合
+     * @param <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveBatch(Iterable<S> entities) {
+        this.saveBatch(entities, Const.DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小为可通过参数设置.</p>
+     *
+     * @param entities 实体类集合
+     * @param <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveBatch(Iterable<S> entities, int batchSize) {
+        Assert.notNull(entities, "Entities must not be null!");
+        int i = 0;
+        for (S entity : entities) {
+            this.em.persist(entity);
+            if (++i % batchSize == 0) {
+                this.em.flush();
+                this.em.clear();
+            }
+        }
+    }
+
+    /**
+     * 批量更新实体类集合，该方法仅用于更新，不能用于含有新增数据的场景，需要调用方事先做好处理.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     *
+     * @param entities 可迭代的实体类集合
+     * @param <S> <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void updateBatch(Iterable<S> entities) {
+        this.updateBatch(entities, Const.DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 批量更新实体类集合，该方法仅用于更新，不能用于含有新增数据的场景，需要调用方事先做好处理.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.</p>
+     *
+     * @param entities 可迭代的实体类集合
+     * @param <S> <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void updateBatch(Iterable<S> entities, int batchSize) {
+        Assert.notNull(entities, "Entities must not be null!");
+        int i = 0;
+        for (S entity : entities) {
+            this.em.merge(entity);
+            if (++i % batchSize == 0) {
+                this.em.flush();
+                this.em.clear();
+            }
+        }
+    }
+
+    /**
+     * 批量新增或者更新实体类集合.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     *
+     * <p>注意：该方法相比 {@link #saveAll(Iterable)} 性能略高，但相比直接的批量新增 {@link #saveBatch(Iterable)}
+     * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
+     *
+     * @param entities 实体类集合
+     * @param <S> <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveOrUpdateBatch(Iterable<S> entities) {
+        this.saveOrUpdateBatch(entities, Const.DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 批量新增或者更新实体类集合.
+     *
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.</p>
+     *
+     * <p>注意：该方法相比 {@link #saveAll(Iterable)} 性能略高，但相比直接的批量新增 {@link #saveBatch(Iterable)}
+     * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
+     *
+     * @param entities 实体类集合
+     * @param <S> <S> 泛型实体类
+     */
+    @Transactional
+    @Override
+    public <S extends T> void saveOrUpdateBatch(Iterable<S> entities, int batchSize) {
+        Assert.notNull(entities, "Entities must not be null!");
+        int i = 0;
+        for (S entity : entities) {
+            Assert.notNull(entity, "Entity must not be null.");
+            if (this.entityInformation.isNew(entity)) {
+                em.persist(entity);
+            } else {
+                em.merge(entity);
+            }
+
+            if (++i % batchSize == 0) {
+                this.em.flush();
+                this.em.clear();
+            }
+        }
+    }
+
+    /**
      * 保存或更新实体类中非 null 属性的字段值.
      *
      * <ul>
@@ -102,46 +222,61 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * </ul>
      *
      * @param entities 可迭代的实体类集合
-     * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
      */
     @Transactional
     @Override
-    public <S extends T> List<S> saveOrUpdateAllByNotNullProperties(Iterable<S> entities) {
+    public <S extends T> void saveOrUpdateAllByNotNullProperties(Iterable<S> entities) {
         Assert.notNull(entities, "Entities must not be null!");
-        List<S> result = new ArrayList<>();
         for (S entity : entities) {
-            result.add(saveOrUpdateByNotNullProperties(entity));
+            saveOrUpdateByNotNullProperties(entity);
         }
-        return result;
     }
 
     /**
-     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理，
-     * 每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     * 批量新增或更新所有实体类中非 null 属性的字段值.
      *
-     * @param entities 实体类集合
+     * <p>注意：该方法会批量 flush 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     *
+     * <p>保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
+     *
+     * <ul>
+     *     <li>如果某个实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
+     *     <li>如果某个实体的主键 ID 不为空，会先判断是否存在该 ID 的数据，如果不存在也会新增插入一条数据；
+     *     否则说明是更新的情况，会仅更新实体类属性中不为 null 值的属性字段到数据库中；</li>
+     * </ul>
+     *
+     * @param entities 可迭代的实体类集合
      * @param <S> 泛型实体类
      */
     @Transactional
     @Override
-    public <S extends T> void saveBatch(Iterable<S> entities) {
-        this.saveBatch(entities, Const.DEFAULT_BATCH_SIZE);
+    public <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities) {
+        this.saveOrUpdateBatchByNotNullProperties(entities, Const.DEFAULT_BATCH_SIZE);
     }
 
     /**
-     * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
+     * 批量新增或更新所有实体类中非 null 属性的字段值.
      *
-     * @param entities 实体类集合
-     * @param batchSize 每次批量新增的大小
+     * <p>注意：该方法会批量 flush 数据到数据库中，每次批量大小可通过参数设置.</p>
+     *
+     * <p>保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
+     *
+     * <ul>
+     *     <li>如果某个实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
+     *     <li>如果某个实体的主键 ID 不为空，会先判断是否存在该 ID 的数据，如果不存在也会新增插入一条数据；
+     *     否则说明是更新的情况，会仅更新实体类属性中不为 null 值的属性字段到数据库中；</li>
+     * </ul>
+     *
+     * @param entities 可迭代的实体类集合
      * @param <S> 泛型实体类
      */
     @Transactional
     @Override
-    public <S extends T> void saveBatch(Iterable<S> entities, int batchSize) {
+    public <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize) {
         Assert.notNull(entities, "Entities must not be null!");
         int i = 0;
         for (S entity : entities) {
-            this.em.persist(entity);
+            saveOrUpdateByNotNullProperties(entity);
             if (++i % batchSize == 0) {
                 this.em.flush();
                 this.em.clear();
