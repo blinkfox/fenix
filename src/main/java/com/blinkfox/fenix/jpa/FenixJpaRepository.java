@@ -151,4 +151,11 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      */
     <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize);
 
+    /**
+     * 根据 ID 的集合数据删除这些数据，注意该方法仅是循环调用 {@link #deleteById(Object)} 方法而已，性能并不高.
+     *
+     * @param ids ID 集合
+     */
+    void deleteByIds(Iterable<ID> ids);
+
 }

@@ -285,6 +285,20 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
     }
 
     /**
+     * 根据 ID 的集合数据删除这些数据，注意该方法仅是循环调用 {@link #deleteById(Object)} 方法而已，性能并不高.
+     *
+     * @param ids ID 集合
+     */
+    @Transactional
+    @Override
+    public void deleteByIds(Iterable<ID> ids) {
+        Assert.notNull(ids, "The given ids must not be null!");
+        for (ID id : ids) {
+            super.deleteById(id);
+        }
+    }
+
+    /**
      * 通过反射获取对象实体中所有值为 {@code null} 的属性名称的数组.
      *
      * @param entity 实体对象
