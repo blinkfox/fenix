@@ -12,9 +12,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +30,12 @@ import org.springframework.util.FileCopyUtils;
 /**
  * {@link FenixSchoolRepository} 接口功能的单元测试类.
  *
+ * <p>注意：本单测类会按方法名顺序执行，且每次执行会清除掉之前的所有数据.</p>
+ *
  * @author blinkfox on 2020-12-05.
  * @since v2.4.0
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class FenixSchoolRepositoryTest {
@@ -61,39 +67,56 @@ public class FenixSchoolRepositoryTest {
     }
 
     /**
+     * 每个方法执行完毕之后后清掉之前插入的数据.
+     */
+    @After
+    public void clearData() {
+        this.fenixSchoolRepository.deleteAllInBatch();
+    }
+
+    /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveBatch() {
+    public void test10WithSaveBatch() {
         // 构造批量的数据.
         List<School> schools = this.buildSchools(COUNT);
-        fenixSchoolRepository.saveBatch(schools, BATCH_SIZE);
-        List<School> allSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools.size() >= COUNT);
+        this.fenixSchoolRepository.saveBatch(schools, BATCH_SIZE);
+        List<School> currSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, currSchools.size());
+        for (School school : currSchools) {
+            Assert.assertTrue(school.getAge() <= 80);
+        }
 
         this.updateSchools(schools);
-        fenixSchoolRepository.updateBatch(schools);
-        List<School> allSchools2 = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools2.size() >= COUNT);
+        this.fenixSchoolRepository.updateBatch(schools);
+        List<School> allSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, allSchools.size());
+        for (School school : allSchools) {
+            Assert.assertTrue(school.getAge() >= 80);
+        }
     }
 
     /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveBatchWithDefault() {
+    public void test15WithSaveBatchWithDefault() {
         // 构造批量的数据.
         int count = 5;
-        fenixSchoolRepository.saveBatch(this.buildSchools(count));
-        List<School> allSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools.size() >= count);
+        this.fenixSchoolRepository.saveBatch(this.buildSchools(count));
+        List<School> allSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(count, allSchools.size());
+        for (School school : allSchools) {
+            Assert.assertTrue(school.getAge() <= 55);
+        }
     }
 
     /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveOrUpdateBatch() {
+    public void test20WithSaveOrUpdateBatch() {
         // 构造批量的数据.
         List<School> schools = this.buildSchools(COUNT);
 
@@ -105,18 +128,18 @@ public class FenixSchoolRepositoryTest {
         insertSchools.add(this.deepCloneSchool(schools.get(13)));
         this.updateSchools(insertSchools);
         fenixSchoolRepository.saveOrUpdateBatch(insertSchools);
-        List<School> currSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(currSchools.size() >= 4);
+        List<School> currSchools = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(4, currSchools.size());
         for (School school : currSchools) {
             Assert.assertTrue(school.getAge() >= 80);
         }
 
         // 再批量新增或更新 school 集合.
         fenixSchoolRepository.saveOrUpdateBatch(schools, BATCH_SIZE);
-        List<School> allSchools = fenixSchoolRepository.findAll();
-        Assert.assertTrue(allSchools.size() >= COUNT);
+        List<School> allSchools = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, allSchools.size());
         for (School school : allSchools) {
-            Assert.assertTrue(school.getAge() <= 90);
+            Assert.assertTrue(school.getAge() <= 80);
         }
     }
 
@@ -124,7 +147,7 @@ public class FenixSchoolRepositoryTest {
      * 测试新增或更新实体的功能.
      */
     @Test
-    public void saveOrUpdateByNotNullProperties() {
+    public void test30WithSaveOrUpdateByNotNullProperties() {
         // 先插入第一条数据.
         String id = "100";
         String name = "测试大学";
@@ -164,15 +187,15 @@ public class FenixSchoolRepositoryTest {
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveOrUpdateAllByNotNullProperties() {
+    public void test35WithSaveOrUpdateAllByNotNullProperties() {
         String id = "1";
         // 先插入一条数据.
         List<School> schools = new ArrayList<>();
         School school1 = schoolMap.get(id);
         schools.add(school1);
         fenixSchoolRepository.saveOrUpdateAllByNotNullProperties(schools);
-        List<School> results = fenixSchoolRepository.findAll();
-        Assert.assertTrue(results.size() >= 1);
+        List<School> results = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(1, results.size());
 
         // 再插入一条和更新一条数据.
         Integer age = 124;
@@ -183,8 +206,8 @@ public class FenixSchoolRepositoryTest {
                 .setAge(age)
                 .setUpdateTime(new Date()));
         fenixSchoolRepository.saveOrUpdateAllByNotNullProperties(schools2);
-        List<School> results2 = fenixSchoolRepository.findAll();
-        Assert.assertTrue(results2.size() >= 2);
+        List<School> results2 = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(2, results2.size());
 
         // 验证是否是增量更新的字段.
         Optional<School> schoolResult = fenixSchoolRepository.findById(id);
@@ -197,14 +220,14 @@ public class FenixSchoolRepositoryTest {
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void saveOrUpdateBatchByNotNullProperties() {
+    public void test40WithSaveOrUpdateBatchByNotNullProperties() {
         // 先批量插入几条新的 School 对象.
         List<School> schools = buildSchools(COUNT);
         fenixSchoolRepository.saveOrUpdateBatchByNotNullProperties(schools);
-        List<School> currSchools = fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(currSchools.size() >= COUNT);
+        List<School> currSchools = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, currSchools.size());
         for (School school : currSchools) {
-            Assert.assertTrue(school.getAge() <= 90);
+            Assert.assertTrue(school.getAge() <= 80);
         }
 
         // 再批量新增或更新 school 集合.
@@ -221,8 +244,8 @@ public class FenixSchoolRepositoryTest {
                 .setName("修改后的名称2")
                 .setUpdateTime(now));
         fenixSchoolRepository.saveOrUpdateBatchByNotNullProperties(saveOrUpdateSchools, 2);
-        List<School> allSchools = fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(allSchools.size() >= (COUNT + 2));
+        List<School> allSchools = fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT + 2, allSchools.size());
 
         // 断言更新数据的正确性.
         List<School> bigAgeSchools = new ArrayList<>();
@@ -231,19 +254,19 @@ public class FenixSchoolRepositoryTest {
                 bigAgeSchools.add(school);
             }
         }
-        Assert.assertTrue(bigAgeSchools.size() >= 2);
+        Assert.assertEquals(2, bigAgeSchools.size());
     }
 
     /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void deleteByIds() {
+    public void test50WithDeleteByIds() {
         // 先保存 15 条数据.
         List<School> schools = buildSchools(COUNT);
         this.fenixSchoolRepository.saveOrUpdateBatch(schools);
-        List<School> currSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(currSchools.size() >= COUNT);
+        List<School> currSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, currSchools.size());
 
         // 构造要删除的 5 条数据.
         int count = 5;
@@ -253,21 +276,21 @@ public class FenixSchoolRepositoryTest {
         }
 
         // 删除并断言.
-         this.fenixSchoolRepository.deleteByIds(ids);
-        List<School> allSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(allSchools.size() >= (COUNT - 5));
+        this.fenixSchoolRepository.deleteByIds(ids);
+        List<School> allSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT - 5, allSchools.size());
     }
 
     /**
      * 测试新增或更新所有实体类的功能.
      */
     @Test
-    public void deleteBatchByIds() {
+    public void test55WithDeleteBatchByIds() {
         // 先保存 15 条数据.
         List<School> schools = buildSchools(COUNT);
         this.fenixSchoolRepository.saveOrUpdateBatch(schools);
-        List<School> currSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(currSchools.size() >= COUNT);
+        List<School> currSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(COUNT, currSchools.size());
 
         // 构造要删除的所有 ID 数据，比总数据少一条.
         List<String> ids = new ArrayList<>();
@@ -277,8 +300,8 @@ public class FenixSchoolRepositoryTest {
 
         // 删除并断言.
         this.fenixSchoolRepository.deleteBatchByIds(ids);
-        List<School> allSchools = this.fenixSchoolRepository.findAll(Sort.by(Sort.Order.asc("age")));
-        Assert.assertTrue(allSchools.size() >= 1);
+        List<School> allSchools = this.fenixSchoolRepository.findAll(this.buildAgeAscSort());
+        Assert.assertEquals(1, allSchools.size());
     }
 
     /**
@@ -292,7 +315,7 @@ public class FenixSchoolRepositoryTest {
         Date now = new Date();
         for (int i = 0; i < count; ++i) {
             schools.add(new School()
-                    .setId(UUID.randomUUID().toString().replace("-",""))
+                    .setId(UUID.randomUUID().toString().replace("-", ""))
                     .setName("测试名称" + i)
                     .setAge(50 + i)
                     .setCity("城市" + i)
@@ -328,6 +351,15 @@ public class FenixSchoolRepositoryTest {
         School newSchool = new School();
         BeanUtils.copyProperties(school, newSchool);
         return newSchool;
+    }
+
+    /**
+     * 构造根据年龄升序排的 {@link Sort} 对象.
+     *
+     * @return {@link Sort} 对象
+     */
+    private Sort buildAgeAscSort() {
+        return Sort.by(Sort.Order.asc("age"));
     }
 
 }

@@ -31,6 +31,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小为可通过参数设置.</p>
      *
      * @param entities 实体类集合
+     * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
     <S extends T> void saveBatch(Iterable<S> entities, int batchSize);
@@ -41,7 +42,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
      *
      * @param entities 可迭代的实体类集合
-     * @param <S> <S> 泛型实体类
+     * @param <S> 泛型实体类
      */
     <S extends T> void updateBatch(Iterable<S> entities);
 
@@ -51,7 +52,8 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.</p>
      *
      * @param entities 可迭代的实体类集合
-     * @param <S> <S> 泛型实体类
+     * @param batchSize 批量大小
+     * @param <S> 泛型实体类
      */
     <S extends T> void updateBatch(Iterable<S> entities, int batchSize);
 
@@ -64,7 +66,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
      *
      * @param entities 实体类集合
-     * @param <S> <S> 泛型实体类
+     * @param <S> 泛型实体类
      */
     <S extends T> void saveOrUpdateBatch(Iterable<S> entities);
 
@@ -77,7 +79,8 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
      *
      * @param entities 实体类集合
-     * @param <S> <S> 泛型实体类
+     * @param batchSize 批量大小
+     * @param <S> 泛型实体类
      */
     <S extends T> void saveOrUpdateBatch(Iterable<S> entities, int batchSize);
 
@@ -147,6 +150,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * </ul>
      *
      * @param entities 可迭代的实体类集合
+     * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
     <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize);

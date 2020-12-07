@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.helper.id;
+package com.blinkfox.fenix.id;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.helper.id;
+package com.blinkfox.fenix.id;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -228,6 +228,7 @@ public final class IdWorker {
             }
             return timestamp;
         }
+
     }
 
 }

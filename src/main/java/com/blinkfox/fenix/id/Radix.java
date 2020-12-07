@@ -1,7 +1,9 @@
-package com.blinkfox.fenix.helper.id;
+package com.blinkfox.fenix.id;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * 进制转换相关的工具类.
@@ -9,6 +11,7 @@ import java.util.Map;
  * @author blinkfox on 2020-12-07.
  * @since v2.4.0
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Radix {
 
     /**
@@ -39,11 +42,6 @@ public final class Radix {
             digitMap.put(DIGITS[i], i);
         }
     }
-
-    /**
-     * 私有构造方法.
-     */
-    private Radix() {}
 
     /**
      * 将长整型数值转换为指定的进制数（最大支持 62 进制，字母数字已经用尽）.
