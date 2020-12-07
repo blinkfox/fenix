@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  * EntityOne 对应的 Repository.
  *
  * @author blinkfox on 2020-12-07.
- * @since v1.0.0
+ * @since v2.4.0
  */
 @Repository
 public interface EntityOneRepository extends CrudRepository<EntityOne, Long> {
