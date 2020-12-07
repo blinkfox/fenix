@@ -89,6 +89,6 @@ public final class Const {
      *
      * @since v2.4.0
      */
-    public static final int DEFAULT_BATCH_SIZE = 100;
+    public static final int DEFAULT_BATCH_SIZE = 200;
 
 }

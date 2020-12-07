@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;
+import org.hibernate.Session;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -24,6 +25,8 @@ import org.springframework.util.Assert;
  * @since v2.4.0
  */
 public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> implements FenixJpaRepository<T, ID> {
+
+    private static final String ENTITIES_NULL_MSG = "Entities must not be null!";
 
     private final JpaEntityInformation<T, ?> entityInformation;
 
@@ -59,7 +62,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param entities 实体类集合
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveBatch(Iterable<S> entities) {
         this.saveBatch(entities, Const.DEFAULT_BATCH_SIZE);
@@ -74,10 +77,10 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveBatch(Iterable<S> entities, int batchSize) {
-        Assert.notNull(entities, "Entities must not be null!");
+        Assert.notNull(entities, ENTITIES_NULL_MSG);
         int i = 0;
         for (S entity : entities) {
             this.em.persist(entity);
@@ -96,7 +99,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param entities 可迭代的实体类集合
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void updateBatch(Iterable<S> entities) {
         this.updateBatch(entities, Const.DEFAULT_BATCH_SIZE);
@@ -111,13 +114,15 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void updateBatch(Iterable<S> entities, int batchSize) {
-        Assert.notNull(entities, "Entities must not be null!");
+        Assert.notNull(entities, ENTITIES_NULL_MSG);
         int i = 0;
+        Session session = this.em.unwrap(Session.class);
         for (S entity : entities) {
-            this.em.merge(entity);
+            session.update(entity);
+            // this.em.merge(entity);
             if (++i % batchSize == 0) {
                 this.em.flush();
                 this.em.clear();
@@ -136,7 +141,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param entities 实体类集合
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveOrUpdateBatch(Iterable<S> entities) {
         this.saveOrUpdateBatch(entities, Const.DEFAULT_BATCH_SIZE);
@@ -154,10 +159,10 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveOrUpdateBatch(Iterable<S> entities, int batchSize) {
-        Assert.notNull(entities, "Entities must not be null!");
+        Assert.notNull(entities, ENTITIES_NULL_MSG);
         int i = 0;
         for (S entity : entities) {
             Assert.notNull(entity, "Entity must not be null.");
@@ -187,7 +192,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param <S> 泛型实体类
      * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> S saveOrUpdateByNotNullProperties(S entity) {
         Assert.notNull(entity, "Entity must not be null.");
@@ -227,10 +232,10 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      *
      * @param entities 可迭代的实体类集合
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveOrUpdateAllByNotNullProperties(Iterable<S> entities) {
-        Assert.notNull(entities, "Entities must not be null!");
+        Assert.notNull(entities, ENTITIES_NULL_MSG);
         for (S entity : entities) {
             saveOrUpdateByNotNullProperties(entity);
         }
@@ -252,7 +257,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param entities 可迭代的实体类集合
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities) {
         this.saveOrUpdateBatchByNotNullProperties(entities, Const.DEFAULT_BATCH_SIZE);
@@ -275,10 +280,10 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize) {
-        Assert.notNull(entities, "Entities must not be null!");
+        Assert.notNull(entities, ENTITIES_NULL_MSG);
         int i = 0;
         for (S entity : entities) {
             saveOrUpdateByNotNullProperties(entity);
@@ -294,7 +299,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      *
      * @param ids ID 集合
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void deleteByIds(Iterable<ID> ids) {
         Assert.notNull(ids, "The given ids must not be null!");
@@ -309,7 +314,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      *
      * @param ids ID 集合
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void deleteBatchByIds(Iterable<ID> ids) {
         this.deleteBatchByIds(ids, Const.DEFAULT_BATCH_SIZE);
@@ -322,7 +327,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param ids ID 集合
      * @param batchSize 批量大小
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void deleteBatchByIds(Iterable<ID> ids, int batchSize) {
         Assert.notNull(ids, "The given ids must not be null!");
