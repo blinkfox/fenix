@@ -18,7 +18,8 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
     /**
      * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
      *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     * 该方法相比 {@link #saveAll(Iterable)} 性能更高，但仅能用于新增插入数据的场景。</p>
      *
      * @param entities 实体类集合
      * @param <S> 泛型实体类
@@ -28,7 +29,8 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
     /**
      * 批量新增实体类集合，该方法仅用于新增，不能用于有更新数据的场景，需要调用方事先做好处理.
      *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小为可通过参数设置.</p>
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小为可通过参数设置.
+     * 该方法相比 {@link #saveAll(Iterable)} 性能更高，但仅能用于新增插入数据的场景。</p>
      *
      * @param entities 实体类集合
      * @param batchSize 批量大小
@@ -39,7 +41,8 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
     /**
      * 批量更新实体类集合，该方法仅用于更新，不能用于含有新增数据的场景，需要调用方事先做好处理.
      *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.
+     * 该方法相比 {@link #saveAll(Iterable)} 性能更高，但仅能用于更新数据的场景。</p>
      *
      * @param entities 可迭代的实体类集合
      * @param <S> 泛型实体类
@@ -49,40 +52,14 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
     /**
      * 批量更新实体类集合，该方法仅用于更新，不能用于含有新增数据的场景，需要调用方事先做好处理.
      *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.</p>
+     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.
+     * 该方法相比 {@link #saveAll(Iterable)} 性能更高，但仅能用于更新数据的场景。</p>
      *
      * @param entities 可迭代的实体类集合
      * @param batchSize 批量大小
      * @param <S> 泛型实体类
      */
     <S extends T> void updateBatch(Iterable<S> entities, int batchSize);
-
-    /**
-     * 批量新增或者更新实体类集合.
-     *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
-     *
-     * <p>注意：该方法相比 {@link #saveAll(Iterable)} 性能略高，但相比直接的批量新增 {@link #saveBatch(Iterable)}
-     * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
-     *
-     * @param entities 实体类集合
-     * @param <S> 泛型实体类
-     */
-    <S extends T> void saveOrUpdateBatch(Iterable<S> entities);
-
-    /**
-     * 批量新增或者更新实体类集合.
-     *
-     * <p>该方法会批量 {@code flush} 数据到数据库中，每次批量大小可通过参数设置.</p>
-     *
-     * <p>注意：该方法相比 {@link #saveAll(Iterable)} 性能略高，但相比直接的批量新增 {@link #saveBatch(Iterable)}
-     * 或者批量更新 {@link #updateBatch(Iterable)} 略慢.</p>
-     *
-     * @param entities 实体类集合
-     * @param batchSize 批量大小
-     * @param <S> 泛型实体类
-     */
-    <S extends T> void saveOrUpdateBatch(Iterable<S> entities, int batchSize);
 
     /**
      * 新增或更新实体类中非 null 属性的字段值.
@@ -105,7 +82,7 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * 新增或更新所有实体类中非 null 属性的字段值.
      *
      * <p>注意：该方法仅仅是循环调用 {@link #saveOrUpdateByNotNullProperties(Object)} 方法，
-     * 保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
+     * 保存每条数据时会先查询判断是否存在，再进行插入或者更新.</p>
      *
      * <ul>
      *     <li>如果某个实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
@@ -117,43 +94,6 @@ public interface FenixJpaRepository<T, ID> extends JpaRepository<T, ID> {
      * @param <S> 泛型实体类
      */
     <S extends T> void saveOrUpdateAllByNotNullProperties(Iterable<S> entities);
-
-    /**
-     * 批量新增或更新所有实体类中非 null 属性的字段值.
-     *
-     * <p>注意：该方法会批量 flush 数据到数据库中，每次默认的批量大小为 {@link Const#DEFAULT_BATCH_SIZE}.</p>
-     *
-     * <p>保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
-     *
-     * <ul>
-     *     <li>如果某个实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
-     *     <li>如果某个实体的主键 ID 不为空，会先判断是否存在该 ID 的数据，如果不存在也会新增插入一条数据；
-     *     否则说明是更新的情况，会仅更新实体类属性中不为 null 值的属性字段到数据库中；</li>
-     * </ul>
-     *
-     * @param entities 可迭代的实体类集合
-     * @param <S> 泛型实体类
-     */
-    <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities);
-
-    /**
-     * 批量新增或更新所有实体类中非 null 属性的字段值.
-     *
-     * <p>注意：该方法会批量 flush 数据到数据库中，每次批量大小可通过参数设置.</p>
-     *
-     * <p>保存每条数据时会先查询判断是否存在，再进行插入或者更新，通常在性能上较差.</p>
-     *
-     * <ul>
-     *     <li>如果某个实体的主键 ID 为空，说明是新增的情况，就插入一条新的数据；</li>
-     *     <li>如果某个实体的主键 ID 不为空，会先判断是否存在该 ID 的数据，如果不存在也会新增插入一条数据；
-     *     否则说明是更新的情况，会仅更新实体类属性中不为 null 值的属性字段到数据库中；</li>
-     * </ul>
-     *
-     * @param entities 可迭代的实体类集合
-     * @param batchSize 批量大小
-     * @param <S> 泛型实体类
-     */
-    <S extends T> void saveOrUpdateBatchByNotNullProperties(Iterable<S> entities, int batchSize);
 
     /**
      * 根据 ID 的集合数据删除这些数据，注意该方法仅是循环调用 {@link #deleteById(Object)} 方法而已，
