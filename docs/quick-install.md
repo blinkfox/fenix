@@ -1,30 +1,30 @@
-## 支持场景
+## 🏖️ 一、支持场景
 
 适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。因为后续版本的 Spring Data JPA 对其中 `QueryLookupStrategy` 的代码有较大改动。
 
-## Spring Boot 项目集成 :id=spring-boot-integrations
+## ☘️ 二、Spring Boot 项目集成 :id=spring-boot-integrations
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
 !> **注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**，如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。
 
-### Maven
+### 🌾 1. Maven
 
 ```xml
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.3.6</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
-### Gradle
+### 🌵 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.3.6'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.4.0'
 ```
 
-### 激活 Fenix (@EnableFenix)
+### 🏕️ 3. 激活 Fenix (@EnableFenix)
 
 然后需要在你的 Spring Boot 应用中使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
@@ -49,11 +49,11 @@ public class DemoApplication {
 }
 ```
 
-> **注**： 
+> **注**：
 > 1. `@EnableFenix` 注解中实质上是使用的是 `FenixJpaRepositoryFactoryBean`。而 `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解和其他更多动态的能力。
 > 2. 如果你是多数据源，则你可以根据自身情况，在需要的数据源中的 `@EnableJpaRepositories` 注解中单独设置 `repositoryFactoryBeanClass` 的值为：`FenixJpaRepositoryFactoryBean.class`。示例如：`@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)`。
 
-### application.yml 配置（可选的）
+### 🏝️ 4. application.yml 配置（可选的）
 
 !> **注**： Fenix 采用了**约定优于配置**的方式，所以通常情况下，你可以不用做下面任何的 Fenix 配置，下面的配置信息供你参考使用。
 
@@ -80,29 +80,29 @@ fenix:
   predicate-handlers:
 ```
 
-## 非 SpringBoot 项目集成 :id=not-spring-boot-project
+## 🍁 三、非 SpringBoot 项目集成 :id=not-spring-boot-project
 
 如果你**不是 Spring Boot 项目**，而是通过其他方式来使用 Spring Data JPA。那么，你可以通过以下的方式来集成原生的 `fenix` 库，除了通过 `@EnableFenix` 激活之外，**最重要的是需要在你应用启动的过程中，手动加载某些 Fenix 配置信息到内存中**。
 
 !> **注**：请确保你引入的 Spring Data JPA 版本是 **`2.1.8.RELEASE` 及以上**，如果 Spring Data JPA 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。。
 
-### Maven
+### 🌼 1. Maven
 
 ```xml
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>2.3.6</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
-### Gradle
+### 🌻 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix:2.3.6'
+compile 'com.blinkfox:fenix:2.4.0'
 ```
 
-### 激活 Fenix
+### 🏔️ 3. 激活 Fenix
 
 跟前面 Spring Boot 激活 Fenix FactoryBean 一样，需要在启动类中使用 `@EnableFenix` 激活 Fenix，也可以直接在 `@EnableJpaRepositories` 注解中，配置
 `repositoryFactoryBeanClass` 的属性值为 `FenixJpaRepositoryFactoryBean.class`。
@@ -117,7 +117,7 @@ compile 'com.blinkfox:fenix:2.3.6'
 @EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)
 ```
 
-### 加载 Fenix 配置信息
+### 🚣 4. 加载 Fenix 配置信息
 
 最后，需要在你的应用启动过程中加载 Fenix 配置信息到内存中。我这里作为示例在 Spring Bean 中的 `@PostConstruct` 的方法中来加载 Fenix 配置。当然，你也可以在你想初始化的任何代码中去加执 Fenix 的初始化加载的代码。
 

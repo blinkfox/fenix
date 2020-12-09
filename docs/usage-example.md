@@ -1,8 +1,8 @@
-# 四种方式的使用示例
+# 🍉 四种方式的使用示例
 
 以下的四种方式的示例均以之前的博客信息数据作为示例，你可以根据自己的场景或喜欢的方式来选择动态查询的方式。
 
-## 第一种：基于 JPQL (或 SQL) 的 XML 方式
+## ✈️ 第一种：基于 JPQL (或 SQL) 的 XML 方式
 
 在 `BlogRepository` 中的查询方法使用 `QueryFenix` 注解，用来分页查询博客信息数据：
 
@@ -66,7 +66,7 @@ public void queryMyBlogs() {
 }
 ```
 
-## 第二种：基于 JPQL (或 SQL) 的 Java API 方式
+## 🚢 第二种：基于 JPQL (或 SQL) 的 Java API 方式
 
 在 `BlogRepository` 中的查询方法使用 `QueryFenix` 注解，用来查询所有符合条件的博客信息数据：
 
@@ -141,7 +141,7 @@ public void queryBlogsWithJava() {
 }
 ```
 
-## 第三种：基于 Specification 的 Java API 方式
+## ⛵ 第三种：基于 Specification 的 Java API 方式
 
 基于 `Specification` 的方式，只须要 `BlogRepository` 接口继承 `FenixJpaSpecificationExecutor` 接口即可，当然也可以继承原生的 `JpaSpecificationExecutor` 接口亦可，但更建议直接继承 `FenixJpaSpecificationExecutor` 接口，该接口也继承自 `JpaSpecificationExecutor` 接口，但提供了更多的默认接口方法，且在 API 使用上，可以不用写 `FenixSpecification.of()` 的中间层，更为简单直接。
 
@@ -184,7 +184,7 @@ public void queryBlogsWithSpecifition() {
 }
 ```
 
-## 第四种：基于 Specification 的 Java Bean 注解方式
+## 🪂 第四种：基于 Specification 的 Java Bean 注解方式
 
 本方式是指通过将 Java Bean 作为参数传递，在 Java Bean 对象的属性中通过查询的条件注解来表明是何种查询匹配方式。当然，同第三种方式一样，`BlogRepository` 接口也须要继承 `FenixJpaSpecificationExecutor` 接口。
 
