@@ -1,10 +1,10 @@
-# 更多功能
+# 🍬 更多功能
 
 Fenix 中除了上面介绍的一些功能之外，还有其他额外的辅助、简化开发的功能，以下作简要介绍。
 
-## 1. 返回自定义的实体对象
+## 🦋 一、返回自定义的实体对象
 
-### (1) 初衷
+### 📡 1. 初衷
 
 JPA 本身支持通过“[投影](https://docs.spring.io/spring-data/jpa/docs/2.2.0.RELEASE/reference/html/#projections)”的方式来返回自定义的实体对象，但使用起来不那么“自然”。主要原因是：
 
@@ -13,7 +13,7 @@ JPA 本身支持通过“[投影](https://docs.spring.io/spring-data/jpa/docs/2.
 
 基于以上原因，Fenix 从 `v1.1.0` 版本开始新增了更加简单、自然的方式来返回自定义的实体对象（`Java Bean`）。下面依然通过 XML 和 Java 两种情况来做示例演示和说明。
 
-### (2) XML 中的使用示例
+### 🩸 2. XML 中的使用示例
 
 首先，定义一个自定义的数据传输实体用户博客信息类（DTO） `UserBlogInfo.java`，用来作为查询的返回结果，各属性请保证必须至少含有可公开访问的 `Setter` 方法：
 
@@ -102,13 +102,13 @@ Page<UserBlogInfo> queryUserBlogPageWithFenixResultType(@Param("userId") String 
 </fenix>
 ```
 
-!> **注**：
+> **💡 注**：
 > 1. 上面的代码关键之处，就在 fenix 节点中配置了 `resultType` 属性的值为我们定义的**实体类的全路径名** `com.blinkfox.fenix.vo.UserBlogInfo`。这样查询结果返回的时候就能自动识别并返回了。
 > 2. 另一个要点是所有查询列**都必须使用 as**来返回一个“别名”，且**这个“别名”必须跟实体类的属性名一致，不区分大小写**。
 > 3. 此种方式再运行时可能会与 `spring-boot-devtools.jar` 冲突，报 `No converter found capable of converting from type [xxx] to type [xxx]` 错误。建议不使用 `spring-boot-devtools.jar`。
 > 4. 在 Fenix `v2.3.1` 及之前的版本，**在异步多线程情况下，可能出现 JDBC 连接无法释放的问题**，强烈建议你升级 Fenix 版本为 `v2.3.3` 及之后的版本。
 
-### (3) Java 中的使用示例
+### 💊 3. Java 中的使用示例
 
 在 Java 中的使用示例同 XML 中相似，只不过是将 SQL 写到了 Java 代码中了而已，且通过 `setResultTypeClass` 方法来设置返回的结果类型。
 
@@ -153,7 +153,7 @@ public final class BlogSqlInfoProvider {
 List<UserBlogInfo> queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title);
 ```
 
-## 2. 从 XML 中获取 SQL 信息
+## 🐛 二、从 XML 中获取 SQL 信息
 
 Fenix 中会自动从 `XML` 中获取到 SQL 信息。如果你想手动从 `XML` 中获取到 SQL 信息（`SqlInfo`），也可以使用 `Fenix.java` 提供的 `API` 来获取。
 
@@ -165,11 +165,11 @@ Fenix.getXmlSqlInfo(String fullFenixId, Object context)
 Fenix.getXmlSqlInfo(String namespace, String fenixId, Object context)
 ```
 
-## 3. 表达式、模版解析器
+## 🐜 三、表达式、模版解析器
 
 在 Fenix 中解析 XML 标签中的表达式或者模版是通过 `Mvel` 表达式语言来实现的，主要方法解析方法是封装在了`ParseHelper.java` 的工具类中，通过该类让开发人员自己测试表达式也是极为方便的。以下作简要介绍。
 
-### (1) 解析表达式
+### 💉 1. 解析表达式
 
 #### 主要方法
 
@@ -205,7 +205,7 @@ public void testParseStr2() {
 }
 ```
 
-### (2) 解析模版
+### 🩺 2. 解析模版
 
 #### 主要方法
 
@@ -227,13 +227,13 @@ public void testParseTemplate2() {
 }
 ```
 
-## 4. 上下文参数包装类
+## 🐝 四、上下文参数包装类
 
 Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWrapper` 工具类，其本质上就是对 `HashMap` 方法的一个**简单链式封装**。
 
 > **注**：提供该包装器类的主要目的是方便开发者封装较多的散参数或者多个 Java 对象为一个 `Map` 型的上下文参数。
 
-### (1) ParamWrapper主要方法
+### 🛏️ 1. ParamWrapper主要方法
 
 - `newInstance()`，创建新的`ParamWrapper`实例。
 - `newInstance(Map<String, Object> paramMap)`，传入已有的`Map`型对象，并创建新的`ParamWrapper`实例。
@@ -241,7 +241,7 @@ Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWr
 - `put(String key, Object value)`，向参数包装器中，`put`对应的key和value值。
 - `toMap()`，返回填充了key、value后的Map对象。
 
-### (2) 对比的示例
+### 🪑 2. 对比的示例
 
 以前需要开发者自己封装Map：
 
@@ -259,7 +259,7 @@ Map<String, Object> context = ParamWrapper.newInstance("sex", "1").put("stuId", 
 
 前后对比来看，再仅仅只需要传入个别自定义参数时，能简化部分代码量和参数传递。
 
-## 5. 表达式的真假判断
+## 🐞 五、表达式的真假判断
 
 **主要方法**：
 

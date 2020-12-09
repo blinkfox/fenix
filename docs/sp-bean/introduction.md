@@ -1,12 +1,12 @@
-# 使用介绍
+# 🥣 使用介绍
 
 在 Fenix 中基于 `Specification` 方式书写动态查询，也可以使用普通的 Java Bean，以及将 Bean 中的属性标注上对应匹配条件的注解，就可以将 Java Bean 作为参数传递来完成动态查询了。
 
-## 1. 总体示例
+## 🦖 一、总体示例
 
 下面直接通过示例来说明如何使用。
 
-### (1) 继承 FenixJpaSpecificationExecutor 接口
+### 🔑 1. 继承 FenixJpaSpecificationExecutor 接口
 
 同基于 `Specification` API 的方式一样，Java Bean 的注解方式也需要在你的 `BlogRepository` 接口中，继承 `FenixJpaSpecificationExecutor` 接口，该接口实质上是继承自 `JpaSpecificationExecutor` 接口，但提供了更多的**默认接口方法**，且在 API 使用上，可以不用写 `FenixSpecification.of()` 的中间层，更为简单直接。
 
@@ -16,7 +16,7 @@ public interface BlogRepository extends FenixJpaSpecificationExecutor<Blog> {
 }
 ```
 
-### (2) 定义动态查询的 Java Bean 类和查询条件的注解
+### 🔐 2. 定义动态查询的 Java Bean 类和查询条件的注解
 
 然后，定义一个用于表示各种查询条件的普通 Java Bean 类 `BlogParam`，当然该类也可以是前台传递过来的对象参数，也可以单独定义。该类的各个属性对应某个查询字段，属性上的注解对应查询的匹配方式，某个字段是否生成查询条件的默认判断依据是该属性值是否为空。
 
@@ -66,7 +66,7 @@ public class BlogParam {
 }
 ```
 
-### (3) 调用方法和测试
+### 🗝️ 3. 调用方法和测试
 
 基于 `Specification` 的方式，不需要定义额外的查询方法，也不需要写 `JPQL` (或 SQL) 语句，简单直接。
 
@@ -101,7 +101,7 @@ public void queryBlogsWithAnnotaion() {
 
 以上就是基于 `Specification` 通过 Java Bean 的条件注解来动态查询的简单使用示例。
 
-## 2. 自定义属性注解条件的生成匹配逻辑
+## 🦕 二、自定义属性注解条件的生成匹配逻辑
 
 匹配 Java Bean 中的属性是否生成对应的条件，默认是通过属性的值是否为 `空` 来识别的。
 

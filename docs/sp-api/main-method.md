@@ -1,12 +1,12 @@
-# API 方法
+# 🌭 API 方法
 
 以下将介绍基于 `Specification` 的主要 API 方法。这些 API 都在 `FenixPredicateBuilder` 类中，用来链式生成 `Predicate` 的条件集合。
 
-## 1. 比较匹配类型的方法
+## 🦜 一、比较匹配类型的方法
 
 比较类型的方法是指等于、不等于、大于、大于等于、小于、小于等于等方法，使用方式也几乎相同。主要 API 如下：
 
-### (1) 等于 (Equal)
+### 💰 1. 等于 (Equal)
 
 > **注**：由于 `equals()` 方法是 Java Object 类自带的方法，为了将其与本方法区分开来，Fenix 中的等值匹配系列的方法取名为 `equal`。
 
@@ -28,7 +28,7 @@ orNotEquals(String fieldName, Object value)
 orNotEquals(String fieldName, Object value, boolean match)
 ```
 
-### (2) 大于 (GreaterThan)
+### 📧 2. 大于 (GreaterThan)
 
 ```java
 // 生成“与逻辑”的“大于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -40,7 +40,7 @@ orGreaterThan(String fieldName, Object value)
 orGreaterThan(String fieldName, Object value, boolean match)
 ```
 
-### (3) 大于等于 (GreaterThanEqual)
+### 📩 3. 大于等于 (GreaterThanEqual)
 
 ```java
 // 生成“与逻辑”的“大于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -52,7 +52,7 @@ orGreaterThanEqual(String fieldName, Object value)
 orGreaterThanEqual(String fieldName, Object value, boolean match)
 ```
 
-### (4) 小于 (LessThan)
+### 📥 4. 小于 (LessThan)
 
 ```java
 // 生成“与逻辑”的“小于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -64,7 +64,7 @@ orLessThan(String fieldName, Object value)
 orLessThan(String fieldName, Object value, boolean match)
 ```
 
-### (5) 小于等于 (andLessThanEqual)
+### 📫 5. 小于等于 (andLessThanEqual)
 
 ```java
 // 生成“与逻辑”的“小于等于匹配”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -76,7 +76,7 @@ orLessThanEqual(String fieldName, Object value)
 orLessThanEqual(String fieldName, Object value, boolean match)
 ```
 
-### (6) 使用示例
+### 📮 6. 使用示例
 
 ```java
 @Test
@@ -107,11 +107,11 @@ public void testOrGreaterThanEqual() {
 }
 ```
 
-## 2. 区间匹配的方法 (between)
+## 🐢 二、区间匹配的方法 (between)
 
 区间匹配本质上也是比较匹配类型的特殊形式，API 参数上表现为匹配的边界值有两个（开始值和结束值），参数会多一个，且在某一个边界值为 null 时，会退化成大于等于或者小于等于的匹配条件。所以，这里单独拿出来作介绍说明。
 
-### (1) API 方法
+### ✏️ 1. API 方法
 
 ```java
 // 生成“与逻辑”的“匹配区间”的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -131,14 +131,14 @@ orNotBetween(String fieldName, Object startValue, Object endValue)
 orNotBetween(String fieldName, Object startValue, Object endValue, boolean match)
 ```
 
-### (2) 退化情况说明
+### 🖋️ 2. 退化情况说明
 
 - 当开始值或结束值均不为 `null` 时，会生成 `between ... and ...` 的区间条件，不发生退化；
 - 当开始值不为 `null`，结束值为 `null` 时，会生成大于等于（`>=`）的条件，发生退化；
 - 当开始值为 `null`，结束值不为 `null` 时，会生成小于等于（`<=`）的条件，发生退化；
 - 当开始值或结束值均为 `null` 时，将直接抛出异常；
 
-### (3) 使用示例
+### 🖍️ 3. 使用示例
 
 ```java
 @Test
@@ -175,7 +175,7 @@ public void testBetween() {
 }
 ```
 
-## 3. 模糊匹配的方法 (LIKE)
+## 🦚 三、模糊匹配的方法 (LIKE)
 
 Fenix 中的模糊匹配包含四种，分别是：
 
@@ -184,7 +184,7 @@ Fenix 中的模糊匹配包含四种，分别是：
 - 后缀模糊匹配 `EndsWith`
 - 以及 SQL 语法通用的任意自定义模式匹配的 `LikePattern`
 
-### (1) 前后模糊匹配的 (Like)
+### 📝 1. 前后模糊匹配的 (Like)
 
 ```java
 // 生成“与逻辑”的“前后模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -204,7 +204,7 @@ orNotLike(String fieldName, Object value)
 orNotLike(String fieldName, Object value, boolean match)
 ```
 
-### (2) 前缀模糊匹配 (StartsWith)
+### 🗂️ 2. 前缀模糊匹配 (StartsWith)
 
 ```java
 // 生成“与逻辑”的“前缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -224,7 +224,7 @@ orNotStartsWith(String fieldName, Object value)
 orNotStartsWith(String fieldName, Object value, boolean match)
 ```
 
-### (3) 后缀模糊匹配 (EndsWith)
+### 📈 3. 后缀模糊匹配 (EndsWith)
 
 ```java
 // 生成“与逻辑”的“后缀模糊匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -244,7 +244,7 @@ orNotEndsWith(String fieldName, Object value)
 orNotEndsWith(String fieldName, Object value, boolean match)
 ```
 
-### (4) 自定义模式匹配 (LikePattern)
+### 📊 4. 自定义模式匹配 (LikePattern)
 
 ```java
 // 生成“与逻辑”的“自定义模式匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -264,7 +264,7 @@ orNotLikePattern(String fieldName, String pattern)
 orNotLikePattern(String fieldName, String pattern, boolean match)
 ```
 
-### (5) 使用示例
+### 📌 5. 使用示例
 
 ```java
 @Test
@@ -286,11 +286,11 @@ public void testOrLike() {
 }
 ```
 
-## 4. 范围匹配的方法 (IN)
+## 🦎 四、范围匹配的方法 (IN)
 
 范围匹配是指生成 `IN` 范围查条件。
 
-### (1) API 方法
+### 📍 1. API 方法
 
 ```java
 // 生成“与逻辑”的“范围匹配”时的 Predicate 条件，如果没有 match 参数或者 match 值为 true 则生成该条件，否则不生成.
@@ -318,7 +318,7 @@ orNotIn(String fieldName, Object[] value)
 orNotIn(String fieldName, Object[] value, boolean match)
 ```
 
-### (2) 使用示例
+### 📎 2. 使用示例
 
 ```java
 @Test
@@ -332,9 +332,9 @@ public void testIn() {
 }
 ```
 
-## 5. NULL 匹配 (IS NULL)
+## 🐲 五、NULL 匹配 (IS NULL)
 
-### (1) API 方法
+### 📐 1. API 方法
 
 NULL 匹配是指 SQL 中的字段 `IS NULL` 或者 `IS NOT NULL`。主要 API 方法如下：
 
@@ -356,7 +356,7 @@ orIsNotNull(String fieldName)
 orIsNotNull(String fieldName, boolean match)
 ```
 
-### (2) 使用示例
+### 📏 2.使用示例
 
 ```java
 @Test
@@ -369,14 +369,14 @@ public void testIsNull() {
 }
 ```
 
-## 6. 自定义任意操作
+## 🐍 六、自定义任意操作
 
 Fenix 中仍然提供了让你自定义动态操作的 `doAny` 方法，该方法中需要传递 `AbstractPredicateHandler` 的子类对象，也可以传递 `PredicateHandler` 接口的实现类实例。
 
 - 通常情况下，推荐直接使用 `PredicateHandler` 的匿名实现类的方式来完成，这样就可以简单的通过 `Lambda` 表达式来完成操作。
 - 如果你的自定义操作，也想用于 Java Bean 条件注解的情况，那么建议你继承 `AbstractPredicateHandler` 抽象类即可。
 
-### (1) API 方法
+### ✂️ 1. API 方法
 
 ```java
 // 通过传递 AbstractPredicateHandler 的子类对象来完成任意自定义操作，在具体实现类中写相关的动态条件拼接逻辑.
@@ -388,7 +388,7 @@ doAny(String fieldName, Object value, PredicateHandler handler)
 doAny(String fieldName, Object value, PredicateHandler handler, boolean match)
 ```
 
-### (2) 示例
+### 🗑️ 2. 示例
 
 以下通过一个简单的 `PredicateHandler` 的 Lambda 表达式来完成字符串第二、三、四个字符分别是 `ava` 的匹配代码。当然，其实你可以直接通过 `andLikePattern` 方法达到目的，但这里我只是做一个演示的示例供你参考。
 
@@ -411,7 +411,7 @@ public void testFindAllWithDoAny() {
 }
 ```
 
-## 7. 获取 JPA 的 CriteriaBuilder 等对象
+## 🐊 七、获取 JPA 的 CriteriaBuilder 等对象
 
 基于 `Specification` 的方式在构造动态查询条件的过程中，如果以上的诸多 API 方法仍然不满足你的需求，想通过原生的写法实现，Fenix 中也提供给你使用原生的方式。你可以在构建过程中获取到 Spring Data JPA 中的 `CriteriaBuilder`、`CriteriaQuery`、`From` 等对象实例，从而方便你来按你自己的需求写动态查询的代码。
 

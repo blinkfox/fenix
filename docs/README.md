@@ -1,3 +1,5 @@
+# 🍑 简介
+
 > [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL。
 
 - [⛱️ 示例项目 (fenix-example)](https://github.com/blinkfox/fenix-example)

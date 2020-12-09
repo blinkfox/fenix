@@ -1,4 +1,4 @@
-- 💎 快速入门
+- 🍒 快速入门
   - [🍑 简介](README)
   - [🍎 与 MyBatis 的 XML 的 SQL 写法比较](compare-mybatis)
   - [🍋 快速集成](quick-install)
@@ -15,9 +15,13 @@
 - 🍔 基于 Specification 的 Java API 方式
   - [🍕 总体示例](sp-api/example)
   - [🌭 API 方法](sp-api/main-method)
-- 🍚 基于 Specification 的 Java Bean 注解方式
+- 🍚 基于 Specification 的 Bean 注解方式
   - [🥣 使用介绍](sp-bean/introduction)
   - [🥗 内置条件注解](sp-bean/annotations)
   - [🍜 自定义条件注解](sp-bean/custom-annotation)
+- 🛰️ 增强的【增删改】
+  - [🚀 更高效的【批量增删改】](cud/fast-batch-cud)
+  - [🚁 非【null】属性的增量更新]()
+  - [✈️ 更多的主键 ID 生成策略]()
 - [🍬 更多功能](more-features)
 - [🍹 版本更新记录](CHANGELOG)
