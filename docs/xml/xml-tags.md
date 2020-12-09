@@ -1,4 +1,4 @@
-# SQL 语义化标签
+# 🌶️ SQL 语义化标签
 
 Fenix 的核心功能就在于将 SQL 单独写到 XML 文件中，为了增强写动态 SQL 的能力，引入了 `MVEL` 模版引擎，使得我们可以写出动态的 SQL。但是这样的 SQL 中就像 `MyBatis` 一样充斥着 `if/else` 或者 `foreach` 循环等等语句。不仅冗长、而且可读性也不好。
 
@@ -22,9 +22,9 @@ Fenix 中提供了大量常见场景下的 XML 标签供开发者使用，且这
 - [choose](/xml/xml-tags?id=choose)
 - [set](/xml/xml-tags?id=set)
 
-## equal
+## 🐈 一、equal
 
-### 标签
+### 🛀 1. 标签
 
 ```xml
 <equal field="" value="" name="" match="" />
@@ -32,14 +32,14 @@ Fenix 中提供了大量常见场景下的 XML 标签供开发者使用，且这
 <orEqual field="" value="" name="" match="" />
 ```
 
-### 属性介绍
+### 🛌 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
 - **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL（`JPQL`） 片段；否则解析出的匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
-### 使用示例
+### 🔪 3. 使用示例
 
 ```xml
 <equal field="nickname" value="name" />
@@ -56,7 +56,7 @@ AND email = :user_email
 AND email = :myEmail
 ```
 
-## 与 equal 类似的标签 :id=equal-similar-tags
+## 🐒 二、与 equal 类似的标签 :id=equal-similar-tags
 
 以下标签的属性及含义和 `<equal/>` 标签都是一样的，只不过 `XML` 的标签名称和生成的 SQL **操作符**有所不同而已。主要是**大于**、**小于**、**大于等于**和**小于等于**之类的标签逻辑。
 
@@ -76,9 +76,9 @@ AND email = :myEmail
 - `andLessThanEqual`：带 `and` 前缀的小于等于
 - `orLessThanEqual`：带 `or` 前缀的小于等于
 
-## like
+## 🐶 三、like
 
-### 标签
+### 🧭 1. 标签
 
 ```xml
 <like field="" name="" value="" pattern="" match="" />
@@ -91,7 +91,7 @@ AND email = :myEmail
 <orNotLike field="" name="" value="" pattern="" match="" />
 ```
 
-### 属性介绍
+### 🧱 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
 - **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
@@ -99,7 +99,7 @@ AND email = :myEmail
 - **pattern**，表示 `like` 匹配的模式，如：`abc%`、`_bc`等，只能是静态文本内容。**条件必填**属性。`pattern` 和 `value` 只能存在一个，`pattern` 用来指定自定义的匹配模式。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
-### 使用示例
+### 💈 3. 使用示例
 
 ```xml
 <andLike field="u.email" value="email" match="?email != empty" />
@@ -115,11 +115,11 @@ u.email NOT LIKE '%@gmail.com'
 AND u.email NOT LIKE :myEmail
 ```
 
-## startsWith
+## 🦊 四、startsWith
 
 `startsWith` 是 `like` 标签的特殊形式，表示按前缀来做模糊匹配。
 
-### 标签
+### 🛎️ 1. 标签
 
 ```xml
 <startsWith field="" name="" value="" match=""/>
@@ -131,14 +131,14 @@ AND u.email NOT LIKE :myEmail
 <orNotStartsWith field="" name="" value="" match=""/>
 ```
 
-### 属性介绍
+### ⌛ 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
 - **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按前缀来匹配的，即：`xxx%`。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
-### 使用示例
+### ⌚ 3. 使用示例
 
 ```xml
 <startsWith field="u.name" value="user.name" match="user.name != empty"/>
@@ -154,11 +154,11 @@ AND u.name NOT LIKE :user_name
 AND u.name LIKE :myName
 ```
 
-## endsWith
+## 🐺 五、endsWith
 
 `endsWith` 也是 `like` 标签的特殊形式，同 `startsWith` 标签相反，表示按后缀来做模糊匹配。
 
-### 标签
+### ⏰ 1. 标签
 
 ```xml
 <endsWith field="" name="" value="" match=""/>
@@ -170,14 +170,14 @@ AND u.name LIKE :myName
 <orNotEndsWith field="" name="" value="" match=""/>
 ```
 
-### 属性介绍
+### ⛱️ 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，也可以是数据库的表达式、函数等。**必填**属性。
 - **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数值，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等。**必填**属性。生成的 SQL 片段是按后缀来匹配的，即：`%xxx`。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false` 时不生成。
 
-### 使用示例
+### 🌡️ 3. 使用示例
 
 ```xml
 <endsWith field="u.name" value="user.name" match="user.name != empty"/>
@@ -193,9 +193,9 @@ AND u.name NOT LIKE :user_name
 AND u.name LIKE :myName
 ```
 
-## between
+## 🐯 六、between
 
-### 标签
+### 🧨 1. 标签
 
 ```xml
 <between field="" startName="" start="" endName="" end="" match=""/>
@@ -203,7 +203,7 @@ AND u.name LIKE :myName
 <orBetween field="" startName="" start="" endName="" end="" match="" />
 ```
 
-### 属性介绍
+### 🎈 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
 - **startName**，表示JPA 中生成的开始值的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `start` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `start` 值比较复杂，为表达式时，生成的命名参数不对的问题。
@@ -214,7 +214,7 @@ AND u.name LIKE :myName
 
 !> **注意**：Fenix 中对 start 和 end 的空判断是检测是否是 `null`，而不是空字符串，`0`等情况。所以，如果 `start` 和 `end` 的某一个值为 `null` 时，区间查询将退化为大于等于（`>=`）或者小于等于（`<=`）的查询。
 
-### 使用示例
+### 🎉 3. 使用示例
 
 ```xml
 <andBetween field="u.age" start="startAge" end="endAge" match="(?startAge != null) || (?endAge != null)" />
@@ -230,9 +230,9 @@ AND u.name LIKE :myName
 - 当 `start` 不为 `null`，`end`不为`null`，则生成的 SQL 片段为：`AND u.age BETWEEN :startAge AND :endAge`；
 - 当 `start` 为 `null`，`end`为`null`，则不生成SQL片段；
 
-## in
+## 🦁 七、in
 
-### 标签
+### 🎊 1. 标签
 
 ```xml
 <in field="" name="" value="" match="" />
@@ -245,14 +245,14 @@ AND u.name LIKE :myName
 <orNotIn field="" name="" value="" match="" />
 ```
 
-### 属性介绍
+### 🎏 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
 - **name**，表示JPA 中生成的 JPQL 语句中的命名参数名称，`v2.3.0` 版本新增的属性。当不填写或者内容为空时，将默认根据 `value` 的值来生成命名参数名称。**非必填**属性。该字段通常用来解决 `value` 值比较复杂，为表达式时，生成的命名参数不对的问题。
 - **value**，表示参数的集合，值可以是数组，也可以是 `Collection` 集合，还可以是单个的值。**必填**属性。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
-### 使用示例
+### 🎀 3. 使用示例
 
 ```xml
 <andIn field="u.sex" value="userMap.sexs" match="?userMap.sexs != empty"/>
@@ -264,9 +264,9 @@ AND u.sex in :userMap_sexs
 AND u.sex in :mySex
 ```
 
-## is null :id=is-null
+## 🐱 八、is null :id=is-null
 
-### 标签
+### 🎁 1. 标签
 
 ```xml
 <!-- IS NULL 相关的标签. -->
@@ -280,12 +280,12 @@ AND u.sex in :mySex
 <orIsNotNull field="" match=""/>
 ```
 
-### 属性介绍
+### 🤿 2. 属性介绍
 
 - **field**，表示对应数据库或实体的字段，可以是数据库的表达式、函数等。**必填**属性。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
-### 使用示例
+### 🪁 3. 使用示例
 
 ```xml
 <andIsNull field="u.n_age" match="?id != empty"/>
@@ -293,11 +293,11 @@ AND u.sex in :mySex
 AND u.n_age IS NULL
 ```
 
-## where
+## 🐎 九、where
 
 `where` 标签主要用于在全动态 SQL 的场景中消除 `WHERE` 关键字后面的 `AND` 或者 `OR` 关键字，防止拼接出的动态 SQL 语法不对。
 
-### 标签
+### 🔮 1. 标签
 
 下面是 `where` 标签的使用方式，两种方式是等价的，看情况选用一种方式即可。
 
@@ -311,7 +311,7 @@ AND u.n_age IS NULL
 </where>
 ```
 
-### 使用示例
+### 🧿 2. 使用示例
 
 ```xml
 <!-- 用于演示 where 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
@@ -361,11 +361,11 @@ AND u.n_age IS NULL
 </fenix>
 ```
 
-## text
+## 🐅 十、text
 
 `text` 标签主要用于在标签内部自定义任何需要的文本和传递的参数，为 SQL 书写提供更多的灵活性。
 
-### 标签
+### 🕹️ 1. 标签
 
 ```xml
 <text value="" match="">
@@ -373,12 +373,12 @@ AND u.n_age IS NULL
 </text>
 ```
 
-### 属性介绍
+### 🧸 2. 属性介绍
 
 - **value**，表示 `text` 块中需要传递的 `Map` 型参数。**非必填**属性。`Map` 中的 `key` 必须是“死”字符串，用于和 `JPQL` 的命名参数相呼应，`value` 的值才可以被动态解析；
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true`时才生成，匹配结果为 `false`时不生成。
 
-### 使用示例
+### 🖼️ 3. 使用示例
 
 ```xml
 <!-- value 值必须是 MVEL 表达式中的 Map 类型，其 key 应该与绑定参数 :userId 向同. -->
@@ -392,11 +392,11 @@ AND u.n_age IS NULL
 </text>
 ```
 
-## import
+## 🐴 十一、import
 
 `import` 标签主要用于在 Fenix 标签中导入其它的 `<fenix></fenix>` 节点，便于 SQL 逻辑的进一步复用。
 
-### 标签
+### 🧵 1. 标签
 
 ```xml
 <import fenixId=""/>
@@ -405,14 +405,14 @@ AND u.n_age IS NULL
 <import namespace="" fenixId="" value="" match=""/>
 ```
 
-### 属性介绍
+### 🧶 2. 属性介绍
 
 - **namespace**，表示需要引用导入的节点所在的 `XML` 文件的命名空间，**非必填**属性。如果如果不填此属性，则视为仅从本 `XML` 文件中查找和导入 `fenixId` 的节点。
 - **fenixId**，表示要引用导入的 `<fenix></fenix>` 节点的 `id`，**必填**属性。
 - **value**，表示需要传入到要引用的 `<fenix></fenix>` 节点中的上下文参数值，**非必填**属性。如果不填此属性，则会传递和使用最顶层的上下文参数。
 - **match**，表示匹配条件。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
-### 使用示例
+### 🛍️ 3. 使用示例
 
 ```xml
 <!-- 一些公共字段的 fenix 节点. -->
@@ -472,11 +472,11 @@ AND u.n_age IS NULL
 </fenix>
 ```
 
-## choose
+## 🐄 十二、choose
 
 `choose` 标签主要用于解决"较多的"多分支条件选择逻辑，对应的即是Java中 `if/else if/ ... /else if/else` 这种逻辑。
 
-### 标签
+### 📿 1. 标签
 
 ```xml
 <choose when="" then=""
@@ -486,13 +486,13 @@ AND u.n_age IS NULL
         else=""/>
 ```
 
-### 属性介绍
+### 📯 2. 属性介绍
 
 - **when{x}**，表示匹配条件，可以写“无数”个，对应于Java中的 `if/else if` 条件。**必填**属性，如果不填此属性，表示 `false`，将直接进入 `else` 的表达式逻辑块中。
 - **then{x}**，表示需要执行的逻辑，和 `when` 向对应，可以写“无数”个，内容是字符串或者是 `MVEL` 的字符串模版，**必填**属性。如果如果不填此属性，即使满足了对应的 `when` 条件，也不会做 SQL 的拼接操作。
 - **else**，表示所有 `when` 条件都不满足时才执行的逻辑，内容是字符串或者 `MVEL` 的字符串模版，**非必填**属性。如果不填此属性，则表示什么都不做（这样就无任何意义了）。
 
-### 使用示例
+### 🎙️ 3. 使用示例
 
 ```xml
 <!-- choose 标签的使用示例. -->
@@ -513,11 +513,11 @@ AND u.n_age IS NULL
 </fenix>
 ```
 
-## set
+## 🐄 十三、set
 
 `set` 标签主要用于动态生成 `update` 语句中的 SQL 片段。
 
-### 标签
+### 📻 1. 标签
 
 ```xml
 <set field="" value="" match=""
@@ -526,13 +526,13 @@ AND u.n_age IS NULL
         field4="" value4="" match4=""/>
 ```
 
-### 属性介绍
+### 📱 2. 属性介绍
 
 - **field{x}**，表示对应数据库或实体的字段，可以写“无数”个。**必填**属性。
 - **value{x}**，表示对应字段的值，可以写“无数”个，对应 `MVEL` 表达式，也可以是基础数据类型，如：数字、字符串等，与相同序号的 `field` 值相对应。**非必填**属性。不填写此值则是 `null` 值。
 - **match{x}**，表示匹配条件，可以写“无数”个，与相同序号的 `field` 和 `value` 值相对应。**非必填**属性，如果不填此属性，或者内容为空，则视为必然生成此条件 SQL 片段；否则匹配结果为 `true` 时才生成，匹配结果为 `false`时不生成。
 
-### 使用示例
+### ☎️ 3. 使用示例
 
 ```xml
 <!-- 测试 set 相关标签的更新. -->

@@ -1,10 +1,10 @@
-# 总体示例
+# 🍗 总体示例
 
 在 Fenix 中书写动态 SQL，也可以使用 Java 链式 `API` 代码来完成，使用方式和 `MyBatis` 的方式总体相似，但是 Fenix 的 Java 动态 SQL 的 `API` 更为强大，且大多数方法同 `XML` 中 SQL 语义化标签相对应。
 
 下面直接通过示例来说明如何使用。
 
-## 创建提供 SqlInfo 的方法
+## 🎠 一、创建提供 SqlInfo 的方法
 
 创建一个 `BlogSqlProvider` 类，在类中创建一个返回 `SqlInfo` 示例的方法，这里作为示例我取名为 `queryBlogsWithJava`，方法参数最好与 `BlogRepository` 接口中的查询方法保持一致，并用 `@Param` 注解来描述，方法的参数顺序可以调换，参数可以变少，但不应该增多（因为多余的参数值，也会是 `null`）。
 
@@ -51,7 +51,7 @@ public class BlogSqlProvider {
 }
 ```
 
-## 创建查询方法
+## 🎠 二、创建查询方法
 
 在 `BlogRepository.java` 接口中添加动态查询博客信息的方法，我这里也取名为 `queryBlogsWithJava`。注意，这里也使用到了 `@QueryFenix` 注解，但是注解元素用得是 `provider` 和 `method`。
 
@@ -70,13 +70,13 @@ List<Blog> queryBlogsWithJava(@Param("blog") Blog blog, @Param("startTime") Date
         @Param("endTime") Date endTime, @Param("blogIds") String[] blogIds);
 ```
 
-**`@QueryFenix` 注解的再解释**：
+**💡 `@QueryFenix` 注解的再解释**：
 
 - `provider`：表示 `SqlInfo` 提供类的 `class`，如果使用 `Java` 方式的话，**必填**元素。示例中它的值就是我们前面创建的 `BlogSqlProvider.class`。
 - `method`：表示 `SqlInfo` 提供类的方法名，值为方法名的字符串。**非必填**元素。如果不填写这个值，就默认视为提供的方法名就是 `repository` 接口的查询方法名。示例中它的值就是我们前面创建的 `queryBlogsWithJava` 方法。
 - `countMethod()`：表示通过 Java 来拼接分页查询时查询总记录数 SQL 语句的提供类的方法名。
 
-## 创建并执行单元测试
+## 🎢 三、创建并执行单元测试
 
 在 `BlogRepositoryTest` 单元测试类中，新增 `queryBlogsWithJava` 测试方法，代码如下：
 
