@@ -8,7 +8,7 @@
 
 ## 🚞 一、项目和数据准备
 
-!> **注**：下面“项目和数据准备”的内容，除了集成 Fenix 配置之外，基本上与 Fenix 无关，你大概体验和预览下内容就行。
+!> **💡 注**：下面“项目和数据准备”的内容，除了集成 Fenix 配置之外，基本上与 Fenix 无关，你大概体验和预览下内容就行。
 
 ### 🚜 1. 创建项目
 
@@ -171,7 +171,7 @@ fenix:
 
 定义博客信息操作的持久层代码 `BlogRepository` 接口，这里使用 `@QueryFenix` 注解来演示根据散参数、博客信息 Bean(可以是其它Bean 或者 Map)的参数来**多条件模糊分页查询**博客信息。注解的值是 Fenix XML 文件对应的命名空间 `namespace` 和 `<fenix id="queryMyBlogs"></fenix>` XML 标签的 `id` 属性值。
 
-!> **注**：一些简单的查询 SQL 语句，我仍然建议你使用原生的 `@Query` 注解，而将 `@QueryFenix` 注解使用在较长的、复杂动态 SQL 的场景中。
+!> **💡 注**：一些简单的查询 SQL 语句，我仍然建议你使用原生的 `@Query` 注解，而将 `@QueryFenix` 注解使用在较长的、复杂动态 SQL 的场景中。
 
 ```java
 import com.blinkfox.fenix.example.entity.Blog;
