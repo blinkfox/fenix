@@ -21,7 +21,7 @@
   - [🍜 自定义条件注解](sp-bean/custom-annotation)
 - 🛰️ 增强的【增删改】
   - [🚀 更高效的【批量增删改】](cud/fast-batch-cud)
-  - [🚁 非【null】属性的增量更新]()
-  - [✈️ 更多的主键 ID 生成策略]()
+  - [🚁 非【null】属性的增量更新](cud/not-null-update)
+  - [✈️ 更多的主键 ID 生成策略](cud/id-generator)
 - [🍬 更多功能](more-features)
 - [🍹 版本更新记录](CHANGELOG)

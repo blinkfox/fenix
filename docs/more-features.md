@@ -261,15 +261,17 @@ Map<String, Object> context = ParamWrapper.newInstance("sex", "1").put("stuId", 
 
 ## 🐞 五、表达式的真假判断
 
+Fenix 中关于表达式字符串的真假判断在 `com.blinkfox.fenix.helper.ParseHelper` 类中提供了静态方法。
+
 **主要方法**：
 
 ```java
 // 是否匹配，常用于标签中的 match 值的解析，即如果 match 不填写，或者内容为空，或者解析出为正确的值，都视为true.
-isMatch(String match, Object context)
+ParseHelper.isMatch(String match, Object context)
 
 // 是否不匹配，同 isMatch 相反，只有解析到的值是 false 时，才认为是 false.
-isNotMatch(String match, Object context)
+ParseHelper.isNotMatch(String match, Object context)
 
 // 是否为 true，只有当解析值确实为 true 时，才为 true.
-isTrue(String exp, Object context)
+ParseHelper.isTrue(String exp, Object context)
 ```

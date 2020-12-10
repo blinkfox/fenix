@@ -1,6 +1,6 @@
 # 🚀 更高效的【批量增删改】
 
-## 一、JPA 中自带的优化配置
+## 💐 一、JPA 中自带的优化配置
 
 在 Spring Data JPA 中批量保存或更新的 `saveAll` 方法性能较低。但是，Spring Data JPA（或者说 `Hibernate`）中也自带了关于批量操作的优化配置，通常默认没有开启，我建议你开启这些配置项。
 
@@ -19,13 +19,13 @@ spring:
           batch_versioned_data: true
 ```
 
-## 二、Fenix 中【批量增删改】的增强
+## 🌻 二、Fenix 中【批量增删改】的增强
 
-### 1. 如何使用
+### 🍺 1. 如何使用
 
 Fenix 在 `2.4.0` 版本中提供了相比 `saveAll` 更高效的**批量新增**、**批量更新**和**批量删除**的方法。但是，Fenix 中并没有提供类似于 `saveAll` 这种能同时做到批量新增或者更新的方法，而是为了提高效率，对批量新增和批量更新的方法单独进行了实现和优化。这样即能保证对 JPA 的兼容性，又能提高各自处理场景的效率。需要开发人员可以根据自己的业务场景选择对应的方法。
 
-要使用这些方法，只须要让你业务功能的 `Repository` 接口集成自 `FenixJpaRepository` 接口即可。由于 `FenixJpaRepository` 接口继承自 `JpaRepository` 接口，所以 `FenixJpaRepository` 接口的功能完全兼容你以前所使用的 `JpaRepository` 的接口。
+要使用这些方法，只须要让你业务功能的 `Repository` 接口继承自 `FenixJpaRepository` 接口即可。由于 `FenixJpaRepository` 接口继承自 `JpaRepository` 接口，所以 `FenixJpaRepository` 接口的功能完全兼容你以前所使用的 `JpaRepository` 的接口。
 
 使用示例如下：
 
@@ -42,7 +42,7 @@ public interface SchoolRepository extends FenixJpaRepository<School, String> {
 }
 ```
 
-### 2. 批量新增（saveBatch）
+### 🥤 2. 批量新增（saveBatch）
 
 **批量新增**有两个重载方法：
 
@@ -68,7 +68,7 @@ public void testSaveBatch() {
 }
 ```
 
-### 3. 批量更新（updateBatch）
+### 🍹 3. 批量更新（updateBatch）
 
 **批量更新**也有两个重载方法：
 
@@ -94,7 +94,7 @@ public void testUpdateBatch() {
 }
 ```
 
-### 4. 批量删除（deleteBatchByIds）
+### 🧃 4. 批量删除（deleteBatchByIds）
 
 Spring Data JPA 中已经有相关批量删除的方法了，比如：
 
