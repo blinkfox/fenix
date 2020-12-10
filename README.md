@@ -2,13 +2,13 @@
 
 <div align="center"><img style="display: block; margin: 0 auto;" src="https://blinkfox.github.io/fenix/assets/images/logo.png" alt="fenix logo" /></div>
 
-[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![HitCount](http://hits.dwyl.io/blinkfox/fenix.svg)](http://hits.dwyl.io/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v2.3.6-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/2.3.6/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v2.3.6-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/2.3.6/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
+[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![HitCount](http://hits.dwyl.io/blinkfox/fenix.svg)](http://hits.dwyl.io/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v2.4.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/2.4.0/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v2.4.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/2.4.0/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
 
 > [Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL。
 
 [📖 使用文档](https://blinkfox.github.io/fenix) | [🍉 示例项目 (fenix-example)](https://github.com/blinkfox/fenix-example)
 
-## 💎 特性
+## 💎 一、特性
 
 - 简单、轻量级、无副作用的集成和使用，jar 包仅 `177 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
@@ -16,15 +16,17 @@
 - `XML` 的方式功能强大，让 SQL 和 Java 代码解耦，易于维护；
 - 可以采用 Java 链式 `API` 来书写动态 SQL；
 - 可以采用动态条件注解和Java 链式 `API` 来书写出动态的 `Specification`。
+- 增强了更快速高效的 JPA 批量“增删改”的支持，支持非 `null` 属性的增量更新；
+- 支持**雪花算法**的主键 ID 生成策略；
 - 具有动态性、极致的可复用性的优点；
 - SQL 执行结果可返回任意自定义的实体对象，比使用 JPA 自身的投影方式更加简单和自然；
 - 具有可扩展性，如：可自定义 `XML` 语义标签和对应的标签处理器来生成自定义逻辑的 SQL 片段和参数；
 
-## ✔️ 支持场景
+## 🏖️️ 二、支持场景
 
 适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。因为后续版本的 Spring Data JPA 对其中 `QueryLookupStrategy` 的代码有较大改动。
 
-## 🌱 Spring Boot 项目集成
+## ☘️ 三、Spring Boot 项目集成
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
@@ -32,23 +34,23 @@
 
 > **注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**，如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。
 
-### Maven
+### 🌾 1. Maven
 
 ```xml
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.3.6</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
-### Gradle
+### 🌵 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.3.6'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.4.0'
 ```
 
-### 激活 Fenix (@EnableFenix)
+### 🏕️ 3. 激活 Fenix (@EnableFenix)
 
 然后需要在你的 Spring Boot 应用中使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
@@ -68,11 +70,11 @@ public class DemoApplication {
 }
 ```
 
-> **注**： 
+> **💡 注**： 
 > 1. `@EnableFenix` 注解中实质上是使用的是 `FenixJpaRepositoryFactoryBean`。而 `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解和其他更多动态的能力。
 > 2. 如果你是多数据源，则你可以根据自身情况，在需要的数据源中的 `@EnableJpaRepositories` 注解中单独设置 `repositoryFactoryBeanClass` 的值为：`FenixJpaRepositoryFactoryBean.class`。示例如：`@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)`。
 
-### application.yml 配置（可选的）
+### 🏝️ 4. application.yml 配置（可选的）
 
 > **注**：Fenix 采用了**约定优于配置**的方式，所以通常情况下，你可以不用做任何的 Fenix 配置。
 
@@ -99,7 +101,7 @@ fenix:
   predicate-handlers:
 ```
 
-## 🍔 示例概览
+## 🍔 四、示例概览
 
 Fenix 中支持四种方式书写动态 SQL，分别是：
 
@@ -383,10 +385,10 @@ public void queryBlogsWithAnnotaion() {
 }
 ```
 
-## 📝 开源许可证
+## 📝 五、开源许可证
 
 本 `Fenix` 的 Spring Data JPA 扩展库遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) 许可证。
 
-## 🙏 鸣谢
+## 🙏 六、鸣谢
 
 感谢 [JetBrains 公司](https://www.jetbrains.com/?from=fenix) 为本开源项目提供的免费正版 Intellij IDEA 的 License 支持。
