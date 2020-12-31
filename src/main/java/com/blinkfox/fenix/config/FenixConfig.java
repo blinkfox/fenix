@@ -124,7 +124,7 @@ public class FenixConfig {
 
     static {
         initDefaultTagHandler();
-        initDefaultspecificationHandler();
+        initDefaultSpecificationHandlers();
     }
 
     /**
@@ -227,7 +227,7 @@ public class FenixConfig {
     /**
      * 初始化添加默认的注解 {@code Class} 和对应处理器实例到 HashMap 集合中等.
      */
-    private static void initDefaultspecificationHandler() {
+    private static void initDefaultSpecificationHandlers() {
         add(new EqualsPredicateHandler());
         add(new GreaterThanEqualPredicateHandler());
         add(new GreaterThanPredicateHandler());

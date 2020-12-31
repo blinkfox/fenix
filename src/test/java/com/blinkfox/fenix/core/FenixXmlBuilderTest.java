@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.blinkfox.fenix.bean.SqlInfo;
 import com.blinkfox.fenix.config.FenixConfig;
@@ -37,6 +38,11 @@ public class FenixXmlBuilderTest {
     private static final String BASE_QUERY = SELECT_QUERY + " WHERE";
 
     /**
+     * email 的常量字符串.
+     */
+    private static final String EMAIL = "zhangsan@163.com";
+
+    /**
      * 上下文参数 Map.
      */
     private static Map<String, Object> context;
@@ -54,7 +60,7 @@ public class FenixXmlBuilderTest {
         context = new HashMap<>(4);
         context.put("entityName", User.class.getSimpleName());
         context.put("user", new User().setId("123").setName(NAME).setSex("0"));
-        context.put(EMAIL_KEY, "zhangsan@163.com");
+        context.put(EMAIL_KEY, EMAIL);
     }
 
     /**
@@ -391,6 +397,39 @@ public class FenixXmlBuilderTest {
         Map<String, Object> params = sqlInfo.getParams();
         assertEquals(2, params.size());
         assertEquals('%' + NAME + '%', params.get("user_name"));
+    }
+
+    /**
+     * 测试 where 标签的情况4.
+     */
+    @Test
+    public void testWhere4() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere4", context);
+        assertEquals(BASE_QUERY + " u.name LIKE '%ZhangSan%' AND u.email = :email", sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(1, params.size());
+        assertEquals(EMAIL, params.get("email"));
+    }
+
+    /**
+     * 测试 where 标签的情况5.
+     */
+    @Test
+    public void testWhere5() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere5", context);
+        assertEquals(SELECT_QUERY + " ORDER BY u.updateTime DESC", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * 测试 where 标签的情况6.
+     */
+    @Test
+    public void testWhere6() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere6", context);
+        assertEquals(SELECT_QUERY, sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
     }
 
 }

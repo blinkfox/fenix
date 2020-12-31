@@ -258,4 +258,32 @@
             u.updateTime DESC
     </fenix>
 
+    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
+    <fenix id="testWhere4">
+        SELECT u FROM @{entityName}
+        <where />
+        @if{?user.name != empty}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        <andEqual field="u.email" value="email" match="email != empty"/>
+    </fenix>
+
+    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
+    <fenix id="testWhere5">
+        SELECT u FROM @{entityName}
+        <where />
+        AND
+        ORDER BY u.updateTime DESC
+    </fenix>
+
+    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
+    <fenix id="testWhere6">
+        SELECT u FROM @{entityName}
+        <where />
+        @if{?user.name == 'Lisi'}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        <andEqual field="u.email" value="email" match="email == 'aa'"/>
+    </fenix>
+
 </fenixs>

@@ -48,6 +48,23 @@ public class StringHelperTest {
     }
 
     /**
+     * 测试字符串替换.
+     */
+    @Test
+    public void replaceWhereAndOr() {
+        Assert.assertEquals("aaa WHERE bbb WHERE ccc WHERE ddd",
+                StringHelper.replaceWhereAndOr("aaa wheRe Or bbb WHERE AND ccc where OR ddd"));
+        Assert.assertEquals("aaa WHERE bbb ccc WHERE ddd eee",
+                StringHelper.replaceWhereAndOr("aaa where AND bbb ccc WHERE and ddd eee"));
+        Assert.assertEquals("select * from table WHERE field1 = 'a' WHERE field2 = 'b'",
+                StringHelper.replaceWhereAndOr("select * from table WHERE AND field1 = 'a' WHERE AND field2 = 'b'"));
+        Assert.assertEquals("aaa   WHERE  bbb ccc  WHEREANDddd eee WHERE ",
+                StringHelper.replaceWhereAndOr("aaa   WHERE and  bbb ccc  WHEREANDddd eee WHERE OR "));
+        Assert.assertEquals("[aaa bbb] WHERE [def]",
+                StringHelper.replaceWhereAndOr("[aaa bbb] WHERE [def] WHERE"));
+    }
+
+    /**
      * 测试字符串格式化方法.
      */
     @Test

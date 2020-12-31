@@ -21,6 +21,12 @@ public final class StringHelper {
      */
     private static final Pattern BLANK_PATTERN = Pattern.compile("\\|\t|\r|\n");
 
+    private static final String PATTERN_WHERE_AND_OR_BLANK = "(?i) WHERE AND | WHERE OR ";
+
+    private static final String WHERE = " WHERE ";
+
+    private static final String WHERE_PREV_SPACE = " WHERE";
+
     /**
      * XML文件扩展名常量.
      */
@@ -45,6 +51,24 @@ public final class StringHelper {
     public static String replaceBlank(String str) {
         Matcher m = BLANK_PATTERN.matcher(str);
         return m.replaceAll("").replaceAll("\\s{2,}", " ").trim();
+    }
+
+    /**
+     * 替换 SQL 字符串中的 {@code WHERE AND} 或者 {@code WHERE OR} 等字符串为 {@code WHERE}，且查找时忽略大小写.
+     *
+     * @param s 待替换的原字符串
+     * @return 替换后的总字符串
+     * @author blinkfox on 2020-12-31.
+     * @since v2.4.1
+     */
+    public static String replaceWhereAndOr(String s) {
+        s = s.replaceAll(PATTERN_WHERE_AND_OR_BLANK, WHERE)
+                .replaceAll("(?i) WHERE ORDER BY ", " ORDER BY ")
+                .replaceAll("(?i) WHERE GROUP BY ", " GROUP BY ");
+        if (s.endsWith(WHERE_PREV_SPACE)) {
+            s = s.substring(0, s.lastIndexOf(WHERE_PREV_SPACE));
+        }
+        return s;
     }
 
     /**

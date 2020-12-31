@@ -159,7 +159,9 @@ public final class FenixXmlBuilder {
             sqlInfo.getParams().put(namedText, ParseHelper.parseExpressWithException(text, context));
             sql = sql.replace(hashTagText, Const.COLON + namedText);
         }
-        sqlInfo.setSql(sql);
+
+        // 替换掉 'WHERE AND' 或者 'WHERE OR' 中的字符串为 'WHERE'.
+        sqlInfo.setSql(StringHelper.replaceWhereAndOr(sql));
     }
 
 }
