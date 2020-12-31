@@ -69,7 +69,7 @@ public final class Fenix {
      */
     public SqlInfo end() {
         SqlInfo sqlInfo = this.source.getSqlInfo();
-        sqlInfo.setSql(StringHelper.replaceBlank(sqlInfo.getJoin().toString()));
+        sqlInfo.setSql(StringHelper.replaceWhereAndOr(StringHelper.replaceBlank(sqlInfo.getJoin().toString())));
 
         // 判断是否打印 SqlInfo 信息.
         FenixConfig fenixConfig = FenixConfigManager.getInstance().getFenixConfig();
