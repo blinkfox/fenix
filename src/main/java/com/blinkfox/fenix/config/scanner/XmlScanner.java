@@ -8,6 +8,7 @@ import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +83,8 @@ public class XmlScanner {
 
         try {
             for (Resource resource : resources) {
-                String path = resource.getURL().getPath();
+                URL url = resource.getURL();
+                String path = url.getPath();
                 if (xmlResourceMap.containsKey(path)) {
                     log.debug("【Fenix 提示】已经扫描过了【" + path + "】文件，将跳过该 XML 文件的初始化加载.");
                     continue;
@@ -90,9 +92,9 @@ public class XmlScanner {
 
                 // 获取该资源文件中的 Fenix XML 文件的 Document 对象，并存入到 Map 中.
                 try (InputStream in = resource.getInputStream()) {
-                    XmlResource xmlResource = this.getFenixXmlResource(in, path);
+                    XmlResource xmlResource = getFenixXmlResource(in, path);
                     if (xmlResource != null) {
-                        xmlResourceMap.put(path, xmlResource);
+                        xmlResourceMap.put(path, xmlResource.setUrl(url));
                     }
                 }
             }
@@ -124,7 +126,7 @@ public class XmlScanner {
      * @param path 文件路径
      * @return Fenix XML 资源
      */
-    private XmlResource getFenixXmlResource(InputStream in, String path) {
+    public static XmlResource getFenixXmlResource(InputStream in, String path) {
         Document doc;
         try {
             doc = new SAXReader().read(in);
@@ -143,7 +145,7 @@ public class XmlScanner {
                 throw new ConfigNotFoundException("【Fenix 警示】Fenix XML 文件 " + path + " 的根节点 namespace "
                         + "命名空间属性未配置，请配置!");
             }
-            return new XmlResource().setNamespace(namespace).setPath(path).setDocument(doc);
+            return new XmlResource(namespace, doc);
         }
 
         return null;

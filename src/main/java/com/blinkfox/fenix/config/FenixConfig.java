@@ -62,6 +62,7 @@ import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotStartsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -79,6 +80,13 @@ import org.dom4j.Node;
  */
 @Getter
 public class FenixConfig {
+
+    /**
+     * 是否开启 debug 模式.
+     *
+     * @since v2.4.1
+     */
+    private boolean debug;
 
     /**
      * Fenix 加载完成后是否打印启动的 banner，默认打印.
@@ -109,6 +117,16 @@ public class FenixConfig {
      */
     @Getter
     private static final Map<String, Node> fenixs = new HashMap<>();
+
+    /**
+     * 所有 Fenix XML 命名空间 namespace 和 XML 文件的 URL 映射关系的 Map.
+     *
+     * <p>该 Map 的 key 是 XML 文件命名空间 namespace 的值，value 是 XML 文件的 URL.</p>
+     *
+     * @since v2.4.1
+     */
+    @Getter
+    private static final Map<String, URL> xmlUrlMap = new HashMap<>();
 
     /**
      * 初始化默认的一些标签和 TagHandler 实例到 HashMap 集合中，key 是标签字符串,value 是 TagHandler 实例.
@@ -272,6 +290,21 @@ public class FenixConfig {
         add(new OrNotEndsWithPredicateHandler());
         add(new OrLikePatternPredicateHandler());
         add(new OrNotLikePatternPredicateHandler());
+    }
+
+    /**
+     * 设置是否开启 debug 模式.
+     *
+     * <p>开启之后 XML 的 SQL 方式，将直接从 XML 中文件中实时读取和解析资源，不会走缓存，建议仅开发环境开启此功能.</p>
+     *
+     * @param debug 是否开启 debug 模式
+     * @return {@link FenixConfig} 实例自身
+     * @author blinkfox on 2021-01-01.
+     * @since v2.4.1
+     */
+    public FenixConfig setDebug(boolean debug) {
+        this.debug = debug;
+        return this;
     }
 
     /**

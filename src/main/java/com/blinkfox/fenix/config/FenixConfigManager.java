@@ -11,6 +11,7 @@ import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -110,6 +111,9 @@ public final class FenixConfigManager {
         if (this.fenixConfig.isPrintBanner()) {
             log.warn(BANNER_TEXT);
         }
+        if (this.fenixConfig.isDebug()) {
+            log.warn("【Fenix 提示】已开启 Fenix 的【debug】模式，仅建议你在开发环境中开启此模式.");
+        }
         log.warn("【Fenix 提示】初始化加载 Fenix 配置信息完成.");
     }
 
@@ -123,6 +127,10 @@ public final class FenixConfigManager {
             log.debug("【Fenix 提示】扫描到了这些 Fenix XML 文件：【{}】.", xmlResourceMap.keySet());
         }
 
+        // 是否开启了 debug 模式.
+        final boolean debug = this.fenixConfig.isDebug();
+        Map<String, URL> xmlUrlMap = FenixConfig.getXmlUrlMap();
+
         // 遍历各个 XML 资源文件信息，将 fenixId 和 对应的 Node 节点缓存起来.
         Collection<XmlResource> xmlResources = xmlResourceMap.values();
         for (XmlResource xmlResource : xmlResources) {
@@ -131,17 +139,22 @@ public final class FenixConfigManager {
                 String fenixId = XmlNodeHelper.getNodeText(fenixNode.selectSingleNode(XpathConst.ATTR_ID));
                 if (StringHelper.isBlank(fenixId)) {
                     throw new NodeNotFoundException("【Fenix 异常提示】命名空间为【" + namespace + "】的 Fenix XML 文件中有"
-                            + " fenix 节点的 id 属性为空，请检查！文件位置在【" + xmlResource.getPath() + "】.");
+                            + " fenix 节点的 id 属性为空，请检查！文件位置在【" + xmlResource.getUrl().getPath() + "】.");
                 }
 
                 // 判断 fenixId 是否有 '.' 号，如果有的话，就抛出异常提示.
                 if (fenixId.contains(Const.DOT)) {
                     throw new FenixException("【Fenix 异常提示】命名空间为【" + namespace + "】的 XML 文件中，fenix 节点 id"
-                            + "【" + fenixId + "】不能包含 '.' 号，请修正！文件位置在【" + xmlResource.getPath() + "】.");
+                            + "【" + fenixId + "】不能包含 '.' 号，请修正！文件位置在【" + xmlResource.getUrl().getPath() + "】.");
                 }
 
                 // 将 fenix 节点缓存到 Map 中，key 是由 namespace 和 fenixId 组成，用 "." 号分隔，value 是 fenixNode.
                 FenixConfig.getFenixs().put(StringHelper.concat(namespace, Const.DOT, fenixId), fenixNode);
+
+                // v2.4.1 版本新增，如果开启了 debug 模式，就建立 namespace 和 xml 路径的映射关系，便于实时读取 XML 文件中的内容.
+                if (debug) {
+                    xmlUrlMap.put(namespace, xmlResource.getUrl());
+                }
             }
         }
     }

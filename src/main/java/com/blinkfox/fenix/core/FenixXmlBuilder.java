@@ -2,7 +2,6 @@ package com.blinkfox.fenix.core;
 
 import com.blinkfox.fenix.bean.BuildSource;
 import com.blinkfox.fenix.bean.SqlInfo;
-import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
@@ -34,6 +33,11 @@ public final class FenixXmlBuilder {
      * 用于解析出 '#{' 和 '}' 符号之间文本内容的正则表达式 Pattern（包含 '#{' 和 '}').
      */
     private static final Pattern PATTERN = Pattern.compile("(#\\{[^}]+})");
+
+    /**
+     * {@link FenixConfigManager} 对象的引用.
+     */
+    private static final FenixConfigManager fenixConfigManager = FenixConfigManager.getInstance();
 
     /**
      * 通过传入 fullFenixId（命名空间和 Fenix 节点的 ID）和上下文参数，
@@ -69,7 +73,7 @@ public final class FenixXmlBuilder {
         }
 
         // 获取 namespace 文档中的指定的 fenixId 的节点对应的 Node 节点，如果是 debug 模式，则实时获取；否则从缓存中获取.
-        Node fenixNode = FenixConfig.getFenixs().get(StringHelper.concat(namespace, Const.DOT, fenixId));
+        Node fenixNode = XmlNodeHelper.getNodeBySpaceAndId(namespace, fenixId);
         if (fenixNode == null) {
             throw new NodeNotFoundException(StringHelper.format("【Fenix 异常】未找到 namespace 为:【{}】,"
                     + " fenixId 为:【{}】的 XML 节点!", namespace, fenixId));
@@ -77,7 +81,7 @@ public final class FenixXmlBuilder {
 
         // 生成新的 SqlInfo 信息并打印出来.
         SqlInfo sqlInfo = buildNewSqlInfo(namespace, fenixNode, context);
-        if (FenixConfigManager.getInstance().getFenixConfig().isPrintSqlInfo()) {
+        if (fenixConfigManager.getFenixConfig().isPrintSqlInfo()) {
             new SqlInfoPrinter().print(sqlInfo, namespace, fenixId);
         }
         return sqlInfo;

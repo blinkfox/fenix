@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * UserRepositoryTest Test.
+ * UserRepository Test.
  *
  * @author blinkfox on 2019-08-04.
  */
@@ -53,6 +53,7 @@ public class UserRepositoryTest {
     public void init() throws IOException {
         if (!isLoad) {
             FenixConfigManager.getInstance().initLoad(new FenixConfig()
+                    .setDebug(true)
                     .setXmlLocations("my, fenix ,  , others/fenix-xml.xml , abc, def/ghi")
                     .setHandlerLocations("com.blinkfox.fenix.handler, , "));
 
