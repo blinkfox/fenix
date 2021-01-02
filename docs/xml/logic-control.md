@@ -99,4 +99,24 @@ SELECT u FROM User AS u WHERE u.id = #{user.id}
 @end{}
 ```
 
-以上只是几个你可能会用到的逻辑控制标签。当然，还有其他[更多的 `MVEL` 模版语法](http://mvel.documentnode.com/#mvel-2.0-templating-guide) 你可以参考。
+**多重迭代**：
+
+你也可以通过逗号（`,`）分割，一次迭代多个集合：
+
+```java
+@foreach{var1 : set1, var2 : set2}
+  @{var1}-@{var2}
+@end{}
+```
+
+**分隔符**：
+
+您可以通过在 `@end{}` 标记中指定迭代器来自动向迭代添加文本分割符。
+
+```java
+@foreach{item : people}@{item.name}@end{', '}
+```
+
+会得到类似这样的结果：`John, Mary, Joseph`。
+
+> **💡 总结**：以上只是几个你可能会用到的逻辑控制标签。当然，还有其他[更多的 `MVEL` 模版语法](http://mvel.documentnode.com/#mvel-2.0-templating-guide) 供你参考。

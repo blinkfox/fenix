@@ -517,6 +517,8 @@ AND u.n_age IS NULL
 
 `set` 标签主要用于动态生成 `update` 语句中的 SQL 片段。
 
+> **💡 注**：从 `2.4.0` 版本之后，增加了 `saveOrUpdateByNotNullProperties` 的**增量更新非`null`字段**的方法。大多数情况下，你可以不使用 `set` 标签了。
+
 ### 📻 1. 标签
 
 ```xml

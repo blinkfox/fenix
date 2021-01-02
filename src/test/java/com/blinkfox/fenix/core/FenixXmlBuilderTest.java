@@ -432,4 +432,14 @@ public class FenixXmlBuilderTest {
         assertTrue(sqlInfo.getParams().isEmpty());
     }
 
+    /**
+     * 测试 where 标签的情况7.
+     */
+    @Test
+    public void testWhere7() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere7", context);
+        assertEquals(SELECT_QUERY, sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
 }

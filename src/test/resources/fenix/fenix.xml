@@ -286,4 +286,16 @@
         <andEqual field="u.email" value="email" match="email == 'aa'"/>
     </fenix>
 
+    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
+    <fenix id="testWhere7">
+        SELECT u FROM @{entityName}
+        <where />
+        @if{?user.name == 'Lisi'}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        @if{?user.status == 'null'}
+        AND u.status = @{user.status}
+        @end{}
+    </fenix>
+
 </fenixs>

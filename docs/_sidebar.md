@@ -23,5 +23,8 @@
   - [🚀 更高效的【批量增删改】](cud/fast-batch-cud)
   - [🚁 非【null】属性的增量更新](cud/not-null-update)
   - [✈️ 更多的主键 ID 生成策略](cud/id-generator)
-- [🍬 更多功能](more-features)
+- 🍬 更多功能
+  - [🦋 返回自定义的实体对象](more/custom-entity)
+  - [🐛 调试 (debug) 模式](more/debug-mode)
+  - [🐝 其他功能](more/other-features)
 - [🍹 版本更新记录](CHANGELOG)

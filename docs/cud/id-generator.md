@@ -1,6 +1,6 @@
-# ✈️ 更多的主键 ID 生成策略
+# ✈️ 更多的主键 ID 生成策略 :id=title
 
-## 🆔 一、简介
+## 🆔 一、简介 :id=introduction
 
 Fenix 从 `2.4.0` 版本开始新增了三种主键 `ID` 的生产策略类供你选择和使用，同时也支持你通过 Java API 去调用生成 `ID`：
 
@@ -8,7 +8,7 @@ Fenix 从 `2.4.0` 版本开始新增了三种主键 `ID` 的生产策略类供�
 - **☃️ 62 进制雪花算法 ID** (`String` 字符串型)
 - **🌟 62 进制 UUID** (`String` 字符串型)
 
-## ❄️ 二、雪花算法的 ID 生成策略
+## ❄️ 二、雪花算法的 ID 生成策略 :id=snowflake
 
 雪花算法 (`snowflake`) 已经是现在使用比较广泛的 ID 生成算法，其避免了 `UUID` 的冗长无序的缺点，生成的 ID 是**整体有序**的**长整型**数据，Fenix 中也默认做了集成和支持。
 
@@ -54,7 +54,7 @@ public class MyEntity {
 }
 ```
 
-## ☃️ 三、62 进制雪花算法的 ID 生成策略
+## ☃️ 三、62 进制雪花算法的 ID 生成策略 :id=snowflake-base62
 
 如果你的 ID 不是长整型（`Long`）的，是字符串类型（`String`）的，为了能缩短雪花算法 ID 字符串的长度，可以将原来长度为 `16` 位的雪花算法 ID 的转换为 `62` 进制，能大幅度缩短 `ID` 的长度为 `9` 位，且依然能保证**唯一性**和**整体有序性**。
 
@@ -110,7 +110,7 @@ String uuid = IdWorker.getUuid();
 String uuid2 = IdWorker.get62RadixUuid();
 ```
 
-## 🌟 四、62 进制 UUID 生成策略
+## 🌟 四、62 进制 UUID 生成策略 :id=uuid-base62
 
 鉴于 `UUID` 本质上是 `16` 进制的字符串，字符串长度为 `32` 位，依然可以通过进制转换，将其转换为 `62` 进制，能大幅度缩短 `UUID` 的字符串长度为 `19` 位，且依然能保证**唯一性**和**无序性**。
 
@@ -156,7 +156,7 @@ public class MyEntity {
 }
 ```
 
-## ☕ 五、通过 Java API 获取 ID
+## ☕ 五、通过 Java API 获取 ID :id=java-api
 
 在 Fenix 中，你也可以通过 Java API 调用生成雪花算法的 ID 或 `UUID`。
 

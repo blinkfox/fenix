@@ -153,7 +153,34 @@ public final class BlogSqlInfoProvider {
 List<UserBlogInfo> queryUserBlogsWithFenixJava(@Param("userId") String userId, @Param("title") String title);
 ```
 
-## 🐛 二、从 XML 中获取 SQL 信息
+## 🐛 二、调试 (debug) 模式
+
+从 `2.4.1` 版本开始，新增回了 debug 调试模式的功能，也就是可以在不重启服务的情况下，每一条对 XML SQL 的请求，都会实时从 XML 文件流中读取和解析 SQL 语句。
+
+> **💡 注**：其实该功能在 `1.0.0` 版本中就有，只不过当时的 IDEA 在识别更新的文件时有些问题，导致该功能没有啥效果，所以就去掉了。现在又将此功能加了回来，更加方便开发人员快速、动态的调试 SQL 语句了。
+
+### 📝 1. 开启 debug 模式
+
+如果你是使用的 `fenix-spring-boot-starter`，那么只需要在你的 `application.yml` 或者 `application.properties` 文件中，将 `fenix.debug` 设置为 `true` 即可。
+
+```yaml
+fenix:
+  # v2.4.1 版本新增，表示是否开启 debug 调试模式，默认 false。
+  # 当开启之后，对 XML 中的 SQL 会进行实时文件流的读取和解析，不需要重启服务。切记仅在开发环境中开启此功能.
+  debug: true
+```
+
+如果不是使用的 `fenix-spring-boot-starter`，那么需要在你构造的 `FenixConfig` 实例对象中设置 `setDebug` 为 `true` 即可。
+
+### 🧬 2. IDEA 中开启热更新策略
+
+当然，还需要你开发使用的 IDE 能在服务运行期间动态识别到文件资源的更新，不同的 IDE 工具支持可能有差别。
+
+如果你使用的是 Intellij IDEA，那么可以通过 `Edit Configurations` 编辑应用运行时的更新策略。你可以将 `On 'update' action` 和 `On frame deactivation` 的值设置为：`Update classes and resources`。设置的结果效果图如下：
+
+![IDEA 中的资源更新的设置](https://statics.sh1a.qingstor.com/2021/01/02/idea-update.png)
+
+## 🦗 三、从 XML 中获取 SQL 信息
 
 Fenix 中会自动从 `XML` 中获取到 SQL 信息。如果你想手动从 `XML` 中获取到 SQL 信息（`SqlInfo`），也可以使用 `Fenix.java` 提供的 `API` 来获取。
 
@@ -165,7 +192,7 @@ Fenix.getXmlSqlInfo(String fullFenixId, Object context)
 Fenix.getXmlSqlInfo(String namespace, String fenixId, Object context)
 ```
 
-## 🐜 三、表达式、模版解析器
+## 🐜 四、表达式、模版解析器
 
 在 Fenix 中解析 XML 标签中的表达式或者模版是通过 `Mvel` 表达式语言来实现的，主要方法解析方法是封装在了`ParseHelper.java` 的工具类中，通过该类让开发人员自己测试表达式也是极为方便的。以下作简要介绍。
 
@@ -227,11 +254,11 @@ public void testParseTemplate2() {
 }
 ```
 
-## 🐝 四、上下文参数包装类
+## 🐝 五、上下文参数包装类
 
 Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWrapper` 工具类，其本质上就是对 `HashMap` 方法的一个**简单链式封装**。
 
-> **注**：提供该包装器类的主要目的是方便开发者封装较多的散参数或者多个 Java 对象为一个 `Map` 型的上下文参数。
+> **💡 注**：提供该包装器类的主要目的是方便开发者封装较多的散参数或者多个 Java 对象为一个 `Map` 型的上下文参数。
 
 ### 🛏️ 1. ParamWrapper主要方法
 
@@ -259,7 +286,7 @@ Map<String, Object> context = ParamWrapper.newInstance("sex", "1").put("stuId", 
 
 前后对比来看，再仅仅只需要传入个别自定义参数时，能简化部分代码量和参数传递。
 
-## 🐞 五、表达式的真假判断
+## 🐞 六、表达式的真假判断
 
 Fenix 中关于表达式字符串的真假判断在 `com.blinkfox.fenix.helper.ParseHelper` 类中提供了静态方法。
 

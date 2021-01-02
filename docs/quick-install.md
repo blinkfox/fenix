@@ -14,14 +14,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
 </dependency>
 ```
 
 ### 🌵 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.4.0'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.4.1'
 ```
 
 ### 🏕️ 3. 激活 Fenix (@EnableFenix)
@@ -51,7 +51,7 @@ public class DemoApplication {
 
 > **💡 注**：
 > 1. `@EnableFenix` 注解中实质上是使用的是 `FenixJpaRepositoryFactoryBean`。而 `FenixJpaRepositoryFactoryBean` 继承自 Spring Data JPA 默认的 `JpaRepositoryFactoryBean`。所以，Fenix 与 JPA 的各种注解和特性完全兼容，并提供了更加强大的 `@QueryFenix` 注解和其他更多动态的能力。
-> 2. 如果你是多数据源，则你可以根据自身情况，在需要的数据源中的 `@EnableJpaRepositories` 注解中单独设置 `repositoryFactoryBeanClass` 的值为：`FenixJpaRepositoryFactoryBean.class`。示例如：`@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)`。
+> 2. 如果你是多数据源，则你可以根据自身情况，在需要的数据源中使用 `@EnableFenix` 注解即可。或者你也可以在 `@EnableJpaRepositories` 注解中单独设置 `repositoryFactoryBeanClass` 的值为：`FenixJpaRepositoryFactoryBean.class`。示例如：`@EnableJpaRepositories(repositoryFactoryBeanClass = FenixJpaRepositoryFactoryBean.class)`。
 
 ### 🏝️ 4. application.yml 配置（可选的）
 
@@ -64,6 +64,9 @@ public class DemoApplication {
 ```yaml
 # Fenix 的几个配置项、默认值及详细说明，通常情况下你不需要填写这些配置信息（下面的配置代码也都可以删掉）.
 fenix:
+  # v2.4.1 版本新增，表示是否开启 debug 调试模式，默认 false。
+  # 当开启之后，对 XML 中的 SQL 会进行实时文件流的读取和解析，不需要重启服务。切记仅在开发环境中开启此功能.
+  debug: false
   # 成功加载 Fenix 配置信息后，是否打印启动 banner，默认 true.
   print-banner: true
   # 是否打印 Fenix 生成的 SQL 信息，默认为空.
@@ -92,20 +95,19 @@ fenix:
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
 </dependency>
 ```
 
 ### 🌻 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix:2.4.0'
+compile 'com.blinkfox:fenix:2.4.1'
 ```
 
 ### 🏔️ 3. 激活 Fenix
 
-跟前面 Spring Boot 激活 Fenix FactoryBean 一样，需要在启动类中使用 `@EnableFenix` 激活 Fenix，也可以直接在 `@EnableJpaRepositories` 注解中，配置
-`repositoryFactoryBeanClass` 的属性值为 `FenixJpaRepositoryFactoryBean.class`。
+跟前面 Spring Boot 激活 Fenix FactoryBean 一样，需要在启动类中使用 `@EnableFenix` 激活 Fenix，也可以直接在 `@EnableJpaRepositories` 注解中，配置 `repositoryFactoryBeanClass` 的属性值为 `FenixJpaRepositoryFactoryBean.class`。
 
 主要注解配置的代码如下：
 
@@ -155,6 +157,7 @@ public void init() {
 
     // 加载 FenixConfig 实例，配置是否打印 banner、SQL 信息、XML 文件位置和自定义的 XML 语义标签处理器的位置.
     FenixConfigManager.getInstance().initLoad(new FenixConfig()
+            .setDebug(false)
             .setPrintBanner(true)
             .setPrintSqlInfo(true)
             .setXmlLocations(xmlLocations)
