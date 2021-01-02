@@ -1,8 +1,8 @@
-# 🍜 自定义条件注解
+# 🍜 自定义条件注解 :id=title
 
 如果 Fenix 中内置的注解不满足你的场景，你可以自定义注解和对应注解的处理器来达到自己的目的。
 
-## 🐙 一、定义你自己的注解
+## 🐙 一、定义你自己的注解 :id=annotation
 
 假设你想定义一个我自己的等值条件的注解 `@MyEquals`，来达到自己的相等条件的处理的能力。注解的代码的定义如下：
 
@@ -22,7 +22,7 @@ public @interface MyEquals {
 }
 ```
 
-## 🐚 二、创建你注解的处理器
+## 🐚 二、创建你注解的处理器 :id=handler
 
 然后，需要创建一个你注解的处理器类 `MyEqualsPredicateHandler.java`，该类须要继承 `AbstractPredicateHandler` 抽象类。然后实现其中的 `getAnnotation()` 和 `buildPredicate()` 方法即可。
 
@@ -61,11 +61,11 @@ public class MyEqualsPredicateHandler extends AbstractPredicateHandler {
 }
 ```
 
-## 🐌 三、将处理器类加入到初始化配置中
+## 🐌 三、将处理器类加入到初始化配置中 :id=config
 
 最后一步，就是将上述 `MyEqualsPredicateHandler` 的处理器类添加到 Fenix 配置中，使得的系统初始化时将该处理器的实例和注解的映射信息加载到内存中，方便后续使用。
 
-### 🔭 1. Spring Boot 项目的自定义注解处理器配置
+### 🔭 1. Spring Boot 项目的自定义注解处理器配置 :id=spring-boot-config
 
 如果你是 Spring Boot 项目，那么只需要在 `fenix.predicate-handlers` 属性中添加该处理器的全路径名即可，示例如下：
 
@@ -79,7 +79,7 @@ fenix:
     - com.xxx.yyy.handler.MyOtherPredicateHandler
 ```
 
-### 🔬 2. 非 Spring Boot 项目的自定义注解处理器配置
+### 🔬 2. 非 Spring Boot 项目的自定义注解处理器配置 :id=project-config
 
 如果你的项目不是 Spring Boot 项目，那么在你的初始化代码中，通过 `FenixConfig.add(handler);` 代码来添加处理器的实例即可。示例代码如下：
 

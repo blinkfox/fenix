@@ -1,4 +1,6 @@
-## 🚀 一、注解元数据介绍
+# 🍓 @QueryFenix 注解 :id=title
+
+## 🚀 一、注解元数据介绍 :id=metadata
 
 - **`value()`**: 完整的 `fenix id` 标记，该值由 XML 文件的命名空间（`namespace`）、点（`.`）号和 Fenix XML 标签中的 fenix id 组成。如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号，且如果 fenix id 与对应的查询方法名一样，那么 `value()` 值就可以为空。
 - **`countQuery()`**: 表示查询分页查询情况下查询总记录数时需要执行的 SQL。该值仅分页查询时用到，值的规则同上面的 `value()` 一样，如果 `namespace` 的值写成对应 `repository` 接口的全路径名，则该值可以不用写 `namespace`和`.`号。
@@ -7,7 +9,7 @@
 - **`method()`**: 表示通过 Java 来拼接 SQL 语句的提供类的方法。
 - **`countMethod()`**: 表示通过 Java 来拼接分页查询时查询总记录数 SQL 语句的提供类的方法。
 
-## 🚠 二、@QueryFenix 注解使用简化
+## 🚠 二、@QueryFenix 注解使用简化 :id=simplified
 
 之前的示例中 `@QueryFenix("BlogRepository.queryMyBlogs")` 注解的内容分别代表 XML 文件对应的命名空间 `namespace` 和 XML 标签的 `id` 属性值。如果你将 XML 文件中的 `namespace` 写成 `BlogRepository.java` 的全路径名 `com.blinkfox.fenix.example.repository.BlogRepository`，那么 `@QueryFenix` 注解就可以再简化一些，只写对应的 `fenixId` 即可。
 
@@ -34,7 +36,7 @@ Page<Blog> queryMyBlogs(@Param("ids") List<String> ids, @Param("blog") Blog blog
 Page<Blog> queryMyBlogs(@Param("ids") List<String> ids, @Param("blog") Blog blog, Pageable pageable);
 ```
 
-## 🛰️ 三、自动的分页总记录数查询及自定义
+## 🛰️ 三、自动的分页总记录数查询及自定义 :id=auto-paging
 
 上面的分页查询，我们没有设置自定义的查询总记录数的语句，依然可以正常分页。是因为 Fenix 帮你将上面 `SELECT` 语句块的查询结果换成了 `count(*)`，来查询总记录数。由于 JPA 中的分页和排序参数是单独设置的，所以，查询总记录数的 JPQL 语句中也不会有 `Order By` 这样的片段。
 
@@ -63,10 +65,10 @@ Page<Blog> queryMyBlogs(@Param("ids") List<String> ids, @Param("blog") Blog blog
 Page<Blog> queryMyBlogs(@Param("ids") List<String> ids, @Param("blog") Blog blog, Pageable pageable);
 ```
 
-## 🚁 四、nativeQuery 原生 SQL
+## 🚁 四、nativeQuery 原生 SQL :id=native-query
 
 同原生的 `@Query` 注解一样，你也可以在 `@QueryFenix` 注解中，通过将 `nativeQuery()` 的值来设置为 `true`，来表示你的 JPQL 语句是将使用原生 SQL 查询。
 
-## 🪐 五、使用 Java 代码拼接 SQL
+## 🪐 五、使用 Java 代码拼接 SQL :id=java-sql
 
 关于如何用 Java 代码来拼接动态 SQL，请参看[后续篇章](java/example)。

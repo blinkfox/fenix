@@ -1,39 +1,41 @@
-## 🐫 一、无参静态方法
+# 🍖 API 方法 :id=title
+
+## 🐫 一、无参静态方法 :id=no-param-static-method
 
 !> **💡 注意**：这里的**无参静态方法**是指拼接 SQL 时仅仅拼接文本字符串，不会添加 SQL 的命名参数，且无动态判断是否生成该段 SQL 片段的能力。作用是和待拼接的字符串自动拼接在一起，省去了 `SQL 关键字` 的书写，目的是用来提高SQL的可读性。
 
-### 💻 1. 主要方法
+### 💻 1. 主要方法 :id=main-methods
 
 SQL中的关键字很多，`Fenix` 封装了大多数常用的关键字作为连接 SQL 字符串的方法，如上面总体示例所列出的 `select()`、`from()`、`select()` 等，在流式拼接的过程中，使得 SQL 的可读性和连贯性大大提高了。下面列出了大多数常用的关键字方法，来**用于拼接字符串文本，但不能传递 SQL 参数**。
 
-- insertInto(String text)
-- values(String text)
-- deleteFrom(String text)
-- update(String text)
-- select(String text)
-- from(String text)
-- and(String text)
-- or(String text)
-- as(String text)
-- set(String text)
-- innerJoin(String text)
-- leftJoin(String text)
-- rightJoin(String text)
-- fullJoin(String text)
-- on(String text)
-- orderBy(String text)
-- groupBy(String text)
-- having(String text)
-- limit(String text)
-- offset(String text)
-- asc()
-- desc()
-- union()
-- unionAll()
+- `insertInto(String text)`
+- `values(String text)`
+- `deleteFrom(String text)`
+- `update(String text)`
+- `select(String text)`
+- `from(String text)`
+- `and(String text)`
+- `or(String text)`
+- `as(String text)`
+- `set(String text)`
+- `innerJoin(String text)`
+- `leftJoin(String text)`
+- `rightJoin(String text)`
+- `fullJoin(String text)`
+- `on(String text)`
+- `orderBy(String text)`
+- `groupBy(String text)`
+- `having(String text)`
+- `limit(String text)`
+- `offset(String text)`
+- `asc()`
+- `desc()`
+- `union()`
+- `unionAll()`
 
-> **以上方法主要作用**：用方法名所代表的关键字后追加空格，再拼接上 `text` 文本参数，其方法名称已经体现了具体用途和使用场景，这里不在赘述。
+> **🔔 以上方法主要作用**：用方法名所代表的关键字后追加空格，再拼接上 `text` 文本参数，其方法名称已经体现了具体用途和使用场景，这里不在赘述。
 
-### 🔌 2. 使用示例
+### 🔌 2. 使用示例 :id=static-method-demo
 
 !> **💡 注**：下面的示例仅是为了演示相关 `API` 的使用，具体 SQL 运行时的正确性，你不用特别在意，实际业务场景中不会这样写。
 
@@ -77,11 +79,11 @@ public void testSelect() {
 }
 ```
 
-## 🦒 二、text
+## 🦒 二、text :id=text
 
 `text()` 系列的方法作用同 `XML` 中的 [text 标签](xml/xml-tags?id=text)比较类似，是用来任意传递拼接 SQL 字符串和参数的，主要目的是为了提高 SQL 拼接的灵活性。
 
-### 💿 1. 主要方法
+### 💿 1. 主要方法 :id=text-methods
 
 下面是 `text()` 系列的重载方法：
 
@@ -126,11 +128,11 @@ public void testText() {
 }
 ```
 
-## 🐘 三、param 和 params
+## 🐘 三、param 和 params :id=params
 
 `param()` 和 `params()` 方法的作用是为了任意传递 SQL 参数的，目的也是为了提高 SQL 拼接过程中 SQL 参数的灵活性。
 
-### 💾 1. 主要方法
+### 💾 1. 主要方法 :id=params-methods
 
 ```java
 // 在 SQL 的参数集合中添加命名参数，其中 key 是 JPQL 中的命名参数名称，value 是该参数对应的值.
@@ -140,13 +142,13 @@ param(String key, Object value)
 params(Map<String, Object> paramMap)
 ```
 
-### 📺 2. 使用示例
+### 📺 2. 使用示例 :id=params-demo
 
 关于 `param` 的使用示例可以直接参考 [text 的使用示例](java/main-method?id=text-example) 即可。
 
-## 🐭 四、equal
+## 🐭 四、equal :id=equal
 
-### 📷 1. 方法介绍
+### 📷 1. 方法介绍 :id=equal-methods
 
 `equal` 系列是用来拼接 SQL 中等值查询的系列方法，生成如：`u.email = :email` 这样的等值查询且附带绑定参数的功能，其主要包含如下方法：
 
@@ -178,7 +180,7 @@ orEqual(String field, Object value, String name, boolean match) // v2.3.0 版本
 - `value`，表示 Java 中的变量或常量值；
 - `match`，表示是否生成该 SQL 片段，值为 `true` 时生成，否则不生成；
 
-## 🐁 五、与 equal 类似的方法
+## 🐁 五、与 equal 类似的方法 :id=equal-similar
 
 同 `equal`（等于）类似的系列方法还有**不等于**、**大于**、**小于**、**大于等于**、**小于等于**、**模糊查询**，各系列分别如下：
 
@@ -197,9 +199,9 @@ orEqual(String field, Object value, String name, boolean match) // v2.3.0 版本
 
 !> 以上各系列的方法和参数也同 `equal`，这里就不再赘述了。
 
-## 🦛 六、between
+## 🦛 六、between :id=between
 
-### 🕯️ 1. 方法介绍
+### 🕯️ 1. 方法介绍 :id=between-methods
 
 `between` 系列方法是用来拼接 SQL 中区间查询的系列方法，生成如：`u.age BETWEEN :u_age_start AND :u_age_end`这样的区间查询功能，主要包含如下方法：
 
@@ -233,7 +235,7 @@ orEqual(String field, Object value, String name, boolean match) // v2.3.0 版本
 - `endValue`，表示区间查询的结束值；
 - `match`，表示是否生成该SQL片段，值为`true`时生成，否则不生成；
 
-### 🔦 2. 使用示例
+### 🔦 2. 使用示例 :id=between-demo
 
 !> **注**：下面的示例仅是为了集中演示 `between` 的使用，具体 SQL 运行时的正确性，你不用特别在意。
 
@@ -267,9 +269,9 @@ assertEquals(3, sqlInfo.getParams().size());
 
 !> **💡 注意**：Fenix 中会对 `start` 和 `end` 的值做 `null` 的空检测。区间查询中如果 `start` 为空，`end` 不为空，则会退化为大于等于查询；如果 `start` 为空，`end` 不为空，则会退化为小于等于查询；如果 `start`、`end` 均不为空，则是区间查询；两者会均为空则不生产此条 SQL。
 
-## 🐹 七、in
+## 🐹 七、in :id=in
 
-### 🏮 1. 方法介绍
+### 🏮 1. 方法介绍 :id=in-methods
 
 `in` 系列的方法是用来拼接 `SQL` 中范围查询的系列方法，生成如：`u.sex in :u_sex` 这样的范围查询功能，主要包含如下方法：
 
@@ -343,7 +345,7 @@ orNotIn(String field, String name, Collection<?> values, boolean match) // v2.3.
 - `values`，表示范围查询需要的参数的数组或集合；
 - `match`，表示是否生成该SQL片段，值为`true`时生成，否则不生成；
 
-### 🪔 2. 使用示例
+### 🪔 2. 使用示例 :id=in-demo
 
 !> **💡 注**：下面的示例仅是为了集中演示 `in` 的使用，具体 SQL 运行时的正确性，你不用特别在意。
 
@@ -372,9 +374,9 @@ assertEquals("u.sex IN :u_sex u.city IN :u_city u.sex IN :u_sex AND u.sex IN :u_
 assertEquals(2, sqlInfo.getParams().size());
 ```
 
-## 🐿️ 八、isNull
+## 🐿️ 八、isNull :id=is-null
 
-### 📖 1. 方法介绍
+### 📖 1. 方法介绍 :id=is-null-methods
 
 `isNull` 系列的方法是用来拼接 SQL 中判断字段为 `null` 值或不为 `null` 值情况的系列方法，生成如：`u.state IS NULL` 这样 SQL 片段的功能，主要包含如下方法：
 
@@ -410,7 +412,7 @@ orIsNotNull(String field, boolean match
 - `field`，表示数据库字段或实体属性；
 - `match`，表示是否生成该 SQL 片段，值为 `true` 时生成，否则不生成；
 
-### 📕 2. 使用示例
+### 📕 2. 使用示例 :id=is-null-demo
 
 !> **注**：下面的示例仅是为了集中演示 `isNull` 的使用，具体 SQL 运行时的正确性，你不用特别在意。
 
@@ -441,7 +443,7 @@ public void testIsNull() {
 }
 ```
 
-## 🐻 九、doAny
+## 🐻 九、doAny :id=do-any
 
 `doAny` 的两个方法主要用来方便你在链式拼接的过程中，来完成更多自定义、灵活的操作。`match` 意义和上面类似，值为 `true` 时才执行，`FenixAction` 是你自定义操作的函数式接口，执行时调用 `execute()` 方法，Java 8 及之后可以使用 `Lambda` 表达式来简化代码。
 
@@ -453,7 +455,7 @@ doAny(FenixAction action)
 doAny(boolean match, FenixAction action)
 ```
 
-### 📘 1. 使用示例
+### 📘 1. 使用示例 :id=do-any-demo
 
 下面是 `doAny` 的执行示例，供你参考。
 
@@ -468,7 +470,7 @@ SqlInfo sqlInfo = Fenix.start()
         .end();
 ```
 
-## 🐼 十、where
+## 🐼 十、where :id=where
 
 `where` 方法有几个重载方法，其中 `where(Consumer<Fenix> consumer)` 方法同 XML 中的 `<where></where>` 标签是用来处理动态 SQL 中的 `WHERE` 关键之后的 `AND` 或者 `OR` 关键字的情况。
 
@@ -497,7 +499,7 @@ where(Consumer<Fenix> consumer)
 whereDynamic()
 ```
 
-### 📗 1. 使用示例
+### 📗 1. 使用示例 :id=where-demo
 
 下面是动态 where（`whereDynamic()` 和 `where(Consumer<Fenix> consumer)`）的使用示例，供你参考。
 
@@ -527,7 +529,7 @@ SqlInfo sqlInfo = Fenix.start()
         .end();
 ```
 
-## 🦨 十一、综合性示例
+## 🦨 十一、综合性示例 :id=comprehensive-example
 
 下面是一个综合性的示例，来演示通过 Fenix 的链式 API 来拼接动态 SQL 的使用。
 

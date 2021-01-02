@@ -1,10 +1,10 @@
-# 🍕 总体示例
+# 🍕 总体示例 :id=title
 
 在 Fenix 中书写动态查询，也可以使用 Spring Data JPA 中提供的 `Specification` 方式，Fenix 中对此进行了动态查询能力的链式封装。
 
 下面直接通过示例来说明如何使用。
 
-## 📒 一、继承 FenixJpaSpecificationExecutor 接口
+## 📒 一、继承 FenixJpaSpecificationExecutor 接口 :id=extends-executor
 
 在你的 `BlogRepository` 接口中，继承 `FenixJpaSpecificationExecutor` 接口，该接口实质上是继承自 `JpaSpecificationExecutor` 接口，但提供了更多的**默认接口方法**，且在 API 使用上，可以不用写 `FenixSpecification.of()` 的中间层，更为简单直接。
 
@@ -14,7 +14,7 @@ public interface BlogRepository extends JpaRepository<Blog, String>, FenixJpaSpe
 }
 ```
 
-## 🏷️ 二、Service 中直接调用
+## 🏷️ 二、Service 中直接调用 :id=service-invoke
 
 基于 `Specification` 的方式，不需要定义额外的查询方法，也不需要写 `JPQL` (或 SQL) 语句，简单直接。
 

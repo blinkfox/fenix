@@ -1,4 +1,4 @@
-# 🍇 快速开始
+# 🍇 快速开始 :id=title
 
 对于很长的、复杂的动态或统计性的 SQL 采用注解 或者 Java 书写不仅冗长，且不易于调试和维护。因此，我更推荐你通过 `XML` 文件来书写 SQL，使得 SQL 和 Java 代码解耦，更易于维护和阅读。
 
@@ -6,11 +6,11 @@
 
 !> **💡 提示**：本文档中的一些示例可以在 Fenix 示例项目源码 [fenix-example](https://github.com/blinkfox/fenix-example) 中查看，其他更多的使用示例可以在 Fenix 源码的[单元测试](https://github.com/blinkfox/fenix/tree/develop/src/test/java/com/blinkfox/fenix/repository)中找到。
 
-## 🚞 一、项目和数据准备
+## 🚞 一、项目和数据准备 :id=project-data-ready
 
 !> **💡 注**：下面“项目和数据准备”的内容，除了集成 Fenix 配置之外，基本上与 Fenix 无关，你大概体验和预览下内容就行。
 
-### 🚜 1. 创建项目
+### 🚜 1. 创建项目 :id=create-project
 
 在 [start.spring.io](https://start.spring.io/) 中创建一个自己的 SpringBoot2.x 项目，目前最新稳定版本是 `2.1.7`（后续会陆续升级）。选出了一些组件来生成项目，我这里仅选了如下几个：
 
@@ -21,7 +21,7 @@
 
 生成之后直接导入 IDE 开发工具，然后根据前面的 Fenix [Spring Boot 项目集成](quick-install?id=spring-boot-integrations) 的文档集成 Fenix 库到项目中即可，这里不再赘述。你也可以 [点击这里下载](https://github.com/blinkfox/fenix-example) 本示例项目的源码查看。
 
-### 🏎️ 2. Blog 实体类
+### 🏎️ 2. Blog 实体类 :id=blog-engity
 
 以下将以一个简单的博客信息（`Blog`）作为实体来演示在 Fenix 中 `XML` 动态 SQL 的使用。`Blog` 实体类代码如下：
 
@@ -94,7 +94,7 @@ public class Blog {
 }
 ```
 
-### 🛵 3. 初始化结构和数据
+### 🛵 3. 初始化结构和数据 :id=init-data
 
 我这里准备了一些初始化的数据表结构和数据脚本，当然也可用直接通过 JPA 特性和 API 代码来初始化数据。这里，我还是通过脚本的方式来初始化一些后续查询需要用到的数据。
 
@@ -138,7 +138,7 @@ INSERT INTO test.t_blog VALUES ('9', '4', '马六-Maliu', 'Vue 项目实战','�
 INSERT INTO test.t_blog VALUES ('10', '5', '马六-Maliu', 'JavaScript 精粹','这是 JavaScript 精粹的内容', '2019-08-13 00:41:33', '2019-08-13 00:41:36');
 ```
 
-### 🏍️ 4. application.yml 配置
+### 🏍️ 4. application.yml 配置 :id=application-config
 
 以下是 `application.yml` 配置文件的内容，供你参考：
 
@@ -160,6 +160,7 @@ spring:
 
 # Fenix 的几个配置，都有默认值. 所以通常不需要配置，下面的配置代码也都可以删掉，你视具体情况配置即可.
 fenix:
+  debug: false
   print-banner: true
   print-sql:
   xml-locations:
@@ -167,7 +168,7 @@ fenix:
   predicate-handlers:
 ```
 
-## 🚌 二、创建 BlogRepository.java
+## 🚌 二、创建 BlogRepository.java :id=blog-repository-java
 
 定义博客信息操作的持久层代码 `BlogRepository` 接口，这里使用 `@QueryFenix` 注解来演示根据散参数、博客信息 Bean(可以是其它Bean 或者 Map)的参数来**多条件模糊分页查询**博客信息。注解的值是 Fenix XML 文件对应的命名空间 `namespace` 和 `<fenix id="queryMyBlogs"></fenix>` XML 标签的 `id` 属性值。
 
@@ -204,7 +205,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 }
 ```
 
-## 🚑 三、创建 BlogRepository.xml
+## 🚑 三、创建 BlogRepository.xml :id=blog-repository-xml
 
 在 `BlogRepository.java` 中的标注了 `@QueryFenix("BlogRepository.queryMyBlogs")` 注解，就需要根据此注解的信息找到 XML 文件中的 JPQL 语句块儿，才能生成 JPQL 语句和参数，并执行 JPQL 语句。
 
@@ -231,7 +232,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 </fenixs>
 ```
 
-## 🚒 四、创建并执行单元测试
+## 🚒 四、创建并执行单元测试 :id=unit-test
 
 最后，创建一个用于测试查询博客信息的单元测试类 `BlogRepositoryTest`，代码如下：
 

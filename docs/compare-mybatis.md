@@ -1,6 +1,6 @@
-# 🍎 与 MyBatis XML 的 SQL 写法比较
+# 🍎 与 MyBatis XML 的 SQL 写法比较 :id=title
 
-## 🌴 假设业务查询场景
+## 🌴 假设业务查询场景 :id=business-scenario
 
 下面将通过一个多条件查询**操作日志**的功能，来初步了解和比较 `MyBatis` 与 `Fenix` 在写“**多条件模糊分页**”查询时 SQL 写法的一些差异和各自的特点。
 
@@ -13,7 +13,7 @@
 - **操作结果**：数据库字段类型为 `int` 型，只能下拉选择一个选项值来进行**等值查询**（`=`）；
 - **操作时间**：数据库字段类型为 `datetime` 型，可以选择开始时间或者结束时间来进行**区间查询**（`BETWEEN ? AND ?`、`>=`、`<=`）；
 
-## 🌼 使用 MyBatis XML 的 SQL 写法
+## 🌼 使用 MyBatis XML 的 SQL 写法 :id=mybatis-xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -71,7 +71,7 @@
 </mapper>
 ```
 
-## 🌺 使用 Fenix XML 的 SQL 写法
+## 🌺 使用 Fenix XML 的 SQL 写法 :id=fenix-xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -99,7 +99,7 @@
 </fenixs>
 ```
 
-## 🌸 比较总结
+## 🌸 比较总结 :id=summary
 
 `MyBatis` 和 `Fenix` 的 SQL 有以下几个差异点：
 
