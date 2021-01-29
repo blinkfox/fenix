@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.w3school.com.cn"
+           xmlns="http://www.w3school.com.cn"
+           elementFormDefault="qualified">
+
+    <xs:element name="fenixs">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="fenix"/>
+            </xs:choice>
+            <xs:attribute name="namespace" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:group name="mainGroup">
+        <xs:choice>
+            <xs:element name="in" type="normal"/>
+            <xs:element name="andIn" type="normal"/>
+            <xs:element name="orIn" type="normal"/>
+            <xs:element name="notIn" type="normal"/>
+            <xs:element name="andNotIn" type="normal"/>
+            <xs:element name="orNotIn" type="normal"/>
+
+            <xs:element name="notEqual" type="normal"/>
+            <xs:element name="equal" type="normal"/>
+            <xs:element name="andEqual" type="normal"/>
+            <xs:element name="orEqual" type="normal"/>
+            <xs:element name="andNotEqual" type="normal"/>
+            <xs:element name="orNotEqual" type="normal"/>
+
+            <xs:element name="greaterThan" type="normal"/>
+            <xs:element name="andGreaterThan" type="normal"/>
+            <xs:element name="orGreaterThan" type="normal"/>
+
+            <xs:element name="lessThan" type="normal"/>
+            <xs:element name="andLessThan" type="normal"/>
+            <xs:element name="orLessThan" type="normal"/>
+
+            <xs:element name="greaterThanEqual" type="normal"/>
+            <xs:element name="andGreaterThanEqual" type="normal"/>
+            <xs:element name="orGreaterThanEqual" type="normal"/>
+
+            <xs:element name="lessThanEqual" type="normal"/>
+            <xs:element name="andLessThanEqual" type="normal"/>
+            <xs:element name="orLessThanEqual" type="normal"/>
+
+            <xs:element name="startsWith" type="normal"/>
+            <xs:element name="andStartsWith" type="normal"/>
+            <xs:element name="orStartsWith" type="normal"/>
+            <xs:element name="notStartsWith" type="normal"/>
+            <xs:element name="andNotStartsWith" type="normal"/>
+            <xs:element name="orNotStartsWith" type="normal"/>
+
+            <xs:element name="endsWith" type="normal"/>
+            <xs:element name="andEndsWith" type="normal"/>
+            <xs:element name="orEndsWith" type="normal"/>
+            <xs:element name="notEndsWith" type="normal"/>
+            <xs:element name="andNotEndsWith" type="normal"/>
+            <xs:element name="orNotEndsWith" type="normal"/>
+
+            <xs:element name="like" type="like"/>
+            <xs:element name="andLike" type="like"/>
+            <xs:element name="orLike" type="like"/>
+            <xs:element name="notLike" type="like"/>
+            <xs:element name="andNotLike" type="like"/>
+            <xs:element name="orNotLike" type="like"/>
+
+            <xs:element name="between" type="between"/>
+            <xs:element name="andBetween" type="between"/>
+            <xs:element name="orBetween" type="between"/>
+
+            <xs:element name="isNull" type="null"/>
+            <xs:element name="andIsNull" type="null"/>
+            <xs:element name="orIsNull" type="null"/>
+            <xs:element name="isNotNull" type="null"/>
+            <xs:element name="andIsNotNull" type="null"/>
+            <xs:element name="orIsNotNull" type="null"/>
+
+            <xs:element name="text" type="text"/>
+
+            <xs:element name="import">
+                <xs:complexType>
+                    <xs:attribute name="namespace" type="xs:string"/>
+                    <xs:attribute name="fenixId" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                    <xs:attribute name="match" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="choose">
+                <xs:complexType>
+                    <xs:attribute name="when" type="xs:string"/>
+                    <xs:attribute name="when1" type="xs:string"/>
+                    <xs:attribute name="when2" type="xs:string"/>
+                    <xs:attribute name="then" type="xs:string"/>
+                    <xs:attribute name="then1" type="xs:string"/>
+                    <xs:attribute name="then2" type="xs:string"/>
+                    <xs:attribute name="else" type="xs:string"/>
+                    <xs:anyAttribute processContents="skip"/>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="set">
+                <xs:complexType>
+                    <xs:attribute name="field" type="xs:string"/>
+                    <xs:attribute name="field1" type="xs:string"/>
+                    <xs:attribute name="field2" type="xs:string"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                    <xs:attribute name="value1" type="xs:string"/>
+                    <xs:attribute name="value2" type="xs:string"/>
+                    <xs:attribute name="match" type="xs:string"/>
+                    <xs:attribute name="match1" type="xs:string"/>
+                    <xs:attribute name="match2" type="xs:string"/>
+                    <xs:anyAttribute processContents="skip"/>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:any processContents="skip"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:element name="fenix">
+        <xs:complexType mixed="true">
+            <xs:choice>
+                <xs:group ref="mainGroup" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="where" minOccurs="0" maxOccurs="1"/>
+            </xs:choice>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="resultType" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="normal">
+        <xs:attribute name="field" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+        <xs:attribute name="match" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="like">
+        <xs:attribute name="field" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string" />
+        <xs:attribute name="pattern" type="xs:string" />
+        <xs:attribute name="match" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="between">
+        <xs:attribute name="field" type="xs:string" use="required"/>
+        <xs:attribute name="startName" type="xs:string"/>
+        <xs:attribute name="start" type="xs:string" use="required"/>
+        <xs:attribute name="endName" type="xs:string"/>
+        <xs:attribute name="end" type="xs:string" use="required"/>
+        <xs:attribute name="match" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="null">
+        <xs:attribute name="field" type="xs:string" use="required"/>
+        <xs:attribute name="match" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="text" mixed="true">
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="match" type="xs:string"/>
+    </xs:complexType>
+
+
+
+    <xs:element name="where" >
+        <xs:complexType mixed="true">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="mainGroup"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
