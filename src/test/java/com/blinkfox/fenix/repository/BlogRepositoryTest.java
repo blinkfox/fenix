@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.context.ContextConfiguration;
@@ -323,18 +324,17 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogsWithDistinct() {
-        Page<Blog> blogPage = blogRepository.queryBlogsWithDistinct(PageRequest.of(0,10));
+        Page<Blog> blogPage = blogRepository.queryBlogsWithDistinct(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
         Assert.assertTrue(blogPage.getTotalElements() == 8);
     }
-
 
     /**
      * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的分页查询.
      */
     @Test
     public void queryBlogsWithoutDistinct() {
-        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinct(PageRequest.of(0,10));
+        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinct(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
         Assert.assertTrue(blogPage.getTotalElements() == 10);
     }
@@ -344,20 +344,29 @@ public class BlogRepositoryTest {
      */
     @Test
     public void queryBlogsWithoutDistinctNative() {
-        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinctNative(PageRequest.of(0,10));
+        Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinctNative(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
         Assert.assertTrue(blogPage.getTotalElements() == 10);
     }
-
 
     /**
      * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
      */
     @Test
     public void queryBlogsWithDistinctNative() {
-        Page<Long> blogPage = blogRepository.queryBlogsWithDistinctNative(PageRequest.of(0,10));
+        Page<Long> blogPage = blogRepository.queryBlogsWithDistinctNative(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
-        Assert.assertTrue(blogPage.getTotalElements() == 8);
+        Assert.assertEquals(8, blogPage.getTotalElements());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     */
+    @Test
+    public void queryBlogsWithDistinctNative2() {
+        Page<Long> blogPage = blogRepository.queryBlogsWithDistinctNative(Pageable.unpaged());
+        Assert.assertFalse(blogPage.isEmpty());
+        Assert.assertEquals(8, blogPage.getTotalElements());
     }
 
     /**

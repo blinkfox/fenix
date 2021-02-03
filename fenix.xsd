@@ -142,8 +142,8 @@
     <xs:complexType name="like">
         <xs:attribute name="field" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string"/>
-        <xs:attribute name="value" type="xs:string" />
-        <xs:attribute name="pattern" type="xs:string" />
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="pattern" type="xs:string"/>
         <xs:attribute name="match" type="xs:string"/>
     </xs:complexType>
 
@@ -166,9 +166,7 @@
         <xs:attribute name="match" type="xs:string"/>
     </xs:complexType>
 
-
-
-    <xs:element name="where" >
+    <xs:element name="where">
         <xs:complexType mixed="true">
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:group ref="mainGroup"/>

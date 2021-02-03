@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -54,6 +55,7 @@ public class UserRepositoryTest {
         if (!isLoad) {
             FenixConfigManager.getInstance().initLoad(new FenixConfig()
                     .setDebug(true)
+                    .setPrintSqlInfo(true)
                     .setXmlLocations("my, fenix ,  , others/fenix-xml.xml , abc, def/ghi")
                     .setHandlerLocations("com.blinkfox.fenix.handler, , "));
 
@@ -108,7 +110,18 @@ public class UserRepositoryTest {
         Map<String, Object> userMap = new HashMap<>(2);
         userMap.put("ids", new String[] {"2", "4", "6", "8", "10"});
         Page<User> userPage = userRepository.queryUserByIds(userMap,
-                PageRequest.of(0, 2, Sort.by(Sort.Order.desc("id"))));
+                PageRequest.of(0, 3, Sort.by(Sort.Order.desc("id"))));
+        Assert.assertFalse(userPage.getContent().isEmpty());
+    }
+
+    /**
+     * 测试使用 {@link QueryFenix} 注解没有任何元数据参数时，使用默认约定来查询用户信息的方法.
+     */
+    @Test
+    public void queryUserByIdsWithUnPage() {
+        Map<String, Object> userMap = new HashMap<>(2);
+        userMap.put("ids", new String[] {"2", "4", "6", "8", "10"});
+        Page<User> userPage = userRepository.queryUserByIds(userMap, Pageable.unpaged());
         Assert.assertFalse(userPage.getContent().isEmpty());
     }
 
