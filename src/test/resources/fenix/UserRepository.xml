@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
-<fenixs namespace="com.blinkfox.fenix.repository.UserRepository">
+<fenixs namespace="com.blinkfox.fenix.repository.UserRepository"
+        xmlns="http://www.w3school.com.cn"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.w3school.com.cn https://gitee.com/blinkfox/fenix/raw/master/fenix.xsd">
 
     <fenix id="UserHeader">
         SELECT u FROM User AS u

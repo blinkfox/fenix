@@ -129,6 +129,7 @@
             </xs:choice>
             <xs:attribute name="id" type="xs:string" use="required"/>
             <xs:attribute name="resultType" type="xs:string"/>
+            <xs:attribute name="removeIfExist" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
