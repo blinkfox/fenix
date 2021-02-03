@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 这是用来测试当配置了具体的 XML 文件路径时是否能扫描到该 XML 文件. -->
-<fenixs namespace="myFenixXml"
-        xmlns="http://www.w3school.com.cn"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.w3school.com.cn https://gitee.com/blinkfox/fenix/raw/master/fenix.xsd">
+<fenixs namespace="myFenixXml">
 
     <!-- 查询所有用户信息. -->
     <fenix id="queryAllUsers">

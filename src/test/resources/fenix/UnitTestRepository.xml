@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 这是用来单元测试 XML 模版或标签生成的 SQL 的数据库操作运行时的 Fenix XML 仓库. -->
-<fenixs namespace="UnitTestRepository"
-        xmlns="http://www.w3school.com.cn"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.w3school.com.cn https://gitee.com/blinkfox/fenix/raw/master/fenix.xsd">
+<fenixs namespace="UnitTestRepository">
 
     <fenix id="sqlHeader">
         SELECT u FROM User AS u

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 这是用来 XML 文件在自定义的目录中. -->
-<fenixs namespace="defaultFenix"
-        xmlns="http://www.w3school.com.cn"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.w3school.com.cn https://gitee.com/blinkfox/fenix/raw/master/fenix.xsd">
+<fenixs namespace="defaultFenix">
 
     <!-- 测试该多个 and 时移除 "1 = 1 AND " 的 SQL 片段 -->
     <fenix id="queryUsersByName" removeIfExist="1 = 1 AND ">
