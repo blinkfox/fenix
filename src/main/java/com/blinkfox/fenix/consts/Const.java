@@ -82,5 +82,19 @@ public final class Const {
      * 类型的字符串常量.
      */
     public static final String TYPE = "type";
+    
+        /**
+     * 常规字符串T、F标识
+     */
+    public static final String BOOLEAN_STRING_TRUE = "T";
+    public static final String BOOLEAN_STRING_FALSE = "F";
+
+    /**
+     * 常规字符串0、1标识
+     */
+    public static final String FLAG_STRING_TRUE = "1";
+    public static final String FLAG_STRING_FALSE = "0";
+    public static final String FLAG_STRING_TRUE_CN = "是";
+    public static final String FLAG_STRING_FALSE_CN = "否";
 
 }
