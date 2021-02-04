@@ -2,7 +2,7 @@
 
 <div align="center"><img style="display: block; margin: 0 auto;" src="https://blinkfox.github.io/fenix/assets/images/logo.png" alt="fenix logo" /></div>
 
-[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![HitCount](http://hits.dwyl.io/blinkfox/fenix.svg)](http://hits.dwyl.io/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v2.4.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/2.4.1/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v2.4.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/2.4.1/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
+[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![HitCount](http://hits.dwyl.io/blinkfox/fenix.svg)](http://hits.dwyl.io/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v2.4.2-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/2.4.2/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v2.4.2-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/2.4.2/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
 
 > [Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL。
 
@@ -10,7 +10,7 @@
 
 ## 💎 一、特性
 
-- 简单、轻量级、无副作用的集成和使用，jar 包仅 `191 KB`；
+- 简单、轻量级、无副作用的集成和使用，jar 包仅 `192 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
 - 提供了 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL；
 - `XML` 的方式功能强大，让 SQL 和 Java 代码解耦，易于维护；
@@ -40,14 +40,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.4.1</version>
+    <version>2.4.2</version>
 </dependency>
 ```
 
 ### 🌵 2. Gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.4.1'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.4.2'
 ```
 
 ### 🏕️ 3. 激活 Fenix (@EnableFenix)
