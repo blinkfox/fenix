@@ -27,7 +27,7 @@ public class BuildSpecificationException extends RuntimeException {
      * @param e 可抛出实例
      */
     public BuildSpecificationException(String message, Throwable e) {
-        super(message,e);
+        super(message, e);
     }
 
 }

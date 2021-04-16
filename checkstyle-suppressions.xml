@@ -6,4 +6,6 @@
 <suppressions>
     <!-- 抑制掉一些可不用修改的 checkstyle 检查项. -->
     <suppress checks="NameCheck" files="com.blinkfox.fenix.jpa.FenixJpaRepository.java" lines="13-17"/>
+    <suppress checks="NameCheck" files="com.blinkfox.fenix.jpa.FenixJpaRepositoryFactoryBean.java" lines="13-17"/>
+    <suppress checks="NameCheck" files="com.blinkfox.fenix.jpa.FenixSimpleJpaRepository.java" lines="25-30"/>
 </suppressions>

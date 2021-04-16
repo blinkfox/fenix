@@ -17,8 +17,6 @@ import org.springframework.data.repository.config.DefaultRepositoryBaseClass;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.transaction.PlatformTransactionManager;
 
-
-
 /**
  * 用于开启（激活）Fenix 的注解.
  *
@@ -44,6 +42,7 @@ public @interface EnableFenix {
      * Alias for the {@link #basePackages()} attribute. Allows for more concise annotation declarations e.g.:
      * {@code @EnableJpaRepositories("org.my.pkg")}
      * instead of {@code @EnableJpaRepositories(basePackages="org.my.pkg")}.
+     *
      * @return value
      */
     String[] value() default {};
@@ -52,6 +51,7 @@ public @interface EnableFenix {
      * Base packages to scan for annotated components.
      * {@link #value()} is an alias for (and mutually exclusive with) this
      * attribute. Use {@link #basePackageClasses()} for a type-safe alternative to String-based package names.
+     *
      * @return basePackages
      */
     String[] basePackages() default {};
@@ -61,6 +61,7 @@ public @interface EnableFenix {
      * The package of each class specified will be scanned.
      * Consider creating a special no-op marker class or interface in
      * each package that serves no purpose other than being referenced by this attribute.
+     *
      * @return basePackageClasses
      */
     Class<?>[] basePackageClasses() default {};
@@ -69,12 +70,14 @@ public @interface EnableFenix {
      * Specifies which types are eligible for component scanning. Further narrows the set of candidate components from
      * everything in
      * {@link #basePackages()} to everything in the base packages that matches the given filter or filters.
+     *
      * @return {@link org.springframework.context.annotation.ComponentScan.Filter}
      */
     ComponentScan.Filter[] includeFilters() default {};
 
     /**
      * Specifies which types are not eligible for component scanning.
+     *
      * @return {@link org.springframework.context.annotation.ComponentScan.Filter}
      */
     ComponentScan.Filter[] excludeFilters() default {};
@@ -132,6 +135,7 @@ public @interface EnableFenix {
     /**
      * Configures whether nested repository-interfaces (e.g. defined as inner classes) should be discovered by the
      * repositories infrastructure.
+     *
      * @return isConsiderNestedRepositories
      */
     boolean considerNestedRepositories() default false;

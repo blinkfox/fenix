@@ -12,6 +12,7 @@ public class FieldEmptyException extends RuntimeException {
 
     /**
      * 附带日志消息参数的构造方法.
+     *
      * @param msg 日志消息
      */
     public FieldEmptyException(String msg) {

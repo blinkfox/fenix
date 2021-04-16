@@ -378,6 +378,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
 
     /**
      * 通过QueryInfo获取CountSql.
+     *
      * @param fenixQueryInfo {@link FenixQueryInfo}
      * @return countSql
      */
@@ -394,7 +395,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         if (!matcher.find()) {
             return countSql;
         }
-        String distinctColumn = matcher.group(4).replaceAll(REGX_SQL_ALIAS,"");
+        String distinctColumn = matcher.group(4).replaceAll(REGX_SQL_ALIAS, "");
         return countSql.replaceFirst("count\\(\\*\\)", String.format("count(distinct %s)", distinctColumn));
     }
 
