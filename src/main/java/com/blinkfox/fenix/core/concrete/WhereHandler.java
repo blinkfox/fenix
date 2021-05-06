@@ -32,8 +32,12 @@ public class WhereHandler implements FenixHandler {
         // 说明后续的动态条件的 SQL 语句中都要判断是否要前置添加 WHERE 关键字，并去除掉 WHERE 后面的 AND 或者 OR 关键字.
         // 在各个动态标签或文本标签中，如果处理了 WHERE 标签的情况之后，就再将 prependWhere 设置为 false 即可.
         SqlInfo sqlInfo = source.getSqlInfo();
+        String oldSql = sqlInfo.getJoin().toString();
         sqlInfo.setPrependWhere(true);
         FenixXmlBuilder.buildSqlInfo(source.getNamespace(), sqlInfo, source.getNode(), source.getContext());
+        if (oldSql.equals(sqlInfo.getJoin().toString())) {
+            sqlInfo.setPrependWhere(false);
+        }
     }
 
 }

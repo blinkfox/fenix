@@ -442,4 +442,14 @@ public class FenixXmlBuilderTest {
         assertTrue(sqlInfo.getParams().isEmpty());
     }
 
+    /**
+     * 测试 where 标签的情况8.
+     */
+    @Test
+    public void testWhere8() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere8", context);
+        assertEquals("SELECT * FROM ( SELECT t.name as name FROM User t ) a", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
 }

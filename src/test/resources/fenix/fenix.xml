@@ -234,26 +234,29 @@
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere">
         SELECT u FROM @{entityName}
-        <where />
-        <andEqual field="u.id" value="user.id" match="user.id != empty"/>
-        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        <where>
+            <andEqual field="u.id" value="user.id" match="user.id != empty"/>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        </where>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere2">
         SELECT u FROM @{entityName}
-        <where />
-        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-        <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
+        <where>
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
+        </where>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere3">
         SELECT u FROM @{entityName}
-        <where />
-        anD u.id = #{user.id}
-        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        <where>
+            anD u.id = #{user.id}
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        </where>
         ORDER BY
             u.updateTime DESC
     </fenix>
@@ -261,41 +264,56 @@
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere4">
         SELECT u FROM @{entityName}
-        <where />
-        @if{?user.name != empty}
-        AND u.name LIKE '%@{user.name}%'
-        @end{}
-        <andEqual field="u.email" value="email" match="email != empty"/>
+        <where>
+            @if{?user.name != empty}
+            AND u.name LIKE '%@{user.name}%'
+            @end{}
+            <andEqual field="u.email" value="email" match="email != empty"/>
+        </where>
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere5">
         SELECT u FROM @{entityName}
-        <where />
-        AND
+        <where>
+            AND
+        </where>
         ORDER BY u.updateTime DESC
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere6">
         SELECT u FROM @{entityName}
-        <where />
-        @if{?user.name == 'Lisi'}
-        AND u.name LIKE '%@{user.name}%'
-        @end{}
-        <andEqual field="u.email" value="email" match="email == 'aa'"/>
+        <where>
+            @if{?user.name == 'Lisi'}
+            AND u.name LIKE '%@{user.name}%'
+            @end{}
+            <andEqual field="u.email" value="email" match="email == 'aa'"/>
+        </where>
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere7">
         SELECT u FROM @{entityName}
-        <where />
-        @if{?user.name == 'Lisi'}
-        AND u.name LIKE '%@{user.name}%'
-        @end{}
-        @if{?user.status == 'null'}
-        AND u.status = @{user.status}
-        @end{}
+        <where>
+            @if{?user.name == 'Lisi'}
+            AND u.name LIKE '%@{user.name}%'
+            @end{}
+            @if{?user.status == 'null'}
+            AND u.status = @{user.status}
+            @end{}
+        </where>
+    </fenix>
+
+    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
+    <fenix id="testWhere8">
+        SELECT * FROM
+        (
+            SELECT
+                t.name as name FROM @{entityName} t
+            <where />
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        ) a
     </fenix>
 
 </fenixs>
