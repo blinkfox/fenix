@@ -88,12 +88,14 @@
             ol.createTime,
             ol.description
         FROM
-            OperationLog AS ol
-        <where />
-        <andLike field="ol.title" value="log.title" match="log.title != empty"/>
-        <andIn field="ol.type" value="log.typeList" match="log.typeList != empty"/>
-        <andEqual field="ol.result" value="log.result" match="log.result != empty"/>
-        <andBetween field="ol.createTime" start="log.startTime" end="log.endTime" match="(log.startTime != empty) || (log.endTime != empty)"/>
+        OperationLog AS ol
+        <trimWhere>
+            <andLike field="ol.title" value="log.title" match="log.title != empty"/>
+            <andIn field="ol.type" value="log.typeList" match="log.typeList != empty"/>
+            <andEqual field="ol.result" value="log.result" match="log.result != empty"/>
+            <andBetween field="ol.createTime" start="log.startTime" end="log.endTime"
+                        match="(log.startTime != empty) || (log.endTime != empty)"/>
+        </trimWhere>
     </fenix>
 
 </fenixs>
@@ -105,7 +107,7 @@
 
 - MyBatis 只能写原生 SQL，无法享受跨数据库时的兼容性；由于 Fenix 是基于 Spring Data JPA 的扩展，即可以写 `JPQL` 语句，也可以写原生 `SQL` 语句，上述示例中写的是 `JPQL` 语句，SQL 的字段表达上更简洁，也不需要再定义 `resultMap` 映射关系。
 - MyBatis 书写动态 SQL 依赖只能使用 `if/else`、`foreach` 等分支选择、循环等操作，保证了灵活性，但是代码量和重复性较高，且 SQL 嵌套多层，视觉上比较混乱，可读写差；而 Fenix 也有 `if/else`、`foreach` 等分支循环操作，但内置了大量的更加简单、强大和语义化的 XML [SQL 标签](xml/xml-tags)，使用语义化的 SQL 标签，使得 SQL 的语义简单明了，没有多层嵌套，可读写更好，通过 `match` 属性的值来确定是否生成此条 SQL，来达到动态性。
-- MyBatis 通过 `trim` 标签或者使用 `<where>` 标签来消除 `WHERE` 语句后的 `AND` 关键字，而 `Fenix` 也是直接使用 `<where />` 标签即可动态处理 `WHERE` 与 `AND` 的关系，也可以将各个动态条件包裹在 `<where></where>` 标签内。
+- MyBatis 通过 `<trim />` 标签或者使用 `<where />` 标签来消除 `WHERE` 语句后的 `AND` 或者 `OR` 关键字，而 `Fenix` 也是直接将各个动态条件的 SQL 包裹在 `<trimWhere />` 标签中。
 - MyBatis 的动态 SQL 解析引擎是 [OGNL](http://commons.apache.org/proper/commons-ognl/)，而 Fenix 的解析引擎是 [MVEL](http://mvel.documentnode.com/)，功能和性能上都更优一些。
 
 > **💧 总结**：通过以上 MyBatis 和 Fenix 的各自 SQL 写法比较来看，`Fenix` 的 SQL 在**动态性**、**简洁性**和**SQL 语义化**等方面，都更加强大。

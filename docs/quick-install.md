@@ -16,14 +16,14 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>2.4.2</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
 ### 🌵 2. Gradle :id=spring-boot-gradle
 
 ```bash
-compile 'com.blinkfox:fenix-spring-boot-starter:2.4.2'
+compile 'com.blinkfox:fenix-spring-boot-starter:2.5.0'
 ```
 
 ### 🏕️ 3. 激活 Fenix (@EnableFenix) :id=enable-fenix
@@ -98,14 +98,14 @@ fenix:
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
-    <version>2.4.2</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
 ### 🌻 2. Gradle :id=project-gradle
 
 ```bash
-compile 'com.blinkfox:fenix:2.4.2'
+compile 'com.blinkfox:fenix:2.5.0'
 ```
 
 ### 🏔️ 3. 激活 Fenix :id=project-enable-fenix

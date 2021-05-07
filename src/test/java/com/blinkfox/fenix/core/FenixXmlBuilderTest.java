@@ -443,12 +443,80 @@ public class FenixXmlBuilderTest {
     }
 
     /**
-     * 测试 where 标签的情况8.
+     * 测试 trimWhere 标签的情况8.
      */
     @Test
-    public void testWhere8() {
-        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testWhere8", context);
+    public void testTrimWhere() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere", context);
         assertEquals("SELECT * FROM ( SELECT t.name as name FROM User t ) a", sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况2.
+     */
+    @Test
+    public void testTrimWhere2() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere2", context);
+        assertEquals("SELECT * FROM ( SELECT t.name as name FROM User t WHERE u.name LIKE :user_name ) a",
+                sqlInfo.getSql());
+        assertEquals(1, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况3.
+     */
+    @Test
+    public void testTrimWhere3() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere3", context);
+        assertEquals(BASE_QUERY + " u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC",
+                sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(2, params.size());
+        assertEquals('%' + NAME + '%', params.get("user_name"));
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况4.
+     */
+    @Test
+    public void testTrimWhere4() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere4", context);
+        assertEquals(SELECT_QUERY, sqlInfo.getSql());
+        assertEquals(0, sqlInfo.getParams().size());
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况5.
+     */
+    @Test
+    public void testTrimWhere5() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere5", context);
+        assertEquals(BASE_QUERY + " u.name LIKE '%ZhangSan%' AND u.email = :email", sqlInfo.getSql());
+
+        Map<String, Object> params = sqlInfo.getParams();
+        assertEquals(1, params.size());
+        assertEquals(EMAIL, params.get("email"));
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况6.
+     */
+    @Test
+    public void testTrimWhere6() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere6", context);
+        assertEquals(SELECT_QUERY, sqlInfo.getSql());
+        assertTrue(sqlInfo.getParams().isEmpty());
+    }
+
+    /**
+     * 测试 trimWhere 标签的情况6.
+     */
+    @Test
+    public void testTrimWhere7() {
+        SqlInfo sqlInfo = Fenix.getXmlSqlInfo("fenix.testTrimWhere7", context);
+        assertEquals(SELECT_QUERY + " WHERE 1 = 1", sqlInfo.getSql());
         assertTrue(sqlInfo.getParams().isEmpty());
     }
 

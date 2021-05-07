@@ -16,7 +16,7 @@ Fenix 中提供了大量常见场景下的 XML 标签供开发者使用，且这
 - [between](/xml/xml-tags?id=between)
 - [in](/xml/xml-tags?id=in)
 - [is null](/xml/xml-tags?id=is-null)
-- [where](/xml/xml-tags?id=where)
+- [trimWhere](/xml/xml-tags?id=trimWhere)
 - [text](/xml/xml-tags?id=text)
 - [import](/xml/xml-tags?id=import)
 - [choose](/xml/xml-tags?id=choose)
@@ -293,71 +293,46 @@ AND u.sex in :mySex
 AND u.n_age IS NULL
 ```
 
-## 🐎 九、where :id=where
+## 🐎 九、trimWhere :id=trimWhere
 
-`where` 标签主要用于在全动态 SQL 的场景中消除 `WHERE` 关键字后面的 `AND` 或者 `OR` 关键字，防止拼接出的动态 SQL 语法不对。
+`trimWhere` 标签属于 `v2.5.0` 版本新增的标签。主要用于在全动态 SQL 的场景中消除 `WHERE` 关键字后面的 `AND` 或者 `OR` 关键字，防止拼接出的动态 SQL 语法不对。
+
+> **💡 注**：本 `trimWhere` 标签修改自之前版本中的 `where` 标签，不过 `where` 标签存在已知的 `bug`。因为 `where` 允许和其他的动态条件标签写在 XML 的同一层级，当动态标签都不满足条件时，会导致结果多一个 `WHERE` 关键字，导致最终生成的 JPQL 或 SQL 无法正确的运行。为了保持对以前 `where` 标签写法的兼容。所以，**在 `v2.5.0` 版本中新增了标签 `trimWhere` 标签。可以用于完全替代 `where` 标签，且写法上只允许包裹式的写法，并且以前的 `where` 标签将继续保留但不再推荐使用**。后续也将只会介绍 `trimWhere` 标签。
 
 ### 🔮 1. 标签 :id=where-tag
 
-下面是 `where` 标签的使用方式，两种方式是等价的，看情况选用一种方式即可。
+下面是 `trimWhere` 标签的使用方式。
 
 ```xml
-<!-- 直接在动态条件前加上 where 标签即可. -->
-<where />
-
-<!-- 或者将动态条件包裹在 where 标签内部也可以. -->
-<where>
-    <!-- 在 where 标签块中可以书写任何文本 SQL 或者 XML 语义化 SQL 标签. -->
-</where>
+<!-- 将动态条件包裹在 trimWhere 标签内部即可. -->
+<trimWhere>
+    <!-- 在 trimWhere 标签块中可以书写任何文本 SQL 或者 XML 语义化 SQL 标签. -->
+</trimWhere>
 ```
 
 ### 🧿 2. 使用示例 :id=where-demo
 
 ```xml
-<!-- 用于演示 where 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
+<!-- 用于演示 trimWhere 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
 <!-- SELECT u FROM User WHERE u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC -->
 <fenix id="testWhere">
     SELECT u FROM @{entityName}
-    <where />
-    anD u.id = #{user.id}
-    <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-    <andLike field="u.name" value="user.name" match="user.name != empty"/>
-    ORDER BY u.updateTime DESC
-</fenix>
-
-<!-- 用于演示 where 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->
-<!-- SELECT u FROM User -->
-<fenix id="testWhere2">
-    SELECT u FROM @{entityName}
-    <where />
-    <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-    <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
-</fenix>
-```
-
-下面的使用方式等价于上面的方式，看情况选用一种方式来使用即可：
-
-```xml
-<!-- 用于演示 where 标签的使用，假如 user.email 的值为空，那么生成的 SQL 结果为: -->
-<!-- SELECT u FROM User WHERE u.id = :user_id AND u.name LIKE :user_name ORDER BY u.updateTime DESC -->
-<fenix id="testWhere">
-    SELECT u FROM @{entityName}
-    <where>
+    <trimWhere>
         anD u.id = #{user.id}
         <andEqual field="u.email" value="user.email" match="user.email != empty"/>
         <andLike field="u.name" value="user.name" match="user.name != empty"/>
-    </where>
+    </trimWhere>
     ORDER BY u.updateTime DESC
 </fenix>
 
-<!-- 用于演示 where 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->
+<!-- 用于演示 trimWhere 标签的使用，假如 user.email 和 birthday 的值都为空，那么生成的 SQL 结果为: -->
 <!-- SELECT u FROM User -->
 <fenix id="testWhere2">
     SELECT u FROM @{entityName}
-    <where>
+    <trimWhere>
         <andEqual field="u.email" value="user.email" match="user.email != empty"/>
         <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
-    </where>
+    </trimWhere>
 </fenix>
 ```
 

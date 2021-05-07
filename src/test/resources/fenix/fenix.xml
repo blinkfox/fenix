@@ -234,29 +234,26 @@
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere">
         SELECT u FROM @{entityName}
-        <where>
-            <andEqual field="u.id" value="user.id" match="user.id != empty"/>
-            <andLike field="u.name" value="user.name" match="user.name != empty"/>
-        </where>
+        <where />
+        <andEqual field="u.id" value="user.id" match="user.id != empty"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere2">
         SELECT u FROM @{entityName}
-        <where>
-            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-            <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
-        </where>
+        <where />
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.birthday" value="user.birthday" match="user.birthday != empty"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签生成的 JPQL 语句和参数. -->
     <fenix id="testWhere3">
         SELECT u FROM @{entityName}
-        <where>
-            anD u.id = #{user.id}
-            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-            <andLike field="u.name" value="user.name" match="user.name != empty"/>
-        </where>
+        <where />
+        anD u.id = #{user.id}
+        <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
         ORDER BY
             u.updateTime DESC
     </fenix>
@@ -264,56 +261,128 @@
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere4">
         SELECT u FROM @{entityName}
-        <where>
-            @if{?user.name != empty}
-            AND u.name LIKE '%@{user.name}%'
-            @end{}
-            <andEqual field="u.email" value="email" match="email != empty"/>
-        </where>
+        <where />
+        @if{?user.name != empty}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        <andEqual field="u.email" value="email" match="email != empty"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere5">
         SELECT u FROM @{entityName}
-        <where>
-            AND
-        </where>
+        <where />
+        AND
         ORDER BY u.updateTime DESC
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere6">
         SELECT u FROM @{entityName}
-        <where>
-            @if{?user.name == 'Lisi'}
-            AND u.name LIKE '%@{user.name}%'
-            @end{}
-            <andEqual field="u.email" value="email" match="email == 'aa'"/>
-        </where>
+        <where />
+        @if{?user.name == 'Lisi'}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        <andEqual field="u.email" value="email" match="email == 'aa'"/>
     </fenix>
 
     <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
     <fenix id="testWhere7">
         SELECT u FROM @{entityName}
-        <where>
+        <where />
+        @if{?user.name == 'Lisi'}
+        AND u.name LIKE '%@{user.name}%'
+        @end{}
+        @if{?user.status == 'null'}
+        AND u.status = @{user.status}
+        @end{}
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere">
+        SELECT * FROM
+        (
+            SELECT
+                t.name as name FROM @{entityName} t
+            <trimWhere>
+                <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            </trimWhere>
+        ) a
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere2">
+        SELECT * FROM
+        (
+        SELECT
+        t.name as name FROM @{entityName} t
+        <trimWhere>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        </trimWhere>
+        ) a
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere3">
+        SELECT u FROM @{entityName}
+        <trimWhere>
+            anD u.id = #{user.id}
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        </trimWhere>
+        ORDER BY
+        u.updateTime DESC
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere4">
+        SELECT u FROM @{entityName}
+        <trimWhere>
+            @if{?user.email != empty}
+            AND u.email LIKE '%@{user.email}%'
+            @end{}
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+        </trimWhere>
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere5">
+        SELECT u FROM @{entityName}
+        <trimWhere>
+            @if{?user.name != empty}
+            AND u.name LIKE '%@{user.name}%'
+            @end{}
+            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
+            <andEqual field="u.email" value="email" match="email != empty"/>
+        </trimWhere>
+    </fenix>
+
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere6">
+        SELECT u FROM @{entityName}
+        <trimWhere>
             @if{?user.name == 'Lisi'}
             AND u.name LIKE '%@{user.name}%'
             @end{}
             @if{?user.status == 'null'}
             AND u.status = @{user.status}
             @end{}
-        </where>
+        </trimWhere>
     </fenix>
 
-    <!-- 用于单元测试 where 标签是否能正常消除掉 and. -->
-    <fenix id="testWhere8">
-        SELECT * FROM
-        (
-            SELECT
-                t.name as name FROM @{entityName} t
-            <where />
-            <andEqual field="u.email" value="user.email" match="user.email != empty"/>
-        ) a
+    <!-- 用于单元测试 trimWhere 标签是否正常. -->
+    <fenix id="testTrimWhere7">
+        SELECT u FROM @{entityName}
+        <trimWhere>
+            1 = 1
+            @if{?user.name == 'Lisi'}
+            AND u.name LIKE '%@{user.name}%'
+            @end{}
+            @if{?user.status == 'null'}
+            AND u.status = @{user.status}
+            @end{}
+        </trimWhere>
     </fenix>
 
 </fenixs>

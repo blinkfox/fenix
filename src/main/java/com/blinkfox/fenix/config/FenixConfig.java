@@ -17,6 +17,7 @@ import com.blinkfox.fenix.core.concrete.SetHandler;
 import com.blinkfox.fenix.core.concrete.StartsWithHandler;
 import com.blinkfox.fenix.core.concrete.TextHandler;
 import com.blinkfox.fenix.core.concrete.WhereHandler;
+import com.blinkfox.fenix.core.concrete.TrimWhereHandler;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.BetweenPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
@@ -240,6 +241,7 @@ public class FenixConfig {
         add("choose", ChooseHandler::new);
         add("set", SetHandler::new);
         add("where", WhereHandler::new);
+        add("trimWhere", TrimWhereHandler::new);
     }
 
     /**

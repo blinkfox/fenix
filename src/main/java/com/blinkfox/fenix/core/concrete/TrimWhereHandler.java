@@ -6,20 +6,22 @@ import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixXmlBuilder;
 
 /**
- * {@code <where></where>} 标签是可以包裹其他动态标签的标签，功能同 MyBatis 中的 {@code <where>} 标签相似，
+ * {@code <trimWhere></trimWhere>} 标签是可以包裹其他动态标签的标签，功能同 MyBatis 中的 {@code <where>} 标签相似，
  * 用于去掉 {@code WHERE} 关键字后的 {@code AND} 或者 {@code OR} 关键字的 {@link FenixHandler} 接口的实现类.
+ *
+ * <p>注意：该标签源自于 {@code <where />}，由于 {@code <where />} 标签存在 bug，且为了保持向前兼容，所以新增此标签，并推荐使用此标签.</p>
  *
  * <p>XML 标签示例如：</p>
  * <ul>
- *     <li>{@code <where>...</where>}</li>
+ *     <li>{@code <trimWhere>...</trimWhere>}</li>
  * </ul>
- * <p>注：{@code <where>} 标签只能用来去掉{@code WHERE} 关键字后的 {@code AND} 或者 {@code OR} 关键字.</p>
+ * <p>注：{@code <trimWhere>} 标签只能用来去掉{@code WHERE} 关键字后的 {@code AND} 或者 {@code OR} 关键字.</p>
  *
- * @author blinkfox on 2019-08-07.
- * @see TrimWhereHandler
- * @since v2.1.0
+ * @author blinkfox on 2021-05-07.
+ * @see WhereHandler
+ * @since v2.5.0
  */
-public class WhereHandler implements FenixHandler {
+public class TrimWhereHandler implements FenixHandler {
 
     /**
      * 根据 {@link BuildSource} 的相关参数来动态构建出 {@code WHERE} 语句后的 SQL 或 JPQL 语句及参数信息.
@@ -34,6 +36,11 @@ public class WhereHandler implements FenixHandler {
         SqlInfo sqlInfo = source.getSqlInfo();
         sqlInfo.setPrependWhere(true);
         FenixXmlBuilder.buildSqlInfo(source.getNamespace(), sqlInfo, source.getNode(), source.getContext());
+
+        // 如果 '<trimWhere></trimWhere>' 标签中的内容构建完成之后，任然是 true 时，就设置为 false.
+        if (sqlInfo.isPrependWhere()) {
+            sqlInfo.setPrependWhere(false);
+        }
     }
 
 }
