@@ -1,15 +1,17 @@
 package com.blinkfox.fenix.repository;
 
+import com.blinkfox.fenix.dto.UserDto;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.provider.UserSqlInfoProvider;
-import java.util.List;
-import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户库持久化类.
@@ -83,5 +85,8 @@ public interface UserRepository extends JpaRepository<User, String> {
      */
     @QueryFenix("otherFenix.queryUsersByName")
     List<User> queryUsersByName(@Param("user") User user);
+
+    @QueryFenix("otherFenix.queryUserDtoListByName")
+    List<UserDto> queryUserDtoListByName(@Param("user") User user);
 
 }

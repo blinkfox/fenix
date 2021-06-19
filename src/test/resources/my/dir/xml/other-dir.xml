@@ -13,4 +13,26 @@
         <andLike field="u.email" value="user.email" match="user.email != empty"/>
     </fenix>
 
+    <!--  resultType="com.blinkfox.fenix.dto.UserDto"  -->
+    <fenix id="queryUserDtoListByName" removeIfExist="1 = 1 AND " >
+        SELECT
+            u.id as id,
+            u.name as name,
+            u.age as age,
+            u.sex as sex,
+            u.password as password,
+            u.birthday as birthday,
+            u.createTime as createTime,
+            u.updateTime as updateTime,
+            u.status as status,
+            u.email as email
+        FROM User AS u
+        WHERE
+        1 = 1
+        <andLike field="u.name" value="user.name" match="user.name != empty"/>
+        AND u.age > #{user.age}
+        AND u.status = #{user.status}
+        <andLike field="u.email" value="user.email" match="user.email != empty"/>
+    </fenix>
+
 </fenixs>

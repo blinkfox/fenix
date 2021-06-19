@@ -4,13 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
+import com.blinkfox.fenix.dto.UserDto;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.jpa.QueryFenix;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
+import com.blinkfox.fenix.jpa.annotation.JpaDto;
 import lombok.Setter;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,6 +22,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UserRepository Test.
@@ -57,6 +60,8 @@ public class UserRepositoryTest {
                     .setDebug(true)
                     .setPrintSqlInfo(true)
                     .setXmlLocations("my, fenix ,  , others/fenix-xml.xml , abc, def/ghi")
+                    .setDtoAnnotation(JpaDto.class.getName())
+                    .setDtoBasePackage(UserDto.class.getPackage().getName())
                     .setHandlerLocations("com.blinkfox.fenix.handler, , "));
 
             userRepository.saveAll(
@@ -68,7 +73,7 @@ public class UserRepositoryTest {
     }
 
     /**
-     * 测试使用 {@link com.blinkfox.fenix.jpa.QueryFenix} 注解来模糊查询博客信息.
+     * 测试使用 {@link QueryFenix} 注解来模糊查询博客信息.
      */
     @Test
     public void queryBlogsByTitle() {
@@ -134,5 +139,15 @@ public class UserRepositoryTest {
                 .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
         Assert.assertFalse(users.isEmpty());
     }
+
+    @Test
+    public void queryUserDtoListByName() {
+       //  FenixScanDtoHelper.scanDtoAndRegisterConverts(JpaDto.class, "com.blinkfox.fenix.dto");
+
+        List<UserDto> users = userRepository.queryUserDtoListByName(new User()
+                .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
+        Assert.assertFalse(users.isEmpty());
+    }
+
 
 }

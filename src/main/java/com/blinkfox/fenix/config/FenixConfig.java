@@ -5,70 +5,16 @@ import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.SymbolConst;
 import com.blinkfox.fenix.core.FenixHandler;
 import com.blinkfox.fenix.core.FenixHandlerFactory;
-import com.blinkfox.fenix.core.concrete.BetweenHandler;
-import com.blinkfox.fenix.core.concrete.ChooseHandler;
-import com.blinkfox.fenix.core.concrete.EndsWithHandler;
-import com.blinkfox.fenix.core.concrete.ImportHandler;
-import com.blinkfox.fenix.core.concrete.InHandler;
-import com.blinkfox.fenix.core.concrete.IsNullHandler;
-import com.blinkfox.fenix.core.concrete.LikeHandler;
-import com.blinkfox.fenix.core.concrete.NormalHandler;
-import com.blinkfox.fenix.core.concrete.SetHandler;
-import com.blinkfox.fenix.core.concrete.StartsWithHandler;
-import com.blinkfox.fenix.core.concrete.TextHandler;
-import com.blinkfox.fenix.core.concrete.TrimWhereHandler;
-import com.blinkfox.fenix.core.concrete.WhereHandler;
+import com.blinkfox.fenix.core.concrete.*;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.BetweenPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.EndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.EqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.GreaterThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.GreaterThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.InPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.IsNotNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.IsNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.JoinPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LessThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LessThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LikeInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LikeOrLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LikePatternPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.LikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotBetweenPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotEndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotLikePatternPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.NotStartsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrBetweenPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrEndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrGreaterThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrIsNotNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrIsNullPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLessThanEqualPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLessThanPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLikeOrLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLikePatternPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotBetweenPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotEndsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotEqualsPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotInPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotLikePatternPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrNotStartsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
-import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
+import com.blinkfox.fenix.specification.handler.impl.*;
+import lombok.Getter;
+import org.dom4j.Node;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import lombok.Getter;
-import org.dom4j.Node;
 
 /**
  * Fenix 的默认主配置类.
@@ -106,10 +52,20 @@ public class FenixConfig {
     protected String xmlLocations = Const.DEFAULT_FENIX_XML_DIR;
 
     /**
-     * Fenix 自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     * Fenix 自定义的 {@link TagHandler} 处理器实现的所在位置，
      * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
      */
     protected String handlerLocations;
+
+    /**
+     * dto扫描包位置
+     */
+    private String dtoBasePackage;
+
+    /**
+     * 自定的DtoAnnotation
+     */
+    private String dtoAnnotation;
 
     /**
      * 所有 Fenix XML 文档的缓存 map.
@@ -343,7 +299,7 @@ public class FenixConfig {
     }
 
     /**
-     * 设置自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     * 设置自定义的 {@link TagHandler} 处理器实现的所在位置，
      * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
      *
      * @param handlerLocations handler 的包路径位置，如：'com.blinkfox.handler'.
@@ -353,6 +309,17 @@ public class FenixConfig {
         this.handlerLocations = handlerLocations;
         return this;
     }
+
+    public FenixConfig setDtoBasePackage(String dtoBasePackage) {
+        this.dtoBasePackage = dtoBasePackage;
+        return this;
+    }
+
+    public FenixConfig setDtoAnnotation(String dtoAnnotation) {
+        this.dtoAnnotation = dtoAnnotation;
+        return this;
+    }
+
 
     /**
      * 添加自定义标签和该 SQL 片段对应的 {@link TagHandler} 处理器实现的 class.

@@ -6,24 +6,21 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
+import lombok.Setter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.*;
+import org.springframework.data.repository.query.Parameter;
+import org.springframework.data.repository.query.ParametersParameterAccessor;
+import org.springframework.data.repository.query.ReturnedType;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.Tuple;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-import lombok.Setter;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
-import org.springframework.data.jpa.repository.query.JpaParameters;
-import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
-import org.springframework.data.jpa.repository.query.JpaQueryMethod;
-import org.springframework.data.jpa.repository.query.QueryUtils;
-import org.springframework.data.repository.query.Parameter;
-import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.ReturnedType;
 
 /**
  * 继承了 {@code AbstractJpaQuery} 抽象类，
@@ -132,16 +129,23 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         // 判断是否有分页参数.如果有的话，就设置分页参数，并设置新的 querySql 的值.
         final Pageable pageable = this.buildPagableAndSortSql(values, fenixQueryInfo.getQuerySql());
 
+        // 获取 resultType
+        String resultType = sqlInfo.getResultType();
+
         // 构建出 SQL 语句相关的 Query 实例，要区分是否是原生 SQL.
         Query query;
         EntityManager em = super.getEntityManager();
         String querySql = fenixQueryInfo.getQuerySql();
+        Class<?> type = this.getTypeToQueryFor(jpaMethod.getResultProcessor().withDynamicProjection(
+                new ParametersParameterAccessor(jpaMethod.getParameters(), values)).getReturnedType(), querySql);
         if (queryFenix.nativeQuery()) {
-            Class<?> type = this.getTypeToQueryFor(jpaMethod.getResultProcessor().withDynamicProjection(
-                    new ParametersParameterAccessor(jpaMethod.getParameters(), values)).getReturnedType(), querySql);
             query = type == null ? em.createNativeQuery(querySql) : em.createNativeQuery(querySql, type);
         } else {
-            query = em.createQuery(querySql);
+            if (StringHelper.isNotBlank(resultType)) {
+                query = em.createQuery(querySql);
+            } else {
+                query = type == null ? em.createQuery(querySql) : em.createQuery(querySql, type);
+            }
         }
 
         // 循环设置命名绑定参数，且如果分页对象不为空，就设置分页参数.
@@ -152,7 +156,6 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         }
 
         // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
-        String resultType = sqlInfo.getResultType();
         if (StringHelper.isNotBlank(resultType)) {
             query = new QueryResultBuilder(query, resultType).build(queryFenix.nativeQuery());
         }
@@ -163,6 +166,7 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         }
         return query;
     }
+
 
     /**
      * 根据给定的参数访问对象创建一个 {@code Query} 对象，用于查询分页时的记录数.
