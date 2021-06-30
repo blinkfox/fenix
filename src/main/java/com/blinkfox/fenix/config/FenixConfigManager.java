@@ -7,18 +7,18 @@ import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.consts.XpathConst;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.exception.NodeNotFoundException;
-import com.blinkfox.fenix.helper.ParamWrapper;
-import com.blinkfox.fenix.helper.ParseHelper;
-import com.blinkfox.fenix.helper.StringHelper;
-import com.blinkfox.fenix.helper.XmlNodeHelper;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Map;
+import com.blinkfox.fenix.helper.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Node;
+
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Fenix 的配置信息管理器单例类，用于加载 Fenix 所需的各种配置信息到内存中.
@@ -76,6 +76,9 @@ public final class FenixConfigManager {
      * @param fenixConfig {@link FenixConfig} 的子类配置类实例
      */
     public void initLoad(FenixConfig fenixConfig) {
+        // 扫描并注册类型转换器
+        scanDtoAndRegisterConverts(fenixConfig);
+
         // 初始化设置 FenixConfig 实例和其中的一些属性.
         this.initFenixConfig(fenixConfig);
 
@@ -86,6 +89,19 @@ public final class FenixConfigManager {
         // 初次测试表达式引擎是否能够正确工作和打印 banner 信息.
         this.testFirstEvaluate();
         this.printBanner();
+    }
+
+    private void scanDtoAndRegisterConverts(FenixConfig fenixConfig){
+        String dtoAnnotation = fenixConfig.getDtoAnnotation();
+        String dtoBasePackage = fenixConfig.getDtoBasePackage();
+        if (Objects.nonNull(dtoBasePackage) && Objects.nonNull(dtoBasePackage)){
+            try {
+                Class<? extends Annotation> aClass = (Class<? extends Annotation>)Class.forName(dtoAnnotation);
+                FenixScanDtoHelper.scanDtoAndRegisterConverts(aClass, dtoBasePackage);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
