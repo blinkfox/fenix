@@ -5,7 +5,9 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.dto.UserDto;
+import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
+import com.blinkfox.fenix.interceptor.CustomerPage;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.jpa.annotation.JpaDto;
 import lombok.Setter;
@@ -25,6 +27,7 @@ import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +143,9 @@ public class UserRepositoryTest {
         Assert.assertFalse(users.isEmpty());
     }
 
+    /**
+     * 测试 Map 转任意的 DTO
+     */
     @Test
     public void queryUserDtoListByName() {
        //  FenixScanDtoHelper.scanDtoAndRegisterConverts(JpaDto.class, "com.blinkfox.fenix.dto");
@@ -148,5 +154,40 @@ public class UserRepositoryTest {
         Assert.assertFalse(users.isEmpty());
     }
 
+
+    /**
+     * 测试类型转换 Page 转 CustomerPage
+     * 应用场景: 比如公司一般都封装了自己的自定义Page对象, 则需要一个从Spring Data JPA的Page对象转换成自定义的CustomerPage
+     * 使用方法: 使用是用户参考 com.blinkfox.fenix.processor.EnhanceRepositoryProxyPostProcessor 实现一个 FenixRepositoryProxyPostProcessor 并标注 @Component 交给Spring管理即可
+     *
+     */
+    @Test
+    public void queryCustomPage(){
+        List<String> ids = Arrays.asList("1", "2", "3", "4", "5", "6");
+        Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Order.desc("birthday")));
+
+        CustomerPage<User> page = userRepository.queryCustomPage(ids, pageable);
+        System.out.println(JSON.toJSONString(page));
+    }
+
+    /**
+     * 测试拦截 @Query
+     */
+    @Test
+    public void interceptorQuery(){
+        List<UserDto> users = userRepository.interceptorQuery();
+        System.out.println("结果: " + JSON.toJSONString(users));
+        Assert.assertFalse(users.isEmpty());
+    }
+
+    /**
+     * 测试拦截 @QueryFenix
+     */
+    @Test
+    public void interceptorQueryFenix(){
+        List<UserDto> users = userRepository.interceptorQueryFenix();
+        System.out.println("结果: " + JSON.toJSONString(users));
+        Assert.assertFalse(users.isEmpty());
+    }
 
 }

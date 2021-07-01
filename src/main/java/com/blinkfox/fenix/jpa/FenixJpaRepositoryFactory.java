@@ -1,15 +1,16 @@
 package com.blinkfox.fenix.jpa;
 
-import java.util.Optional;
-import javax.persistence.EntityManager;
+import com.blinkfox.fenix.jpa.interceptor.SqlInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+
+import javax.persistence.EntityManager;
+import java.util.Optional;
 
 /**
  * 扩展了 {@link JpaRepositoryFactory} JPA 规范类的 的 Repository 工厂类.
@@ -31,6 +32,11 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
      * QueryExtractor 查询提取器.
      */
     private final QueryExtractor extractor;
+
+    /**
+     * 新增sql拦截器
+     */
+    private SqlInterceptor sqlInterceptor;
 
     /**
      * 创建 {@link JpaRepositoryFactory} 实例.
@@ -56,7 +62,9 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
             QueryMethodEvaluationContextProvider provider) {
-        return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider));
+        FenixQueryLookupStrategy queryLookupStrategy = (FenixQueryLookupStrategy)FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider);
+        queryLookupStrategy.setSqlInterceptor(this.sqlInterceptor);
+        return Optional.of(queryLookupStrategy);
     }
 
     /**
@@ -70,4 +78,11 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
         return FenixSimpleJpaRepository.class;
     }
 
+    public SqlInterceptor getSqlInterceptor() {
+        return sqlInterceptor;
+    }
+
+    public void setSqlInterceptor(SqlInterceptor sqlInterceptor) {
+        this.sqlInterceptor = sqlInterceptor;
+    }
 }

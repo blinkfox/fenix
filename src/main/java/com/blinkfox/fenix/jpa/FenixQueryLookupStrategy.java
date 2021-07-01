@@ -1,8 +1,12 @@
 package com.blinkfox.fenix.jpa;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 import javax.persistence.EntityManager;
+
+import com.blinkfox.fenix.jpa.interceptor.SqlInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
@@ -56,6 +60,11 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
      * @since v2.3.1
      */
     private Object queryMethodFactory;
+
+    /**
+     * 新增sql拦截器
+     */
+    private SqlInterceptor sqlInterceptor;
 
     /**
      * 构造方法.
@@ -127,9 +136,15 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     @Override
     public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,
             NamedQueries namedQueries) {
+        FenixSqlInterceptor annotation = AnnotationUtils.findAnnotation(method, FenixSqlInterceptor.class);
         // 如果没有 QueryFenix 注解，就是用默认的 jpaQueryLookupStrategy.resolveQuery 来构造 RepositoryQuery 实例.
         QueryFenix queryFenixAnnotation = method.getAnnotation(QueryFenix.class);
         if (queryFenixAnnotation == null) {
+            if(Objects.nonNull(annotation) && Objects.nonNull(sqlInterceptor)){
+                // 这里sql传入null，也可以从@Query注解里面取出来sql
+                sqlInterceptor.onPrepareStatement(method, null);
+            }
+
             return this.jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
         }
 
@@ -143,6 +158,10 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
                     .build(method, metadata, factory), this.entityManager);
         }
 
+        if(Objects.nonNull(annotation) && Objects.nonNull(sqlInterceptor)){
+            fenixJpaQuery.setSqlInterceptor(this.sqlInterceptor);
+        }
+        fenixJpaQuery.setJapMethod(method);
         fenixJpaQuery.setQueryFenix(queryFenixAnnotation);
         fenixJpaQuery.setQueryClass(method.getDeclaringClass());
         return fenixJpaQuery;
@@ -166,4 +185,11 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
         return null;
     }
 
+    public SqlInterceptor getSqlInterceptor() {
+        return sqlInterceptor;
+    }
+
+    public void setSqlInterceptor(SqlInterceptor sqlInterceptor) {
+        this.sqlInterceptor = sqlInterceptor;
+    }
 }
