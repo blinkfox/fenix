@@ -91,14 +91,13 @@ public class ClassScannerHelper implements ResourceLoaderAware {
                 Resource resource = resources[i];  
                 if (resource.isReadable()) {  
                     MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
-                    if ((includeFilters.size() == 0 && excludeFilters.size() == 0)  || matches(metadataReader)) {
+                    if ((includeFilters.isEmpty() && excludeFilters.isEmpty()) || matches(metadataReader)) {
                         try {  
                             classes.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
                         } catch (ClassNotFoundException e) {  
                             e.printStackTrace();  
                         }  
- 
-                    }  
+                    }
                 }  
             }  
         } catch (IOException ex) {  

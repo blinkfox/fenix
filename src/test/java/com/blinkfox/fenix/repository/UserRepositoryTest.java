@@ -143,7 +143,6 @@ public class UserRepositoryTest {
     @Test
     public void queryUserDtoListByName() {
        //  FenixScanDtoHelper.scanDtoAndRegisterConverts(JpaDto.class, "com.blinkfox.fenix.dto");
-
         List<UserDto> users = userRepository.queryUserDtoListByName(new User()
                 .setName("name-").setEmail("qq").setAge(22).setStatus("0"));
         Assert.assertFalse(users.isEmpty());
