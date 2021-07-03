@@ -4,10 +4,12 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import javax.persistence.EntityManager;
 
+import com.blinkfox.fenix.helper.AnnotationHelper;
 import com.blinkfox.fenix.jpa.interceptor.SqlInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.jpa.provider.QueryExtractor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy;
@@ -136,13 +138,20 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     @Override
     public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,
             NamedQueries namedQueries) {
-        FenixSqlInterceptor annotation = AnnotationUtils.findAnnotation(method, FenixSqlInterceptor.class);
+        FenixSqlInterceptor sqlInterceptorAnnotation = AnnotationUtils.findAnnotation(method, FenixSqlInterceptor.class);
+        org.springframework.data.jpa.repository.Query query = AnnotationUtils.findAnnotation(method, org.springframework.data.jpa.repository.Query.class);
+
         // 如果没有 QueryFenix 注解，就是用默认的 jpaQueryLookupStrategy.resolveQuery 来构造 RepositoryQuery 实例.
         QueryFenix queryFenixAnnotation = method.getAnnotation(QueryFenix.class);
         if (queryFenixAnnotation == null) {
-            if(Objects.nonNull(annotation) && Objects.nonNull(sqlInterceptor)){
+            if(Objects.nonNull(sqlInterceptorAnnotation) && Objects.nonNull(query) && Objects.nonNull(sqlInterceptor)) {
+                String sql = query.value();
                 // 这里sql传入null，也可以从@Query注解里面取出来sql
-                sqlInterceptor.onPrepareStatement(method, null);
+                String newSql = sqlInterceptor.onPrepareStatement(method, sql);
+                if (Objects.nonNull(newSql)){
+                    // 在生成 javax.persistence.Query之前替换掉注解里面的静态sql 为新的sql
+                    AnnotationHelper.updateAnnotationProperty(query, "value", newSql);
+                }
             }
 
             return this.jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
@@ -158,7 +167,7 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
                     .build(method, metadata, factory), this.entityManager);
         }
 
-        if(Objects.nonNull(annotation) && Objects.nonNull(sqlInterceptor)){
+        if(Objects.nonNull(sqlInterceptorAnnotation) && Objects.nonNull(sqlInterceptor)){
             fenixJpaQuery.setSqlInterceptor(this.sqlInterceptor);
         }
         fenixJpaQuery.setJapMethod(method);

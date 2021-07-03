@@ -31,11 +31,12 @@ public class CustomSqlInterceptor implements SqlInterceptor {
                     " FROM User AS u";
 
             Query query = method.getAnnotation(Query.class);
-            System.out.println("修改前: " + query.value());
+            //System.out.println("修改前: " + query.value());
             // 修改 @Query 注解的值
-            AnnotationHelper.updateAnnotationProperty(query, "value", newSql);
-            System.out.println("修改后: " + query.value());
+            //AnnotationHelper.updateAnnotationProperty(query, "value", newSql);
+            //System.out.println("修改后: " + query.value());
             System.out.println("修改拦截到的sql为: " + newSql);
+            return newSql;
         } else if("interceptorQueryFenix".equals(name)){
             String newSql = "SELECT\n" +
                     "            u.id as id,\n" +

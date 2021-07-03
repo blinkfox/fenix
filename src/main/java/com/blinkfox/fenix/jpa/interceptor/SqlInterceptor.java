@@ -10,6 +10,12 @@ import java.lang.reflect.Method;
  */
 public interface SqlInterceptor {
 
+    /**
+     * 多增加了一个method参数，或许以后可能会用上，现在感觉用处不大。
+     * @param method
+     * @param sql
+     * @return
+     */
     public default String onPrepareStatement(Method method, String sql) {
         return sql;
     }
