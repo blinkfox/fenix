@@ -1,11 +1,8 @@
 package com.blinkfox.fenix;
 
-import com.blinkfox.fenix.lambda.SFunction;
 import com.blinkfox.fenix.lambda.SerializedLambda;
 import lombok.Getter;
 import org.junit.Test;
-
-import java.util.function.Function;
 
 
 public class SerializedLambdaTest {
