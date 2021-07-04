@@ -149,13 +149,12 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         Query query;
         EntityManager em = super.getEntityManager();
         String querySql = fenixQueryInfo.getQuerySql();
-        if (Objects.nonNull(sqlInterceptor)){
-            // 提供一个预处理sql的机会
-            // 获取修改后的sql
-            querySql = sqlInterceptor.onPrepareStatement(this.japMethod, querySql);
-        }
         Class<?> type = this.getTypeToQueryFor(jpaMethod.getResultProcessor().withDynamicProjection(
                 new ParametersParameterAccessor(jpaMethod.getParameters(), values)).getReturnedType(), querySql);
+        if (Objects.nonNull(this.sqlInterceptor)){
+            // 提供一个预处理sql的机会, 获取修改后的sql
+            querySql = sqlInterceptor.onPrepareStatement(this.japMethod, querySql);
+        }
         if (queryFenix.nativeQuery()) {
             query = type == null ? em.createNativeQuery(querySql) : em.createNativeQuery(querySql, type);
         } else {

@@ -176,6 +176,7 @@ public class UserRepositoryTest {
     @Test
     public void interceptorQuery(){
         List<UserDto> users = userRepository.interceptorQuery();
+        users = userRepository.interceptorQuery();
         System.out.println("结果: " + JSON.toJSONString(users));
         Assert.assertFalse(users.isEmpty());
     }
@@ -186,6 +187,7 @@ public class UserRepositoryTest {
     @Test
     public void interceptorQueryFenix(){
         List<UserDto> users = userRepository.interceptorQueryFenix();
+        users = userRepository.interceptorQueryFenix();
         System.out.println("结果: " + JSON.toJSONString(users));
         Assert.assertFalse(users.isEmpty());
     }
