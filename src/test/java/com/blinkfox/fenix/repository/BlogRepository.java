@@ -3,6 +3,7 @@ package com.blinkfox.fenix.repository;
 import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.provider.BlogSqlInfoProvider;
+import com.blinkfox.fenix.specification.FenixJpaSpecificationExecutor;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Repository;
  * @author blinkfox on 2019/8/4.
  */
 @Repository
-public interface BlogRepository extends JpaRepository<Blog, String> {
+public interface BlogRepository extends JpaRepository<Blog, String>, FenixJpaSpecificationExecutor<Blog> {
 
     /**
      * 使用原生的 {@link Query} 注解来模糊查询博客信息.

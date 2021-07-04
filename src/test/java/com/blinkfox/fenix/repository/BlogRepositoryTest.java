@@ -13,7 +13,11 @@ import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -367,6 +371,32 @@ public class BlogRepositoryTest {
         Page<Long> blogPage = blogRepository.queryBlogsWithDistinctNative(Pageable.unpaged());
         Assert.assertFalse(blogPage.isEmpty());
         Assert.assertEquals(8, blogPage.getTotalElements());
+    }
+
+    @Test
+    public void queryBlogsWithSpecifition() {
+        // 这一段代码是在模拟构造前台传递查询的相关 map 型参数，当然也可以使用其他 Java 对象，作为查询参数.
+        Map<String, Object> params = new HashMap<>();
+        params.put("ids", new String[]{"1", "2", "3", "4", "5", "6", "7", "8"});
+        params.put("author", "ZhangSan");
+        params.put("startTime", Date.from(LocalDateTime.of(2019, Month.APRIL, 8, 0, 0, 0)
+                .atZone(ZoneId.systemDefault()).toInstant()));
+        params.put("endTime", Date.from(LocalDateTime.of(2019, Month.OCTOBER, 8, 0, 0, 0)
+                .atZone(ZoneId.systemDefault()).toInstant()));
+
+        // 开始真正的查询，使用.
+        Object[] ids = (Object[]) params.get("ids");
+        List<Blog> blogs = blogRepository.findAll(builder ->
+                builder.andIn(Blog::getId, ids, ids != null && ids.length > 0)
+                        .andLike("title", params.get("title"), params.get("title") != null)
+                        .andLike("author", params.get("author"))
+                        //.andBetween("createTime", params.get("startTime"), params.get("endTime"))
+                        .andBetween(Blog::getCreateTime, params.get("startTime"), params.get("endTime"))
+                        .build());
+
+        // 单元测试断言查询结果的正确性.
+        Assert.assertEquals(2, blogs.size());
+        blogs.forEach(blog -> Assert.assertTrue(blog.getAuthor().endsWith("ZhangSan")));
     }
 
     /**
