@@ -86,39 +86,6 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
         return FenixSimpleJpaRepository.class;
     }
 
-    /**
-     * 重写此方法, 完成对注解sql的拦截(因为@Query的sql是静态不可变的,所以可以在这里进行唯一的一次拦截修改)
-     * @param repositoryInterface
-     * @param fragments
-     * @param <T>
-     * @return
-     */
-    @Override
-    public <T> T getRepository(Class<T> repositoryInterface, RepositoryComposition.RepositoryFragments fragments) {
-        this.sqlInterceptor(repositoryInterface);
-        T repository = super.getRepository(repositoryInterface, fragments);
-
-        return repository;
-    }
-
-    private <T> void sqlInterceptor(Class<T> repositoryInterface) {
-        if (Objects.nonNull(sqlInterceptor)){
-            Method[] japMethods = ReflectionUtils.getAllDeclaredMethods(repositoryInterface);
-            Arrays.asList(japMethods).stream()
-            .filter(m -> m.isAnnotationPresent(Query.class) && m.isAnnotationPresent(FenixSqlInterceptor.class))
-            .forEach(m -> {
-                Query query = m.getAnnotation(Query.class);
-                String sql = query.value();
-                // 这里sql传入null，也可以从@Query注解里面取出来sql
-                String newSql = sqlInterceptor.onPrepareStatement(m, sql);
-                if (Objects.nonNull(newSql)){
-                    // 在生成 javax.persistence.Query之前替换掉注解里面的静态sql 为新的sql
-                    AnnotationHelper.updateAnnotationProperty(query, "value", newSql);
-                }
-            });
-        }
-    }
-
     public SqlInterceptor getSqlInterceptor() {
         return sqlInterceptor;
     }
