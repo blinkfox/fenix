@@ -144,16 +144,6 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
         // 如果没有 QueryFenix 注解，就是用默认的 jpaQueryLookupStrategy.resolveQuery 来构造 RepositoryQuery 实例.
         QueryFenix queryFenixAnnotation = method.getAnnotation(QueryFenix.class);
         if (queryFenixAnnotation == null) {
-            if(Objects.nonNull(sqlInterceptorAnnotation) && Objects.nonNull(query) && Objects.nonNull(sqlInterceptor)) {
-                String sql = query.value();
-                // 这里sql传入null，也可以从@Query注解里面取出来sql
-                String newSql = sqlInterceptor.onPrepareStatement(method, sql);
-                if (Objects.nonNull(newSql)){
-                    // 在生成 javax.persistence.Query之前替换掉注解里面的静态sql 为新的sql
-                    AnnotationHelper.updateAnnotationProperty(query, "value", newSql);
-                }
-            }
-
             return this.jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
         }
 

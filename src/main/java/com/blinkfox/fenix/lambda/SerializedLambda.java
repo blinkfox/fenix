@@ -24,6 +24,7 @@ import java.io.*;
 /**
  * @author HCL
  * 抄自 mybatis-plus 项目的 com.blinkfox.fenix.lambda.SerializedLambda
+ * -Djdk.internal.lambda.dumpProxyClasses
  */
 @SuppressWarnings("unused")
 public class SerializedLambda implements Serializable {

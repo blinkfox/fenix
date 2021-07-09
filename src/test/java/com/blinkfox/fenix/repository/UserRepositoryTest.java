@@ -5,7 +5,6 @@ import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfig;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.dto.UserDto;
-import com.blinkfox.fenix.entity.Blog;
 import com.blinkfox.fenix.entity.User;
 import com.blinkfox.fenix.interceptor.CustomerPage;
 import com.blinkfox.fenix.jpa.QueryFenix;
