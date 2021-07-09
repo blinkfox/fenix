@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class PageToCuctomerPageConvert<T> implements Converter<Page<T>, CustomerPage<T>> {
+public class PageToCustomerPageConvert<T> implements Converter<Page<T>, CustomerPage<T>> {
 
 	@Override
 	public CustomerPage<T> convert(Page<T> source) {

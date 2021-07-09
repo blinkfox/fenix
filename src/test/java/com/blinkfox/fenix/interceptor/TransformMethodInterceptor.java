@@ -16,7 +16,7 @@ public class TransformMethodInterceptor implements MethodInterceptor {
 		Method method = invocation.getMethod();
 		Class<?> returnType = method.getReturnType();
 		if((result instanceof Page) && (CustomerPage.class.equals(returnType))) {
-			CustomerPage<?> page = new PageToCuctomerPageConvert<>().convert((Page)result);
+			CustomerPage<?> page = new PageToCustomerPageConvert<>().convert((Page)result);
 			
 			return page;
 		}

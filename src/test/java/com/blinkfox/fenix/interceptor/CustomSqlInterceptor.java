@@ -18,7 +18,7 @@ public class CustomSqlInterceptor implements SqlInterceptor {
     @Override
     public String onPrepareStatement(Method method, String sql) {
         /**
-         * 这里只是进行模拟自动增加别名, 如果用户引用了 durid连接池 则可以使用它的sqlparse模块自动增加上别名, 或者引入其它的sql解析模块动态给sql增加别名, 在这里还可以实现转驼峰
+         * 这里只是进行模拟自动增加别名, 如果用户引用了 druid连接池 则可以使用它的sqlparse模块自动增加上别名, 或者引入其它的sql解析模块动态给sql增加别名, 在这里还可以实现转驼峰
          */
 
         System.out.println("拦截到sql: " + sql);
