@@ -1,23 +1,19 @@
 package com.blinkfox.fenix.specification.predicate;
 
-import com.blinkfox.fenix.exception.FenixException;
-import com.blinkfox.fenix.lambda.SFunction;
-import com.blinkfox.fenix.lambda.SerializedLambda;
+import com.blinkfox.fenix.helper.LambdaHelper;
+import com.blinkfox.fenix.helper.LambdaHelper.SFunction;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.handler.PredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.*;
 import lombok.Getter;
-import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Fenix 中用来动态链式构造 {@link Predicate} 实例的构造器.
@@ -1587,40 +1583,7 @@ public class FenixPredicateBuilder {
     }
 
     private static String getFieldName(SFunction lambda){
-        SerializedLambda serializedLambda = SerializedLambda.resolve(lambda, FenixPredicateBuilder.class.getClassLoader());
-        // 获取方法引用的类
-        String lambdaClassName = serializedLambda.getImplClassName();
-        // 获取方法引的方法
-        String lambdamethodName = serializedLambda.getImplMethodName();
-
-        try {
-            Class<?> lambdaClass = Class.forName(lambdaClassName);
-            Method lambdaMethod = ReflectionUtils.findMethod(lambdaClass, lambdamethodName);
-            // 尝试获取字段名称
-            String columnName = methodToProperty(lambdamethodName);
-
-            return columnName;
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-        throw new FenixException("无法从方法引用推导出类名称: " + lambdaClassName.substring(lambdaClassName.lastIndexOf(".") + 1) + ":" + lambdamethodName);
-    }
-
-    public static String methodToProperty(String methodName) {
-        if (methodName.startsWith("is")) {
-            methodName = methodName.substring(2);
-        } else if (methodName.startsWith("get") || methodName.startsWith("set")) {
-            methodName = methodName.substring(3);
-        } else {
-            throw new FenixException("Error parsing property name '" + methodName + "'.  Didn't start with 'is', 'get' or 'set'.");
-        }
-
-        if (methodName.length() == 1 || (methodName.length() > 1 && !Character.isUpperCase(methodName.charAt(1)))) {
-            methodName = methodName.substring(0, 1).toLowerCase(Locale.ENGLISH) + methodName.substring(1);
-        }
-
-        return methodName;
+        return LambdaHelper.getProperty(lambda);
     }
 
 }

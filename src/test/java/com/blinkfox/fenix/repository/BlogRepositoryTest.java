@@ -387,7 +387,9 @@ public class BlogRepositoryTest {
         // 开始真正的查询，使用.
         Object[] ids = (Object[]) params.get("ids");
         List<Blog> blogs = blogRepository.findAll(builder ->
-                builder.andIn(Blog::getId, ids, ids != null && ids.length > 0)
+                builder
+                        //.andIn("id", ids, ids != null && ids.length > 0)
+                        //.andIn(Blog::getId, ids, ids != null && ids.length > 0)
                         .andLike("title", params.get("title"), params.get("title") != null)
                         .andLike("author", params.get("author"))
                         //.andBetween("createTime", params.get("startTime"), params.get("endTime"))
