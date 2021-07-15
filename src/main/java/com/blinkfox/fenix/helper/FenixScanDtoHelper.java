@@ -12,9 +12,9 @@ public class FenixScanDtoHelper {
         final DefaultConversionService sharedConversionService = (DefaultConversionService) DefaultConversionService.getSharedInstance();
         ClassScannerHelper.scan(basePackage, annotationClass)
                 .forEach(clazz -> {
-            // 注册类型转换器
-            sharedConversionService.addConverter(Map.class, clazz, new GenericConvert(clazz));
-        });
+                    // 注册类型转换器
+                    sharedConversionService.addConverter(Map.class, clazz, new GenericConvert(clazz));
+                });
     }
 
 }

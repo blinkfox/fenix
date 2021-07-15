@@ -6,6 +6,7 @@ import com.blinkfox.fenix.core.Fenix;
 import com.blinkfox.fenix.helper.ClassMethodInvoker;
 import com.blinkfox.fenix.helper.QueryHelper;
 import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.jpa.interceptor.SqlInterceptor;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.*;
@@ -16,8 +17,10 @@ import org.springframework.data.repository.query.ReturnedType;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,6 +88,16 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private Class<?> queryClass;
 
     /**
+     * 新增sql拦截器
+     */
+    private SqlInterceptor sqlInterceptor;
+
+    /**
+     * Repository中的方法
+     */
+    private Method japMethod;
+
+    /**
      * Creates a new {@code AbstractJpaQuery} from the given {@code JpaQueryMethod}.
      *
      * @param method JpaQueryMethod
@@ -138,6 +151,10 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         String querySql = fenixQueryInfo.getQuerySql();
         Class<?> type = this.getTypeToQueryFor(jpaMethod.getResultProcessor().withDynamicProjection(
                 new ParametersParameterAccessor(jpaMethod.getParameters(), values)).getReturnedType(), querySql);
+        if (Objects.nonNull(this.sqlInterceptor)){
+            // 提供一个预处理sql的机会, 获取修改后的sql
+            querySql = sqlInterceptor.onPrepareStatement(this.japMethod, querySql);
+        }
         if (queryFenix.nativeQuery()) {
             query = type == null ? em.createNativeQuery(querySql) : em.createNativeQuery(querySql, type);
         } else {
@@ -403,4 +420,19 @@ public class FenixJpaQuery extends AbstractJpaQuery {
         return countSql.replaceFirst("count\\(\\*\\)", String.format("count(distinct %s)", distinctColumn));
     }
 
+    public SqlInterceptor getSqlInterceptor() {
+        return sqlInterceptor;
+    }
+
+    public void setSqlInterceptor(SqlInterceptor sqlInterceptor) {
+        this.sqlInterceptor = sqlInterceptor;
+    }
+
+    public void setJapMethod(Method japMethod) {
+        this.japMethod = japMethod;
+    }
+
+    public Method getJapMethod() {
+        return japMethod;
+    }
 }

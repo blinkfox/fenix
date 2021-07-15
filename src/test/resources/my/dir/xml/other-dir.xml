@@ -35,4 +35,26 @@
         <andLike field="u.email" value="user.email" match="user.email != empty"/>
     </fenix>
 
+    <fenix id="queryCustomPage" >
+        SELECT u FROM User AS u WHERE u.id in(#{ids})
+    </fenix>
+
+    <!-- 没有提供sql别名 -->
+    <fenix id="interceptorQueryFenix">
+        SELECT
+        u.id,
+        u.name ,
+        u.age ,
+        u.sex ,
+        u.password ,
+        u.birthday ,
+        u.createTime ,
+        u.updateTime ,
+        u.status ,
+        u.email
+        FROM User AS u
+        WHERE
+        1 = 1
+    </fenix>
+
 </fenixs>

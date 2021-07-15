@@ -2,11 +2,14 @@ package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.dto.UserDto;
 import com.blinkfox.fenix.entity.User;
+import com.blinkfox.fenix.interceptor.CustomerPage;
+import com.blinkfox.fenix.jpa.FenixSqlInterceptor;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.provider.UserSqlInfoProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -88,5 +91,30 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @QueryFenix("otherFenix.queryUserDtoListByName")
     List<UserDto> queryUserDtoListByName(@Param("user") User user);
+
+    /**
+     * 新增自定义 Page 类型返回值
+     * @param ids
+     * @param pageable
+     * @return
+     */
+    @QueryFenix("otherFenix.queryCustomPage")
+    CustomerPage<User> queryCustomPage(@Param("ids") List<String> ids, Pageable pageable);
+
+    /**
+     * 这里没有提供别名
+     * @return
+     */
+    @FenixSqlInterceptor(strategy = FenixSqlInterceptor.SqlColumnStrategy.UNDERLINE2CAMEL) // 打开sql拦截
+    @Query("SELECT " +
+            " u.id , u.name, u.age, u.sex, u.password, " +
+            " u.birthday, u.createTime, u.updateTime, " +
+            " u.status, u.email " +
+            " FROM User AS u")
+    List<UserDto> interceptorQuery();
+
+    @FenixSqlInterceptor(strategy = FenixSqlInterceptor.SqlColumnStrategy.CAMEL2UNDERLINE) // 打开sql拦截
+    @QueryFenix("otherFenix.interceptorQueryFenix")
+    List<UserDto> interceptorQueryFenix();
 
 }

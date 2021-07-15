@@ -3,12 +3,14 @@ package com.blinkfox.fenix.dto;
 import com.blinkfox.fenix.jpa.annotation.JpaDto;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @JpaDto
+@ToString
 public class UserDto {
 
     private String id;
