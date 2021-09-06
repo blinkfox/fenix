@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="BlogRepository">
+
+    <!-- 一个最简单的示例来查询我的博客信息. -->
+    <fenix id="querySimplyDemo">
+        SELECT b FROM Blog AS b
+        WHERE
+        <equal field="b.id" value="blog.id"/>
+    </fenix>
+
+</fenixs>

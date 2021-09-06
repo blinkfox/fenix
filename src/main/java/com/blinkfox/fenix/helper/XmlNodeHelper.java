@@ -10,12 +10,15 @@ import com.blinkfox.fenix.exception.NodeNotFoundException;
 import com.blinkfox.fenix.exception.XmlParseException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.springframework.core.io.UrlResource;
+import org.springframework.util.CollectionUtils;
 
 /**
  * XML 文件和 XML 标签节点相关操作的工具类.
@@ -43,25 +46,32 @@ public final class XmlNodeHelper {
      */
     public static Node getNodeBySpaceAndId(String namespace, String fenixId) {
         if (fenixConfigManager.getFenixConfig().isDebug()) {
-            URL url = FenixConfig.getXmlUrlMap().get(namespace);
-            if (url == null) {
+            Set<URL> urlSet = FenixConfig.getXmlUrlMap().get(namespace);
+            if (CollectionUtils.isEmpty(urlSet)) {
                 throw new ConfigNotFoundException("【Fenix 异常提示】在 debug 模式下，未找到命名空间为【" + namespace + "】的 XML 文件，请检查！");
             }
 
-            // 实时读取 XML 文件中指定 fenixId 的内容节点.
             Document doc;
-            try (InputStream in = new UrlResource(url).getInputStream()) {
-                doc = new SAXReader().read(in);
-            } catch (Exception e) {
-                throw new XmlParseException("【Fenix 异常提示】读取或解析 XML 文件失败，读取到的 XML 路径是:【" + url.getPath() + "】.", e);
-            }
+            Node node = null;
+            for (URL url : urlSet) {
+                // 实时读取 XML 文件中指定 fenixId 的内容节点.
+                try (InputStream in = new UrlResource(url).getInputStream()) {
+                    doc = new SAXReader().read(in);
+                } catch (Exception e) {
+                    throw new XmlParseException("【Fenix 异常提示】读取或解析 XML 文件失败，读取到的 XML 路径是:【" + url.getPath() + "】.", e);
+                }
 
-            try {
-                return doc.selectSingleNode("/fenixs/fenix[@id='" + fenixId + "']");
-            } catch (Exception e) {
-                throw new NodeNotFoundException("【Fenix 异常提示】在 XML 文件【" + url.getPath()
-                        + "】中未找到 ID 为【" + fenixId + "】的 Fenix 节点.");
+                try {
+                    node = doc.selectSingleNode("/fenixs/fenix[@id='" + fenixId + "']");
+                    if (Objects.nonNull(node)) {
+                        break;
+                    }
+                } catch (Exception e) {
+                    throw new NodeNotFoundException("【Fenix 异常提示】在 XML 文件【" + url.getPath()
+                            + "】中未找到 ID 为【" + fenixId + "】的 Fenix 节点.");
+                }
             }
+            return node;
         } else {
             return FenixConfig.getFenixs().get(StringHelper.concat(namespace, Const.DOT, fenixId));
         }
