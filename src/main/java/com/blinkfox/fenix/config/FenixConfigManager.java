@@ -13,7 +13,9 @@ import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -129,7 +131,7 @@ public final class FenixConfigManager {
 
         // 是否开启了 debug 模式.
         final boolean debug = this.fenixConfig.isDebug();
-        Map<String, URL> xmlUrlMap = FenixConfig.getXmlUrlMap();
+        Map<String, Set<URL>> xmlUrlMap = FenixConfig.getXmlUrlMap();
 
         // 遍历各个 XML 资源文件信息，将 fenixId 和 对应的 Node 节点缓存起来.
         Collection<XmlResource> xmlResources = xmlResourceMap.values();
@@ -153,7 +155,8 @@ public final class FenixConfigManager {
 
                 // v2.4.1 版本新增，如果开启了 debug 模式，就建立 namespace 和 xml 路径的映射关系，便于实时读取 XML 文件中的内容.
                 if (debug) {
-                    xmlUrlMap.put(namespace, xmlResource.getUrl());
+                    Set<URL> urlSet = xmlUrlMap.computeIfAbsent(namespace, k -> new HashSet<>());
+                    urlSet.add(xmlResource.getUrl());
                 }
             }
         }

@@ -66,6 +66,7 @@ import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import lombok.Getter;
 import org.dom4j.Node;
@@ -127,7 +128,7 @@ public class FenixConfig {
      * @since v2.4.1
      */
     @Getter
-    private static final Map<String, URL> xmlUrlMap = new HashMap<>();
+    private static final Map<String, Set<URL>> xmlUrlMap = new HashMap<>();
 
     /**
      * 初始化默认的一些标签和 TagHandler 实例到 HashMap 集合中，key 是标签字符串,value 是 TagHandler 实例.
