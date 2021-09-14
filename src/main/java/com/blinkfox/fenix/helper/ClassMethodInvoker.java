@@ -31,11 +31,11 @@ public final class ClassMethodInvoker {
      */
     public static SqlInfo invoke(Class<?> cls, String method, Map<String, Object> paramMap) {
         Method[] methods = cls.getMethods();
-        int n = methods.length;
         for (Method m : methods) {
             if (m.getName().equals(method)) {
-                List<Object> paramValues = new ArrayList<>(n);
-                for (Parameter p : m.getParameters()) {
+                Parameter[] parameters = m.getParameters();
+                List<Object> paramValues = new ArrayList<>(parameters.length);
+                for (Parameter p : parameters) {
                     Param param = p.getAnnotation(Param.class);
                     paramValues.add(param != null ? paramMap.get(param.value()) : null);
                 }
