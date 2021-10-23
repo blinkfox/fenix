@@ -16,12 +16,14 @@ import org.hibernate.type.descriptor.java.DataHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.convert.JodaTimeConverters;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * 自定义查询结果的转换器.
@@ -71,8 +73,44 @@ public class FenixResultTransformer<T> implements ResultTransformer {
         // 将返回结果类中的所有属性保存到 Map 中，便于后续快速获取和判断.
         this.fieldMap = new HashMap<>();
         PropertyDescriptor[] propDescriptors = BeanUtils.getPropertyDescriptors(this.resultClass);
+        handleFieldMap(propDescriptors, null);
+    }
+
+    /**
+     * 处理结果类中的所有属性，包括深度嵌套的属性到 fieldMap 中.
+     *
+     * @param propDescriptors 给定类的 PropertyDescriptors 数组
+     * @param nestedPropertyPrefix 嵌套属性的前缀
+     */
+    private void handleFieldMap(PropertyDescriptor[] propDescriptors, String nestedPropertyPrefix) {
         for (PropertyDescriptor propDescriptor : propDescriptors) {
-            this.fieldMap.put(propDescriptor.getName().toLowerCase(), propDescriptor);
+            Class<?> propertyType = propDescriptor.getPropertyType();
+            // 不是"简单"类型的递归执行
+            if (!BeanUtils.isSimpleProperty(propertyType)) {
+                String propertyTypeName = propertyType.getSimpleName();
+                propertyTypeName = StringUtils.uncapitalize(propertyTypeName);
+                PropertyDescriptor[] propertyDescriptors =
+                        BeanUtils.getPropertyDescriptors(propertyType);
+                String tempNestedPropertyPrefix = nestedPropertyPrefix;
+                if (StringUtils.hasText(nestedPropertyPrefix)) {
+                    nestedPropertyPrefix =
+                            nestedPropertyPrefix + propertyTypeName + PropertyAccessor.NESTED_PROPERTY_SEPARATOR;
+                } else {
+                    nestedPropertyPrefix = propertyTypeName + PropertyAccessor.NESTED_PROPERTY_SEPARATOR;
+                }
+                handleFieldMap(propertyDescriptors, nestedPropertyPrefix);
+                // 重置
+                nestedPropertyPrefix = tempNestedPropertyPrefix;
+            }
+
+            String key;
+            if (StringUtils.hasText(nestedPropertyPrefix)) {
+                key = nestedPropertyPrefix + propDescriptor.getName();
+            } else {
+                key = propDescriptor.getName();
+            }
+
+            this.fieldMap.put(key, propDescriptor);
         }
     }
 
@@ -96,6 +134,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
 
         BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(resultObject);
         beanWrapper.setConversionService(conversionService);
+        beanWrapper.setAutoGrowNestedPaths(true);
 
         // 遍历设置各个属性对应的值.
         for (int i = 0, len = aliases.length; i < len; i++) {
@@ -105,13 +144,15 @@ public class FenixResultTransformer<T> implements ResultTransformer {
                         + "请检查并保证每一个查询结果列都必须用【as】后加“别名”的方式！");
             }
 
-            PropertyDescriptor propDescriptor = this.fieldMap.get(column.replaceAll(" ", "").toLowerCase());
+            column = column.replaceAll(" ", "");
+            // TODO: 2021/10/23 HSQL(可能还有其他的数据库)返回的 aliases 是所有大写的名称，需要做适配，临时用双引号规避掉这个问题
+            PropertyDescriptor propDescriptor = this.fieldMap.get(column);
             if (propDescriptor == null) {
                 continue;
             }
 
             try {
-                beanWrapper.setPropertyValue(propDescriptor.getName(), tuple[i]);
+                beanWrapper.setPropertyValue(column, tuple[i]);
             } catch (NotWritablePropertyException | TypeMismatchException e) {
                 throw new FenixException("【Fenix 异常】设置字段【" + column + "】的值到属性【"
                         + propDescriptor.getName() + "】中出错，请检查该字段或属性是否存在或者可公开访问！", e);

@@ -5,6 +5,7 @@ import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.provider.BlogSqlInfoProvider;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
+import com.blinkfox.fenix.vo.UserBlogInfo4Nested;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 
 /**
  * 博客数据的库持久化类.
@@ -95,6 +95,17 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
      */
     @QueryFenix(value = "BlogRepository.queryUserBlogsWithFenixNative", nativeQuery = true)
     List<UserBlogInfo> queryUserBlogsWithFenixNative(@Param("userId") String userId, @Param("title") String title);
+
+    /**
+     * 使用原生的 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体信息.主要测试嵌套属性的投影
+     *
+     * @param userId 用户 ID
+     * @param title 标题
+     * @return 用户博客信息集合
+     */
+    @QueryFenix(value = "BlogRepository.queryUserBlogsWithFenixNative4Nested", nativeQuery = true)
+    List<UserBlogInfo4Nested> queryUserBlogsWithFenixNative4Nested(@Param("userId") String userId,
+            @Param("title") String title);
 
     /**
      * 使用 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体分页信息.
@@ -221,6 +232,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测的分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -229,6 +241,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -237,6 +250,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -245,6 +259,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 用户ID集合
      */

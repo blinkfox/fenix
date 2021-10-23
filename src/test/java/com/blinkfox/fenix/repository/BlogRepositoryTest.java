@@ -11,6 +11,7 @@ import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.blinkfox.fenix.vo.UserBlogDto;
 import com.blinkfox.fenix.vo.UserBlogInfo;
+import com.blinkfox.fenix.vo.UserBlogInfo4Nested;
 import com.blinkfox.fenix.vo.UserBlogProjection;
 import java.io.IOException;
 import java.util.Date;
@@ -162,6 +163,17 @@ public class BlogRepositoryTest {
         List<UserBlogInfo> userBlogs = blogRepository.queryUserBlogsWithFenixNative("1", SPRING);
         Assert.assertFalse(userBlogs.isEmpty());
         Assert.assertTrue(StringHelper.isNotBlank(userBlogs.get(0).getName()));
+    }
+
+    /**
+     * 测试嵌套属性投影.
+     */
+    @Test
+    public void testQueryUserBlogsWithFenixNative4Nested() {
+        List<UserBlogInfo4Nested> userBlogInfo4Nesteds = blogRepository.queryUserBlogsWithFenixNative4Nested("1",
+                SPRING);
+        Assert.assertFalse(userBlogInfo4Nesteds.isEmpty());
+        Assert.assertTrue(StringHelper.isNotBlank(userBlogInfo4Nesteds.get(0).getName()));
     }
 
     /**
