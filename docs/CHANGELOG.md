@@ -1,6 +1,10 @@
 # 🍹 版本更新记录 :id=title
 
-## 🎣 v2.6.0 支持 Spring Data JPA 2.6.0 版本 🆕 (2021-11-21) :id=v260
+## 🏔️ v2.6.1 修复启动 Banner 版本号不对的小问题 🆕 (2021-12-10) :id=v261
+
+- 修复了 Fenix 启动 Banner 中版本号不对的小问题；
+
+## 🎣 v2.6.0 支持 Spring Data JPA 2.6.0 版本 (2021-11-21) :id=v260
 
 - 支持最新的 Spring Data JPA 版本(`v2.6.0`)，同时也能兼容之前的 Spring Data JPA 版本；
 
