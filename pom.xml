@@ -46,19 +46,19 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>2.6.0</version>
+            <version>2.6.1</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.2.Final</version>
+            <version>5.6.4.Final</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.32</version>
+            <version>1.7.33</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.mvel</groupId>
             <artifactId>mvel2</artifactId>
-            <version>2.4.13.Final</version>
+            <version>2.4.14.Final</version>
         </dependency>
         <dependency>
             <groupId>jaxen</groupId>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.3.13</version>
+            <version>5.3.15</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -121,13 +121,13 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.78</version>
+            <version>1.2.79</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.blinkfox</groupId>
             <artifactId>stalker</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.3</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
