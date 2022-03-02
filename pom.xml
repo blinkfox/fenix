@@ -52,13 +52,13 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.4.Final</version>
+            <version>5.6.5.Final</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.33</version>
+            <version>1.7.36</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.3.15</version>
+            <version>5.3.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
