@@ -4,6 +4,8 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.lang.reflect.InvocationTargetException;
 import javax.persistence.Query;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
 
@@ -19,6 +21,7 @@ import org.hibernate.transform.ResultTransformer;
  * @see NativeQuery
  * @since v1.1.0
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class QueryResultBuilder {
 
     /**
@@ -32,19 +35,21 @@ final class QueryResultBuilder {
     @SuppressWarnings("deprecation")
     static Query build(Query query, String resultTypeClassStr, QueryFenix queryFenix) {
         // 反射创建 ResultTransformer 的对象实例.
-        Class<? extends AbstractResultTransformer> resultTransformerClass = queryFenix.resultTransformer();
         AbstractResultTransformer transformer;
         try {
-            transformer = resultTransformerClass.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            transformer = queryFenix.resultTransformer().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException
+                | InvocationTargetException | NoSuchMethodException e) {
             throw new FenixException(StringHelper.format("【Fenix 异常】通过反射创建【{}】类的对象实例异常，请检查该类的"
                     + "构造方法是否有 public 的无参构造方法，建议你参考【com.blinkfox.fenix.jpa.FenixResultTransformer】类来实现"
-                    + "自己的 ResultTransformer 类。", resultTransformerClass.getName()), e);
+                    + "自己的 ResultTransformer 类。", queryFenix.resultTransformer().getName()), e);
         }
 
-        // 设置结果类型的 class
-        transformer.setResultClass(getResultTypeClass(resultTypeClassStr));
+        // 设置结果类型的 class，并进行初始化设置.
+        transformer.setResultClass(getResultTypeClass(queryFenix.resultType(), resultTypeClassStr));
+        transformer.init();
 
+        // 根据是否原生 SQL 来包装并设置查询结果转换器对象.
         if (queryFenix.nativeQuery()) {
             // 获取该查询对应的 NativeQuery，设置转换类型.
             query.unwrap(NativeQuery.class).setResultTransformer(transformer);
@@ -55,12 +60,17 @@ final class QueryResultBuilder {
     }
 
     /**
-     * 获取返回类型字符串所对应的 {@code Class} 实例.// TODO 待完成.
+     * 根据多个结果类型优先选取或得到一个可用的结果类型，如果 class 为空，就返回类型字符串所对应的 {@code Class} 实例.
      *
+     * @param resultTypeClass 结果类型的 Class 对象
      * @param resultTypeClassStr 结果类型
      * @return {@code Class} 实例
      */
-    private static Class<?> getResultTypeClass(String resultTypeClassStr) {
+    private static Class<?> getResultTypeClass(Class<?> resultTypeClass, String resultTypeClassStr) {
+        if (resultTypeClass != null && resultTypeClass != Void.class) {
+            return resultTypeClass;
+        }
+
         try {
             return Class.forName(resultTypeClassStr);
         } catch (ClassNotFoundException e) {
