@@ -13,10 +13,10 @@
     Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
  -->
 
- <!-- 这是基于 Google CheckStyle 文件 
-    (https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml) 
-    而修改的符合 Blinkfox 风格指南的 checkstyle 文件.
- -->
+<!-- 这是基于 Google CheckStyle 文件
+   (https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml)
+   而修改的符合 Blinkfox 风格指南的 checkstyle 文件.
+-->
 
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
@@ -302,11 +302,13 @@
         <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false"/>
             <property name="allowedAbbreviationLength" value="1"/>
-            <property name="allowedAbbreviations" value="XML, URL, ID, FTP, DTO, VO, DO, TO, PO, BO, POJO"/>
+            <property name="allowedAbbreviations" value="XML, URL, ID, FTP, DTO, VO, DO, TO, PO, BO, POJO, HTTP, IP"/>
             <property name="tokens"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF,
                     PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF"/>
         </module>
+        <!-- 检查 switch 块中冒号之前是否没有空格. -->
+        <module name="NoWhitespaceBeforeCaseDefaultColon"/>
         <!-- 检查重载方法是否都分组在一起. -->
         <module name="OverloadMethodsDeclarationOrder"/>
         <!-- 检查变量声明与其首次使用之间的距离，默认大于 3 行，如果该变量是 final 修饰的，默认会忽略此规则. -->
@@ -380,7 +382,7 @@
         </module>
         <!-- Javadoc 方法注释，检查 protected 及其之上的 protected 域，且不能缺失 @param 和 @return 的注解标记. -->
         <module name="JavadocMethod">
-            <property name="scope" value="protected"/>
+            <property name="accessModifiers" value="protected"/>
             <property name="allowMissingParamTags" value="false"/>
             <property name="allowMissingReturnTag" value="false"/>
             <!-- Javadoc 方法注释，允许在具有 @Override 和 @Test 注解的方法上写 Javadoc 注释. -->
@@ -394,6 +396,12 @@
             <!-- Javadoc 方法注释，允许在具有 @Override 和 @Test 注解的方法上不写 Javadoc 注释. -->
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
+        </module>
+        <!-- 检查类、枚举、接口和注解接口定义中缺少的 Javadoc 注释. -->
+        <module name="MissingJavadocType">
+            <property name="scope" value="protected"/>
+            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF"/>
+            <property name="excludeScope" value="nothing"/>
         </module>
         <!-- 方法名使用小驼峰的模式. -->
         <module name="MethodName">

@@ -8,9 +8,7 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.BlobType;
 import org.hibernate.type.descriptor.java.DataHelper;
 import org.springframework.beans.BeanUtils;
@@ -21,16 +19,15 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.convert.JodaTimeConverters;
-import org.springframework.util.Assert;
 
 /**
  * 自定义查询结果的转换器.
  *
- * @param <T> 要转换的范型 T
  * @author blinkfox on 2019-10-08.
+ * @author blinkfox on 2022-03-25 (v2.7.0) 做了代码重构，公共代码集成自 {@link AbstractResultTransformer}
  * @since v1.1.0
  */
-public class FenixResultTransformer<T> implements ResultTransformer {
+public class FenixResultTransformer extends AbstractResultTransformer {
 
     /**
      * serialVersionUID.
@@ -40,14 +37,9 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     private static final DefaultConversionService conversionService = new DefaultConversionService();
 
     /**
-     * 要转换类型的 class 实例.
-     */
-    private final Class<T> resultClass;
-
-    /**
      * 返回结果各属性字段名称及对应的对象间的映射关系 Map.
      */
-    private final transient Map<String, PropertyDescriptor> fieldMap;
+    private transient Map<String, PropertyDescriptor> fieldMap;
 
     static {
         // 添加一些默认的 ConversionService.
@@ -60,17 +52,18 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     }
 
     /**
-     * 基于要转换的 {@code resultClass} 类型的构造方法.
+     * 结果 类 class 的 Setter 方法.
      *
-     * @param resultClass 转换类型的 class
+     * @param resultClass 结果类的 class
      */
-    public FenixResultTransformer(Class<T> resultClass) {
-        Assert.notNull(resultClass, "【Fenix 异常】resultClass cannot be null.");
-        this.resultClass = resultClass;
+    @Override
+    public void setResultClass(Class<?> resultClass) {
+        // 调用父类设置结果 class 的方法.
+        super.setResultClassValue(resultClass);
 
         // 将返回结果类中的所有属性保存到 Map 中，便于后续快速获取和判断.
-        this.fieldMap = new HashMap<>();
         PropertyDescriptor[] propDescriptors = BeanUtils.getPropertyDescriptors(this.resultClass);
+        this.fieldMap = new HashMap<>(propDescriptors.length);
         for (PropertyDescriptor propDescriptor : propDescriptors) {
             this.fieldMap.put(propDescriptor.getName().toLowerCase(), propDescriptor);
         }
@@ -86,7 +79,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
         // 构造结果实例.
-        T resultObject;
+        Object resultObject;
         try {
             resultObject = this.resultClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException
@@ -120,17 +113,7 @@ public class FenixResultTransformer<T> implements ResultTransformer {
         return resultObject;
     }
 
-    /**
-     * 直接返回集合本身即可.
-     *
-     * @param list 集合.
-     * @return 集合
-     */
-    @SuppressWarnings("rawtypes")
-    @Override
-    public List<?> transformList(List list) {
-        return list;
-    }
+
 
     /**
      * Clob 转换为 String 的转换器类.

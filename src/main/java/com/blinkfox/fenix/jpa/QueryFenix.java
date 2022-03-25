@@ -77,4 +77,23 @@ public @interface QueryFenix {
      */
     boolean enableDistinct() default false;
 
+    /**
+     * 自定义查询结果的 Class 类型.
+     *
+     * <p>该属性和 Fenix XML 文件中的 {@code resultType} 同义，后续推荐使用本属性来设置结果类型的 class，
+     * 这样能更好的利用 Java 类的静态编译检查和代码重构后发现一些类路径修改所造成的隐患问题.</p>
+     *
+     * @since 2.7.0
+     */
+    Class<?> resultType() default Void.class;
+
+    /**
+     * 自定义查询结果的转换器的 Class 类型.
+     *
+     * <p>为了保持向前兼容，默认的转换器仍然使用的是之前版本使用的 {@link FenixResultTransformer} 类的 Class.</p>
+     *
+     * @since 2.7.0
+     */
+    Class<? extends AbstractResultTransformer> resultTransformer() default FenixResultTransformer.class;
+
 }
