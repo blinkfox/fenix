@@ -14,6 +14,9 @@ import java.util.Set;
  */
 public class PrefixUnderscoreTransformer extends UnderscoreTransformer {
 
+    /**
+     * 需要从字段属性中去除的前缀集合.
+     */
     private static final Set<String> prefixSet = new HashSet<>();
 
     static {

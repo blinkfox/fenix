@@ -48,7 +48,7 @@ public final class Const {
     public static final String SPACE = " ";
 
     /**
-     *空字符串.
+     * 空字符串.
      *
      * @since v2.1.0
      */

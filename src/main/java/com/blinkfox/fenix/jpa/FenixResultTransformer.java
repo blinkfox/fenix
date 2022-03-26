@@ -6,6 +6,7 @@ import java.beans.PropertyDescriptor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.core.convert.converter.Converter;
@@ -20,7 +21,7 @@ import org.springframework.data.convert.JodaTimeConverters;
  *
  * @author blinkfox on 2019-10-08.
  * @author blinkfox on 2022-03-25 (v2.7.0) 做了代码重构，公共代码集成自 {@link AbstractResultTransformer}
- * @see com.blinkfox.fenix.jpa.transformer.LowerCamelCaseTransformer
+ * @see com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer
  * @see com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer
  * @since v1.1.0
  */
@@ -30,6 +31,14 @@ public class FenixResultTransformer extends AbstractResultTransformer {
      * serialVersionUID.
      */
     private static final long serialVersionUID = 4519223959994503529L;
+
+    /**
+     * 返回结果类中所有属性描述信息的映射关系 Map.
+     *
+     * <p>其中 key 为结果类 class 的全类路径名，value 为实体类中 Java 属性的 Map.
+     * 该子 Map 的 key是属性的小写名称，value 是属性真正的名称.</p>
+     */
+    protected static final Map<String, Map<String, String>> classIgnoreCaseFieldsMap = new ConcurrentHashMap<>();
 
     private static final DefaultConversionService oldConversionService = new DefaultConversionService();
 
@@ -50,14 +59,15 @@ public class FenixResultTransformer extends AbstractResultTransformer {
      */
     @Override
     public void init() {
-        Map<String, PropertyDescriptor> fieldsMap = classPropertiesMap.get(this.resultClass.getName());
+        Map<String, String> fieldsMap = classIgnoreCaseFieldsMap.get(this.resultClass.getName());
         if (fieldsMap == null) {
             PropertyDescriptor[] propDescriptors = BeanUtils.getPropertyDescriptors(this.resultClass);
             fieldsMap = new HashMap<>(propDescriptors.length);
             for (PropertyDescriptor propDescriptor : propDescriptors) {
-                fieldsMap.put(propDescriptor.getName().toLowerCase(), propDescriptor);
+                String propName = propDescriptor.getName();
+                fieldsMap.put(propName.toLowerCase(), propName);
             }
-            classPropertiesMap.put(this.resultClass.getName(), fieldsMap);
+            classIgnoreCaseFieldsMap.put(this.resultClass.getName(), fieldsMap);
         }
     }
 
@@ -73,7 +83,7 @@ public class FenixResultTransformer extends AbstractResultTransformer {
         // 获取实际数据库查询结果对象的字段信息和 result class 类的属性信息
         BeanWrapper beanWrapper = super.newResultBeanWrapper();
         beanWrapper.setConversionService(oldConversionService);
-        Map<String, PropertyDescriptor> fieldsMap = classPropertiesMap.get(super.resultClass.getName());
+        Map<String, String> fieldsMap = classIgnoreCaseFieldsMap.get(super.resultClass.getName());
 
         // 遍历设置各个属性对应的值.
         for (int i = 0, len = aliases.length; i < len; ++i) {

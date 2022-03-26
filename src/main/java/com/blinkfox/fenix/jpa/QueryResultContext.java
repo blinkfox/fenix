@@ -2,6 +2,7 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
+import com.blinkfox.fenix.jpa.transformer.ColumnAnnotationTransformer;
 import com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer;
 import com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer;
 import java.lang.reflect.InvocationTargetException;
@@ -38,6 +39,7 @@ final class QueryResultContext {
         buildInTransformerMap.put(FenixResultTransformer.class.getName(), FenixResultTransformer::new);
         buildInTransformerMap.put(UnderscoreTransformer.class.getName(), UnderscoreTransformer::new);
         buildInTransformerMap.put(PrefixUnderscoreTransformer.class.getName(), PrefixUnderscoreTransformer::new);
+        buildInTransformerMap.put(ColumnAnnotationTransformer.class.getName(), ColumnAnnotationTransformer::new);
     }
 
     /**

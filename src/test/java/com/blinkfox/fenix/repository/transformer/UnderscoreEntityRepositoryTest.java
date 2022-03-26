@@ -3,6 +3,7 @@ package com.blinkfox.fenix.repository.transformer;
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.entity.transformer.UnderscoreEntity;
+import com.blinkfox.fenix.vo.transformer.UnderscoreColumnVo;
 import com.blinkfox.fenix.vo.transformer.UnderscoreVo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,11 +72,8 @@ public class UnderscoreEntityRepositoryTest {
         Assert.assertEquals(COUNT, this.underscoreEntityRepository.count());
     }
 
-    /**
-     * 测试保存所有数据的方法.
-     */
     @Test
-    public void findAll() {
+    public void queryFenixResultType() {
         int num = 2;
         List<UnderscoreVo> underscoreVoList = this.underscoreEntityRepository.queryFenixResultType(num);
         Assert.assertEquals(COUNT - num, underscoreVoList.size());
@@ -89,6 +87,23 @@ public class UnderscoreEntityRepositoryTest {
             Assert.assertNotNull(underscoreVo.getColumnFourTestName());
             Assert.assertNotNull(underscoreVo.getColumnCreateTime());
             Assert.assertNotNull(underscoreVo.getColumnLastUpdateTime());
+        }
+    }
+
+    @Test
+    public void queryAtColumnVoList() {
+        int num = 3;
+        List<UnderscoreColumnVo> underscoreColumnVoList = this.underscoreEntityRepository.queryAtColumnVoList(num);
+        Assert.assertEquals(COUNT - num, underscoreColumnVoList.size());
+        for (UnderscoreColumnVo underscoreColumnVo : underscoreColumnVoList) {
+            Assert.assertNotNull(underscoreColumnVo.getId());
+            Assert.assertNotNull(underscoreColumnVo.getColumnName());
+            Assert.assertTrue(underscoreColumnVo.getColumnName().startsWith(COLUMN_VALUE));
+            Assert.assertNotNull(underscoreColumnVo.getColumnLongName());
+            Assert.assertTrue(underscoreColumnVo.getColumnLongName() > num);
+            Assert.assertNotNull(underscoreColumnVo.getColumnFourTestName());
+            Assert.assertNotNull(underscoreColumnVo.getLastUpdateTime());
+            Assert.assertNull(underscoreColumnVo.getCreateTime());
         }
     }
 

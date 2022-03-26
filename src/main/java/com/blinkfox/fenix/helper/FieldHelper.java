@@ -25,8 +25,7 @@ public final class FieldHelper {
      * @return 所有的 {@link Field} 字段的数组
      */
     public static Field[] getAllFields(final Class<?> cls) {
-        final List<Field> allFieldsList = getAllFieldsList(cls);
-        return allFieldsList.toArray(new Field[0]);
+        return getAllFieldsList(cls).toArray(new Field[0]);
     }
 
     /**
@@ -40,8 +39,7 @@ public final class FieldHelper {
         final List<Field> allFields = new ArrayList<>();
         Class<?> currentClass = cls;
         while (currentClass != null) {
-            final Field[] declaredFields = currentClass.getDeclaredFields();
-            Collections.addAll(allFields, declaredFields);
+            Collections.addAll(allFields, currentClass.getDeclaredFields());
             currentClass = currentClass.getSuperclass();
         }
         return allFields;

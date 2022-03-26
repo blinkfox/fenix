@@ -17,4 +17,17 @@
             column_long_name > #{num}
     </fenix>
 
+    <!-- 查询并返回自定义的实体 Bean，该 Bean 的属性通过 @Column 注解来标注. -->
+    <fenix id="queryAtColumnVoList">
+        SELECT
+            u.id,
+            u.column_name,
+            column_long_name,
+            u.column_four_test_name,
+            u.column_last_update_time
+        FROM t_underscore_table as u
+        WHERE
+        u.column_long_name > #{num}
+    </fenix>
+
 </fenixs>
