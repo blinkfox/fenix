@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,6 +35,12 @@ public class UnderscoreEntityRepositoryTest {
     @Resource
     private UnderscoreEntityRepository underscoreEntityRepository;
 
+    /**
+     * 是否加载过的标识.
+     */
+    @Setter
+    private static Boolean isLoad = false;
+
     private static final int COUNT = 5;
 
     /**
@@ -40,25 +48,27 @@ public class UnderscoreEntityRepositoryTest {
      */
     @PostConstruct
     public void init() {
-        // 初始化加载 Fenix 配置.
-        FenixConfigManager.getInstance().initLoad();
+        if (!isLoad) {
+            // 初始化加载 Fenix 配置.
+            FenixConfigManager.getInstance().initLoad();
 
-        // 构造实体集合.
-        List<UnderscoreEntity> underscoreEntities = new ArrayList<>();
-        for (int i = 1; i <= 5; ++i) {
-            underscoreEntities.add(new UnderscoreEntity()
-                    .setColumnName(COLUMN_VALUE + i)
-                    .setColumnLongName((long) i)
-                    .setColumnThreeName("This is column_three_name value, index is:" + i)
-                    .setColumnFourTestName("这是 column_four_test_name 的值, index is:" + i)
-                    .setColumnCreateTime(new Date())
-                    .setColumnLastUpdateTime(LocalDateTime.now()));
+            // 构造实体集合.
+            List<UnderscoreEntity> underscoreEntities = new ArrayList<>();
+            for (int i = 1; i <= COUNT; ++i) {
+                underscoreEntities.add(new UnderscoreEntity()
+                        .setColumnName(COLUMN_VALUE + i)
+                        .setColumnLongName((long) i)
+                        .setColumnThreeName("This is column_three_name value, index is:" + i)
+                        .setColumnFourTestName("这是 column_four_test_name 的值, index is:" + i)
+                        .setColumnCreateTime(new Date())
+                        .setColumnLastUpdateTime(LocalDateTime.now()));
+            }
+            this.underscoreEntityRepository.saveAll(underscoreEntities);
+            isLoad = true;
         }
-        this.underscoreEntityRepository.saveAll(underscoreEntities);
 
         // 断言结果是否正确.
-        List<UnderscoreEntity> entities = this.underscoreEntityRepository.findAll();
-        Assert.assertEquals(COUNT, entities.size());
+        Assert.assertEquals(COUNT, this.underscoreEntityRepository.count());
     }
 
     /**
@@ -74,12 +84,20 @@ public class UnderscoreEntityRepositoryTest {
             Assert.assertNotNull(underscoreVo.getColumnName());
             Assert.assertTrue(underscoreVo.getColumnName().startsWith(COLUMN_VALUE));
             Assert.assertNotNull(underscoreVo.getColumnLongName());
-            Assert.assertTrue(underscoreVo.getColumnLongName() > 2);
+            Assert.assertTrue(underscoreVo.getColumnLongName() > num);
             Assert.assertNotNull(underscoreVo.getColumnThreeName());
             Assert.assertNotNull(underscoreVo.getColumnFourTestName());
             Assert.assertNotNull(underscoreVo.getColumnCreateTime());
             Assert.assertNotNull(underscoreVo.getColumnLastUpdateTime());
         }
+    }
+
+    /**
+     * 销毁.
+     */
+    @PreDestroy
+    public void destroy() {
+        FenixConfigManager.getInstance().clear();
     }
 
 }

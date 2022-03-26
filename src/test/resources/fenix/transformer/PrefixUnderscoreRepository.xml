@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="com.blinkfox.fenix.repository.transformer.PrefixUnderscoreRepository">
+
+    <!-- 查询并返回自定义的实体 Bean. -->
+    <fenix id="queryPrefixUnderscoreVoWithXml">
+        SELECT
+            pu.c_id,
+            pu.c_name,
+            n_integer_column,
+            n_long_column,
+            pu.dt_last_update_time
+        FROM t_prefix_underscore as pu
+        WHERE
+            n_integer_column >= #{num}
+    </fenix>
+
+</fenixs>

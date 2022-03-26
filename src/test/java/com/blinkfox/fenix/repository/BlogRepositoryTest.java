@@ -326,7 +326,7 @@ public class BlogRepositoryTest {
     public void queryBlogsWithDistinct() {
         Page<Blog> blogPage = blogRepository.queryBlogsWithDistinct(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
-        Assert.assertTrue(blogPage.getTotalElements() == 8);
+        Assert.assertEquals(8, blogPage.getTotalElements());
     }
 
     /**
@@ -336,7 +336,7 @@ public class BlogRepositoryTest {
     public void queryBlogsWithoutDistinct() {
         Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinct(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
-        Assert.assertTrue(blogPage.getTotalElements() == 10);
+        Assert.assertEquals(10, blogPage.getTotalElements());
     }
 
     /**
@@ -346,7 +346,7 @@ public class BlogRepositoryTest {
     public void queryBlogsWithoutDistinctNative() {
         Page<Blog> blogPage = blogRepository.queryBlogsWithoutDistinctNative(PageRequest.of(0, 10));
         Assert.assertFalse(blogPage.isEmpty());
-        Assert.assertTrue(blogPage.getTotalElements() == 10);
+        Assert.assertEquals(10, blogPage.getTotalElements());
     }
 
     /**

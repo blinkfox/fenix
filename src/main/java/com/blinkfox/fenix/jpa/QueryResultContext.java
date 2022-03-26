@@ -2,9 +2,7 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
-import com.blinkfox.fenix.jpa.transformer.HyphenTransformer;
-import com.blinkfox.fenix.jpa.transformer.LowerCamelCaseTransformer;
-import com.blinkfox.fenix.jpa.transformer.UnderscoreHyphenTransformer;
+import com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer;
 import com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -38,10 +36,8 @@ final class QueryResultContext {
 
     static {
         buildInTransformerMap.put(FenixResultTransformer.class.getName(), FenixResultTransformer::new);
-        buildInTransformerMap.put(LowerCamelCaseTransformer.class.getName(), LowerCamelCaseTransformer::new);
         buildInTransformerMap.put(UnderscoreTransformer.class.getName(), UnderscoreTransformer::new);
-        buildInTransformerMap.put(HyphenTransformer.class.getName(), HyphenTransformer::new);
-        buildInTransformerMap.put(UnderscoreHyphenTransformer.class.getName(), UnderscoreHyphenTransformer::new);
+        buildInTransformerMap.put(PrefixUnderscoreTransformer.class.getName(), PrefixUnderscoreTransformer::new);
     }
 
     /**
