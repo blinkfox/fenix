@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="com.blinkfox.fenix.repository.transformer.UnderscoreEntityRepository">
+
+    <!-- 查询并返回自定义的实体 Bean. -->
+    <fenix id="queryFenixResultType">
+        SELECT
+            u.id,
+            u.column_name,
+            column_long_name,
+            column_three_name,
+            u.column_four_test_name,
+            u.column_create_time,
+            u.column_last_update_time
+        FROM t_underscore_table as u
+        WHERE
+            column_long_name > #{num}
+    </fenix>
+
+</fenixs>

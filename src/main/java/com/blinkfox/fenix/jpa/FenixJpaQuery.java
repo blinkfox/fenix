@@ -153,8 +153,8 @@ public class FenixJpaQuery extends AbstractJpaQuery {
 
         // 如果自定义设置的返回类型不为空，就做额外的返回结果处理.
         String resultType = sqlInfo.getResultType();
-        if (StringHelper.isNotBlank(resultType)) {
-            query = QueryResultBuilder.build(query, resultType, queryFenix);
+        if (StringHelper.isNotBlank(resultType) || queryFenix.resultType() != Void.class) {
+            query = QueryResultContext.buildTransformer(query, resultType, queryFenix);
         }
 
         // 如果分页参数为空，说明不需要再做分页查询，须要从 ThreadLocal 中移除当前线程中的 fenixQueryInfo 信息.

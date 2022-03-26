@@ -3,13 +3,9 @@ package com.blinkfox.fenix.jpa;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.beans.PropertyDescriptor;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.hibernate.type.BlobType;
-import org.hibernate.type.descriptor.java.DataHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.core.convert.converter.Converter;
@@ -19,8 +15,13 @@ import org.springframework.data.convert.JodaTimeConverters;
 /**
  * 自定义查询结果的转换器.
  *
+ * <p>注意：该类在 v2.7.0 版本进行了较大的重构，为了保持向以前的版本兼容，诸多功能仍然和以前保持一致。
+ * 但新版本建议使用 {@link com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer} 等相关的转换器.</p>
+ *
  * @author blinkfox on 2019-10-08.
  * @author blinkfox on 2022-03-25 (v2.7.0) 做了代码重构，公共代码集成自 {@link AbstractResultTransformer}
+ * @see com.blinkfox.fenix.jpa.transformer.LowerCamelCaseTransformer
+ * @see com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer
  * @since v1.1.0
  */
 public class FenixResultTransformer extends AbstractResultTransformer {
@@ -30,16 +31,16 @@ public class FenixResultTransformer extends AbstractResultTransformer {
      */
     private static final long serialVersionUID = 4519223959994503529L;
 
-    private static final DefaultConversionService conversionService = new DefaultConversionService();
+    private static final DefaultConversionService oldConversionService = new DefaultConversionService();
 
     static {
         // 添加一些默认的 ConversionService.
         Collection<Converter<?, ?>> convertersToRegister = JodaTimeConverters.getConvertersToRegister();
         for (Converter<?, ?> converter : convertersToRegister) {
-            conversionService.addConverter(converter);
+            oldConversionService.addConverter(converter);
         }
-        conversionService.addConverter(ClobToStringConverter.INSTANCE);
-        conversionService.addConverter(BlobToStringConverter.INSTANCE);
+        oldConversionService.addConverter(ClobToStringConverter.INSTANCE);
+        oldConversionService.addConverter(BlobToStringConverter.INSTANCE);
     }
 
     /**
@@ -71,7 +72,7 @@ public class FenixResultTransformer extends AbstractResultTransformer {
     public Object transformTuple(Object[] tuple, String[] aliases) {
         // 获取实际数据库查询结果对象的字段信息和 result class 类的属性信息
         BeanWrapper beanWrapper = super.newResultBeanWrapper();
-        beanWrapper.setConversionService(conversionService);
+        beanWrapper.setConversionService(oldConversionService);
         Map<String, PropertyDescriptor> fieldsMap = classPropertiesMap.get(super.resultClass.getName());
 
         // 遍历设置各个属性对应的值.
@@ -86,42 +87,6 @@ public class FenixResultTransformer extends AbstractResultTransformer {
             super.setResultPropertyValue(beanWrapper, fieldsMap.get(column.trim().toLowerCase()), tuple[i]);
         }
         return beanWrapper.getWrappedInstance();
-    }
-
-    /**
-     * Clob 转换为 String 的转换器类.
-     *
-     * @author blinkfox 2019-10-08.
-     */
-    private enum ClobToStringConverter implements Converter<Clob, String> {
-
-        /**
-         * 单实例.
-         */
-        INSTANCE;
-
-        @Override
-        public String convert(Clob source) {
-            return DataHelper.extractString(source);
-        }
-    }
-
-    /**
-     * Blob 转换为 String 的转换器类.
-     *
-     * @author blinkfox 2019-10-08.
-     */
-    private enum BlobToStringConverter implements Converter<Blob, String> {
-
-        /**
-         * 单实例.
-         */
-        INSTANCE;
-
-        @Override
-        public String convert(Blob source) {
-            return BlobType.INSTANCE.toString(source);
-        }
     }
 
 }

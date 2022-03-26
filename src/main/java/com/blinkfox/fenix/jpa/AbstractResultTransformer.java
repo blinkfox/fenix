@@ -3,17 +3,23 @@ package com.blinkfox.fenix.jpa;
 import com.blinkfox.fenix.exception.FenixException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Setter;
 import org.hibernate.transform.ResultTransformer;
+import org.hibernate.type.BlobType;
+import org.hibernate.type.descriptor.java.DataHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.support.DefaultConversionService;
 
 /**
  * 抽象的、具有公共代码的结果转换类.
@@ -28,6 +34,16 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
      * 返回结果类中所有属性描述信息的映射关系 Map，其中 key 为结果类 class 的全类路径名，value 为该类中每个字段所对应反射描述信息的 Map.
      */
     protected static final Map<String, Map<String, PropertyDescriptor>> classPropertiesMap = new ConcurrentHashMap<>();
+
+    /**
+     * 全局默认通用的类型转换服务.
+     */
+    protected static final DefaultConversionService defaultConversionService = new DefaultConversionService();
+
+    static {
+        defaultConversionService.addConverter(ClobToStringConverter.INSTANCE);
+        defaultConversionService.addConverter(BlobToStringConverter.INSTANCE);
+    }
 
     /**
      * 要转换类型的 class 实例.
@@ -84,8 +100,9 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
             try {
                 beanWrapper.setPropertyValue(propDescriptor.getName(), value);
             } catch (NotWritablePropertyException | TypeMismatchException e) {
-                throw new FenixException(e, "【Fenix 异常】设置结果类【{}】的【{}】属性值为【{}】时异常，请检查该属性是否存在或者是否有 public 型"
-                        + "的 Getter 方法！", beanWrapper.getWrappedClass().getName(), propDescriptor.getName(), value);
+                throw new FenixException(e, "【Fenix 异常】设置结果类【{}】的【{}】属性值为【{}】时异常，请检查该属性是否存在或者"
+                        + "是否有 public 型的 Getter 方法，或者检查是否支持该字段类型的属性转换！", beanWrapper.getWrappedClass().getName(),
+                        propDescriptor.getName(), value);
             }
         }
     }
@@ -99,6 +116,42 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
     @Override
     public List<?> transformList(List list) {
         return list;
+    }
+
+    /**
+     * Clob 转换为 String 的转换器类.
+     *
+     * @author blinkfox 2019-10-08.
+     */
+    protected enum ClobToStringConverter implements Converter<Clob, String> {
+
+        /**
+         * 单实例.
+         */
+        INSTANCE;
+
+        @Override
+        public String convert(Clob source) {
+            return DataHelper.extractString(source);
+        }
+    }
+
+    /**
+     * Blob 转换为 String 的转换器类.
+     *
+     * @author blinkfox 2019-10-08.
+     */
+    protected enum BlobToStringConverter implements Converter<Blob, String> {
+
+        /**
+         * 单实例.
+         */
+        INSTANCE;
+
+        @Override
+        public String convert(Blob source) {
+            return BlobType.INSTANCE.toString(source);
+        }
     }
 
 }
