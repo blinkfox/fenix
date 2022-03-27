@@ -3,6 +3,7 @@ package com.blinkfox.fenix.id;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -13,9 +14,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class IdWorker {
 
+    private static final IdWorker defaultIdWorker = new IdWorker();
+
     private static final int MAX_WORKER_INDEX = 0x0F;
 
     private static final int WORKER_LENGTH = 16;
+
+    /**
+     * 默认生成的 ID 大小.
+     *
+     * <p>创建具有比 UUID v4 略多的唯一值的 NanoId 字符串.</p>
+     */
+    public static final int DEFAULT_SIZE = 21;
+
+    /**
+     * 默认使用的字母表.
+     *
+     * <p>使用 64 个唯一符号创建对 url 友好的 NanoId 字符串.</p>
+     */
+    private static final char[] DEFAULT_ALPHABET =
+            "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     private final AtomicInteger indexCounter = new AtomicInteger(0);
 
@@ -84,7 +102,7 @@ public final class IdWorker {
     }
 
     /**
-     * 获取长度为 16 位数的 {@code long} 长整型 {@code ID} 值.
+     * 获取长度为 16 位数的 {@code long} 长整型雪花算法 {@code ID} 值.
      *
      * @return 16 位数的整型 {@code ID} 值
      */
@@ -93,7 +111,7 @@ public final class IdWorker {
     }
 
     /**
-     * 获取长度为 16 位数的长整型 {@code ID} 的字符串值.
+     * 获取长度为 16 位数的长整型雪花算法 {@code ID} 的字符串值.
      *
      * @return 长整型 {@code ID} 的字符串值
      */
@@ -102,7 +120,7 @@ public final class IdWorker {
     }
 
     /**
-     * 获取 36 进制的 {@code ID} 符串值.
+     * 获取 36 进制的雪花算法 {@code ID} 符串值.
      *
      * @return 36 进制的 {@code ID} 字符串
      */
@@ -111,7 +129,7 @@ public final class IdWorker {
     }
 
     /**
-     * 根据给定的 16 位数的长整型 {@code ID}，得到其对应的 36 进制的 {@code ID} 符串值.
+     * 根据给定的 16 位数的长整型 {@code ID}，得到其对应的 36 进制的雪花算法 {@code ID} 符串值.
      *
      * @param id 长整型 {@code ID}
      * @return 36 进制的 {@code ID} 字符串
@@ -121,7 +139,7 @@ public final class IdWorker {
     }
 
     /**
-     * 获取 62 进制的 {@code ID} 符串值.
+     * 获取 62 进制的雪花算法 {@code ID} 符串值.
      *
      * @return 62 进制的 {@code ID} 字符串
      */
@@ -130,13 +148,51 @@ public final class IdWorker {
     }
 
     /**
-     * 根据给定的长整型 {@code ID}，得到其对应的 62 进制的 {@code ID} 符串值.
+     * 根据给定的长整型 {@code ID}，得到其对应的 62 进制的雪花算法 {@code ID} 符串值.
      *
      * @param id 长整型 {@code ID}
      * @return 62 进制的 {@code ID} 字符串
      */
     public static String get62RadixId(long id) {
         return Radix.toString(id, Radix.RADIX_62);
+    }
+
+    /**
+     * 通过静态方法获取长度为 16 位数的 {@code long} 长整型雪花算法 {@code ID} 值.
+     *
+     * @return 16 位数的整型 {@code ID} 值
+     * @since v2.7.0
+     */
+    public static long getSnowflakeId() {
+        return defaultIdWorker.getId();
+    }
+
+    /**
+     * 通过静态方法获取长度为 16 位数的雪花算法长整型 {@code ID} 的字符串值.
+     *
+     * @return 16 位数的整型 {@code ID} 值
+     * @since v2.7.0
+     */
+    public static String getSnowflakeIdString() {
+        return defaultIdWorker.getIdString();
+    }
+
+    /**
+     * 通过静态方法获取 36 进制的雪花算法 {@code ID} 符串值.
+     *
+     * @return 36 进制的雪花算法 {@code ID} 字符串
+     */
+    public static String getSnowflake36RadixId() {
+        return defaultIdWorker.get36RadixId();
+    }
+
+    /**
+     * 通过静态方法获取 62 进制的雪花算法 {@code ID} 符串值.
+     *
+     * @return 62 进制的雪花算法 {@code ID} 字符串
+     */
+    public static String getSnowflake62RadixId() {
+        return defaultIdWorker.get62RadixId();
     }
 
     /**
@@ -162,6 +218,46 @@ public final class IdWorker {
                 .append(Radix.digits(uuid.getLeastSignificantBits() >> 48, 4))
                 .append(Radix.digits(uuid.getLeastSignificantBits(), 12))
                 .toString();
+    }
+
+    /**
+     * 生成一个对 URL 优化的、伪随机的 NanoId 字符串，该 NanoId 将默认有 21 个字符.
+     *
+     * @return NanoId 字符串
+     */
+    public static String getNanoId() {
+        return getNanoId(DEFAULT_SIZE);
+    }
+
+    /**
+     * 生成一个指定大小的对 URL 优化的、伪随机的 NanoId 字符串.
+     *
+     * @param size 字符串中的字符数.
+     * @return 一个随机的 NanoId 字符串.
+     */
+    public static String getNanoId(final int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("size must be greater than zero.");
+        }
+
+        int alphaBetaLength = DEFAULT_ALPHABET.length;
+        final int mask = (2 << (int) Math.floor(Math.log(alphaBetaLength - 1d) / Math.log(2))) - 1;
+        final int step = (int) Math.ceil(1.6 * mask * size / alphaBetaLength);
+
+        final StringBuilder builder = new StringBuilder();
+        while (true) {
+            final byte[] bytes = new byte[step];
+            ThreadLocalRandom.current().nextBytes(bytes);
+            for (int i = 0; i < step; ++i) {
+                final int alphabetIndex = bytes[i] & mask;
+                if (alphabetIndex < alphaBetaLength) {
+                    builder.append(DEFAULT_ALPHABET[alphabetIndex]);
+                    if (builder.length() == size) {
+                        return builder.toString();
+                    }
+                }
+            }
+        }
     }
 
     /**
