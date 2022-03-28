@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.entity.ar;
 
-import com.blinkfox.fenix.ar.FenixModel;
+import com.blinkfox.fenix.ar.CrudModel;
 import com.blinkfox.fenix.enums.StatusEnum;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Accessors(chain = true)
 @Entity
 @Table(name = "t_ar_table")
-public class ArEntity extends FenixModel<ArEntity, String> {
+public class ArEntity extends CrudModel<ArEntity, String> {
 
     /**
      * ID.

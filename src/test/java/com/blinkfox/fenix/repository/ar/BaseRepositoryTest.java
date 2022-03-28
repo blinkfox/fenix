@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.repository.ar;
 
-import com.blinkfox.fenix.ar.FenixModel;
+import com.blinkfox.fenix.ar.CrudModel;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.exception.FenixException;
 import javax.annotation.Resource;
@@ -36,7 +36,7 @@ public class BaseRepositoryTest {
             if (applicationContext == null) {
                 throw new FenixException("未成功注入 Spring 应用上下文 applicationContext 的对象实例.");
             }
-            FenixModel.setApplicationContext(applicationContext);
+            CrudModel.setApplicationContext(applicationContext);
 
             // 初始化基础数据.
             this.initData();

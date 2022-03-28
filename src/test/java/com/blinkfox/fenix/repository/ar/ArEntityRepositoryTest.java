@@ -64,7 +64,7 @@ public class ArEntityRepositoryTest extends BaseRepositoryTest {
         // 批量保存并查询判断.
         CrudRepository<ArEntity, String> arEntityRepository = new ArEntity().getRepository();
         arEntityRepository.saveAll(arEntityList);
-        Assert.assertEquals(arEntityRepository.count(), COUNT);
+        Assert.assertEquals(COUNT, arEntityRepository.count());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ArEntityRepositoryTest extends BaseRepositoryTest {
         // 断言查询结果是否正确.
         ArEntity newArEntity = arOption.get();
         Assert.assertNotNull(newArEntity.getId());
-        Assert.assertEquals(newArEntity.getTitle(), TITLE);
+        Assert.assertEquals(TITLE, newArEntity.getTitle());
         Assert.assertNotNull(newArEntity.getDesc());
         Assert.assertNotNull(newArEntity.getAge());
         Assert.assertNotNull(newArEntity.getCreateTime());
