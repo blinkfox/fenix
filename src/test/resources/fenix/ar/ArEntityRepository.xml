@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 这是用来测试 XML 模版或标签生成的 SQL语句或参数的 Fenix XML 文件. -->
+<fenixs namespace="com.blinkfox.fenix.repository.ar.ArEntityRepository">
+
+    <fenix id="findByIdWithFenix">
+        select a from ArEntity as a where a.id = #{id}
+    </fenix>
+
+    <fenix id="findByAgeWithFenix">
+        select a from ArEntity as a
+        <trimWhere>
+            <andGreaterThan field="age" value="age" match="age != null" />
+        </trimWhere>
+    </fenix>
+
+</fenixs>

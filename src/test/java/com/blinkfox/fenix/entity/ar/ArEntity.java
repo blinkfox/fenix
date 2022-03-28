@@ -1,6 +1,7 @@
 package com.blinkfox.fenix.entity.ar;
 
 import com.blinkfox.fenix.ar.FenixModel;
+import com.blinkfox.fenix.enums.StatusEnum;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
@@ -52,6 +53,12 @@ public class ArEntity extends FenixModel<ArEntity, String> {
      */
     @Column(name = "n_age")
     private Integer age;
+
+    /**
+     * 状态.
+     */
+    @Column(name = "c_status")
+    private StatusEnum status;
 
     /**
      * 创建时间.

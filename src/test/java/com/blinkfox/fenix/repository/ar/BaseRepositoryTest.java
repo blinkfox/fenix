@@ -37,8 +37,18 @@ public class BaseRepositoryTest {
                 throw new FenixException("未成功注入 Spring 应用上下文 applicationContext 的对象实例.");
             }
             FenixModel.setApplicationContext(applicationContext);
+
+            // 初始化基础数据.
+            this.initData();
             isLoad = true;
         }
+    }
+
+    /**
+     * 初始化一些数据.
+     */
+    protected void initData() {
+        // do nothing.
     }
 
 }

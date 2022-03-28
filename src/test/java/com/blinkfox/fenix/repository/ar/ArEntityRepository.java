@@ -1,7 +1,10 @@
 package com.blinkfox.fenix.repository.ar;
 
 import com.blinkfox.fenix.entity.ar.ArEntity;
-import org.springframework.data.repository.CrudRepository;
+import com.blinkfox.fenix.jpa.FenixJpaRepository;
+import com.blinkfox.fenix.jpa.QueryFenix;
+import java.util.List;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,6 +14,18 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Repository
-public interface ArEntityRepository extends CrudRepository<ArEntity, String> {
+public interface ArEntityRepository extends FenixJpaRepository<ArEntity, String> {
+
+    @QueryFenix
+    ArEntity findByIdWithFenix(@Param("id") String id);
+
+    /**
+     * 使用 Fenix 根据年龄查询.
+     *
+     * @param age 年龄
+     * @return 数据
+     */
+    @QueryFenix
+    List<ArEntity> findByAgeWithFenix(@Param("age") Integer age);
 
 }
