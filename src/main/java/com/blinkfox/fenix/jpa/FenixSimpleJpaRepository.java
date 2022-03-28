@@ -146,6 +146,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
      * @param <S> 泛型实体类
      * @return 原实体类，注意：如果是更新的情况，返回的值不一定有数据库中之前的值
      */
+    @SuppressWarnings("unchecked")
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public <S extends T> S saveOrUpdateByNotNullProperties(S entity) {
@@ -284,8 +285,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
         List<String> nullProperties = new ArrayList<>();
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             String propertyName = propertyDescriptor.getName();
-            Object propertyValue = beanWrapper.getPropertyValue(propertyName);
-            if (propertyValue == null) {
+            if (beanWrapper.getPropertyValue(propertyName) == null) {
                 nullProperties.add(propertyName);
             }
         }
