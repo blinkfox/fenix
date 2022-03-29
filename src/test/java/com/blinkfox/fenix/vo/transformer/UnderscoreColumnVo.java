@@ -1,6 +1,5 @@
 package com.blinkfox.fenix.vo.transformer;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import lombok.Getter;

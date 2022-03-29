@@ -2,6 +2,7 @@ package com.blinkfox.fenix.entity.ar;
 
 import com.blinkfox.fenix.ar.CrudModel;
 import com.blinkfox.fenix.enums.StatusEnum;
+import com.blinkfox.fenix.repository.ar.ArCrudRepository;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
- * 用来测试 Active Record 的实体类.
+ * 用来测试 Active Record 的实体类，本实体类继承自 {@link CrudModel}.
  *
  * @author blinkfox on 2022-03-28.
  * @since 2.7.0
@@ -24,8 +25,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "t_ar_table")
-public class ArEntity extends CrudModel<ArEntity, String> {
+@Table(name = "t_ar_crud")
+public class ArCrud implements CrudModel<ArCrud, String, ArCrudRepository> {
 
     /**
      * ID.

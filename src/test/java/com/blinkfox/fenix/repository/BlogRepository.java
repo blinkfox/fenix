@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 /**
  * 博客数据的库持久化类.
  *
@@ -221,6 +220,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测的分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -229,6 +229,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -237,6 +238,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 博客集合
      */
@@ -245,6 +247,7 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
     /**
      * 使用开启 distinct 检测但是没有 distinct 关键字的原生 sql 分页查询.
+     *
      * @param pageable 分页参数{@link Pageable}
      * @return 用户ID集合
      */

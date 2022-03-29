@@ -1,15 +1,15 @@
 package com.blinkfox.fenix.jpa;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
 
 /**
  * 为了兼容 Spring Data JPA v2.3.0 之前的版本，用来修改 {@link FenixQueryLookupStrategy} 中部分方法的类.

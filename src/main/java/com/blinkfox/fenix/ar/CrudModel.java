@@ -1,45 +1,36 @@
 package com.blinkfox.fenix.ar;
 
+import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.util.Optional;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Fenix 提供的 ActiveRecord 模式的 CRUD 相关操作的 Model 类.
+ * Fenix 提供的 ActiveRecord 模式的 CRUD 相关操作的 Model 接口.
  *
- * <p>本类仅提供操作单个实体对象的若干增删改查的快捷方法，如果你想进行批量操作或者查询，可以通过本类中的 {@link #getRepository()} 方法来调用或实现.</p>
+ * <p>当实体类实现本接口时，需要该实体类所对应的 Spring Data JPA 中的 Repository 接口继承自 {@link CrudRepository} 接口。
+ * 本接口仅提供操作“单个”实体对象的若干“增删改查”的快捷方法，如果你想进行批量操作或者复杂查询，
+ * 可以通过额外调用本类中的 {@link #getRepository()} 方法来实现即可.</p>
  *
- * @param <T> 实体类的的泛型参数
+ * @param <T> 实体类的泛型参数
  * @param <ID> 主键 ID
- * @author blinkfox on 2022-03-27.
+ * @param <R> 实体类所对应的 Repository 接口
+ * @author blinkfox on 2022-03-29.
  * @since v2.7.0
  */
-public abstract class CrudModel<T, ID> extends Model<T, ID> {
+public interface CrudModel<T, ID, R extends CrudRepository<T, ID>> extends Model<T, ID, R> {
 
     /**
-     * 获取本实体类所对应的 Repository 对象.
+     * 校验 Repository 接口是否是 {@link CrudRepository} 类型的接口.
      *
-     * @return 基本的 CrudRepository 对象
+     * @param repository Spring 容器中的 repository 对象
      */
     @Override
-    public CrudRepository<T, ID> getRepository() {
-        return (CrudRepository<T, ID>) super.getRepository();
-    }
-
-    /**
-     * 设置 Repository 的值.
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void setRepository(Object repositoryBean) {
-        if (repositoryBean instanceof CrudRepository) {
-            this.repository = (CrudRepository<T, ID>) repositoryBean;
-        } else {
-            throw new NoSuchBeanDefinitionException(StringHelper.format("【Fenix 异常】获取到的实体类【{}】"
-                            + "所对应的 Spring Data JPA 的 Repository Bean【{}】的实例不是真正的 CrudRepository 接口或子接口。",
-                    this.getClass().getName(), this.getRepositoryBeanName()));
+    default void validRepository(Object repository) {
+        if (!(repository instanceof CrudRepository)) {
+            throw new FenixException(StringHelper.format("【Fenix 异常】获取到的 Spring Data JPA 的 Repository 接口【{}】"
+                    + "不是真正的 CrudRepository 接口。", repository.getClass().getName()));
         }
     }
 
@@ -50,7 +41,7 @@ public abstract class CrudModel<T, ID> extends Model<T, ID> {
      */
     @Transactional
     @SuppressWarnings("unchecked")
-    public T save() {
+    default T save() {
         return this.getRepository().save((T) this);
     }
 
@@ -59,7 +50,7 @@ public abstract class CrudModel<T, ID> extends Model<T, ID> {
      *
      * @return 本实体对象的 Optional 对象
      */
-    public Optional<T> findById() {
+    default Optional<T> findById() {
         return this.getRepository().findById(this.getId());
     }
 
@@ -68,7 +59,7 @@ public abstract class CrudModel<T, ID> extends Model<T, ID> {
      *
      * @return 布尔值
      */
-    public boolean existsById() {
+    default boolean existsById() {
         return this.getRepository().existsById(this.getId());
     }
 
@@ -77,7 +68,7 @@ public abstract class CrudModel<T, ID> extends Model<T, ID> {
      */
     @Transactional
     @SuppressWarnings("unchecked")
-    public void delete() {
+    default void delete() {
         this.getRepository().delete((T) this);
     }
 
@@ -85,7 +76,7 @@ public abstract class CrudModel<T, ID> extends Model<T, ID> {
      * 根据本实体对象的 ID 值查找并删除此对象.
      */
     @Transactional
-    public void deleteById() {
+    default void deleteById() {
         this.getRepository().deleteById(this.getId());
     }
 
