@@ -92,6 +92,9 @@ public @interface QueryFenix {
      *
      * <p>为了保持向前兼容，默认的转换器仍然使用的是之前版本使用的 {@link FenixResultTransformer} 类的 Class.</p>
      *
+     * @see com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer
+     * @see com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer
+     * @see com.blinkfox.fenix.jpa.transformer.ColumnAnnotationTransformer
      * @since 2.7.0
      */
     Class<? extends AbstractResultTransformer> resultTransformer() default FenixResultTransformer.class;

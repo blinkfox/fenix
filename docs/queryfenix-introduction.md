@@ -10,7 +10,7 @@
 - **`countMethod()`**: 表示通过 Java 来拼接分页查询时查询总记录数 SQL 语句的提供类的方法。
 - **`enableDistinct()`**: 表示是否启用 distinct 检测。
 - **`resultType()`**: 表示自定义查询结果的 Class 类型。该属性和 Fenix XML 文件中的 `resultType` 同义，后续推荐使用本属性来设置结果类型的 class，这样能更好的利用 Java 类的静态编译检查和代码重构后发现一些类路径修改所造成的隐患问题。
-- **`resultTransformer()`**: 表示自定义查询结果的转换器的 Class 类型。为了保持向前兼容，默认的转换器仍然使用的是之前版本使用的 `FenixResultTransformer` 类的 Class。
+- **`resultTransformer()`**: 表示自定义查询结果的转换器的 Class 类型。为了保持向前兼容，默认的转换器仍然使用的是之前版本使用的 `FenixResultTransformer` 类的 Class，你也可以选择下划线或注解等方式的结果转换器。
 
 ## 🚠 二、@QueryFenix 注解使用简化 :id=simplified
 
