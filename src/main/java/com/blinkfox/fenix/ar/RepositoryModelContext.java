@@ -28,6 +28,8 @@ public final class RepositoryModelContext {
     private static ApplicationContext applicationContext;
 
     /**
+     * 根据实体类所对应的 Repository 在 Spring 容器中 的 Bean 名称来获取对应的 Repository 对象实例.
+     *
      * @param repositoryBeanName 实体类所对应的 Repository 在 Spring 容器中 的 Bean 名称
      * @param entityClassName 实体类的 class 名称
      * @param validConsumer 用于校验 Repository 类型是否正确的 Consumer

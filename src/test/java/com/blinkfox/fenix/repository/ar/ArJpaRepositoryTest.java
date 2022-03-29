@@ -27,7 +27,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class ArJpaRepositoryTest extends BaseRepositoryTest {
 
@@ -69,7 +68,7 @@ public class ArJpaRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void test01Save() {
+    public void save() {
         String name = NAME + "save1";
         ArJpa arJpa = new ArJpa().setName(name).save();
         arJpa.flush();
@@ -81,7 +80,7 @@ public class ArJpaRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void test02Save() {
+    public void save2() {
         String name = NAME + "save2";
         ArJpa arJpa = new ArJpa().setName(name).saveAndFlush();
 
@@ -92,13 +91,13 @@ public class ArJpaRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void test03Count() {
+    public void count() {
         initData();
         Assert.assertTrue(new ArJpa().getRepository().count() >= COUNT);
     }
 
     @Test
-    public void test03FindWithPaging() {
+    public void findWithPaging() {
         initData();
 
         int limit = 3;

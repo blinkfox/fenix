@@ -63,7 +63,7 @@ public class ArCrudRepositoryTest extends BaseRepositoryTest {
         // 批量保存并查询判断.
         CrudRepository<ArCrud, String> arCrudRepository = new ArCrud().getRepository();
         arCrudRepository.saveAll(arCrudList);
-        Assert.assertTrue(arCrudRepository.count() > COUNT);
+        Assert.assertTrue(arCrudRepository.count() >= COUNT);
     }
 
     @Test
