@@ -38,14 +38,6 @@ public class ParseHelperTest {
     }
 
     /**
-     * 测试解析表达式的方法.
-     */
-    @Test
-    public void parseExpressWithNull() {
-        Assert.assertNull(ParseHelper.parseExpress("abc", context));
-    }
-
-    /**
      * 测试解析表达式会抛异常的方法.
      */
     @Test(expected = Exception.class)

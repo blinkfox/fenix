@@ -9,10 +9,8 @@ import javax.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,9 +28,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = FenixTestApplication.class)
 public class ArJpaRepositoryTest extends BaseRepositoryTest {
 
-    public static final int COUNT = 4;
+    private static final int COUNT = 4;
 
-    public static final String NAME = "这是 JPA 测试名称";
+    private static final String NAME = "这是 JPA 测试名称";
 
     /**
      * 是否加载过的标识.
@@ -64,7 +62,7 @@ public class ArJpaRepositoryTest extends BaseRepositoryTest {
         // 批量保存并查询判断.
         JpaRepository<ArJpa, String> arJpaRepository = new ArJpa().getRepository();
         arJpaRepository.saveAll(arJpaList);
-        Assert.assertTrue(arJpaRepository.count() > COUNT);
+        Assert.assertTrue(arJpaRepository.count() >= COUNT);
     }
 
     @Test

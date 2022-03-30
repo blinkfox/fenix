@@ -1,5 +1,7 @@
-package com.blinkfox.fenix.ar;
+package com.blinkfox.fenix.ar.repo;
 
+import com.blinkfox.fenix.ar.BaseModel;
+import com.blinkfox.fenix.ar.RepositoryModelContext;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import java.util.Optional;
@@ -19,7 +21,28 @@ import org.springframework.transaction.annotation.Transactional;
  * @author blinkfox on 2022-03-29.
  * @since v2.7.0
  */
-public interface CrudModel<T, ID, R extends CrudRepository<T, ID>> extends Model<T, ID, R> {
+public interface CrudModel<T, ID, R extends CrudRepository<T, ID>> extends BaseModel<T> {
+
+    /**
+     * 获取本实体对象的 ID 值.
+     *
+     * <p>通常建议将实体类的 ID 字段取名为 {@code id}，这样通过实体类自身的 Getter 方法就能自动重写该方法。
+     * 否则当你继承本抽象类时，就需要你自己手动实现此方法。</p>
+     *
+     * @return ID 值
+     */
+    ID getId();
+
+    /**
+     * 懒加载获取本实体类所对应的 Repository（{@link R}）对象.
+     *
+     * @return 基本的 CrudRepository 对象
+     */
+    @SuppressWarnings("unchecked")
+    default R getRepository() {
+        return (R) RepositoryModelContext.getRepositoryObject(
+                this.getRepositoryBeanName(), this.getClass().getName(), this::validRepository, this::validExecutor);
+    }
 
     /**
      * 校验 Repository 接口是否是 {@link CrudRepository} 类型的接口.
@@ -28,6 +51,7 @@ public interface CrudModel<T, ID, R extends CrudRepository<T, ID>> extends Model
      */
     @Override
     default void validRepository(Object repository) {
+        assertNotNullRepository(repository);
         if (!(repository instanceof CrudRepository)) {
             throw new FenixException(StringHelper.format("【Fenix 异常】获取到的 Spring Data JPA 的 Repository 接口【{}】"
                     + "不是真正的 CrudRepository 接口。", repository.getClass().getName()));

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Fenix 中 ActiveRecord 模式下，用来操作 Repository 和 Model 的核心上下文处理类.
+ * Fenix 中 ActiveRecord 模式下，用来操作 Repository 和 Model 接口的核心上下文处理类.
  *
  * @author blinkfox on 2022-03-29.
  * @since 2.7.0
@@ -32,11 +32,12 @@ public final class RepositoryModelContext {
      *
      * @param repositoryBeanName 实体类所对应的 Repository 在 Spring 容器中 的 Bean 名称
      * @param entityClassName 实体类的 class 名称
-     * @param validConsumer 用于校验 Repository 类型是否正确的 Consumer
+     * @param repoValidConsumer 用于校验 Repository 类型是否正确的 Consumer
+     * @param executorValidConsumer 用于校验 Repository（继承了 JpaSpecificationExecutor）类型是否正确的 Consumer
      * @return 实体类所对应的 Repository 对象实例
      */
     public static Object getRepositoryObject(String repositoryBeanName, String entityClassName,
-            Consumer<Object> validConsumer) {
+            Consumer<Object> repoValidConsumer, Consumer<Object> executorValidConsumer) {
         return repositoryMap.computeIfAbsent(repositoryBeanName, key -> {
             // 尝试判断 Spring 容器中是否存在本实体类所对应的 Repository 的 Bean，不存在就抛出异常.
             if (!applicationContext.containsBean(key)) {
@@ -45,8 +46,14 @@ public final class RepositoryModelContext {
                         + "【@Repository】注解。", entityClassName, key));
             }
 
+            // 从 Spring 容器中获取 repository 的 bean，并进行校验.
             Object repository = applicationContext.getBean(key);
-            validConsumer.accept(repository);
+            if (repoValidConsumer != null) {
+                repoValidConsumer.accept(repository);
+            }
+            if (executorValidConsumer != null) {
+                executorValidConsumer.accept(repository);
+            }
             return repository;
         });
     }

@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.entity.ar;
 
-import com.blinkfox.fenix.ar.JpaModel;
-import com.blinkfox.fenix.ar.PagingAndSortingModel;
+import com.blinkfox.fenix.ar.repo.JpaModel;
+import com.blinkfox.fenix.ar.repo.PagingAndSortingModel;
 import com.blinkfox.fenix.repository.ar.ArPageSortRepository;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.blinkfox.fenix.ar;
+package com.blinkfox.fenix.ar.repo;
 
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
@@ -27,6 +27,7 @@ public interface PagingAndSortingModel<T, ID, R extends PagingAndSortingReposito
      */
     @Override
     default void validRepository(Object repository) {
+        assertNotNullRepository(repository);
         if (!(repository instanceof PagingAndSortingRepository)) {
             throw new FenixException(StringHelper.format("【Fenix 异常】获取到的 Spring Data JPA 的 Repository 接口"
                     + "【{}】不是真正的 PagingAndSortingRepository 接口。", repository.getClass().getName()));

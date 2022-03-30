@@ -1,6 +1,6 @@
 package com.blinkfox.fenix.entity.ar;
 
-import com.blinkfox.fenix.ar.CrudModel;
+import com.blinkfox.fenix.ar.repo.CrudModel;
 import com.blinkfox.fenix.enums.StatusEnum;
 import com.blinkfox.fenix.repository.ar.ArCrudRepository;
 import java.time.LocalDateTime;

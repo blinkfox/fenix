@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FenixTestApplication.class)
-public class ArPageSortRepositoryTest  extends BaseRepositoryTest {
+public class ArPageSortRepositoryTest extends BaseRepositoryTest {
 
     public static final String NAME = "这是 PageSort 测试名称";
 

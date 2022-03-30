@@ -1,9 +1,8 @@
 package com.blinkfox.fenix.entity.ar;
 
-import com.blinkfox.fenix.ar.FenixJpaModel;
-import com.blinkfox.fenix.ar.JpaModel;
+import com.blinkfox.fenix.ar.repo.FenixJpaModel;
+import com.blinkfox.fenix.ar.repo.JpaModel;
 import com.blinkfox.fenix.repository.ar.ArFenixJpaRepository;
-import com.blinkfox.fenix.repository.ar.ArJpaRepository;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
