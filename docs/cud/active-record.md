@@ -8,16 +8,22 @@
 
 在集成了 Fenix 的 JPA 中，根据继承关系存在 `CrudRepository`、`PagingAndSortingRepository`、`JpaRepository` 和 `FenixJpaRepository`（Fenix 提供的）四个 Repository 接口。
 
-在 Fenix 的 ActiveRecord 模式中，本质上仍然需要这几个 `Repository`，并基于此继承关系分别提供了四个 `Model` 接口，你须要按需选择对应的接口。对应关系如下：
+另外，根据继承关系还存在 `JpaSpecificationExecutor` 和 `FenixJpaSpecificationExecutor` 两个 SpecificationExecutor 的接口。
+
+在 Fenix 的 ActiveRecord 模式中，本质上仍然需要这几个 `Repository` 或者 `JpaSpecificationExecutor` 接口，并基于此继承关系分别提供了四个 Repository `Model` 接口、两个 Specification `Model` 接口，你须要按需或者组合使用对应的接口。对应关系如下：
 
 - CrudRepository -> `CrudModel`
 - PagingAndSortingRepository -> `PagingAndSortingModel`
 - JpaRepository -> `JpaModel`
 - FenixJpaRepository -> `FenixJpaModel`
+- JpaSpecificationExecutor -> `SpecModel`
+- FenixJpaSpecificationExecutor -> `FenixSpecModel`
 
-## 🍡 二、实现接口 :id=impl-model
+## 🍡 二、实现 Repository 相关的接口 :id=impl-repository
 
-首先，在实体类中实现 Fenix 提供的 `JpaModel` 接口，在该接口中，你需要传递三个泛型参数，按顺序分别是**当前实体类**、**本实体类的 ID 类型**和**本实体类对应的 `Repository` 接口**。
+### 🧀 1. 如何实现 :id=repo-impl
+
+首先，在实体类中实现 Fenix 提供的 `JpaModel` 接口（或者其他 Repository Model 接口），在该接口中，你需要传递三个泛型参数，按顺序分别是**当前实体类**、**本实体类的 ID 类型**和**本实体类对应的 `Repository` 接口**。
 
 ```java
 public class Blog implements JpaModel<Blog, String, BlogRepository> {
@@ -40,9 +46,9 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 }
 ```
 
-## 🍕 三、增删改查 :id=do-curd
+### 🍕 2. 增删改查 :id=do-curd
 
-### 🍨 1. 插入或更新数据
+#### 🍨 (1). 插入或更新数据
 
 ```java
 // 直接通过 Blog 对象保存或更新数据.
@@ -55,7 +61,7 @@ new Blog()
 blog.saveOrUpdateByNotNullProperties();
 ```
 
-### 🍩 2. 删除数据
+#### 🍩 (2). 删除数据
 
 ```java
 // 根据已有实体删除.
@@ -65,7 +71,7 @@ blog.delete();
 new Blog().setId().deleteById();
 ```
 
-### 🎂 3. 根据 ID 查询数据
+#### 🎂 (3). 根据 ID 查询数据
 
 ```java
 // 根据 ID 查询实体数据.
@@ -75,10 +81,45 @@ new Blog().setId().findById();
 blog.existsById();
 ```
 
-### 🍰 4. 调用任意 Repository 中的方法
+#### 🍰 (4). 调用任意 Repository 中的方法
 
 通过调用实体类中的 `getRepository()` 方法拿到对应实体的 `Repository` 对象，就可以调用 JPA 或你自己定义的任意方法。
 
 ```java
 blog.getRepository().findXxx();
 ```
+
+## 🥩 三、实现 SpecificationExecutor 相关的接口 :id=impl-spec-executor
+
+### 🍖 1. 如何实现 :id=spec-impl
+
+SpecificationExecutor 相关的接口可以和 Repository 相关的接口组合使用。所以，在上面的实体类中可以额外再实现 Fenix 提供的 `FenixSpecModel` 接口，在该接口中，你需要传递两个泛型参数，按顺序分别是**当前实体类**和**本实体类对应的 `Repository` 接口**。
+
+```java
+public class Blog implements JpaModel<Blog, String, BlogRepository>,
+        FenixSpecModel<Blog, BlogRepository> {
+
+    @Id
+    @Column(name = "c_id")
+    private String id;
+
+    ...
+
+}
+```
+
+下面是实体类所对应的 `Repository` 接口，该接口还额外继承了 `FenixJpaSpecificationExecutor` 接口，它与 `FenixSpecModel` 是关联对应的。
+
+```java
+@Repository
+public interface BlogRepository extends JpaRepository<Blog, String>,
+        FenixJpaSpecificationExecutor<Blog> {
+
+}
+```
+
+### 🍕 2. 查询示例 :id=spec-query-demo
+
+当你的实体类中实现了 `FenixSpecModel`，该实体类中将获得各种 Fenix 提供的动态查询方法，以下仅展示多条件分页模糊查询的示例。
+
+> 待续 ...

@@ -58,20 +58,20 @@ public class ArFenixJpaRepositoryTest extends BaseRepositoryTest {
         // 批量保存并查询判断.
         JpaRepository<ArFenixJpa, String> arJpaRepository = new ArFenixJpa().getRepository();
         arJpaRepository.saveAll(arJpaList);
-        Assert.assertTrue(arJpaRepository.count() > COUNT);
+        Assert.assertTrue(arJpaRepository.count() >= COUNT);
     }
 
     @Test
     public void saveAndUpdate() {
         String name = NAME + "-save1";
-        ArFenixJpa afj = new ArFenixJpa().setName(name).setDesc("这是 FenixJpa 描述信息").save();
+        String desc = DESC + "-save1";
+        ArFenixJpa afj = new ArFenixJpa().setName(name).setDesc(desc).save();
 
         // 查询断言保存的结果.
         Optional<ArFenixJpa> afjOptional = afj.findById();
         Assert.assertTrue(afjOptional.isPresent());
         Assert.assertEquals(afjOptional.get().getName(), name);
 
-        String desc = "这是新的描述信息";
         ArFenixJpa ajf2 = new ArFenixJpa().setId(afj.getId()).setDesc(desc).saveOrUpdateByNotNullProperties();
         Optional<ArFenixJpa> afjOptional2 = ajf2.findById();
         Assert.assertTrue(afjOptional2.isPresent());

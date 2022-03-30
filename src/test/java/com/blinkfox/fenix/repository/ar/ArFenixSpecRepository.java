@@ -4,8 +4,8 @@ import com.blinkfox.fenix.entity.ar.ArFenixSpec;
 import com.blinkfox.fenix.specification.FenixJpaSpecificationExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ArFenixSpecRepository
-        extends CrudRepository<ArFenixSpec, String>, FenixJpaSpecificationExecutor<ArFenixSpec> {
+        extends JpaRepository<ArFenixSpec, Long>, FenixJpaSpecificationExecutor<ArFenixSpec> {
 
     /**
      * 进行分页查询所有数据的方法.

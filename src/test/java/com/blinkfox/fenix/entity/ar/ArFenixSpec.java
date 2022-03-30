@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.entity.ar;
 
+import com.blinkfox.fenix.ar.repo.JpaModel;
 import com.blinkfox.fenix.ar.spec.FenixSpecModel;
 import com.blinkfox.fenix.repository.ar.ArFenixSpecRepository;
 import javax.persistence.Column;
@@ -23,7 +24,9 @@ import org.hibernate.annotations.Proxy;
 @Entity
 @Proxy(lazy = false)
 @Table(name = "t_ar_fenix_spec")
-public class ArFenixSpec implements FenixSpecModel<ArFenixSpec, ArFenixSpecRepository> {
+public class ArFenixSpec implements
+        JpaModel<ArFenixSpec, Long, ArFenixSpecRepository>,
+        FenixSpecModel<ArFenixSpec, ArFenixSpecRepository> {
 
     @Id
     @Column(name = "n_id")

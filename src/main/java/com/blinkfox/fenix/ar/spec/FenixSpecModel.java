@@ -1,6 +1,5 @@
 package com.blinkfox.fenix.ar.spec;
 
-import com.blinkfox.fenix.ar.RepositoryModelContext;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixJpaSpecificationExecutor;
@@ -16,25 +15,14 @@ import org.springframework.data.domain.Sort;
  * Fenix 提供的 ActiveRecord 模式的 Fenix 增强后的 JpaSpecificationExecutor 相关操作的 Model 接口.
  *
  * <p>当实体类实现本接口时，需要该实体类所对应的 Spring Data JPA 中的 Repository 接口继承自 {@link FenixJpaSpecificationExecutor} 接口。
- * 你还可以通过额外调用本类中的 {@link #getSpecExecutor()} 方法来实现更多的 {@link FenixJpaSpecificationExecutor} 中相关的功能.</p>
+ * 你还可以通过额外调用本类中的 {@link #getRepository()} ()} 方法来实现更多的 {@link FenixJpaSpecificationExecutor} 中相关的功能.</p>
  *
  * @param <T> 实体类的泛型参数
- * @param <E> 实体类所对应的 Repository 接口，且它继承了 FenixJpaSpecificationExecutor 接口
+ * @param <R> 实体类所对应的 Repository 接口，且它继承了 FenixJpaSpecificationExecutor 接口
  * @author blinkfox on 2022-03-30.
  * @since 2.7.0
  */
-public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> extends SpecModel<T, E> {
-
-    /**
-     * 懒加载获取本实体类所对应的 Repository（{@link E}）对象，该对象需要继承自 {@link FenixJpaSpecificationExecutor} 接口.
-     *
-     * @return 基本的 CrudRepository 对象
-     */
-    @SuppressWarnings("unchecked")
-    default E getSpecExecutor() {
-        return (E) RepositoryModelContext.getRepositoryObject(
-                this.getRepositoryBeanName(), this.getClass().getName(), this::validRepository, this::validExecutor);
-    }
+public interface FenixSpecModel<T, R extends FenixJpaSpecificationExecutor<T>> extends SpecModel<T, R> {
 
     /**
      * 校验 Repository 接口是否是 {@link FenixJpaSpecificationExecutor} 类型的接口.
@@ -58,7 +46,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
      */
     default Optional<T> findOne(FenixPredicate fenixPredicate) {
-        return this.getSpecExecutor().findOne(FenixSpecification.of(fenixPredicate));
+        return this.getRepository().findOne(FenixSpecification.of(fenixPredicate));
     }
 
     /**
@@ -69,7 +57,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
      */
     default Optional<T> findOneOfBean(Object beanParam) {
-        return this.getSpecExecutor().findOne(FenixSpecification.ofBean(beanParam));
+        return this.getRepository().findOne(FenixSpecification.ofBean(beanParam));
     }
 
     /**
@@ -79,7 +67,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 不可能是 {@literal null}.
      */
     default List<T> findAll(FenixPredicate fenixPredicate) {
-        return this.getSpecExecutor().findAll(FenixSpecification.of(fenixPredicate));
+        return this.getRepository().findAll(FenixSpecification.of(fenixPredicate));
     }
 
     /**
@@ -90,7 +78,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 分页结果，不可能是 {@literal null}.
      */
     default Page<T> findAll(FenixPredicate fenixPredicate, Pageable pageable) {
-        return this.getSpecExecutor().findAll(FenixSpecification.of(fenixPredicate), pageable);
+        return this.getRepository().findAll(FenixSpecification.of(fenixPredicate), pageable);
     }
 
     /**
@@ -101,7 +89,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 排序结果，不可能是 {@literal null}.
      */
     default List<T> findAll(FenixPredicate fenixPredicate, Sort sort) {
-        return this.getSpecExecutor().findAll(FenixSpecification.of(fenixPredicate), sort);
+        return this.getRepository().findAll(FenixSpecification.of(fenixPredicate), sort);
     }
 
     /**
@@ -111,7 +99,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 不可能是 {@literal null}.
      */
     default List<T> findAllOfBean(Object beanParam) {
-        return this.getSpecExecutor().findAll(FenixSpecification.ofBean(beanParam));
+        return this.getRepository().findAll(FenixSpecification.ofBean(beanParam));
     }
 
     /**
@@ -122,7 +110,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 分页结果，不可能是 {@literal null}.
      */
     default Page<T> findAllOfBean(Object beanParam, Pageable pageable) {
-        return this.getSpecExecutor().findAll(FenixSpecification.ofBean(beanParam), pageable);
+        return this.getRepository().findAll(FenixSpecification.ofBean(beanParam), pageable);
     }
 
     /**
@@ -133,7 +121,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 排序结果，不可能是 {@literal null}.
      */
     default List<T> findAllOfBean(Object beanParam, Sort sort) {
-        return this.getSpecExecutor().findAll(FenixSpecification.ofBean(beanParam), sort);
+        return this.getRepository().findAll(FenixSpecification.ofBean(beanParam), sort);
     }
 
     /**
@@ -143,7 +131,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 实例数量.
      */
     default long count(FenixPredicate fenixPredicate) {
-        return this.getSpecExecutor().count(FenixSpecification.of(fenixPredicate));
+        return this.getRepository().count(FenixSpecification.of(fenixPredicate));
     }
 
     /**
@@ -153,7 +141,7 @@ public interface FenixSpecModel<T, E extends FenixJpaSpecificationExecutor<T>> e
      * @return 实例数量.
      */
     default long countOfBean(Object beanParam) {
-        return this.getSpecExecutor().count(FenixSpecification.ofBean(beanParam));
+        return this.getRepository().count(FenixSpecification.ofBean(beanParam));
     }
 
 }

@@ -9,7 +9,18 @@ import org.springframework.util.Assert;
  * @author blinkfox on 2022-03-30.
  * @since 2.7.0
  */
-public interface BaseModel<T> {
+public interface BaseModel<R> {
+
+    /**
+     * 懒加载获取本实体类所对应的 Repository（{@link R}）对象.
+     *
+     * @return 基本的 CrudRepository 对象
+     */
+    @SuppressWarnings("unchecked")
+    default R getRepository() {
+        return (R) RepositoryModelContext.getRepositoryObject(
+                this.getRepositoryBeanName(), this.getClass().getName(), this::validRepository, this::validExecutor);
+    }
 
     /**
      * 校验 Repository 类型是否正确，默认不做任何校验.
