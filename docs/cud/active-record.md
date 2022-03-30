@@ -118,8 +118,72 @@ public interface BlogRepository extends JpaRepository<Blog, String>,
 }
 ```
 
-### 🍕 2. 查询示例 :id=spec-query-demo
+### 🥓 2. 查询示例 :id=spec-query-demo
 
-当你的实体类中实现了 `FenixSpecModel`，该实体类中将获得各种 Fenix 提供的动态查询方法，以下仅展示多条件分页模糊查询的示例。
+当你的实体类中实现了 `FenixSpecModel`，该实体类中将获得各种 Fenix 提供的动态查询方法，以下仅展示多条件模糊分页查询的示例。
 
-> 待续 ...
+```java
+// 模拟构造一些前端传递过来的查询条件和分页条件.
+String name = "hello";
+String startDate = "2022-03-02";
+String endDate = "2022-03-07";
+List<Integer> statusList = Arrays.asList(0, 1, 2, 3);
+Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Order.desc("birthday")));
+
+// 使用 Fenix 的条件 Lambda 进行模糊查询，还可以在每个查询条件后最后追加动态生成条件.
+Page<Blog> blogsPage = new Blog().findAll(builder -> builder
+        .andIn("status", statusList)
+        .andLike("name", name, StringUtils.isNotBlank(name))
+        .andBetween("publishDate", startDate, endDate)
+        .build(), pageable);
+```
+
+### 🍕 3. 通过 Bean 的查询示例 :id=spec-query-demo-of-bean
+
+Fenix 中的 ActiveRecord 模式，也同样支持 Specification 的 Bean 注解查询方式。
+
+```java
+@Getter
+@Setter
+@Accessors(chain = true)
+public class BlogSearchParam {
+
+    /**
+     * 根据 ID 等值查询的条件，如果该值不为 null 就进行等值查询.
+     */
+    @Equals
+    private Long id;
+
+    /**
+     * 根据名称模糊查询的条件，如果该值不为 null 就进行模糊查询.
+     */
+    @Like
+    private String name;
+
+    /**
+     * 根据状态范围查询的条件，如果该值不为空就进行 in 范围查询.
+     */
+    @In("status")
+    private List<Integer> states;
+
+    /**
+     * 根据出版日期区间查询的条件，如果该值不为空就进行  Between and 查询，
+     * 或者会根据边界值是否为空，自动退化为大于等于或者小于等于的查询.
+     */
+    @Between
+    private BetweenValue<String> publishDate;
+
+}
+```
+
+```java
+// 模拟构造一些前端传递过来的查询条件和分页条件.
+BlogSearchParam blogSearch = new BlogSearchParam()
+        .setName("hello")
+        .setStates(Arrays.asList(0, 1, 2, 3))
+        .setPublishDate(BetweenValue.of(startDate, endDate));
+Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Order.desc("publishDate")));
+
+// 使用 Fenix 的具有条件注解的对象进行模糊查询,更加简单.
+Page<Blog> blogsPage = new Blog().findAllOfBean(blogSearch, pageable);
+```
