@@ -21,10 +21,10 @@
   - [🍜 自定义条件注解](sp-bean/custom-annotation)
 - 🛰️ 更多功能
   - [✈️ ActiveRecord 模式](cud/active-record)
-  - [🪂 返回自定义的实体对象](more/custom-entity)
+  - [🛰️ 返回自定义的实体对象](cud/custom-entity)
   - [🚀 更高效的【批量增删改】](cud/fast-batch-cud)
   - [🚁 非【null】属性的增量更新](cud/not-null-update)
-  - [✈️ 更多的主键 ID 生成策略](cud/id-generator)
+  - [🆔 更多的主键 ID 生成策略](cud/id-generator)
 - 🍬 其他功能
   - [🐛 调试 (debug) 模式](more/debug-mode)
   - [🐝 其他功能](more/other-features)

@@ -52,7 +52,7 @@ public void testParseStr2() {
 }
 ```
 
-### 🩺 2. 解析模版 :id=parse-template
+### 🐴 2. 解析模版 :id=parse-template
 
 #### 主要方法
 
@@ -88,7 +88,7 @@ Fenix 中提供了一个包装上下文参数为 `HashMap` 的包装器 `ParamWr
 - `put(String key, Object value)`，向参数包装器中，`put`对应的key和value值。
 - `toMap()`，返回填充了key、value后的Map对象。
 
-### 🪑 2. 对比的示例 :id=compare-demo
+### 🦊 2. 对比的示例 :id=compare-demo
 
 以前需要开发者自己封装Map：
 

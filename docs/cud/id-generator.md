@@ -1,12 +1,16 @@
-# ✈️ 更多的主键 ID 生成策略 :id=title
+# 🆔 更多的主键 ID 生成策略 :id=title
 
-## 🆔 一、简介 :id=introduction
+## 📖 一、简介 :id=introduction
 
 Fenix 从 `2.4.0` 版本开始新增了三种主键 `ID` 的生产策略类供你选择和使用，同时也支持你通过 Java API 去调用生成 `ID`：
 
 - **❄️ 雪花算法 ID** (`Long` 长整型)
+- **☃️ 36 进制雪花算法 ID** (`String` 字符串型)
 - **☃️ 62 进制雪花算法 ID** (`String` 字符串型)
+- **✒️ 21 位 NanoId** (`String` 字符串型)
 - **🌟 62 进制 UUID** (`String` 字符串型)
+
+> **建议**：各个 ID 的推荐优先级：**雪花算法** > **`NanoId`** > **`UUID`**。
 
 ## ❄️ 二、雪花算法的 ID 生成策略 :id=snowflake
 
@@ -54,7 +58,7 @@ public class MyEntity {
 }
 ```
 
-## ☃️ 三、62 进制雪花算法的 ID 生成策略 :id=snowflake-base62
+## ☃️ 三、36 或 62 进制雪花算法的 ID 生成策略 :id=snowflake-base62
 
 如果你的 ID 不是长整型（`Long`）的，是字符串类型（`String`）的，为了能缩短雪花算法 ID 字符串的长度，可以将原来长度为 `16` 位的雪花算法 ID 的转换为 `62` 进制，能大幅度缩短 `ID` 的长度为 `9` 位，且依然能保证**唯一性**和**整体有序性**。
 
@@ -100,17 +104,37 @@ public class MyEntity {
 }
 ```
 
-在 Fenix 中，你也可以通过 Java API 调用生成 `UUID` 和 62 进制的 `UUID`，API 示例如下：
+而 `36`进制通常是 `10` 位的小写字母，唯一且有序，你也可以视情况选择此策略。示例代码如下：
 
 ```java
-// 使用 IdWorker 来静态方法调用获取通常的 UUID，示例：'73b037d12c894a8ebe673fb6b1caecac'.
-String uuid = IdWorker.getUuid();
-
-// 使用 IdWorker 来静态方法调用获取 62 进制的简短 UUID，示例：'FXOedrCvouduYPlYgul'.
-String uuid2 = IdWorker.get62RadixUuid();
+@Id
+@Column(name = "c_id")
+@GeneratedValue(generator = "snowflake36RadixId")
+@GenericGenerator(name = "snowflake36RadixId", strategy = "com.blinkfox.fenix.id.Snowflake36RadixIdGenerator")
+private String id;
 ```
 
-## 🌟 四、62 进制 UUID 生成策略 :id=uuid-base62
+## ✒️ 四、21 位 NanoId 生成策略 :id=nano-id
+
+相比于 UUID，`NanoId` 大小只有 `108` 个字节，生成的字符串更短，并且生成速度更快。所以，你也可以选择使用 `NanoId` 的生成器 `com.blinkfox.fenix.id.NanoIdGenerator`。
+
+`NanoId` 的字符串示例为：`IaoyHI51Rx-dUIzz-MQUq`。
+
+```java
+@Entity
+@Table(name = "t_my_entity")
+public class MyEntity {
+
+    @Id
+    @Column(name = "c_id")
+    @GeneratedValue(generator = "nanoId")
+    @GenericGenerator(name = "nanoId", strategy = "com.blinkfox.fenix.id.NanoIdGenerator")
+    private String id;
+
+}
+```
+
+## 🌟 五、62 进制 UUID 生成策略 :id=uuid-base62
 
 鉴于 `UUID` 本质上是 `16` 进制的字符串，字符串长度为 `32` 位，依然可以通过进制转换，将其转换为 `62` 进制，能大幅度缩短 `UUID` 的字符串长度为 `19` 位，且依然能保证**唯一性**和**无序性**。
 
@@ -136,9 +160,6 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "t_my_entity")
 public class MyEntity {
 
-    /**
-     * 使用 Fenix 中的雪花算法 ID 生成策略.
-     */
     @Id
     @Column(name = "c_id")
     @GeneratedValue(generator = "uuid62Radix")
@@ -160,22 +181,30 @@ public class MyEntity {
 
 在 Fenix 中，你也可以通过 Java API 调用生成雪花算法的 ID 或 `UUID`。
 
-以下是生成雪花算法 ID 的 API 方法：
+以下是 Java API 生成雪花算法 ID 的 API 方法：
 
 ```java
-private static final IdWorker idWorker = new IdWorker();
-
 // 获取 10 进制长整型的雪花算法 ID（仅由数字组成）.
-long id = idWorker.getId();
+long id = IdWorker.getSnowflakeId();
 
 // 获取 36 进制字符串型的雪花算法 ID（由数字 + 26 位小写字母组成）.
-String id2 = idWorker.get36RadixId();
+String id2 = IdWorker.getSnowflake36RadixId();
 
 // 获取 62 进制字符串型的雪花算法 ID（由数字 + 26 位小写字母 + 26 位大写字母组成）.
-String id3 = idWorker.get62RadixId();
+String id3 = IdWorker.getSnowflake62RadixId();
 ```
 
-以下是通过 Java 静态方法去生成通常的 `UUID` 和 62 进制 `UUID` 的方法：
+以下是通过 Java API 生成 `NanoId` 的方法：
+
+```java
+// 生成默认字符串长度为 21 位的 NanoId，示例：`y5-Gvn2-LSn9p3HN6RuJi`.
+String nanoId = IdWorker.getNanoId();
+
+// 生成指定长度的 NanoId，例如：15，示例：'cz5KYPncsTsszP8'.
+String nanoId2 = IdWorker.getNanoId(15);
+```
+
+以下是通过 Java API 生成 `UUID` 和 62 进制 `UUID` 的方法：
 
 ```java
 // 使用 IdWorker 来静态方法调用获取通常的 UUID，示例：'73b037d12c894a8ebe673fb6b1caecac'.

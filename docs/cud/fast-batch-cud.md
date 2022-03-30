@@ -94,7 +94,7 @@ public void testUpdateBatch() {
 }
 ```
 
-### 🧃 4. 批量删除（deleteBatchByIds） :id=delete-batch
+### 🥂 4. 批量删除（deleteBatchByIds） :id=delete-batch
 
 Spring Data JPA 中已经有相关批量删除的方法了，比如：
 

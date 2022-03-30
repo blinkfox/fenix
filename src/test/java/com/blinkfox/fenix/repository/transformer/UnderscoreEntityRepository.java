@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 public interface UnderscoreEntityRepository extends JpaRepository<UnderscoreEntity, Long> {
 
     /**
-     * 使用 {@link QueryFenix} 注解来连表模糊查询自定义的用户博客实体信息.
+     * 使用 {@link QueryFenix} 注解来查询自定义的实体信息.
      *
      * @param num 数字
      * @return 用户博客信息集合
