@@ -81,9 +81,11 @@ fenix:
   # 扫描你自定义的 XML 标签处理器的位置，默认为空，可以是包路径，也可以是 Java 或 class 文件的全路径名
   # 可以配置多个值，不过一般情况下，你不自定义自己的 XML 标签和处理器的话，不需要配置这个值.
   handler-locations:
-  # v2.2.0 版本新增的配置项，表示自定义的继承自 AbstractPredicateHandler 的子类的全路径名
+  # v2.2.0 新增的配置项，表示自定义的继承自 AbstractPredicateHandler 的子类的全路径名
   # 可以配置多个值，通常情况下，你也不需要配置这个值.
   predicate-handlers:
+  # v2.7.0 新增的配置项，表示带前缀下划线转换时要移除的自定义前缀，多个值用英文逗号隔开，通常你不用配置这个值.
+  underscore-transformer-prefix:
 ```
 
 ## 🍁 三、非 SpringBoot 项目集成 :id=not-spring-boot-project

@@ -4,7 +4,7 @@
 
 [![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v2.6.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/2.6.1/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v2.6.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/2.6.1/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
 
-> [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式的写法。
+> [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，能辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式。
 
 [📖 使用文档](https://blinkfox.github.io/fenix) | [✨ Intellij lIDEA 插件](https://plugins.jetbrains.com/plugin/17158-fenix) | [🍉 示例项目 (fenix-example)](https://github.com/blinkfox/fenix-example)
 
@@ -24,7 +24,7 @@
 
 ## 🏖️️ 二、支持场景
 
-适用于 Java `Spring Data JPA` 项目，`JDK 1.8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。因为后续版本的 Spring Data JPA 对其中 `QueryLookupStrategy` 的代码有较大改动。
+适用于 Java `Spring Data JPA` 项目，`JDK 8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。
 
 ## ☘️ 三、Spring Boot 项目集成
 
@@ -99,6 +99,8 @@ fenix:
   # v2.2.0 版本新增的配置项，表示自定义的继承自 AbstractPredicateHandler 的子类的全路径名
   # 可以配置多个值，通常情况下，你也不需要配置这个值.
   predicate-handlers:
+  # v2.7.0 新增的配置项，表示带前缀下划线转换时要移除的自定义前缀，多个值用英文逗号隔开，通常你不用配置这个值.
+  underscore-transformer-prefix:
 ```
 
 ## 🍔 四、示例概览

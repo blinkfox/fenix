@@ -10,7 +10,7 @@
 
     <name>fenix</name>
     <description>This is an extension library to the Spring Data JPA complex or dynamic SQL query.
-        这是 Spring Data JPA 复杂或动态 SQL 查询的扩展库。
+        这是一个为了解决复杂动态 SQL (JPQL) 而生的 Spring Data JPA 扩展库，能辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式。
     </description>
     <url>https://github.com/blinkfox/fenix</url>
 
@@ -69,7 +69,7 @@
         </dependency>
 
         <!-- 由于下面两个依赖在 Spring Data JPA 的 2.6.0 版本中被移除了，但 fenix 使用到了这两个。
-            因此，在 Fenix 的 2.6.0 版本中添加了这两个依赖项。 -->
+            为了保持向前兼容，在 Fenix 的 2.6.0 版本中添加了这两个依赖项，后续 3.0 大版本时才会考虑是否移除。 -->
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.79</version>
+            <version>1.2.80</version>
             <scope>test</scope>
         </dependency>
         <dependency>
