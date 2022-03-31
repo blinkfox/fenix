@@ -11,11 +11,13 @@ import com.blinkfox.fenix.helper.ParamWrapper;
 import com.blinkfox.fenix.helper.ParseHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.helper.XmlNodeHelper;
+import com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -86,7 +88,7 @@ public final class FenixConfigManager {
         new TaggerScanner().scan(this.fenixConfig.getHandlerLocations());
 
         // 初次测试表达式引擎是否能够正确工作和打印 banner 信息.
-        this.testFirstEvaluate();
+        this.asyncTestFirstEvaluate();
         this.printBanner();
     }
 
@@ -100,14 +102,28 @@ public final class FenixConfigManager {
             throw new FenixException("【Fenix 异常】初始化加载的 FenixConfig 配置信息实例为空，请检查！");
         }
 
+        // 尝试根据配置的前缀来设置结果转换器的前缀.
+        this.trySetUnderscoreTransformerPrefix(fenixConfig.getUnderscoreTransformerPrefix());
+
         // 扫描和缓存 Fenix XML 文件资源信息、扫描和配置自定义的 Fenix 标签处理器实例类.
         String xmlLocations = fenixConfig.getXmlLocations();
         fenixConfig.setXmlLocations(StringHelper.isBlank(xmlLocations) ? Const.DEFAULT_FENIX_XML_DIR : xmlLocations);
         this.fenixConfig = fenixConfig;
     }
 
+    private void trySetUnderscoreTransformerPrefix(String underscoreTransformerPrefix) {
+        if (StringHelper.isNotBlank(underscoreTransformerPrefix)) {
+            // 清空 Fenix 中的所有默认前缀.
+            Set<String> prefixSet = PrefixUnderscoreTransformer.getPrefixSet();
+            prefixSet.clear();
+            for (String prefix : underscoreTransformerPrefix.split(Const.COMMA)) {
+                prefixSet.add(prefix.trim());
+            }
+        }
+    }
+
     /**
-     * 打印 Finix Banner.
+     * 打印 Fenix Banner.
      */
     private void printBanner() {
         if (this.fenixConfig.isPrintBanner()) {
@@ -171,12 +187,18 @@ public final class FenixConfigManager {
     }
 
     /**
-     * 测试第一次 MVEL 表达式的计算，会缓存 MVEL 相关准备工作，从而加快后续的 MVEL 执行.
+     * 异步测试第一次 MVEL 表达式的计算，会缓存 MVEL 相关准备工作，从而加快后续的 MVEL 执行.
      */
-    private void testFirstEvaluate() {
-        Map<String, Object> context = ParamWrapper.newInstance("foo", "hello").toMap();
-        ParseHelper.parseTemplate("@if{?foo != empty}Hello World!@end{}", context);
-        ParseHelper.parseExpressWithException("foo != empty", context);
+    private void asyncTestFirstEvaluate() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                Map<String, Object> context = ParamWrapper.newInstance("foo", "hello").toMap();
+                ParseHelper.parseTemplate("@if{?foo != empty}Hello World!@end{}", context);
+                ParseHelper.parseExpressWithException("foo != empty", context);
+            } catch (Exception e) {
+                log.error("【Fenix 异常】初次测试执行 MVEL 表达式时异常！", e);
+            }
+        });
     }
 
 }

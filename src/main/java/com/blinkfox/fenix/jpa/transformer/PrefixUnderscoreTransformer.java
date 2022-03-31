@@ -1,7 +1,9 @@
 package com.blinkfox.fenix.jpa.transformer;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 
 /**
  * 字段带有某些前缀且含有下划线风格的查询结果实体对象转换器.
@@ -17,14 +19,8 @@ public class PrefixUnderscoreTransformer extends UnderscoreTransformer {
     /**
      * 需要从字段属性中去除的前缀集合.
      */
-    private static final Set<String> prefixSet = new HashSet<>();
-
-    static {
-        prefixSet.add("c_");
-        prefixSet.add("n_");
-        prefixSet.add("d_");
-        prefixSet.add("dt_");
-    }
+    @Getter
+    private static final Set<String> prefixSet = new HashSet<>(Arrays.asList("c_", "n_", "d_", "dt_"));
 
     /**
      * 将原来的字符串名称转换为小驼峰风格的 Java 属性名称.

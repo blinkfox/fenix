@@ -54,7 +54,9 @@ public class FenixXmlBuilderTest {
     public static void init() {
         FenixConfig.add("hi", HelloTagHandler.class);
         FenixConfig.add("andHi", " AND ", HelloTagHandler::new, " LIKE ");
-        FenixConfig fenixConfig = new FenixConfig().setHandlerLocations("com.blinkfox.fenix.handler");
+        FenixConfig fenixConfig = new FenixConfig()
+                .setHandlerLocations("com.blinkfox.fenix.handler")
+                .setUnderscoreTransformerPrefix("c_, n_, d_, dt_");
         FenixConfigManager.getInstance().initLoad(fenixConfig);
 
         context = new HashMap<>(4);

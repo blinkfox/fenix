@@ -113,6 +113,13 @@ public class FenixConfig {
     protected String handlerLocations;
 
     /**
+     * 采用带前缀的下划线转自定义 Bean 时需要移除的前缀集合的字符串，多个前缀字符串用逗号隔开.
+     *
+     * @since v2.7.0
+     */
+    private String underscoreTransformerPrefix;
+
+    /**
      * 所有 Fenix XML 文档的缓存 map.
      *
      * <p>该 Map 的 key 是资源的路径（将 XML 命名空间和 fenixId 用"."号分割），value 是 dom4j 的文档节点 Node.</p>
@@ -352,6 +359,19 @@ public class FenixConfig {
      */
     public FenixConfig setHandlerLocations(String handlerLocations) {
         this.handlerLocations = handlerLocations;
+        return this;
+    }
+
+    /**
+     * 设置自定义的 {@link com.blinkfox.fenix.config.entity.TagHandler} 处理器实现的所在位置，
+     * 多个用逗号隔开，可以是目录也可以是具体的 java 或 class 文件路径.
+     *
+     * @param underscoreTransformerPrefix 自定义的前缀字符串，多个用逗号隔开.
+     * @return {@link FenixConfig} 实例自身
+     * @since v2.7.0
+     */
+    public FenixConfig setUnderscoreTransformerPrefix(String underscoreTransformerPrefix) {
+        this.underscoreTransformerPrefix = underscoreTransformerPrefix;
         return this;
     }
 
