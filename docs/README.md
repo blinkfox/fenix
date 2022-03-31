@@ -2,14 +2,11 @@
 
 > [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，目的是辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式的写法。
 
-**🏕️ 使用示例**：
-
-- [⛱️ 示例项目 (fenix-example)](https://github.com/blinkfox/fenix-example)
-- [🏝️ Fenix 使用的单元测试](https://github.com/blinkfox/fenix/tree/develop/src/test/java/com/blinkfox/fenix/repository)
+[✨ Intellij IDEA 插件](https://plugins.jetbrains.com/plugin/17158-fenix) | [⛱️ 示例项目 (fenix-example)](https://github.com/blinkfox/fenix-example) | [🏝️ Fenix 使用的单元测试](https://github.com/blinkfox/fenix/tree/develop/src/test/java/com/blinkfox/fenix/repository)
 
 ## 💎 特性 :id=features
 
-- 简单、轻量级、无副作用的集成和使用，jar 包仅 `214 KB`；
+- 简单、轻量级、无副作用的集成和使用，jar 包仅 `215 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
 - 提供了 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL；
 - 支持 `ActiveRecord` 模式；
@@ -18,7 +15,7 @@
 - 可以采用动态条件注解和Java 链式 `API` 来书写出动态的 `Specification`；
 - 增强了更快速高效的 JPA 批量“增删改”的支持，支持非 `null` 属性的增量更新；
 - 支持**雪花算法**和 `NanoId` 的主键 ID 生成策略；
-- SQL 执行结果可返回任意自定义的实体对象，支持多种结果转换方式，比使用 JPA 自身的投影方式更加简单和自然；
+- SQL 执行结果可返回任意自定义的实体对象，支持多种结果转换方式，比使用 JPA 自身的投影方式更加简单；
 - 具有可扩展性，如：可自定义 `XML` 语义标签和对应的标签处理器来生成自定义逻辑的 SQL 片段和参数；
 
 ## 🎁 初衷 :id=original-intention
@@ -33,10 +30,18 @@
 
 > **💡 注**：本 `Fenix` 扩展库开发的核心思想来源于我几年前写的动态 SQL 拼接库 [Zealot](https://github.com/blinkfox/zealot)。如果你熟悉星际争霸的话，大概能理解其中的关系。
 
-## 📝 开源许可证 :id=license
+## 🙋 其他贡献者 :id=contributor
 
-本 `Fenix` 的 Spring Data JPA 扩展库遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) 许可证。
+感谢如下贡献者，没有他们， `Fenix` 不会如此完美。
+
+- [@pengten](https://github.com/pengten)
+- [@jgaybjone](https://github.com/jgaybjone)
+- [@imhansai](https://github.com/imhansai)
 
 ## 🙏 鸣谢 :id=thanks
 
 感谢 [JetBrains 公司](https://www.jetbrains.com/?from=fenix) 为本开源项目提供的免费正版 Intellij IDEA 的 License 支持。
+
+## 📝 开源许可证 :id=license
+
+本 `Fenix` 的 Spring Data JPA 扩展库遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) 许可证。
