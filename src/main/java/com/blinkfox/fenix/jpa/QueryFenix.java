@@ -83,6 +83,7 @@ public @interface QueryFenix {
      * <p>该属性和 Fenix XML 文件中的 {@code resultType} 同义，后续推荐使用本属性来设置结果类型的 class，
      * 这样能更好的利用 Java 类的静态编译检查和代码重构后发现一些类路径修改所造成的隐患问题.</p>
      *
+     * @return 结果类型的 class，默认为 {@link Void} 的 class
      * @since 2.7.0
      */
     Class<?> resultType() default Void.class;
@@ -92,6 +93,7 @@ public @interface QueryFenix {
      *
      * <p>为了保持向前兼容，默认的转换器仍然使用的是之前版本使用的 {@link FenixResultTransformer} 类的 Class.</p>
      *
+     * @return Fenix 中约定的 {@link AbstractResultTransformer} 的子类
      * @see com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer
      * @see com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer
      * @see com.blinkfox.fenix.jpa.transformer.ColumnAnnotationTransformer

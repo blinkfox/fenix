@@ -21,8 +21,9 @@ import org.springframework.data.convert.JodaTimeConverters;
  *
  * @author blinkfox on 2019-10-08.
  * @author blinkfox on 2022-03-25 (v2.7.0) 做了代码重构，公共代码集成自 {@link AbstractResultTransformer}
- * @see com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer
  * @see com.blinkfox.fenix.jpa.transformer.UnderscoreTransformer
+ * @see com.blinkfox.fenix.jpa.transformer.PrefixUnderscoreTransformer
+ * @see com.blinkfox.fenix.jpa.transformer.ColumnAnnotationTransformer
  * @since v1.1.0
  */
 public class FenixResultTransformer extends AbstractResultTransformer {
@@ -55,7 +56,7 @@ public class FenixResultTransformer extends AbstractResultTransformer {
     /**
      * 做一些初始化操作.
      *
-     * <p>本方法为了保持向以前的版本兼容，重写了父类中的 {@link super#init()} 方法，本方法中的字段都是小写的，不区分大小写.</p>
+     * <p>本方法的功能能向兼容的以前版本，重写了父类中的 {@code init()} 方法，结果类中属性的字段都是小写的，不区分大小写.</p>
      */
     @Override
     public void init() {

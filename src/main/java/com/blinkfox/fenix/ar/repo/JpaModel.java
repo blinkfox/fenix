@@ -45,6 +45,7 @@ public interface JpaModel<T, ID, R extends JpaRepository<T, ID>> extends PagingA
     /**
      * 保存实体对象中的数据，并立即刷新到数据库中.
      *
+     * @param <S> 本实体类或其子类
      * @return 保存后的实体对象
      */
     @Transactional

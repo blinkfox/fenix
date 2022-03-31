@@ -53,7 +53,7 @@ public class ColumnAnnotationTransformer extends AbstractResultTransformer {
     }
 
     /**
-     * 用来将各个查询结果列的别名和值注入到 {@link super#resultClass} 的结果对象中的方法.
+     * 这是用来将各个查询结果列的别名和值注入到父类的 {@code resultClass} 结果对象中的方法.
      *
      * @param tuple 值数组
      * @param aliases 别名数组
