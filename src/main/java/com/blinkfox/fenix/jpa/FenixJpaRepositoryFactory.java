@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.jpa;
 
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
-import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;

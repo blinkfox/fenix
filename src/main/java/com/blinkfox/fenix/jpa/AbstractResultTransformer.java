@@ -8,7 +8,7 @@ import java.sql.Clob;
 import java.util.List;
 import lombok.Setter;
 import org.hibernate.transform.ResultTransformer;
-import org.hibernate.type.BlobType;
+import org.hibernate.type.descriptor.java.BlobJavaType;
 import org.hibernate.type.descriptor.java.DataHelper;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.NotWritablePropertyException;
@@ -130,7 +130,7 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
 
         @Override
         public String convert(Blob source) {
-            return BlobType.INSTANCE.toString(source);
+            return BlobJavaType.INSTANCE.toString(source);
         }
     }
 

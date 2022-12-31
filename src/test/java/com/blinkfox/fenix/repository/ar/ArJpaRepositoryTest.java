@@ -2,10 +2,10 @@ package com.blinkfox.fenix.repository.ar;
 
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.ar.ArJpa;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;

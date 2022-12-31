@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.vo.transformer;
 
+import jakarta.persistence.Column;
 import java.util.Date;
-import javax.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

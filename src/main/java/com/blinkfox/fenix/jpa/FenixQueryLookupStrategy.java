@@ -1,13 +1,14 @@
 package com.blinkfox.fenix.jpa;
 
+import jakarta.persistence.EntityManager;
 import java.lang.reflect.Method;
-import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy;
 import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
+import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -75,7 +76,8 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
         if (FenixJpaClassWriter.hasDefaultJpaQueryMethodFactoryClass()) {
             this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
             this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager,
-                    (JpaQueryMethodFactory) this.queryMethodFactory, key, provider, EscapeCharacter.DEFAULT);
+                    (JpaQueryMethodFactory) this.queryMethodFactory, key, provider, QueryRewriterProvider.simple(),
+                    EscapeCharacter.DEFAULT);
         } else {
             // 为了兼容 Spring Data JPA v2.3.0 之前的版本，此处使用 Javassist 来重写下面方法的中的字节码，来解决老版本的编译错误.
             this.jpaQueryLookupStrategy = this.createOldJpaQueryLookupStrategy(entityManager, key, extractor, provider,

@@ -42,13 +42,13 @@ import com.blinkfox.fenix.specification.handler.impl.OrNotLikePredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrNotStartsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.OrStartsWithPredicateHandler;
 import com.blinkfox.fenix.specification.handler.impl.StartsWithPredicateHandler;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
 import lombok.Getter;
 
 /**

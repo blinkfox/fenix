@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.data.convert.JodaTimeConverters;
+import org.springframework.data.convert.Jsr310Converters;
 
 /**
  * 自定义查询结果的转换器.
@@ -45,7 +45,7 @@ public class FenixResultTransformer extends AbstractResultTransformer {
 
     static {
         // 添加一些默认的 ConversionService.
-        Collection<Converter<?, ?>> convertersToRegister = JodaTimeConverters.getConvertersToRegister();
+        Collection<Converter<?, ?>> convertersToRegister = Jsr310Converters.getConvertersToRegister();
         for (Converter<?, ?> converter : convertersToRegister) {
             oldConversionService.addConverter(converter);
         }

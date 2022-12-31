@@ -3,19 +3,18 @@ package com.blinkfox.fenix.specification.handler;
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
 import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate.BooleanOperator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Predicate.BooleanOperator;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 
 /**
  * 用来动态构造 JPA 中 {@link Predicate} 的抽象类.
@@ -252,7 +251,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
         try {
             return (boolean) this.getAnnotation().getMethod("allowNull").invoke(annotation);
         } catch (IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                 | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             log.error("【Fenix 错误提示】获取【@In】、【@OrIn】、【@NotIn】、【@OrNotIn】相关注解中的【allowNull】的值失败，将默认返回 false 的值.", e);
             return false;
         }

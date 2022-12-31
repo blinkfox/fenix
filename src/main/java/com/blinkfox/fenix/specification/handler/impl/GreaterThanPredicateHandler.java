@@ -2,10 +2,10 @@ package com.blinkfox.fenix.specification.handler.impl;
 
 import com.blinkfox.fenix.specification.annotation.GreaterThan;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Predicate;
 import java.lang.annotation.Annotation;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
 
 /**
  * 构建“大于条件”({@code field > 'xxx'})场景的 {@link Predicate} 处理器.

@@ -1,12 +1,9 @@
 package com.blinkfox.fenix.specification.predicate;
 
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate.BooleanOperator;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.hibernate.query.criteria.internal.ParameterRegistry;
-import org.hibernate.query.criteria.internal.compile.RenderingContext;
-import org.hibernate.query.criteria.internal.predicate.AbstractSimplePredicate;
-import org.hibernate.query.criteria.internal.predicate.BooleanStaticAssertionPredicate;
 
 /**
  * {@link BooleanStaticAssertionPredicate} 的装饰类，主要用来返回永真和永假条件.
@@ -27,7 +24,7 @@ public class FenixBooleanStaticPredicate extends AbstractSimplePredicate {
 
     @Getter
     @Setter
-    private BooleanOperator operator;
+    private Predicate.BooleanOperator operator;
 
     /**
      * 构造方法.
