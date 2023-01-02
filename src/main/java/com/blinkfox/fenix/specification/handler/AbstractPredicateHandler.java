@@ -2,12 +2,10 @@ package com.blinkfox.fenix.specification.handler;
 
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.handler.bean.BetweenValue;
-import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.From;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Predicate.BooleanOperator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -228,12 +226,7 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
 
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
-            if (list.isEmpty()) {
-                return new FenixBooleanStaticPredicate(
-                        (CriteriaBuilderImpl) criteriaBuilder, true, BooleanOperator.AND);
-            } else {
-                list.forEach(in::value);
-            }
+            list.forEach(in::value);
         } else {
             in.value(value);
         }
