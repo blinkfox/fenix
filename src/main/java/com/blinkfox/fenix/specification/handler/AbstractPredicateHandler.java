@@ -226,7 +226,11 @@ public abstract class AbstractPredicateHandler implements PredicateHandler {
 
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
-            list.forEach(in::value);
+            if (list.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            } else {
+                list.forEach(in::value);
+            }
         } else {
             in.value(value);
         }

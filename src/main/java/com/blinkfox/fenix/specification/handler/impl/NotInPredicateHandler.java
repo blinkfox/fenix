@@ -4,6 +4,7 @@ import com.blinkfox.fenix.specification.annotation.NotIn;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -32,11 +33,15 @@ public class NotInPredicateHandler extends AbstractPredicateHandler {
     @Override
     public Predicate buildPredicate(
             CriteriaBuilder criteriaBuilder, From<?, ?> from, String fieldName, Object value) {
-        CriteriaBuilder.In<Object> in = criteriaBuilder.in(from.get(fieldName));
+        Path<Object> path = from.get(fieldName);
+        CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
         value = value.getClass().isArray() ? Arrays.asList((Object[]) value) : value;
 
         if (value instanceof Collection) {
             Collection<?> list = (Collection<?>) value;
+            if (list.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
             list.forEach(in::value);
         } else {
             in.value(value);
