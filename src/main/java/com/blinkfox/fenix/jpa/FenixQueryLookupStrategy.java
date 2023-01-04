@@ -79,7 +79,7 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
                     (JpaQueryMethodFactory) this.queryMethodFactory, key, provider, QueryRewriterProvider.simple(),
                     EscapeCharacter.DEFAULT);
         } else {
-            // 为了兼容 Spring Data JPA v2.3.0 之前的版本，此处使用 Javassist 来重写下面方法的中的字节码，来解决老版本的编译错误.
+            // 为了兼容 Spring Data JPA v2.3.0 之前的版本，此处使用 Javassist 来重写下面方法中的字节码，来解决老版本的编译错误.
             this.jpaQueryLookupStrategy = this.createOldJpaQueryLookupStrategy(entityManager, key, extractor, provider,
                     EscapeCharacter.DEFAULT);
         }
