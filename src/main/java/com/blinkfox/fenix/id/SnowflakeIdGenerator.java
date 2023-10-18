@@ -25,7 +25,6 @@ public class SnowflakeIdGenerator extends IdentityGenerator {
      * @param obj 对象
      * @return ID 结果
      */
-    @Override
     public Serializable generate(SharedSessionContractImplementor s, Object obj) {
         return idWorker.getId();
     }
