@@ -4,12 +4,12 @@ import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.jpa.AbstractResultTransformer;
+import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.persistence.Column;
 import org.springframework.beans.BeanWrapper;
 
 /**

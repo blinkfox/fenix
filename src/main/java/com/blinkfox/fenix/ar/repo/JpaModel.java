@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author blinkfox on 2022-03-29.
  * @since v2.7.0
  */
-public interface JpaModel<T, ID, R extends JpaRepository<T, ID>> extends PagingAndSortingModel<T, ID, R> {
+public interface JpaModel<T, ID, R extends JpaRepository<T, ID>> extends PagingAndSortingModel<T, ID, R>, CrudModel<T,
+        ID, R> {
 
     /**
      * 校验 Repository 接口是否是 {@link JpaRepository} 类型的接口.
@@ -60,7 +61,7 @@ public interface JpaModel<T, ID, R extends JpaRepository<T, ID>> extends PagingA
      * @return 实体对象
      */
     default T getById() {
-        return this.getRepository().getById(this.getId());
+        return this.getRepository().getReferenceById(this.getId());
     }
 
 }

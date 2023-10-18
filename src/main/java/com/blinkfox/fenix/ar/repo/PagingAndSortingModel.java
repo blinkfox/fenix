@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.ar.repo;
 
+import com.blinkfox.fenix.ar.BaseModel;
 import com.blinkfox.fenix.exception.FenixException;
 import com.blinkfox.fenix.helper.StringHelper;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,8 +18,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @author blinkfox on 2022-03-29.
  * @since v2.7.0
  */
-public interface PagingAndSortingModel<T, ID, R extends PagingAndSortingRepository<T, ID>>
-        extends CrudModel<T, ID, R> {
+public interface PagingAndSortingModel<T, ID, R extends PagingAndSortingRepository<T, ID>> extends BaseModel<R> {
 
     /**
      * 校验 Repository 接口是否是 {@link PagingAndSortingRepository} 类型的接口.

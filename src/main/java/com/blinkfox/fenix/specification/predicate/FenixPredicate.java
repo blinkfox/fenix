@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.specification.predicate;
 
+import jakarta.persistence.criteria.Predicate;
 import java.util.List;
-import javax.persistence.criteria.Predicate;
 
 /**
  * Fenix 中使用 {@link FenixPredicateBuilder} 构建器来动态构造多个 {@link Predicate} 条件的函数式接口.

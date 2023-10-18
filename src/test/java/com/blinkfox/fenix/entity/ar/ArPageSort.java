@@ -1,13 +1,12 @@
 package com.blinkfox.fenix.entity.ar;
 
 import com.blinkfox.fenix.ar.repo.JpaModel;
-import com.blinkfox.fenix.ar.repo.PagingAndSortingModel;
 import com.blinkfox.fenix.repository.ar.ArPageSortRepository;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,7 +25,7 @@ import org.hibernate.annotations.Proxy;
 @Entity
 @Proxy(lazy = false)
 @Table(name = "t_ar_page_sort")
-public class ArPageSort implements PagingAndSortingModel<ArPageSort, String, ArPageSortRepository> {
+public class ArPageSort implements JpaModel<ArPageSort, String, ArPageSortRepository> {
 
     /**
      * ID.

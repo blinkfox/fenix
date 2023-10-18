@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.repository.ar;
 
 import com.blinkfox.fenix.entity.ar.ArPageSort;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @since 2.7.0
  */
 @Repository
-public interface ArPageSortRepository extends PagingAndSortingRepository<ArPageSort, String> {
+public interface ArPageSortRepository extends JpaRepository<ArPageSort, String> {
 
 }

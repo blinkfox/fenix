@@ -3,11 +3,11 @@ package com.blinkfox.fenix.specification.handler.impl;
 import com.blinkfox.fenix.exception.BuildSpecificationException;
 import com.blinkfox.fenix.specification.FenixSpecification;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import java.lang.annotation.Annotation;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 
 /**
  * 构建“实体连接条件”({@code JOIN})场景的 {@link Predicate} 处理器.

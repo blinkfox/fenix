@@ -16,6 +16,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArCrudRepository extends CrudRepository<ArCrud, String> {
 
+    /**
+     * 使用 Fenix 根据 id 查询.
+     *
+     * @param id 主键
+     * @return 数据
+     */
     @QueryFenix
     ArCrud findByIdWithFenix(@Param("id") String id);
 

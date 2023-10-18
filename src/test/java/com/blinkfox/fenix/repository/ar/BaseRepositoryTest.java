@@ -3,7 +3,7 @@ package com.blinkfox.fenix.repository.ar;
 import com.blinkfox.fenix.ar.RepositoryModelContext;
 import com.blinkfox.fenix.config.FenixConfigManager;
 import com.blinkfox.fenix.exception.FenixException;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 

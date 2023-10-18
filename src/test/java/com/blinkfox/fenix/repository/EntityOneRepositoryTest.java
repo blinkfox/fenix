@@ -2,9 +2,9 @@ package com.blinkfox.fenix.repository;
 
 import com.blinkfox.fenix.FenixTestApplication;
 import com.blinkfox.fenix.entity.EntityOne;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

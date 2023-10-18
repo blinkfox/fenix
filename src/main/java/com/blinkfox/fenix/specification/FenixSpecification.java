@@ -7,9 +7,11 @@ import com.blinkfox.fenix.helper.FieldHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.handler.AbstractPredicateHandler;
 import com.blinkfox.fenix.specification.handler.bean.Pair;
-import com.blinkfox.fenix.specification.predicate.FenixBooleanStaticPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicate;
 import com.blinkfox.fenix.specification.predicate.FenixPredicateBuilder;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Predicate;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -126,7 +125,7 @@ public final class FenixSpecification {
                 AbstractPredicateHandler handler = specificationHandlerMap.get(annotation.annotationType());
                 if (handler != null) {
                     Predicate predicate = buildPredicate(beanParam, field, criteriaBuilder, from, handler);
-                    if (predicate != null && isValid(predicate)) {
+                    if (predicate != null) {
                         predicates.add(predicate);
                     }
                 }
@@ -248,28 +247,6 @@ public final class FenixSpecification {
         } else {
             return handler.buildPredicate(criteriaBuilder, root, fieldName, value, annotation);
         }
-    }
-
-    /**
-     * 校验 {@link Predicate} 是否有效，有的 {@code predicate} 可以不用解析.
-     *
-     * @param predicate {@link Predicate} 实例
-     * @return 布尔值
-     */
-    private static boolean isValid(Predicate predicate) {
-        return !(predicate instanceof FenixBooleanStaticPredicate) || validateBooleanPredicate(predicate);
-    }
-
-    /**
-     * 校验布尔类型的 {@link Predicate} 是否有效.
-     *
-     * @param predicate {@link Predicate} 实例
-     * @return 布尔值
-     */
-    private static boolean validateBooleanPredicate(Predicate predicate) {
-        FenixBooleanStaticPredicate boolPredicate = (FenixBooleanStaticPredicate) predicate;
-        return !((boolPredicate.getAssertedValue() && predicate.getOperator() == Predicate.BooleanOperator.AND)
-                || (!boolPredicate.getAssertedValue() && predicate.getOperator() == Predicate.BooleanOperator.OR));
     }
 
 }

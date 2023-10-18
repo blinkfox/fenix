@@ -2,12 +2,12 @@ package com.blinkfox.fenix.jpa;
 
 import com.blinkfox.fenix.consts.Const;
 import com.blinkfox.fenix.helper.StringHelper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.SingularAttribute;
 import org.hibernate.Session;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;

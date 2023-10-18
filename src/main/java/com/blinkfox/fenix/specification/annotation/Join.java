@@ -3,10 +3,10 @@ package com.blinkfox.fenix.specification.annotation;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import jakarta.persistence.criteria.JoinType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import javax.persistence.criteria.JoinType;
 
 /**
  * 用于“连接”({@code JOIN})查询场景的注解.

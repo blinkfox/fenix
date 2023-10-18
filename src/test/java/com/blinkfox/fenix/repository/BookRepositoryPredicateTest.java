@@ -6,12 +6,12 @@ import com.blinkfox.fenix.entity.Book;
 import com.blinkfox.fenix.helper.CollectionHelper;
 import com.blinkfox.fenix.helper.StringHelper;
 import com.blinkfox.fenix.specification.FenixSpecification;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class BookRepositoryPredicateTest {
     private BookRepository bookRepository;
 
     /**
-     * 从资源文件的中读取数据，初始化保存起来，便于后续读取或操作.
+     * 从资源文件中读取数据，初始化保存起来，便于后续读取或操作.
      */
     @PostConstruct
     public void init() throws IOException {
