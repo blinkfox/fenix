@@ -1,6 +1,6 @@
 # 🍹 版本更新记录 :id=title
 
-### ⛵ v3.0.0 适配 SpringBoot 3.x 的版本 🆕 (2023-11-xx) :id=v300
+### ⛵ v3.0.0 适配 SpringBoot 3.x 的版本 🆕 (2023-11-07) :id=v300
 
 - 新增适配了 SpringBoot 3.x 的版本；
 

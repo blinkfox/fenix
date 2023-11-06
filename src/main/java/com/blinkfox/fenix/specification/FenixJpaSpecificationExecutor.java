@@ -21,7 +21,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     /**
      * 基于 {@link FenixPredicate} 返回与之匹配的单个对象的 {@link Optional} 实例.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link jakarta.persistence.criteria.Predicate} 条件的接口
      * @return 不可能是 {@literal null}.
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException 如果找到多个实例时抛出此异常.
      */
@@ -43,7 +43,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     /**
      * 基于 {@link FenixPredicate} 返回与之匹配的所有对象实例的集合.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link jakarta.persistence.criteria.Predicate} 条件的接口
      * @return 不可能是 {@literal null}.
      */
     default List<T> findAll(FenixPredicate fenixPredicate) {
@@ -53,7 +53,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     /**
      * 基于 {@link FenixPredicate} 和 {@link Pageable} 分页信息返回与之匹配的分页对象实例.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link jakarta.persistence.criteria.Predicate} 条件的接口
      * @param pageable 分页信息，不能为 {@literal null}.
      * @return 分页结果，不可能是 {@literal null}.
      */
@@ -64,7 +64,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     /**
      * 基于 {@link FenixPredicate} 和 {@link Sort} 排序信息返回所有与之匹配的对象实例.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link jakarta.persistence.criteria.Predicate} 条件的接口
      * @param sort 排序信息，不能为 {@literal null}.
      * @return 排序结果，不可能是 {@literal null}.
      */
@@ -107,7 +107,7 @@ public interface FenixJpaSpecificationExecutor<T> extends JpaSpecificationExecut
     /**
      * 基于 {@link FenixPredicate} 返回与之匹配的所有对象实例的总数量.
      *
-     * @param fenixPredicate Fenix 中用于动态构造 {@link javax.persistence.criteria.Predicate} 条件的接口
+     * @param fenixPredicate Fenix 中用于动态构造 {@link jakarta.persistence.criteria.Predicate} 条件的接口
      * @return 实例数量.
      */
     default long count(FenixPredicate fenixPredicate) {
