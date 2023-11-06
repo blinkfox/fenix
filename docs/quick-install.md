@@ -8,22 +8,34 @@
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
-!> **💡 注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**，如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.0.0` 版本及以上。
+!> **💡 注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**。如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.x` 的版本。如果 Spring Boot 版本是 `v3.0.0` 及以上，则 Fenix 版本必须是 `v3.x` 的版本。
 
 ### 🌾 1. Maven :id=spring-boot-maven
 
 ```xml
+<!-- Spring Boot 版本要求 3.0 及以上. -->
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
     <version>3.0.0</version>
 </dependency>
+
+<!-- Spring Boot 版本要求 2.x 版本. -->
+<dependency>
+    <groupId>com.blinkfox</groupId>
+    <artifactId>fenix-spring-boot-starter</artifactId>
+    <version>2.7.0</version>
+</dependency>
 ```
 
 ### 🌵 2. Gradle :id=spring-boot-gradle
 
-```bash
+```gradle
+// Spring Boot 版本要求 3.x 版本.
 compile 'com.blinkfox:fenix-spring-boot-starter:3.0.0'
+
+// Spring Boot 版本要求 2.x 版本.
+compile 'com.blinkfox:fenix-spring-boot-starter:2.7.0'
 ```
 
 ### 🏕️ 3. 激活 Fenix (@EnableFenix) :id=enable-fenix
@@ -97,17 +109,29 @@ fenix:
 ### 🌼 1. Maven :id=project-maven
 
 ```xml
+<!-- Spring Boot 版本要求 3.0 及以上. -->
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>
     <version>3.0.0</version>
 </dependency>
+
+<!-- Spring Boot 版本要求 2.x 版本. -->
+<dependency>
+    <groupId>com.blinkfox</groupId>
+    <artifactId>fenix</artifactId>
+    <version>2.7.0</version>
+</dependency>
 ```
 
 ### 🌻 2. Gradle :id=project-gradle
 
-```bash
+```gradle
+// Spring Boot 版本要求 3.x 版本.
 compile 'com.blinkfox:fenix:3.0.0'
+
+// Spring Boot 版本要求 2.x 版本.
+compile 'com.blinkfox:fenix:2.7.0'
 ```
 
 ### 🏔️ 3. 激活 Fenix :id=project-enable-fenix
