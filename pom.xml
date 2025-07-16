@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>3.1.5</version>
+            <version>3.3.12</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.11</version>
+            <version>1.5.13</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.mvel</groupId>
             <artifactId>mvel2</artifactId>
-            <version>2.5.0.Final</version>
+            <version>2.5.1.Final</version>
         </dependency>
         <dependency>
             <groupId>jaxen</groupId>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
+            <version>1.2.83_noneautotype</version>
             <scope>test</scope>
         </dependency>
         <dependency>
