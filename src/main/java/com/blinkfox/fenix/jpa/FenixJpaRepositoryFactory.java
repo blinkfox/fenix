@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
+import org.springframework.lang.Nullable;
 
 /**
  * 扩展了 {@link JpaRepositoryFactory} JPA 规范类的 的 Repository 工厂类.
@@ -56,6 +58,22 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
             QueryMethodEvaluationContextProvider provider) {
         return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider));
+    }
+
+    /**
+     * 创建 {@link QueryLookupStrategy} 策略实例.
+     *
+     * <p>注：本方法用于适配 Spring Data JPA v3.4.x 及以上版本。</p>
+     *
+     * @param key QueryLookupStrategy 的策略 Key
+     * @param expressionDelegate ValueExpressionDelegate 实例
+     * @return FenixQueryLookupStrategy 策略实例
+     * @since 3.0.1
+     */
+    @Override
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
+            @Nullable QueryLookupStrategy.Key key, ValueExpressionDelegate expressionDelegate) {
+        return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, expressionDelegate));
     }
 
     /**

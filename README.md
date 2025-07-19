@@ -2,7 +2,7 @@
 
 <div align="center"><img style="display: block; margin: 0 auto;" src="https://blinkfox.github.io/fenix/assets/images/logo.png" alt="fenix logo" /></div>
 
-[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v3.0.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/3.0.0/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v3.0.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/3.0.0/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
+[![Build Status](https://secure.travis-ci.org/blinkfox/fenix.svg)](https://travis-ci.org/blinkfox/fenix) [![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v3.0.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/3.0.1/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v3.0.1-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/3.0.1/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
 
 > [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，能辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式。
 
@@ -43,7 +43,7 @@
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 </dependency>
 
 <!-- Spring Boot 版本要求 2.x 版本. -->
@@ -58,7 +58,7 @@
 
 ```bash
 // Spring Boot 版本要求 3.x 版本.
-compile 'com.blinkfox:fenix-spring-boot-starter:3.0.0'
+compile 'com.blinkfox:fenix-spring-boot-starter:3.0.1'
 
 // Spring Boot 版本要求 2.x 版本.
 compile 'com.blinkfox:fenix-spring-boot-starter:2.7.0'
