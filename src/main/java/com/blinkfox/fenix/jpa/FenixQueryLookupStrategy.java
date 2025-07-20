@@ -12,9 +12,11 @@ import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.query.CachingValueExpressionDelegate;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 
 /**
  * 定义用来处理 {@link QueryFenix} 注解的查找策略类，该策略类实现了 {@link QueryLookupStrategy} 接口.
@@ -85,6 +87,17 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
         }
     }
 
+    private FenixQueryLookupStrategy(EntityManager entityManager, Key key, QueryExtractor extractor,
+            ValueExpressionDelegate valueExpressionDelegate) {
+        this.entityManager = entityManager;
+        this.extractor = extractor;
+        this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
+        this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(
+                entityManager, (JpaQueryMethodFactory) this.queryMethodFactory, key,
+                new CachingValueExpressionDelegate(valueExpressionDelegate), QueryRewriterProvider.simple(),
+                EscapeCharacter.DEFAULT);
+    }
+
     /**
      * 创建 Spring Data JPA v2.3.0 之前的版本的 {@link QueryLookupStrategy} 对象。
      *
@@ -115,6 +128,23 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
     static QueryLookupStrategy create(EntityManager entityManager, QueryLookupStrategy.Key key,
             QueryExtractor extractor, QueryMethodEvaluationContextProvider provider) {
         return new FenixQueryLookupStrategy(entityManager, key, extractor, provider);
+    }
+
+    /**
+     * 创建 {@link FenixQueryLookupStrategy} 实例.
+     *
+     * <p>注：本方法用于适配 Spring Data JPA v3.4.x 及以上版本。</p>
+     *
+     * @param entityManager entityManager
+     * @param key key
+     * @param extractor extractor
+     * @param valueExpressionDelegate valueExpressionDelegate
+     * @return QueryLookupStrategy
+     * @since 3.0.1
+     */
+    static QueryLookupStrategy create(EntityManager entityManager, QueryLookupStrategy.Key key,
+            QueryExtractor extractor, ValueExpressionDelegate valueExpressionDelegate) {
+        return new FenixQueryLookupStrategy(entityManager, key, extractor, valueExpressionDelegate);
     }
 
     /**
