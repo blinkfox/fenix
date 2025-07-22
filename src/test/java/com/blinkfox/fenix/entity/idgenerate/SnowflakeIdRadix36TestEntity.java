@@ -1,7 +1,7 @@
 package com.blinkfox.fenix.entity.idgenerate;
 
+import com.blinkfox.fenix.id.Snowflake36RadixId;
 import com.blinkfox.fenix.id.SnowflakeId;
-import com.blinkfox.fenix.id.SnowflakeIdType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * {@link SnowflakeId} 和 {@link SnowflakeIdType#RADIX_36} 的测试实体类.
+ * {@link SnowflakeId} 和 {@link Snowflake36RadixId} 的测试实体类.
  *
  * @author blinkfox on 2025-07-22
  * @since 3.1.0
@@ -21,7 +21,7 @@ public class SnowflakeIdRadix36TestEntity {
 
     @Id
     @Column(name = "c_id")
-    @SnowflakeId(SnowflakeIdType.RADIX_36)
+    @Snowflake36RadixId
     private String id;
 
     @Column(name = "c_name")
