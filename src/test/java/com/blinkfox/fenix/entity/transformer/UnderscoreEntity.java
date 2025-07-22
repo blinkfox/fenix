@@ -31,7 +31,7 @@ public class UnderscoreEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "snowflake")
-    @GenericGenerator(name = "snowflake", strategy = "com.blinkfox.fenix.id.SnowflakeIdGenerator")
+    @GenericGenerator(name = "snowflake", strategy = "com.blinkfox.fenix.id.FenixSnowflakeIdGenerator")
     private Long id;
 
     @Column(name = "column_name")

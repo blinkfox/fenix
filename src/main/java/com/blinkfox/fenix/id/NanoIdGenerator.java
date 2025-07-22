@@ -3,7 +3,8 @@ package com.blinkfox.fenix.id;
 import java.io.Serializable;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.UUIDGenerator;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * Nano ID 字符串的生成器类.
@@ -12,7 +13,7 @@ import org.hibernate.id.UUIDGenerator;
  * @since v2.7.0
  */
 @NoArgsConstructor
-public class NanoIdGenerator extends UUIDGenerator {
+public class NanoIdGenerator implements IdentifierGenerator, StandardGenerator {
 
     /**
      * 用于生成 Nano ID 字符串的生成方法.

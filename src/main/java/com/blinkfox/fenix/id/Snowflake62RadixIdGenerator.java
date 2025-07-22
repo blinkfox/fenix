@@ -3,7 +3,8 @@ package com.blinkfox.fenix.id;
 import java.io.Serializable;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.UUIDGenerator;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * 雪花算法的 62 进制 ID 字符串的生成器类.
@@ -16,7 +17,7 @@ import org.hibernate.id.UUIDGenerator;
  * @since v2.4.0
  */
 @NoArgsConstructor
-public class Snowflake62RadixIdGenerator extends UUIDGenerator {
+public class Snowflake62RadixIdGenerator implements IdentifierGenerator, StandardGenerator {
 
     private static final IdWorker idWorker = new IdWorker();
 
