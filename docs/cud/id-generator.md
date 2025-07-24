@@ -58,6 +58,18 @@ public class MyEntity {
 }
 ```
 
+如果你的 Spring Boot 版本是 3.4.0 及以上，那么直接使用 `@SnowflakeId` 注解即可，不需要使用 `@GeneratedValue` 和 `@GenericGenerator` 两个注解。
+
+```java
+/**
+ * 使用 Fenix 中的雪花算法 ID 生成策略.
+ */
+@Id
+@Column(name = "c_id")
+@SnowflakeId
+private Long id;
+```
+
 ## ☃️ 三、36 或 62 进制雪花算法的 ID 生成策略 :id=snowflake-base62
 
 如果你的 ID 不是长整型（`Long`）的，是字符串类型（`String`）的，为了能缩短雪花算法 ID 字符串的长度，可以将原来长度为 `16` 位的雪花算法 ID 的转换为 `62` 进制，能大幅度缩短 `ID` 的长度为 `9` 位，且依然能保证**唯一性**和**整体有序性**。
@@ -114,6 +126,18 @@ public class MyEntity {
 private String id;
 ```
 
+如果你的 Spring Boot 版本是 3.4.0 及以上，那么直接使用 `@Snowflake36RadixId` 或 `@Snowflake62RadixId` 注解即可，不需要使用 `@GeneratedValue` 和 `@GenericGenerator` 两个注解。
+
+```java
+/**
+ * 使用 Fenix 中的 36 进制的雪花算法 ID 生成策略.
+ */
+@Id
+@Column(name = "c_id")
+@Snowflake36RadixId
+private Long id;
+```
+
 ## ✒️ 四、21 位 NanoId 生成策略 :id=nano-id
 
 相比于 UUID，`NanoId` 大小只有 `108` 个字节，生成的字符串更短，并且生成速度更快。所以，你也可以选择使用 `NanoId` 的生成器 `com.blinkfox.fenix.id.NanoIdGenerator`。
@@ -132,6 +156,15 @@ public class MyEntity {
     private String id;
 
 }
+```
+
+如果你的 Spring Boot 版本是 3.4.0 及以上，那么直接使用 `@NanoId` 注解即可，不需要使用 `@GeneratedValue` 和 `@GenericGenerator` 两个注解。
+
+```java
+@Id
+@Column(name = "c_id")
+@NanoId
+private Long id;
 ```
 
 ## 🌟 五、62 进制 UUID 生成策略 :id=uuid-base62
@@ -175,6 +208,15 @@ public class MyEntity {
     // 下面省略了其它字段.
 
 }
+```
+
+如果你的 Spring Boot 版本是 3.4.0 及以上，那么直接使用 `@Uuid62Radix` 注解即可，不需要使用 `@GeneratedValue` 和 `@GenericGenerator` 两个注解。
+
+```java
+@Id
+@Column(name = "c_id")
+@Uuid62Radix
+private Long id;
 ```
 
 ## ☕ 五、通过 Java API 获取 ID :id=java-api
