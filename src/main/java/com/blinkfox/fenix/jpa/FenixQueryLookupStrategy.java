@@ -68,6 +68,7 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
      *
      * @param entityManager EntityManager
      * @param provider QueryExtractor 实例
+     * @deprecated 随着 SpringBoot 版本的迭代，该方法已过时，后续会移除此构造方法.
      */
     private FenixQueryLookupStrategy(EntityManager entityManager, QueryLookupStrategy.Key key,
             QueryExtractor extractor, QueryMethodEvaluationContextProvider provider) {
@@ -107,6 +108,7 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
      * @param provider QueryMethodEvaluationContextProvider
      * @param character EscapeCharacter
      * @return QueryLookupStrategy
+     * @deprecated 随着 SpringBoot 版本的迭代，该方法已过时，后续会移除此方法
      * @author blinkfox on 2020-05-17.
      * @since v2.3.1
      */
@@ -124,6 +126,8 @@ public class FenixQueryLookupStrategy implements QueryLookupStrategy {
      * @param extractor extractor
      * @param provider provider
      * @return MyQueryLookupStrategy
+     * @deprecated 随着 SpringBoot 版本的迭代，该方法已过时，后续会移除并使用
+     *     {@link #create(EntityManager, Key, QueryExtractor, ValueExpressionDelegate)} 方法
      */
     static QueryLookupStrategy create(EntityManager entityManager, QueryLookupStrategy.Key key,
             QueryExtractor extractor, QueryMethodEvaluationContextProvider provider) {
