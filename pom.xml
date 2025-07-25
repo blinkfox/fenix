@@ -46,13 +46,13 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.2</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.6.18.Final</version>
+            <version>6.6.22.Final</version>
             <optional>true</optional>
         </dependency>
         <dependency>
