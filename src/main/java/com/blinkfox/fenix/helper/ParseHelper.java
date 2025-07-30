@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mvel2.MVEL;
+import org.mvel2.templates.CompiledTemplate;
+import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MVEL 表达式解析相关的工具类.
@@ -16,6 +19,9 @@ import org.mvel2.templates.TemplateRuntime;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParseHelper {
+
+    // 静态缓存，用于存储已编译的模板
+    private static final ConcurrentHashMap<String, CompiledTemplate> TEMPLATE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 通过 MVEL 来解析表达式的值，该方法如果解析出错也不抛出异常.
@@ -57,7 +63,8 @@ public final class ParseHelper {
      */
     public static String parseTemplate(String template, Object context) {
         try {
-            return (String) TemplateRuntime.eval(template, context);
+            CompiledTemplate compiledTemplate = TEMPLATE_CACHE.computeIfAbsent(template, TemplateCompiler::compileTemplate);
+            return (String) TemplateRuntime.execute(compiledTemplate, context);
         } catch (Exception e) {
             throw new ParseExpressionException("【Fenix 异常提示】解析模板异常，解析出错的模板为:【" + template + "】.", e);
         }
