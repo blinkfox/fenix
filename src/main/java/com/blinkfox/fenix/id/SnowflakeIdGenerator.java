@@ -1,9 +1,9 @@
 package com.blinkfox.fenix.id;
 
-import java.io.Serializable;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.IdentityGenerator;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * 雪花算法的 10 进制 {@code long} 型 ID 生成器类.
@@ -14,7 +14,7 @@ import org.hibernate.id.IdentityGenerator;
  * @since v2.4.0
  */
 @NoArgsConstructor
-public class SnowflakeIdGenerator extends IdentityGenerator {
+public class SnowflakeIdGenerator implements IdentifierGenerator, StandardGenerator {
 
     private static final IdWorker idWorker = new IdWorker();
 
@@ -25,7 +25,8 @@ public class SnowflakeIdGenerator extends IdentityGenerator {
      * @param obj 对象
      * @return ID 结果
      */
-    public Serializable generate(SharedSessionContractImplementor s, Object obj) {
+    @Override
+    public Object generate(SharedSessionContractImplementor s, Object obj) {
         return idWorker.getId();
     }
 

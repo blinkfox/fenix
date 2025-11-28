@@ -3,7 +3,8 @@ package com.blinkfox.fenix.id;
 import java.io.Serializable;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.UUIDGenerator;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * 用于生成 62 进制字符串型 UUID 的 ID 生成器类.
@@ -15,7 +16,7 @@ import org.hibernate.id.UUIDGenerator;
  * @since v2.4.0
  */
 @NoArgsConstructor
-public class Uuid62RadixIdGenerator extends UUIDGenerator {
+public class Uuid62RadixIdGenerator implements IdentifierGenerator, StandardGenerator {
 
     /**
      * 用于生成 62 进制字符串型 UUID 的 ID 生成方法.

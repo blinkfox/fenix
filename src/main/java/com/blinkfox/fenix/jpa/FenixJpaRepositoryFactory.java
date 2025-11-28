@@ -53,8 +53,11 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
      * @param key QueryLookupStrategy 的策略 Key
      * @param provider QueryMethodEvaluationContextProvider 实例
      * @return FenixQueryLookupStrategy 实例
+     * @deprecated 随着 SpringBoot 版本的迭代，该方法已过时，后续会移除并使用
+     *     {@link #getQueryLookupStrategy(QueryLookupStrategy.Key, ValueExpressionDelegate)} 方法
      */
     @Override
+    @Deprecated(since = "3.1.0", forRemoval = true)
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
             QueryMethodEvaluationContextProvider provider) {
         return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider));
