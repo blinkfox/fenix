@@ -6,7 +6,7 @@
 
 ## 💎 特性 :id=features
 
-- 简单、轻量级、无副作用的集成和使用，jar 包仅 `215 KB`；
+- 简单、轻量级、无副作用的集成和使用，jar 包仅 `224 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
 - 提供了 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL；
 - 支持 `ActiveRecord` 模式；
