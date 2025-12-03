@@ -3,7 +3,6 @@ package com.blinkfox.fenix.id;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
-import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * 雪花算法的 10 进制 {@code long} 型 ID 生成器类.
@@ -14,7 +13,7 @@ import org.hibernate.id.factory.spi.StandardGenerator;
  * @since v2.4.0
  */
 @NoArgsConstructor
-public class SnowflakeIdGenerator implements IdentifierGenerator, StandardGenerator {
+public class SnowflakeIdGenerator implements IdentifierGenerator {
 
     private static final IdWorker idWorker = new IdWorker();
 

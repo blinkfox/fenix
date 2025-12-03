@@ -2,10 +2,10 @@ package com.blinkfox.fenix.entity.ar;
 
 import com.blinkfox.fenix.ar.repo.CrudModel;
 import com.blinkfox.fenix.enums.StatusEnum;
+import com.blinkfox.fenix.id.NanoId;
 import com.blinkfox.fenix.repository.ar.ArCrudRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -13,7 +13,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 用来测试 Active Record 的实体类，本实体类继承自 {@link CrudModel}.
@@ -33,8 +32,7 @@ public class ArCrud implements CrudModel<ArCrud, String, ArCrudRepository> {
      */
     @Id
     @Column(name = "c_id")
-    @GeneratedValue(generator = "nanoId")
-    @GenericGenerator(name = "nanoId", strategy = "com.blinkfox.fenix.id.NanoIdGenerator")
+    @NanoId
     private String id;
 
     /**

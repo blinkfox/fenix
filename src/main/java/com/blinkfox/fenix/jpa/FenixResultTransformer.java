@@ -51,6 +51,9 @@ public class FenixResultTransformer extends AbstractResultTransformer {
         }
         oldConversionService.addConverter(ClobToStringConverter.INSTANCE);
         oldConversionService.addConverter(BlobToStringConverter.INSTANCE);
+        // 添加 Java 8 时间类型到 Date 的转换器，以兼容 Spring Data JPA 4.0 / Hibernate 7.x
+        oldConversionService.addConverter(LocalDateTimeToDateConverter.INSTANCE);
+        oldConversionService.addConverter(LocalDateToDateConverter.INSTANCE);
     }
 
     /**

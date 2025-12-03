@@ -88,6 +88,14 @@ public class FenixJpaQuery extends AbstractJpaQuery {
     private Class<?> queryClass;
 
     /**
+     * 是否声明为 count 查询.
+     *
+     * @since 4.0.0
+     */
+    @Setter
+    private boolean hasDeclaredCountQuery;
+
+    /**
      * Creates a new {@code AbstractJpaQuery} from the given {@code JpaQueryMethod}.
      *
      * @param method JpaQueryMethod
@@ -95,6 +103,11 @@ public class FenixJpaQuery extends AbstractJpaQuery {
      */
     FenixJpaQuery(JpaQueryMethod method, EntityManager em) {
         super(method, em);
+    }
+
+    @Override
+    public boolean hasDeclaredCountQuery() {
+        return this.hasDeclaredCountQuery;
     }
 
     /**

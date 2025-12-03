@@ -61,7 +61,7 @@ public interface JpaModel<T, ID, R extends JpaRepository<T, ID>> extends PagingA
      * @return 实体对象
      */
     default T getById() {
-        return this.getRepository().getReferenceById(this.getId());
+        return this.getRepository().findById(this.getId()).orElse(null);
     }
 
 }

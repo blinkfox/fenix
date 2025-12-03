@@ -9,9 +9,11 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.jpa.repository.query.QueryEnhancerSelector;
 import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.data.repository.config.DefaultRepositoryBaseClass;
 import org.springframework.data.repository.query.QueryLookupStrategy;
@@ -114,6 +116,15 @@ public @interface EnableFenix {
      */
     Class<?> repositoryBaseClass() default DefaultRepositoryBaseClass.class;
 
+    /**
+     * Configure a specific {@link BeanNameGenerator} to be used when creating the repository beans.
+     *
+     * @return the {@link BeanNameGenerator} to be used or the base {@link BeanNameGenerator} interface to indicate
+     *         context default.
+     * @since 4.0, and since Spring Data JPA 3.4
+     */
+    Class<? extends BeanNameGenerator> nameGenerator() default BeanNameGenerator.class;
+
     // JPA specific configuration
 
     /**
@@ -172,5 +183,15 @@ public @interface EnableFenix {
      * @return a single character used for escaping.
      */
     char escapeCharacter() default '\\';
+
+    /**
+     * Configures the {@link QueryEnhancerSelector} to select a query enhancer for query introspection and
+     * transformation.
+     *
+     * @return a {@link QueryEnhancerSelector} class providing a no-args constructor.
+     * @since 4.0
+     */
+    Class<? extends QueryEnhancerSelector> queryEnhancerSelector()
+            default QueryEnhancerSelector.DefaultQueryEnhancerSelector.class;
 
 }

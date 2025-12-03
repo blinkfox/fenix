@@ -35,4 +35,15 @@ public class FenixJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         return new FenixJpaRepositoryFactory(entityManager);
     }
 
+    /**
+     * 初始化设置 repositoryBaseClass 的值为 {@link FenixSimpleJpaRepository}.
+     *
+     * @since 4.0.0
+     */
+    @Override
+    public void afterPropertiesSet() {
+        super.setRepositoryBaseClass(FenixSimpleJpaRepository.class);
+        super.afterPropertiesSet();
+    }
+
 }
