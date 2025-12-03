@@ -8,7 +8,7 @@
 
 如果你是 Spring Boot 项目，那么直接集成 `fenix-spring-boot-starter` 库，并使用 `@EnableFenix` 激活 Fenix 的相关配置信息。
 
-!> **💡 注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**。如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.x` 的版本。如果 Spring Boot 版本是 `v3.0.0` 及以上，则 Fenix 版本必须是 `v3.x` 的版本。如果 Spring Boot 版本是 `v4.0.0` 及以上，则 Fenix 版本必须是 `v4.x` 的版本。
+!> **💡 注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**。如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.x` 的版本。如果 Spring Boot 版本是 `v3.x`，则 Fenix 版本必须是 `v3.x` 的版本。如果 Spring Boot 版本是 `v4.0.0` 及以上，则 Fenix 版本必须是 `v4.x` 的版本。
 
 ### 🌾 1. Maven :id=spring-boot-maven
 
@@ -20,7 +20,7 @@
     <version>4.0.0</version>
 </dependency>
 
-<!-- Spring Boot 版本要求 3.0 及以上. -->
+<!-- Spring Boot 版本要求 3.x 版本. -->
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
@@ -38,7 +38,7 @@
 ### 🌵 2. Gradle :id=spring-boot-gradle
 
 ```gradle
-// Spring Boot 版本要求 3.x 版本.
+// Spring Boot 版本要求 4.x 版本.
 implementation("com.blinkfox:fenix-spring-boot-starter:4.0.0")
 
 // Spring Boot 版本要求 3.x 版本.
@@ -126,7 +126,7 @@ fenix:
     <version>4.0.0</version>
 </dependency>
 
-<!-- Spring Data JPA 版本要求 3.0 及以上. -->
+<!-- Spring Data JPA 版本要求 3.x 版本. -->
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix</artifactId>

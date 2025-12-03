@@ -2,7 +2,7 @@
 
 <div align="center"><img style="display: block; margin: 0 auto;" src="https://blinkfox.github.io/fenix/assets/images/logo.png" alt="fenix logo" /></div>
 
-[![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v3.1.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/3.1.0/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v3.1.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/3.1.0/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
+[![Javadocs](http://www.javadoc.io/badge/com.blinkfox/fenix.svg)](http://www.javadoc.io/doc/com.blinkfox/fenix) [![GitHub license](https://img.shields.io/github/license/blinkfox/fenix.svg)](https://github.com/blinkfox/fenix/blob/develop/LICENSE) [![fenix](https://img.shields.io/badge/fenix-v4.0.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix/4.0.0/jar) [![fenix starter](https://img.shields.io/badge/fenix%20spring%20boot%20starter-v4.0.0-blue)](https://search.maven.org/artifact/com.blinkfox/fenix-spring-boot-starter/4.0.0/jar) [![codecov](https://codecov.io/gh/blinkfox/fenix/branch/develop/graph/badge.svg)](https://codecov.io/gh/blinkfox/fenix)
 
 > [🔥 Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，能辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式。
 
@@ -10,7 +10,7 @@
 
 ## 💎 一、特性
 
-- 简单、轻量级、无副作用的集成和使用，jar 包仅 `215 KB`；
+- 简单、轻量级、无副作用的集成和使用，jar 包仅 `224 KB`；
 - 作为 JPA 的扩展和增强，兼容 Spring Data JPA 原有功能和各种特性；
 - 提供了 `XML`、Java 链式 `API` 和动态条件注解等四种方式来书写动态 SQL；
 - 支持 `ActiveRecord` 模式；
@@ -24,7 +24,7 @@
 
 ## 🏖️️ 二、支持场景
 
-适用于 Java `Spring Data JPA` 项目，`JDK 8` 及以上，Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。
+适用于 Java `Spring Data JPA` 项目，`JDK 8` 及以上（高版本 SpringBoot 要求 `JDK17`），Spring Data JPA 的版本须保证 `2.1.8.RELEASE` 及以上；如果你是 Spring Boot 项目，则 Spring Boot 的版本须保证 `2.1.5.RELEASE` 及以上。
 
 ## ☘️ 三、Spring Boot 项目集成
 
@@ -34,12 +34,20 @@
 
 > **注**：请确保你使用的 Spring Boot 版本是 **`v2.1.5.RELEASE` 及以上**。
 > - 如果 Spring Boot 版本是 `v2.2.x.RELEASE` 及以上，则 Fenix 版本必须是 `v2.x` 的版本。
-> - 如果 Spring Boot 版本是 `v3.0.0` 及以上，则 Fenix 版本必须是 `v3.x` 的版本。
+> - 如果 Spring Boot 版本是 `v3.x` 的版本，则 Fenix 版本必须是 `v3.x` 的版本。
+> - 如果 Spring Boot 版本是 `v4.x` 的版本，则 Fenix 版本必须是 `v4.x` 的版本。
 
 ### 🌾 1. Maven
 
 ```xml
-<!-- Spring Boot 版本要求 3.0 及以上. -->
+<!-- Spring Boot 版本要求 4.0 及以上. -->
+<dependency>
+    <groupId>com.blinkfox</groupId>
+    <artifactId>fenix-spring-boot-starter</artifactId>
+    <version>4.0.0</version>
+</dependency>
+
+<!-- Spring Boot 版本要求 3.x 版本. -->
 <dependency>
     <groupId>com.blinkfox</groupId>
     <artifactId>fenix-spring-boot-starter</artifactId>
@@ -57,11 +65,14 @@
 ### 🌵 2. Gradle
 
 ```bash
+// Spring Boot 版本要求 4.x 版本.
+implementation("com.blinkfox:fenix-spring-boot-starter:4.0.0")
+
 // Spring Boot 版本要求 3.x 版本.
-compile 'com.blinkfox:fenix-spring-boot-starter:3.1.0'
+implementation("com.blinkfox:fenix-spring-boot-starter:3.1.0")
 
 // Spring Boot 版本要求 2.x 版本.
-compile 'com.blinkfox:fenix-spring-boot-starter:2.7.0'
+implementation("com.blinkfox:fenix-spring-boot-starter:2.7.0")
 ```
 
 ### 🏕️ 3. 激活 Fenix (@EnableFenix)
