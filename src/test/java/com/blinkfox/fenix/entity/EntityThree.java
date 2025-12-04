@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.entity;
 
+import com.blinkfox.fenix.id.Uuid62Radix;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,8 +33,7 @@ public class EntityThree {
      */
     @Id
     @Column(name = "c_id")
-    @GeneratedValue(generator = "uuid62Radix")
-    @GenericGenerator(name = "uuid62Radix", strategy = "com.blinkfox.fenix.id.Uuid62RadixIdGenerator")
+    @Uuid62Radix
     private String id;
 
     /**

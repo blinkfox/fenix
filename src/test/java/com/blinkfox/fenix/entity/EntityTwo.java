@@ -1,5 +1,6 @@
 package com.blinkfox.fenix.entity;
 
+import com.blinkfox.fenix.id.Snowflake62RadixId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,8 +33,7 @@ public class EntityTwo {
      */
     @Id
     @Column(name = "c_id")
-    @GeneratedValue(generator = "snowflake62Radix")
-    @GenericGenerator(name = "snowflake62Radix", strategy = "com.blinkfox.fenix.id.Snowflake62RadixIdGenerator")
+    @Snowflake62RadixId
     private String id;
 
     /**

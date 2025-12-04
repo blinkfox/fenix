@@ -4,7 +4,6 @@ import java.io.Serializable;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
-import org.hibernate.id.factory.spi.StandardGenerator;
 
 /**
  * 雪花算法的 62 进制 ID 字符串的生成器类.
@@ -17,7 +16,7 @@ import org.hibernate.id.factory.spi.StandardGenerator;
  * @since v2.4.0
  */
 @NoArgsConstructor
-public class Snowflake62RadixIdGenerator implements IdentifierGenerator, StandardGenerator {
+public class Snowflake62RadixIdGenerator implements IdentifierGenerator {
 
     private static final IdWorker idWorker = new IdWorker();
 

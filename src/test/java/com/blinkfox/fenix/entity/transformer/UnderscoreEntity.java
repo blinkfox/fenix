@@ -1,8 +1,8 @@
 package com.blinkfox.fenix.entity.transformer;
 
+import com.blinkfox.fenix.id.SnowflakeId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -10,7 +10,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 数据库字段都是下划线的测试实体类.
@@ -30,8 +29,7 @@ public class UnderscoreEntity {
      */
     @Id
     @Column(name = "id")
-    @GeneratedValue(generator = "snowflake")
-    @GenericGenerator(name = "snowflake", strategy = "com.blinkfox.fenix.id.SnowflakeIdGenerator")
+    @SnowflakeId
     private Long id;
 
     @Column(name = "column_name")

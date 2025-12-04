@@ -125,7 +125,7 @@ public class FenixSimpleJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> 
         int i = 0;
         Session session = this.em.unwrap(Session.class);
         for (S entity : entities) {
-            session.update(entity);
+            session.merge(entity);
             if (++i % batchSize == 0) {
                 this.em.flush();
                 this.em.clear();

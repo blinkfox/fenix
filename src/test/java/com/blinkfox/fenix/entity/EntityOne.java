@@ -1,8 +1,8 @@
 package com.blinkfox.fenix.entity;
 
+import com.blinkfox.fenix.id.SnowflakeId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 一个用于测试 ID 生成器策略是否正确的实体类 1.
@@ -32,8 +31,7 @@ public class EntityOne {
      */
     @Id
     @Column(name = "c_id")
-    @GeneratedValue(generator = "snowflake")
-    @GenericGenerator(name = "snowflake", strategy = "com.blinkfox.fenix.id.SnowflakeIdGenerator")
+    @SnowflakeId
     private Long id;
 
     /**

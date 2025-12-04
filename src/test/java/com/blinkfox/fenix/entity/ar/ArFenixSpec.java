@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.Proxy;
 
 /**
  * 测试 ActiveRecord 模式下测试 FenixSpecModel 的接口.
@@ -22,7 +21,6 @@ import org.hibernate.annotations.Proxy;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Proxy(lazy = false)
 @Table(name = "t_ar_fenix_spec")
 public class ArFenixSpec implements
         JpaModel<ArFenixSpec, Long, ArFenixSpecRepository>,

@@ -5,6 +5,10 @@ import com.blinkfox.fenix.helper.StringHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import lombok.Setter;
 import org.hibernate.transform.ResultTransformer;
@@ -34,6 +38,9 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
     static {
         defaultConversionService.addConverter(ClobToStringConverter.INSTANCE);
         defaultConversionService.addConverter(BlobToStringConverter.INSTANCE);
+        // 添加 Java 8 时间类型到 Date 的转换器，以兼容 Spring Data JPA 4.0 / Hibernate 7.x
+        defaultConversionService.addConverter(LocalDateTimeToDateConverter.INSTANCE);
+        defaultConversionService.addConverter(LocalDateToDateConverter.INSTANCE);
     }
 
     /**
@@ -131,6 +138,48 @@ public abstract class AbstractResultTransformer implements ResultTransformer {
         @Override
         public String convert(Blob source) {
             return BlobJavaType.INSTANCE.toString(source);
+        }
+    }
+
+    /**
+     * LocalDateTime 转换为 Date 的转换器类.
+     *
+     * <p>用于兼容 Spring Data JPA 4.0 / Hibernate 7.x 中查询结果从 Timestamp 变为 LocalDateTime 后类型转换失败的问题.</p>
+     *
+     * @author blinkfox 2025-12-03.
+     * @since v4.0.0
+     */
+    protected enum LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
+
+        /**
+         * 单实例.
+         */
+        INSTANCE;
+
+        @Override
+        public Date convert(LocalDateTime source) {
+            return Date.from(source.atZone(ZoneId.systemDefault()).toInstant());
+        }
+    }
+
+    /**
+     * LocalDate 转换为 Date 的转换器类.
+     *
+     * <p>用于兼容 Spring Data JPA 4.0 / Hibernate 7.x 中查询结果从 Timestamp 变为 LocalDateTime 后类型转换失败的问题.</p>
+     *
+     * @author blinkfox 2025-12-03.
+     * @since v4.0.0
+     */
+    protected enum LocalDateToDateConverter implements Converter<LocalDate, Date> {
+
+        /**
+         * 单实例.
+         */
+        INSTANCE;
+
+        @Override
+        public Date convert(LocalDate source) {
+            return Date.from(source.atStartOfDay(ZoneId.systemDefault()).toInstant());
         }
     }
 

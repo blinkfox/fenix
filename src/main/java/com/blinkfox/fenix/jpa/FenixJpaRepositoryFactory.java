@@ -5,12 +5,17 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
+import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
+import org.springframework.data.jpa.repository.query.EscapeCharacter;
+import org.springframework.data.jpa.repository.query.JpaQueryConfiguration;
+import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
+import org.springframework.data.jpa.repository.query.QueryEnhancerSelector;
+import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.query.CachingValueExpressionDelegate;
 import org.springframework.data.repository.query.QueryLookupStrategy;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.ValueExpressionDelegate;
-import org.springframework.lang.Nullable;
 
 /**
  * 扩展了 {@link JpaRepositoryFactory} JPA 规范类的 的 Repository 工厂类.
@@ -33,6 +38,14 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
      */
     private final QueryExtractor extractor;
 
+    private final QueryEnhancerSelector queryEnhancerSelector = QueryEnhancerSelector.DEFAULT_SELECTOR;
+
+    private final EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
+
+    private final JpaQueryMethodFactory queryMethodFactory;
+
+    private final QueryRewriterProvider queryRewriterProvider;
+
     /**
      * 创建 {@link JpaRepositoryFactory} 实例.
      *
@@ -42,25 +55,8 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
         super(entityManager);
         this.entityManager = entityManager;
         this.extractor = PersistenceProvider.fromEntityManager(entityManager);
-
-        // 为了兼容 Spring Data JPA v2.3.0 之前的版本，这里修改 class 中的字节码，来支持老版本中 JPA 的相关方法，防止编译报错.
-        FenixJpaClassWriter.modify();
-    }
-
-    /**
-     * 创建 {@link QueryLookupStrategy} 实例.
-     *
-     * @param key QueryLookupStrategy 的策略 Key
-     * @param provider QueryMethodEvaluationContextProvider 实例
-     * @return FenixQueryLookupStrategy 实例
-     * @deprecated 随着 SpringBoot 版本的迭代，该方法已过时，后续会移除并使用
-     *     {@link #getQueryLookupStrategy(QueryLookupStrategy.Key, ValueExpressionDelegate)} 方法
-     */
-    @Override
-    @Deprecated(since = "3.1.0", forRemoval = true)
-    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
-            QueryMethodEvaluationContextProvider provider) {
-        return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, provider));
+        this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
+        this.queryRewriterProvider = QueryRewriterProvider.simple();
     }
 
     /**
@@ -69,14 +65,19 @@ public class FenixJpaRepositoryFactory extends JpaRepositoryFactory {
      * <p>注：本方法用于适配 Spring Data JPA v3.4.x 及以上版本。</p>
      *
      * @param key QueryLookupStrategy 的策略 Key
-     * @param expressionDelegate ValueExpressionDelegate 实例
+     * @param valueExpressionDelegate ValueExpressionDelegate 实例
      * @return FenixQueryLookupStrategy 策略实例
      * @since 3.0.1
      */
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
-            @Nullable QueryLookupStrategy.Key key, ValueExpressionDelegate expressionDelegate) {
-        return Optional.of(FenixQueryLookupStrategy.create(entityManager, key, this.extractor, expressionDelegate));
+            QueryLookupStrategy.Key key, ValueExpressionDelegate valueExpressionDelegate) {
+        JpaQueryConfiguration queryConfiguration = new JpaQueryConfiguration(
+                queryRewriterProvider,
+                queryEnhancerSelector,
+                new CachingValueExpressionDelegate(valueExpressionDelegate),
+                escapeCharacter);
+        return Optional.of(FenixQueryLookupStrategy.create(entityManager, queryMethodFactory, key, queryConfiguration));
     }
 
     /**

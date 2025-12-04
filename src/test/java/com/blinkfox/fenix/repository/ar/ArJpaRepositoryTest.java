@@ -83,7 +83,8 @@ public class ArJpaRepositoryTest extends BaseRepositoryTest {
         ArJpa arJpa = new ArJpa().setName(name).saveAndFlush();
 
         // 查询断言保存的结果.
-        ArJpa arJpa2 = this.arJpaRepository.getById(arJpa.getId());
+        ArJpa arJpa2 = this.arJpaRepository.findById(arJpa.getId()).orElse(null);
+        Assert.assertNotNull(arJpa2);
         Assert.assertEquals(arJpa2.getName(), name);
         Assert.assertEquals(arJpa2.getId(), arJpa.getId());
     }

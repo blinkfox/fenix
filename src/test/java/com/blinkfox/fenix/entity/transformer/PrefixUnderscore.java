@@ -1,8 +1,8 @@
 package com.blinkfox.fenix.entity.transformer;
 
+import com.blinkfox.fenix.id.Snowflake62RadixId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -10,7 +10,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 数据库字段带有特定前缀且有下划线的测试实体类.
@@ -30,8 +29,7 @@ public class PrefixUnderscore {
      */
     @Id
     @Column(name = "c_id")
-    @GeneratedValue(generator = "snowflake36RadixId")
-    @GenericGenerator(name = "snowflake36RadixId", strategy = "com.blinkfox.fenix.id.Snowflake36RadixIdGenerator")
+    @Snowflake62RadixId
     private String id;
 
     @Column(name = "c_name")
