@@ -5,7 +5,12 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mvel2.MVEL;
+import org.mvel2.templates.CompiledTemplate;
+import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
+import java.util.Map;
+import java.lang.ref.SoftReference;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MVEL 表达式解析相关的工具类.
@@ -16,6 +21,12 @@ import org.mvel2.templates.TemplateRuntime;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParseHelper {
+
+    /**
+     * 模板编译缓存，使用 SoftReference 实现内存敏感缓存.
+     * 当内存不足时，JVM 会回收软引用，防止内存溢出.
+     */
+    private static final Map<String, SoftReference<CompiledTemplate>> TEMPLATE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 通过 MVEL 来解析表达式的值，该方法如果解析出错也不抛出异常.
@@ -57,7 +68,13 @@ public final class ParseHelper {
      */
     public static String parseTemplate(String template, Object context) {
         try {
-            return (String) TemplateRuntime.eval(template, context);
+            SoftReference<CompiledTemplate> ref = TEMPLATE_CACHE.get(template);
+            CompiledTemplate compiledTemplate = ref != null ? ref.get() : null;
+            if (compiledTemplate == null) {
+                compiledTemplate = TemplateCompiler.compileTemplate(template);
+                TEMPLATE_CACHE.put(template, new SoftReference<>(compiledTemplate));
+            }
+            return (String) TemplateRuntime.execute(compiledTemplate, context);
         } catch (Exception e) {
             throw new ParseExpressionException("【Fenix 异常提示】解析模板异常，解析出错的模板为:【" + template + "】.", e);
         }
